@@ -173,6 +173,26 @@ static NSString *POSTAMBLE =
 	return @"default";
 }
 
+- (NSString*)addPreamble {
+	return [self addPreambleWithNameBase:@"new preamble"];
+}
+
+- (NSString*)addPreambleWithNameBase:(NSString*)base {
+	if ([preambleDict objectForKey:base] == nil) {
+		[self setPreamble:[self defaultPreamble] forName:base];
+		return base;
+	}
+	int i = 0;
+	NSString *tryName = nil;
+	do {
+		++i;
+		tryName = [NSString stringWithFormat:@"%@ %d", base, i];
+	} while ([preambleDict objectForKey:tryName] != nil);
+
+	[self setPreamble:[self defaultPreamble] forName:tryName];
+	return tryName;
+}
+
 - (BOOL)renamePreambleFrom:(NSString*)old to:(NSString*)new {
 	if ([old isEqualToString:@"default"])
 		return NO;
@@ -180,18 +200,31 @@ static NSString *POSTAMBLE =
 		return NO;
 	if ([old isEqualToString:new])
 		return YES;
+	BOOL isSelected = NO;
+	if ([old isEqualToString:selectedPreambleName]) {
+		[self setSelectedPreambleName:nil];
+		isSelected = YES;
+	}
 	NSString *preamble = [preambleDict objectForKey:old];
 	[preamble retain];
 	[preambleDict removeObjectForKey:old];
 	[preambleDict setObject:preamble forKey:new];
 	[preamble release];
+	if (isSelected) {
+		[self setSelectedPreambleName:new];
+	}
 	return YES;
 }
 
 - (BOOL)removePreamble:(NSString*)name {
 	if ([name isEqualToString:@"default"])
 		return NO;
+	// "name" may be held only by being the selected preamble...
+	[name retain];
+	if ([name isEqualToString:selectedPreambleName])
+		[self setSelectedPreambleName:nil];
 	[preambleDict removeObjectForKey:name];
+	[name release];
 	return YES;
 }
 

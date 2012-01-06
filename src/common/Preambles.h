@@ -44,6 +44,9 @@
 - (NSString*)preambleForName:(NSString*)name;
 - (BOOL)setPreamble:(NSString*)content forName:(NSString*)name;
 
+- (NSString*)addPreamble;
+- (NSString*)addPreambleWithNameBase:(NSString*)name;
+
 - (BOOL)renamePreambleFrom:(NSString*)old to:(NSString*)new;
 - (BOOL)removePreamble:(NSString*)name;
 

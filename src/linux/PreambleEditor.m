@@ -48,6 +48,11 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 - (void) revert;
 - (void) update;
 - (void) fillListStore;
+- (BOOL) isDefaultPreambleSelected;
+- (NSString*) selectedPreambleName;
+- (void) addPreamble;
+- (void) deletePreamble;
+- (void) renamePreambleAtPath:(gchar*)path to:(gchar*)newValue;
 @end
 
 // }}}
@@ -70,7 +75,8 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	    window = NULL;
 	    preambleView = NULL;
 	    preambleSelector = NULL;
-	    loading = NO;
+	    blockSignals = NO;
+		adding = NO;
 	}
 
 	return self;
@@ -128,9 +134,10 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 }
 
 @end
-// }}}
 
+// }}}
 // {{{ Private
+
 @implementation PreambleEditor (Private)
 - (GtkWidget*) createPreambleList {
 	preambleListStore = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_BOOLEAN);
@@ -203,7 +210,7 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	GtkWidget *listWidget = [self createPreambleList];
 	GtkBox *listBox = GTK_BOX (gtk_vbox_new (FALSE, 0));
 	gtk_box_pack_start (listBox, listWidget, TRUE, TRUE, 0);
-	/*
+
 	GtkContainer *listButtonBox = GTK_CONTAINER (gtk_hbox_new (FALSE, 0));
 	gtk_box_pack_start (listBox, GTK_WIDGET (listButtonBox), FALSE, TRUE, 0);
 	GtkWidget *addButton = gtk_button_new_from_stock (GTK_STOCK_ADD);
@@ -218,7 +225,7 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	                  G_CALLBACK (remove_button_clicked_cb),
 	                  self);
 	gtk_container_add (listButtonBox, removeButton);
-	*/
+
 	gtk_paned_pack1 (paned, GTK_WIDGET (listBox), FALSE, TRUE);
 
 	preambleView = GTK_TEXT_VIEW (gtk_text_view_new ());
@@ -266,7 +273,7 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 }
 
 - (void) save {
-	if ([preambles selectedPreambleIsDefault])
+	if ([self isDefaultPreambleSelected])
 	    return;
 	GtkTextIter start,end;
 	GtkTextBuffer *preambleBuffer = gtk_text_view_get_buffer (preambleView);
@@ -280,11 +287,11 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 - (void) revert {
 	GtkTextBuffer *preambleBuffer = gtk_text_view_get_buffer (preambleView);
 	gtk_text_buffer_set_text (preambleBuffer, [[preambles currentPreamble] UTF8String], -1);
-	gtk_text_view_set_editable (preambleView, ![preambles selectedPreambleIsDefault]);
+	gtk_text_view_set_editable (preambleView, ![self isDefaultPreambleSelected]);
 }
 
 - (void) update {
-	if (!loading) {
+	if (!blockSignals) {
 	    [self save];
 	}
 	GtkTreeSelection *sel = gtk_tree_view_get_selection (preambleSelector);
@@ -301,7 +308,7 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 }
 
 - (void) fillListStore {
-	loading = YES;
+	blockSignals = YES;
 
 	GtkTreeIter row;
 	gtk_list_store_clear (preambleListStore);
@@ -312,7 +319,7 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	        IS_CUSTOM_COLUMN, FALSE,
 	        -1);
 	GtkTreeSelection *sel = gtk_tree_view_get_selection (preambleSelector);
-	if ([preambles selectedPreambleIsDefault]) {
+	if ([self isDefaultPreambleSelected]) {
 	    gtk_tree_selection_select_iter (sel, &row);
 	}
 
@@ -324,16 +331,102 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	            NAME_COLUMN, [preambleName UTF8String],
 	            IS_CUSTOM_COLUMN, TRUE,
 	            -1);
-	    if ([preambleName isEqualToString:[preambles selectedPreambleName]]) {
+	    if ([preambleName isEqualToString:[self selectedPreambleName]]) {
 	        gtk_tree_selection_select_iter (sel, &row);
 	    }
 	}
 
-	loading = NO;
+	blockSignals = NO;
+}
+
+- (BOOL) isDefaultPreambleSelected {
+	return [preambles selectedPreambleIsDefault];
+}
+
+- (NSString*) selectedPreambleName {
+	return [preambles selectedPreambleName];
+}
+
+- (void) addPreamble {
+	NSString *newName = [preambles addPreamble];
+
+	GtkTreeIter row;
+	gtk_list_store_append (preambleListStore, &row);
+	gtk_list_store_set (preambleListStore, &row,
+			NAME_COLUMN, [newName UTF8String],
+			IS_CUSTOM_COLUMN, TRUE,
+			-1);
+
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (preambleSelector);
+	gtk_tree_selection_select_iter (sel, &row);
+}
+
+- (void) deletePreamble {
+	if ([self isDefaultPreambleSelected])
+		return;
+
+	NSString *name = [self selectedPreambleName];
+
+	GtkTreeIter row;
+	GtkTreeModel *model = GTK_TREE_MODEL (preambleListStore);
+
+	gtk_tree_model_get_iter_first (model, &row);
+	// ignore first; it is the default one
+	gboolean found = FALSE;
+	while (!found && gtk_tree_model_iter_next (model, &row)) {
+		gchar *candidate;
+		gtk_tree_model_get (model, &row, NAME_COLUMN, &candidate, -1);
+		if (g_strcmp0 (candidate, [name UTF8String]) == 0) {
+			found = TRUE;
+		}
+		g_free (candidate);
+	}
+
+	if (!found)
+		return;
+
+	if (![preambles removePreamble:name])
+		return;
+
+	blockSignals = YES;
+
+	gboolean had_next = gtk_list_store_remove (preambleListStore, &row);
+	if (!had_next) {
+		// select the last item
+		gint length = gtk_tree_model_iter_n_children (model, NULL);
+		gtk_tree_model_iter_nth_child (model, &row, NULL, length - 1);
+	}
+
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (preambleSelector);
+	gtk_tree_selection_select_iter (sel, &row);
+
+	[self revert];
+
+	blockSignals = NO;
+}
+
+- (void) renamePreambleAtPath:(gchar*)path to:(gchar*)newValue {
+	NSString *newName = [NSString stringWithUTF8String:newValue];
+
+	GtkTreeIter row;
+	GtkTreeModel *model = GTK_TREE_MODEL (preambleListStore);
+
+	if (!gtk_tree_model_get_iter_from_string (model, &row, path))
+		return;
+
+	gchar *oldValue;
+	gtk_tree_model_get (model, &row, NAME_COLUMN, &oldValue, -1);
+
+	NSString* oldName = [NSString stringWithUTF8String:oldValue];
+	if ([preambles renamePreambleFrom:oldName to:newName]) {
+		gtk_list_store_set (preambleListStore, &row,
+				NAME_COLUMN, newValue,
+				-1);
+	}
 }
 @end
-// }}}
 
+// }}}
 // {{{ GTK+ callbacks
 
 static gboolean window_delete_event_cb (GtkWidget *widget,
@@ -353,13 +446,13 @@ static void close_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) 
 
 static void add_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSLog(@"Add");
+	[editor addPreamble];
 	[pool drain];
 }
 
 static void remove_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSLog(@"Remove");
+	[editor deletePreamble];
 	[pool drain];
 }
 
@@ -380,6 +473,7 @@ static void preamble_name_edited_cb (GtkCellRendererText *renderer,
                                      gchar               *new_text,
                                      PreambleEditor      *editor) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[editor renamePreambleAtPath:path to:new_text];
 	[pool drain];
 }
 
@@ -392,4 +486,4 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 
 // }}}
 
-// vim:ft=objc:ts=4:noet:sts=4:sw=4
+// vim:ft=objc:ts=4:noet:sts=4:sw=4:foldmethod=marker

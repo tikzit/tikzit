@@ -30,7 +30,8 @@
     GtkListStore  *preambleListStore;
     GtkTreeView   *preambleSelector;
     GtkTextView   *preambleView;
-    BOOL           loading;
+    BOOL           blockSignals;
+    BOOL           adding;
 }
 
 - (id) initWithPreambles:(Preambles*)p;
