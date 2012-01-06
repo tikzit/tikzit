@@ -1,0 +1,176 @@
+%{
+//
+//  tikzparser.y
+//  TikZiT
+//  
+//  Copyright 2010 Chris Heunen. All rights reserved.
+//  
+//  
+//  This file is part of TikZiT.
+//  
+//  TikZiT is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  
+//  TikZiT is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  
+//  You should have received a copy of the GNU General Public License
+//  along with TikZiT.  If not, see <http://www.gnu.org/licenses/>.
+//  
+#include <stdio.h>
+#include <string.h>
+#import <Foundation/Foundation.h>
+#import "TikzGraphAssembler.h"
+#import "GraphElementProperty.h"
+	
+extern int yylex(void);
+extern void yyerror(const char *str);
+
+%}
+
+%union {
+	NSPoint pt;
+	NSString *nsstr;
+};
+
+%token LATEXBEGIN
+%token LATEXEND
+%token TIKZPICTURE
+%token PGFONLAYER
+%token ANCHORCENTER
+%token LEFTPARENTHESIS
+%token RIGHTPARENTHESIS
+%token LEFTBRACKET
+%token RIGHTBRACKET
+%token SEMICOLON
+%token COMMA
+%token EQUALS
+%token DRAW
+%token TO
+%token NODE
+%token RECTANGLE
+%token PATH
+%token ALTNODE
+%token AT
+%token REALNUMBER
+%token NATURALNUMBER
+%token WORD
+%token QUOTEDSTRING
+%token DELIMITEDSTRING
+
+%type<nsstr> nodename
+%type<nsstr> nodeid
+%type<pt> coords
+%type<nsstr> target
+%type<nsstr> propsym
+%type<nsstr> propsyms
+%type<nsstr> val
+%type<nsstr> number
+
+%%
+
+tikzpicture: LATEXBEGIN TIKZPICTURE optproperties expressions LATEXEND TIKZPICTURE;
+expressions: expressions expression | ;
+expression: node | edge | boundingbox | ignore;
+
+ignore: LATEXBEGIN PGFONLAYER DELIMITEDSTRING | LATEXEND PGFONLAYER;
+
+number: REALNUMBER { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
+
+optproperties: LEFTBRACKET properties RIGHTBRACKET | ;
+properties: property extraproperties;
+extraproperties: COMMA property extraproperties | property extraproperties | ;
+
+property:
+	propsyms EQUALS val
+	{
+		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
+		GraphElementProperty *p = [[GraphElementProperty alloc] initWithPropertyValue:$<nsstr>3 forKey:$<nsstr>1];
+		[[a data] addObject:p];
+		[p release];
+	}
+	| propsyms
+	{
+		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
+		GraphElementProperty *p = [[GraphElementProperty alloc] initWithAtomName:$<nsstr>1];
+		[[a data] addObject:p];
+		[p release];
+	};
+
+val: propsyms { $$ = $<nsstr>1; } | QUOTEDSTRING { $$ = $<nsstr>1; };
+propsyms:
+	propsym { $$ = $<nsstr>1; }
+	| propsyms propsym
+	{
+		NSString *s = [$<nsstr>1 stringByAppendingFormat:@" %@", $<nsstr>2];
+		$$ = s;
+	};
+
+propsym:
+	WORD { $$ = $<nsstr>1; }
+	| number { $$ = $<nsstr>1; };
+
+
+nodecmd : NODE { [[TikzGraphAssembler currentAssembler] prepareNode]; };
+
+node:
+	nodecmd optproperties nodename AT coords nodelabel SEMICOLON
+	{
+		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
+		[[a currentNode] setName:$<nsstr>3];
+		[[a currentNode] setPoint:$<pt>5];
+		[a finishNode];
+	};
+
+nodelabel:
+	DELIMITEDSTRING
+	{
+		Node *n = [[TikzGraphAssembler currentAssembler] currentNode];
+		NSString *label = $<nsstr>1;
+		[n setLabel:[label substringWithRange:NSMakeRange(1, [label length]-2)]];
+	}
+
+optanchor: | ANCHORCENTER;
+nodename: LEFTPARENTHESIS nodeid optanchor RIGHTPARENTHESIS { $$ = $<nsstr>2; };
+nodeid: WORD { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
+
+coords:
+	LEFTPARENTHESIS number COMMA number RIGHTPARENTHESIS
+	{
+		$$ = NSMakePoint([$<nsstr>2 floatValue], [$<nsstr>4 floatValue]);
+	};
+
+edgecmd : DRAW { [[TikzGraphAssembler currentAssembler] prepareEdge]; };
+edge:
+	edgecmd optproperties nodename TO optedgenode target SEMICOLON 
+	{
+		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
+		[a setEdgeSource:$<nsstr>3
+				  target:$<nsstr>6];
+		[a finishEdge];
+	};
+target: nodename { $$=$<nsstr>1; } | selfloop { $$=@""; };
+selfloop: LEFTPARENTHESIS RIGHTPARENTHESIS;
+
+altnodecmd: ALTNODE { [[TikzGraphAssembler currentAssembler] prepareNode]; };
+optedgenode:
+	| altnodecmd optproperties nodelabel
+	{
+		[[TikzGraphAssembler currentAssembler] finishNode];
+	}
+
+bbox_ignoreprops:
+	| LEFTBRACKET WORD WORD WORD WORD RIGHTBRACKET;
+
+boundingbox:
+	PATH bbox_ignoreprops coords RECTANGLE coords SEMICOLON
+	{
+		Graph *g = [[TikzGraphAssembler currentAssembler] graph];
+		[g setBoundingBox:NSRectAroundPoints($<pt>3, $<pt>5)];
+	};
+
+%%

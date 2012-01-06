@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=TikZit
+Comment=TeX pgf/TikZ graph editor
+GenericName=TikZ Graph Editor
+Exec=tikzit
+Icon=tikzit
+Categories=GTK;Graphics;Education;Science;
+StartupNotify=false

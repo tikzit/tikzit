@@ -1,0 +1,23 @@
+Some documentation on how the GTK+ port is designed.
+
+State classes:
+
+StyleManager keeps track of what user-defined styles the application
+knows about, and which one is currently "active".  The active style
+is used when creating new nodes.
+
+Preambles keeps track of the preambles used for previews.
+
+
+GUI classes:
+
+MainWindow is the core class that manages the application as a whole.
+It manages the main GtkWindow and is generally responsible for loading
+the various UI elements.  It also keeps track of the main application
+configuration file, the user-defined styles (via StyleManager) and the
+custom preambles (via Preambles).
+
+The Menu class manages the menu and toolbar for MainWindow.  It uses
+GtkUiManager to load these from an XML description, and deals with the
+GTK+ callbacks for the various actions.
+

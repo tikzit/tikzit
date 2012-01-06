@@ -1,0 +1,395 @@
+/*
+ * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#import "PreambleEditor.h"
+#import "Preambles.h"
+
+enum {
+	NAME_COLUMN,
+	IS_CUSTOM_COLUMN,
+	N_COLUMNS
+};
+
+// {{{ Internal interfaces
+// {{{ Signals
+static gboolean window_delete_event_cb (GtkWidget *widget,
+                                        GdkEvent  *event,
+                                        PreambleEditor *editor);
+static void close_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
+static void add_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
+static void remove_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
+static void undo_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
+static void redo_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
+static void preamble_name_edited_cb (GtkCellRendererText *renderer,
+                                     gchar               *path,
+                                     gchar               *new_text,
+                                     PreambleEditor      *editor);
+static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
+                                           PreambleEditor   *editor);
+// }}}
+
+@interface PreambleEditor (Private)
+- (void) loadUi;
+- (void) save;
+- (void) revert;
+- (void) update;
+- (void) fillListStore;
+@end
+
+// }}}
+// {{{ API
+
+@implementation PreambleEditor
+
+- (id) init {
+	[self release];
+	self = nil;
+	return nil;
+}
+
+- (id) initWithPreambles:(Preambles*)p {
+	self = [super init];
+
+	if (self) {
+	    preambles = [p retain];
+	    parentWindow = NULL;
+	    window = NULL;
+	    preambleView = NULL;
+	    preambleSelector = NULL;
+	    loading = NO;
+	}
+
+	return self;
+}
+
+- (Preambles*) preambles {
+	return preambles;
+}
+
+- (void) setParentWindow:(GtkWindow*)parent {
+	parentWindow = parent;
+	if (window) {
+	    gtk_window_set_transient_for (window, parentWindow);
+	}
+}
+
+- (void) show {
+	[self loadUi];
+	gtk_widget_show (GTK_WIDGET (window));
+	[self revert];
+}
+
+- (void) hide {
+	if (!window) {
+	    return;
+	}
+	[self save];
+	gtk_widget_hide (GTK_WIDGET (window));
+}
+
+- (BOOL) isVisible {
+	if (!window) {
+	    return NO;
+	}
+	gboolean visible;
+	g_object_get (G_OBJECT (window), "visible", &visible, NULL);
+	return visible ? YES : NO;
+}
+
+- (void) setVisible:(BOOL)visible {
+	if (visible) {
+	    [self show];
+	} else {
+	    [self hide];
+	}
+}
+
+- (void) dealloc {
+	[preambles release];
+	preambles = nil;
+	gtk_widget_destroy (GTK_WIDGET (window));
+	window = NULL;
+
+	[super dealloc];
+}
+
+@end
+// }}}
+
+// {{{ Private
+@implementation PreambleEditor (Private)
+- (GtkWidget*) createPreambleList {
+	preambleListStore = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_BOOLEAN);
+	preambleSelector = GTK_TREE_VIEW (gtk_tree_view_new_with_model (
+	            GTK_TREE_MODEL (preambleListStore)));
+	gtk_widget_set_size_request (GTK_WIDGET (preambleSelector), 150, -1);
+	gtk_tree_view_set_headers_visible (preambleSelector, FALSE);
+
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes ("Preamble",
+	                                                   renderer,
+	                                                   "text", NAME_COLUMN,
+	                                                   "editable", IS_CUSTOM_COLUMN,
+	                                                   NULL);
+	gtk_tree_view_append_column (preambleSelector, column);
+	g_signal_connect (G_OBJECT (renderer),
+	    "edited",
+	    G_CALLBACK (preamble_name_edited_cb),
+	    self);
+
+	GtkWidget *listScroller = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (listScroller),
+	        GTK_POLICY_AUTOMATIC,
+	        GTK_POLICY_AUTOMATIC);
+	gtk_container_add (GTK_CONTAINER (listScroller),
+	                   GTK_WIDGET (preambleSelector));
+
+	[self fillListStore];
+
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (preambleSelector);
+	gtk_tree_selection_set_mode (sel, GTK_SELECTION_BROWSE);
+	g_signal_connect (G_OBJECT (sel),
+	    "changed",
+	    G_CALLBACK (preamble_selection_changed_cb),
+	    self);
+
+	return listScroller;
+}
+
+- (void) loadUi {
+	if (window) {
+	    return;
+	}
+
+	window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
+	gtk_window_set_title (window, "Preamble editor");
+	gtk_window_set_modal (window, TRUE);
+	gtk_window_set_position (window, GTK_WIN_POS_CENTER_ON_PARENT);
+	gtk_window_set_default_size (window, 600, 400);
+	gtk_window_set_type_hint (window, GDK_WINDOW_TYPE_HINT_DIALOG);
+	if (parentWindow) {
+	    gtk_window_set_transient_for (window, parentWindow);
+	}
+	g_signal_connect (window,
+	                  "delete-event",
+	                  G_CALLBACK (window_delete_event_cb),
+	                  self);
+
+	GtkWidget *mainBox = gtk_vbox_new (FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (window), mainBox);
+
+	GtkPaned *paned = GTK_PANED (gtk_hpaned_new ());
+	gtk_box_pack_start (GTK_BOX (mainBox),
+	                    GTK_WIDGET (paned),
+	                    TRUE, TRUE, 0);
+
+	GtkWidget *listWidget = [self createPreambleList];
+	GtkBox *listBox = GTK_BOX (gtk_vbox_new (FALSE, 0));
+	gtk_box_pack_start (listBox, listWidget, TRUE, TRUE, 0);
+	/*
+	GtkContainer *listButtonBox = GTK_CONTAINER (gtk_hbox_new (FALSE, 0));
+	gtk_box_pack_start (listBox, GTK_WIDGET (listButtonBox), FALSE, TRUE, 0);
+	GtkWidget *addButton = gtk_button_new_from_stock (GTK_STOCK_ADD);
+	g_signal_connect (addButton,
+	                  "clicked",
+	                  G_CALLBACK (add_button_clicked_cb),
+	                  self);
+	gtk_container_add (listButtonBox, addButton);
+	GtkWidget *removeButton = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
+	g_signal_connect (removeButton,
+	                  "clicked",
+	                  G_CALLBACK (remove_button_clicked_cb),
+	                  self);
+	gtk_container_add (listButtonBox, removeButton);
+	*/
+	gtk_paned_pack1 (paned, GTK_WIDGET (listBox), FALSE, TRUE);
+
+	preambleView = GTK_TEXT_VIEW (gtk_text_view_new ());
+	GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
+	        GTK_POLICY_AUTOMATIC, // horiz
+	        GTK_POLICY_ALWAYS); // vert
+	gtk_container_add (GTK_CONTAINER (scroller), GTK_WIDGET (preambleView));
+	gtk_paned_pack2 (paned, scroller, TRUE, TRUE);
+
+	GtkContainer *buttonBox = GTK_CONTAINER (gtk_hbutton_box_new ());
+	gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonBox), GTK_BUTTONBOX_END);
+	gtk_box_pack_start (GTK_BOX (mainBox),
+	                    GTK_WIDGET (buttonBox),
+	                    FALSE, TRUE, 0);
+	GtkWidget *closeButton = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
+	gtk_container_add (buttonBox, closeButton);
+	g_signal_connect (closeButton,
+	                  "clicked",
+	                  G_CALLBACK (close_button_clicked_cb),
+	                  self);
+	/*
+	GtkWidget *undoButton = gtk_button_new_from_stock (GTK_STOCK_UNDO);
+	gtk_container_add (buttonBox, undoButton);
+	gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (buttonBox),
+									    undoButton,
+										TRUE);
+	g_signal_connect (undoButton,
+	                  "clicked",
+	                  G_CALLBACK (undo_button_clicked_cb),
+	                  self);
+	GtkWidget *redoButton = gtk_button_new_from_stock (GTK_STOCK_REDO);
+	gtk_container_add (buttonBox, redoButton);
+	gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (buttonBox),
+									    redoButton,
+										TRUE);
+	g_signal_connect (redoButton,
+	                  "clicked",
+	                  G_CALLBACK (redo_button_clicked_cb),
+	                  self);
+					  */
+	[self revert];
+
+	gtk_widget_show_all (mainBox);
+}
+
+- (void) save {
+	if ([preambles selectedPreambleIsDefault])
+	    return;
+	GtkTextIter start,end;
+	GtkTextBuffer *preambleBuffer = gtk_text_view_get_buffer (preambleView);
+	gtk_text_buffer_get_bounds(preambleBuffer, &start, &end);
+	gchar *text = gtk_text_buffer_get_text(preambleBuffer, &start, &end, FALSE);
+	NSString *preamble = [NSString stringWithUTF8String:text];
+	g_free (text);
+	[preambles setCurrentPreamble:preamble];
+}
+
+- (void) revert {
+	GtkTextBuffer *preambleBuffer = gtk_text_view_get_buffer (preambleView);
+	gtk_text_buffer_set_text (preambleBuffer, [[preambles currentPreamble] UTF8String], -1);
+	gtk_text_view_set_editable (preambleView, ![preambles selectedPreambleIsDefault]);
+}
+
+- (void) update {
+	if (!loading) {
+	    [self save];
+	}
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (preambleSelector);
+	GtkTreeIter row;
+	GtkTreeModel *model;
+	if (gtk_tree_selection_get_selected (sel, &model, &row)) {
+	    gchar *name;
+	    gtk_tree_model_get (model, &row, NAME_COLUMN, &name, -1);
+	    NSString *preambleName = [NSString stringWithUTF8String:name];
+	    [preambles setSelectedPreambleName:preambleName];
+	    g_free (name);
+	}
+	[self revert];
+}
+
+- (void) fillListStore {
+	loading = YES;
+
+	GtkTreeIter row;
+	gtk_list_store_clear (preambleListStore);
+
+	gtk_list_store_append (preambleListStore, &row);
+	gtk_list_store_set (preambleListStore, &row,
+	        NAME_COLUMN, [[preambles defaultPreambleName] UTF8String],
+	        IS_CUSTOM_COLUMN, FALSE,
+	        -1);
+	GtkTreeSelection *sel = gtk_tree_view_get_selection (preambleSelector);
+	if ([preambles selectedPreambleIsDefault]) {
+	    gtk_tree_selection_select_iter (sel, &row);
+	}
+
+	NSEnumerator *en = [preambles customPreambleNameEnumerator];
+	NSString *preambleName;
+	while ((preambleName = [en nextObject])) {
+	    gtk_list_store_append (preambleListStore, &row);
+	    gtk_list_store_set (preambleListStore, &row,
+	            NAME_COLUMN, [preambleName UTF8String],
+	            IS_CUSTOM_COLUMN, TRUE,
+	            -1);
+	    if ([preambleName isEqualToString:[preambles selectedPreambleName]]) {
+	        gtk_tree_selection_select_iter (sel, &row);
+	    }
+	}
+
+	loading = NO;
+}
+@end
+// }}}
+
+// {{{ GTK+ callbacks
+
+static gboolean window_delete_event_cb (GtkWidget *widget,
+                                        GdkEvent  *event,
+                                        PreambleEditor *editor) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[editor hide];
+	[pool drain];
+	return TRUE; // we dealt with this event
+}
+
+static void close_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[editor hide];
+	[pool drain];
+}
+
+static void add_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSLog(@"Add");
+	[pool drain];
+}
+
+static void remove_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSLog(@"Remove");
+	[pool drain];
+}
+
+static void undo_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSLog(@"Undo");
+	[pool drain];
+}
+
+static void redo_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSLog(@"Redo");
+	[pool drain];
+}
+
+static void preamble_name_edited_cb (GtkCellRendererText *renderer,
+                                     gchar               *path,
+                                     gchar               *new_text,
+                                     PreambleEditor      *editor) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[pool drain];
+}
+
+static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
+                                           PreambleEditor   *editor) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[editor update];
+	[pool drain];
+}
+
+// }}}
+
+// vim:ft=objc:ts=4:noet:sts=4:sw=4
