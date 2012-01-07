@@ -44,12 +44,12 @@ Set the tar.bz2 file as default for everything except windows and mac
 Updating the website
 --------------------
 
-Edit docs/web/snippets.php, and update the versions.
+Edit docs/web/link.php, and update the versions.
 
 sftp to
   [sf-username],tikzit@web.sourceforge.net
 
-Upload snippets into htdocs.
+Upload link.php into htdocs.
 
 
 
