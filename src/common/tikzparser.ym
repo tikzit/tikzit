@@ -60,7 +60,7 @@ extern void yyerror(const char *str);
 %token AT
 %token REALNUMBER
 %token NATURALNUMBER
-%token WORD
+%token LWORD
 %token QUOTEDSTRING
 %token DELIMITEDSTRING
 
@@ -113,7 +113,7 @@ propsyms:
 	};
 
 propsym:
-	WORD { $$ = $<nsstr>1; }
+	LWORD { $$ = $<nsstr>1; }
 	| number { $$ = $<nsstr>1; };
 
 
@@ -138,7 +138,7 @@ nodelabel:
 
 optanchor: | ANCHORCENTER;
 nodename: LEFTPARENTHESIS nodeid optanchor RIGHTPARENTHESIS { $$ = $<nsstr>2; };
-nodeid: WORD { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
+nodeid: LWORD { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
 
 coords:
 	LEFTPARENTHESIS number COMMA number RIGHTPARENTHESIS
@@ -166,7 +166,7 @@ optedgenode:
 	}
 
 bbox_ignoreprops:
-	| LEFTBRACKET WORD WORD WORD WORD RIGHTBRACKET;
+	| LEFTBRACKET LWORD LWORD LWORD LWORD RIGHTBRACKET;
 
 boundingbox:
 	PATH bbox_ignoreprops coords RECTANGLE coords SEMICOLON

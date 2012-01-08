@@ -22,6 +22,10 @@
 
 #include <math.h>
 
+#ifndef M_PI
+#define M_PI 3.141592654
+#endif
+
 /*!
  @brief      Compute a bounding rectangle for two given points.
  @param      p1 a point.

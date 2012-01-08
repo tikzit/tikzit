@@ -18,10 +18,9 @@
 #import "CairoRenderContext.h"
 
 #import "cairo_helpers.h"
+#import "util.h"
 
 #import <pango/pangocairo.h>
-// for M_PI:
-#import <math.h>
 
 @implementation PangoTextLayout
 

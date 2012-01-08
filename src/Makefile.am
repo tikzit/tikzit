@@ -48,6 +48,7 @@ tikzit_SOURCES = linux/CairoRenderContext.m \
                  linux/cairo_helpers.m \
                  linux/clipboard.m \
                  linux/gtkhelpers.m \
+                 linux/mkdtemp.m \
                  linux/main.m \
                  common/BasicMapTable.m \
                  common/CircleShape.m \

@@ -67,7 +67,7 @@ at                             return AT;
 
 \\?[a-zA-Z<>\-\']+ { //'
 	yylval.nsstr=[NSString stringWithUTF8String:yytext];
-	return WORD;
+	return LWORD;
 }
 
 

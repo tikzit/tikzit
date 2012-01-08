@@ -80,16 +80,18 @@ AC_TYPE_INT16_T
 AC_TYPE_INT32_T
 AC_TYPE_INT8_T
 AC_TYPE_SIZE_T
-AC_HEADER_STDBOOL
 AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
+AC_HEADER_STDBOOL
+AC_HEADER_STAT
+AC_CHECK_HEADERS([stdint.h inttypes.h unistd.h sys/time.h time.h])
 
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([floor memset sqrt strdup])
+AC_CHECK_FUNCS([floor gettimeofday memset mkdtemp sqrt strdup])
 
 TZ_OBJC2_FEATURES
 AS_IF([test "x$tz_cv_objc_properties$tz_cv_objc_fast_enumeration$tz_cv_objc_optional_keyword" != "xyesyesyes"],

@@ -24,7 +24,6 @@
 #import "Edge.h"
 #import "util.h"
 
-
 @implementation Edge
 
 - (id)init {

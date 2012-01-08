@@ -17,6 +17,7 @@
 
 #import "NSFileManager+Glib.h"
 #import "TZFoundation.h"
+#import "mkdtemp.h"
 
 @implementation NSFileManager(Glib)
 
