@@ -1,10 +1,16 @@
+if WINDOWS
+sharedir = ../
+else
+sharedir = @datarootdir@/tikzit
+endif
+
 AM_OBJCFLAGS = @GNUSTEPOBJCFLAGS@ \
                @GTK_CFLAGS@ \
                @GDK_PIXBUF_CFLAGS@ \
                @POPPLER_CFLAGS@ \
                 -I common \
                 -I linux \
-                -DTIKZITSHAREDIR=\"@datarootdir@/tikzit\" \
+                -DTIKZITSHAREDIR=\"$(sharedir)\" \
                 -std=c99 \
                 -D_GNU_SOURCE
 LIBS = @GNUSTEPLIBS@ \
@@ -48,6 +54,7 @@ tikzit_SOURCES = linux/CairoRenderContext.m \
                  linux/cairo_helpers.m \
                  linux/clipboard.m \
                  linux/gtkhelpers.m \
+                 linux/logo.m \
                  linux/mkdtemp.m \
                  linux/main.m \
                  common/BasicMapTable.m \
@@ -92,6 +99,7 @@ tikzit.res: tikzit.rc
 	$(AM_V_GEN)windres $^ -O coff -o $@
 
 tikzit_LDADD = tikzit.res
+CLEANFILES = tikzit.res
 endif
 
 common/tikzlexer.m: common/tikzlexer.lm
@@ -101,6 +109,27 @@ common/tikzparser.m: common/tikzparser.ym
 	$(AM_V_GEN)$(YACC) --defines=common/tikzparser.h --output=$@ $^
 
 common/tikzparser.h: common/tikzparser.m
+
+linux/icondata.m: ../draw-ellipse.png ../draw-path.png ../select-rectangular.png ../transform-crop-and-resize.png ../transform-move.png
+	$(AM_V_GEN)gdk-pixbuf-csource --struct --static --raw --build-list \
+		draw_ellipse ../draw-ellipse.png \
+		draw_path ../draw-path.png \
+		select_rectangular ../select-rectangular.png \
+		transform_crop_and_resize ../transform-crop-and-resize.png \
+		transform_move ../transform-move.png \
+		> $@
+
+linux/logodata.m: ../share/icons/hicolor/16x16/apps/tikzit.png ../share/icons/hicolor/24x24/apps/tikzit.png ../share/icons/hicolor/48x48/apps/tikzit.png ../share/icons/hicolor/64x64/apps/tikzit.png ../share/icons/hicolor/128x128/apps/tikzit.png
+	$(AM_V_GEN)gdk-pixbuf-csource --struct --static --raw --build-list \
+		logo16 ../share/icons/hicolor/16x16/apps/tikzit.png \
+		logo24 ../share/icons/hicolor/24x24/apps/tikzit.png \
+		logo48 ../share/icons/hicolor/48x48/apps/tikzit.png \
+		logo64 ../share/icons/hicolor/64x64/apps/tikzit.png \
+		logo128 ../share/icons/hicolor/128x128/apps/tikzit.png \
+		> $@
+
+linux/Menu.m: linux/icondata.m
+linux/logo.m: linux/logodata.m
 
 EXTRA_DIST = linux/*.h common/*.h $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym
 MAINTAINERCLEANFILES = $(PARSERFILES)

@@ -41,6 +41,13 @@
 #define ACTION_GROUP_DOCUMENT            "TZDocument"
 #define ACTION_GROUP_DOCUMENTS_LIST_MENU "TZDocumentsList"
 
+#import "logo.h"
+#include <gdk-pixbuf/gdk-pixdata.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-sign"
+#import "icondata.m"
+#pragma GCC diagnostic pop
+
 
 // {{{ Callbacks
 
@@ -122,9 +129,10 @@ static void about_cb (GtkAction *action, MainWindow *window) {
     static const gchar copyright[] =
         "Copyright \xc2\xa9 2010-2011 Aleks Kissinger, Chris Heunen and Alex Merry.";
 
+    GdkPixbuf *logo = get_logo (LOGO_SIZE_128);
     gtk_show_about_dialog (GTK_WINDOW ([window gtkWindow]),
-                   "name", g_get_application_name (),
-                   "logo-icon-name", "tikzit",
+                   "program-name", PACKAGE_NAME,
+                   "logo", logo,
                    "authors", authors,
                    "translator-credits", _("translator-credits"),
                    "comments", _("A graph manipulation program for pgf/tikz graphs"),
@@ -134,6 +142,7 @@ static void about_cb (GtkAction *action, MainWindow *window) {
                    "version", PACKAGE_VERSION,
                    "website", "http://tikzit.sourceforge.net",
                    NULL);
+    g_object_unref (logo);
 }
 
 static void undo_cb (GtkAction *action, MainWindow *window) {
@@ -568,14 +577,14 @@ static guint n_toolbar_style_entries = G_N_ELEMENTS (toolbar_style_entries);
 
 
 static void
-set_tool_button_image (GtkToolButton *button, const gchar *image_file)
+set_tool_button_image (GtkToolButton *button, const GdkPixdata *image_data)
 {
     GtkWidget *image = NULL;
 
-    if (image_file) {
-        gchar *image_path = g_build_filename (TIKZITSHAREDIR, image_file, NULL);
-        image = gtk_image_new_from_file (image_path);
-        g_free (image_path);
+    if (image_data) {
+        GdkPixbuf *buf = gdk_pixbuf_from_pixdata (image_data, FALSE, NULL);
+        image = gtk_image_new_from_pixbuf (buf);
+        g_object_unref (buf);
     }
 
     gtk_tool_button_set_icon_widget (button, image);
@@ -670,11 +679,11 @@ create_recent_chooser_menu ()
     }
 
     /* Set custom images for tool mode buttons */
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/SelectMode")), "select-rectangular.png");
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/CreateNodeMode")), "draw-ellipse.png");
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/DrawEdgeMode")), "draw-path.png");
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/BoundingBoxMode")), "transform-crop-and-resize.png");
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/HandMode")), "transform-move.png");
+    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/SelectMode")), &select_rectangular);
+    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/CreateNodeMode")), &draw_ellipse);
+    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/DrawEdgeMode")), &draw_path);
+    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/BoundingBoxMode")), &transform_crop_and_resize);
+    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/HandMode")), &transform_move);
 
     /* Save the undo and redo actions so they can be updated */
     undoAction = gtk_action_group_get_action (documentActions, "Undo");

@@ -24,6 +24,7 @@
 #import "TZFoundation.h"
 #import <gtk/gtk.h>
 #import "clipboard.h"
+#import "logo.h"
 
 #import "MainWindow.h"
 #import "TikzGraphAssembler.h"
@@ -41,6 +42,20 @@ int main (int argc, char *argv[]) {
     gtk_init (&argc, &argv);
 
     NSAutoreleasePool *initPool = [[NSAutoreleasePool alloc] init];
+
+    GList *icon_list = NULL;
+    g_list_prepend (icon_list, get_logo(LOGO_SIZE_128));
+    g_list_prepend (icon_list, get_logo(LOGO_SIZE_64));
+    g_list_prepend (icon_list, get_logo(LOGO_SIZE_48));
+    //g_list_prepend (icon_list, get_logo(LOGO_SIZE_32));
+    g_list_prepend (icon_list, get_logo(LOGO_SIZE_24));
+    g_list_prepend (icon_list, get_logo(LOGO_SIZE_16));
+    gtk_window_set_default_icon_list (icon_list);
+    GList *list_head = icon_list;
+    while (list_head) {
+        g_object_unref ((GObject*)list_head->data);
+        list_head = list_head->next;
+    }
 
     clipboard_init();
     [TikzGraphAssembler setup];
