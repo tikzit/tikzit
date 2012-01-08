@@ -442,7 +442,8 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
     if (preambles != nil) {
         NSString *preamblesDir = [[SupportDir userSupportDir] stringByAppendingPathComponent:@"preambles"];
-        [[NSFileManager defaultManager] createDirectoryAtPath:preamblesDir withIntermediateDirectories:YES attributes:nil error:NULL];
+        // NSFileManager is slightly dodgy on Windows
+	g_mkdir_with_parents ([preamblesDir UTF8String], 700);
         [preambles storeToDirectory:preamblesDir];
         [configFile setStringEntry:@"selectedPreamble" inGroup:@"Preambles" value:[preambles selectedPreambleName]];
     }

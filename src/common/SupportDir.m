@@ -47,11 +47,17 @@
 }
 
 + (void)createUserSupportDir {
+#ifdef __APPLE__
 	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSError *error = nil;
 	[fileManager createDirectoryAtPath:[SupportDir userSupportDir]
 	       withIntermediateDirectories:YES
 	                        attributes:nil
 	                             error:NULL];
+#else
+	// NSFileManager is slightly dodgy on Windows
+	g_mkdir_with_parents ([[SupportDir userSupportDir] UTF8String], 700);
+#endif
 }
 
 @end
