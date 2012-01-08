@@ -43,6 +43,7 @@ int main (int argc, char *argv[]) {
 
     NSAutoreleasePool *initPool = [[NSAutoreleasePool alloc] init];
 
+#ifndef WINDOWS
     GList *icon_list = NULL;
     g_list_prepend (icon_list, get_logo(LOGO_SIZE_128));
     g_list_prepend (icon_list, get_logo(LOGO_SIZE_64));
@@ -56,6 +57,7 @@ int main (int argc, char *argv[]) {
         g_object_unref ((GObject*)list_head->data);
         list_head = list_head->next;
     }
+#endif
 
     clipboard_init();
     [TikzGraphAssembler setup];
