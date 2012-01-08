@@ -97,4 +97,24 @@ TZ_OBJC2_FEATURES
 AS_IF([test "x$tz_cv_objc_properties$tz_cv_objc_fast_enumeration$tz_cv_objc_optional_keyword" != "xyesyesyes"],
   [AC_MSG_ERROR([Your Objective C compiler does not support the required Objective C 2 features])])
 
+dnl ----------------------------------------------------------------------------
+dnl
+dnl  platform-specific stuff.
+
+AC_CANONICAL_HOST
+have_msw="no"
+case $host_os in
+
+   *mingw32*)
+     have_msw="yes"
+     OBJCFLAGS="$OBJCFLAGS -mwindows"
+     AC_SUBST([WINDOWS])
+     AC_SUBST([WIN32])
+     AC_SUBST([_WIN32])
+     ;;
+
+esac
+
+AM_CONDITIONAL([WINDOWS],[test "x$have_msw" = "xyes"])
+
 AC_OUTPUT

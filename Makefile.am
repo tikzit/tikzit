@@ -6,5 +6,9 @@ nobase_dist_app_DATA = \
 	select-rectangular.png \
 	transform-crop-and-resize.png \
 	transform-move.png \
-	tikzit48x48.png \
 	shapes/*.tikz
+
+if WINDOWS
+else
+nobase_dist_app_DATA += tikzit48x48.png
+endif

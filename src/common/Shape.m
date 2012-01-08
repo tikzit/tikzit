@@ -85,7 +85,6 @@ NSDictionary *shapeDictionary = nil;
 		for (NSString *f in files) {
 			if ([f hasSuffix:@".tikz"]) {
 				nm = [f substringToIndex:[f length]-5];
-				NSLog(@"found: %@", nm);
 				TikzShape *sh =
                   [[TikzShape alloc] initWithTikzFile:
                    [shapeDir stringByAppendingPathComponent:f]];
@@ -95,8 +94,6 @@ NSDictionary *shapeDictionary = nil;
 				}
 			}
 		}
-	} else {
-		NSLog(@"shape directory \"%@\" not found", shapeDir);
 	}
 }
 

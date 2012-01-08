@@ -567,11 +567,13 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     g_object_ref_sink (mainWindow);
     gtk_window_set_title (mainWindow, "TikZiT");
     gtk_window_set_default_size (mainWindow, 700, 400);
+#ifndef WINDOWS
     GdkPixbuf *icon = gdk_pixbuf_new_from_file (TIKZITSHAREDIR "/tikzit48x48.png", NULL);
     if (icon) {
         gtk_window_set_icon (mainWindow, icon);
         g_object_unref (icon);
     }
+#endif
 
     GtkBox *mainLayout = GTK_BOX (gtk_vbox_new (FALSE, 0));
     gtk_widget_show (GTK_WIDGET (mainLayout));

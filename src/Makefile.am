@@ -87,6 +87,13 @@ tikzit_SOURCES += \
                  linux/PreviewWindow.m
 endif
 
+if WINDOWS
+tikzit.res: tikzit.rc
+	$(AM_V_GEN)windres $^ -O coff -o $@
+
+tikzit_LDADD = tikzit.res
+endif
+
 common/tikzlexer.m: common/tikzlexer.lm
 	$(AM_V_GEN)$(LEX) -o $@ $^
 
