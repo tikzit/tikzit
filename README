@@ -1,8 +1,0 @@
-TikZit is a cross-platform application that allows the creation and modification of TeX diagrams written using the pgf/TikZ macro library. It is especially geared toward rapidly creating "dot"-diagrams for use in academic papers.
-
-For more info, see http://tikzit.sf.net
-
-On OS/X, the Cocoa framework is used.
-
-On other platforms, GTK+ and GNUstep are used.
-
