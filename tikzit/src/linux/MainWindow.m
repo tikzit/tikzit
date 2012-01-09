@@ -27,9 +27,9 @@
 #import "GraphRenderer.h"
 #import "Menu.h"
 #import "PreambleEditor.h"
+#ifdef HAVE_POPPLER
 #import "Preambles.h"
 #import "Preambles+Storage.h"
-#ifdef HAVE_POPPLER
 #import "PreviewWindow.h"
 #endif
 #import "PropertyPane.h"
@@ -122,6 +122,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
     if (self) {
         document = nil;
+        preambles = nil;
         preambleWindow = nil;
         previewWindow = nil;
         suppressTikzUpdates = NO;
@@ -339,11 +340,13 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 }
 
 - (void) editPreambles {
+#ifdef HAVE_POPPLER
     if (preambleWindow == nil) {
         preambleWindow = [[PreambleEditor alloc] initWithPreambles:preambles];
         [preambleWindow setParentWindow:mainWindow];
     }
     [preambleWindow show];
+#endif
 }
 
 - (void) showPreview {
@@ -440,6 +443,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 - (void) saveConfiguration {
     NSError *error = nil;
 
+#ifdef HAVE_POPPLER
     if (preambles != nil) {
         NSString *preamblesDir = [[SupportDir userSupportDir] stringByAppendingPathComponent:@"preambles"];
         // NSFileManager is slightly dodgy on Windows
@@ -447,6 +451,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         [preambles storeToDirectory:preamblesDir];
         [configFile setStringEntry:@"selectedPreamble" inGroup:@"Preambles" value:[preambles selectedPreambleName]];
     }
+#endif
 
     [styleManager saveStylesUsingConfigurationName:@"styles"];
     [propertyPane saveUiStateToConfig:configFile group:@"PropertyPane"];
@@ -553,6 +558,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
 // must happen after _loadStyles
 - (void) _loadPreambles {
+#ifdef HAVE_POPPLER
     NSString *preamblesDir = [[SupportDir userSupportDir] stringByAppendingPathComponent:@"preambles"];
     preambles = [[Preambles alloc] initFromDirectory:preamblesDir];
     [preambles setStyleManager:styleManager];
@@ -560,6 +566,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     if (selectedPreamble != nil) {
         [preambles setSelectedPreambleName:selectedPreamble];
     }
+#endif
 }
 
 - (void) _loadUi {

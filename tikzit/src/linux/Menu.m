@@ -224,11 +224,19 @@ static void flip_vert_cb (GtkAction *action, MainWindow *window) {
     [pool drain];
 }
 
+#ifdef HAVE_POPPLER
 static void show_preamble_cb (GtkAction *action, MainWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window editPreambles];
     [pool drain];
 }
+
+static void show_preview_cb (GtkAction *action, MainWindow *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [window showPreview];
+    [pool drain];
+}
+#endif
 
 static void zoom_in_cb (GtkAction *action, MainWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -247,14 +255,6 @@ static void zoom_reset_cb (GtkAction *action, MainWindow *window) {
     [window zoomReset];
     [pool drain];
 }
-
-#ifdef HAVE_POPPLER
-static void show_preview_cb (GtkAction *action, MainWindow *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window showPreview];
-    [pool drain];
-}
-#endif
 
 static void input_mode_change_cb (GtkRadioAction *action, GtkRadioAction *current, MainWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -357,8 +357,8 @@ static const gchar ui_info[] =
 "      <menuitem action='ToolbarVisible'/>"
 "      <menuitem action='StatusbarVisible'/>"
 */
-"      <menuitem action='ShowPreamble'/>"
 #ifdef HAVE_POPPLER
+"      <menuitem action='ShowPreamble'/>"
 "      <menuitem action='ShowPreview'/>"
 #endif
 "      <menu action='Zoom'>"
@@ -439,8 +439,10 @@ static GtkActionEntry static_entries[] = {
     /* ViewMenu */
     { "ToolbarStyle", NULL, N_("_Toolbar style") },
 
+#ifdef HAVE_POPPLER
     { "ShowPreamble", NULL, N_("_Edit Preambles..."), NULL,
       N_("Edit the preambles used to generate the preview"), G_CALLBACK (show_preamble_cb) },
+#endif
 
     { "Zoom", NULL, N_("_Zoom") },
 

@@ -42,8 +42,6 @@ tikzit_SOURCES = linux/CairoRenderContext.m \
                  linux/NSError+Glib.m \
                  linux/NSFileManager+Glib.m \
                  linux/NSString+Glib.m \
-                 linux/PreambleEditor.m \
-                 linux/Preambles+Storage.m \
                  linux/PropertyPane.m \
                  linux/PropertyListEditor.m \
                  linux/RecentManager.m \
@@ -72,7 +70,6 @@ tikzit_SOURCES = linux/CairoRenderContext.m \
                  common/NSFileManager+Utils.m \
                  common/NSString+LatexConstants.m \
                  common/PickSupport.m \
-                 common/Preambles.m \
                  common/PropertyHolder.m \
                  common/GraphElementProperty.m \
                  common/RColor.m \
@@ -90,6 +87,9 @@ tikzit_SOURCES = linux/CairoRenderContext.m \
 
 if HAVE_POPPLER
 tikzit_SOURCES += \
+                 common/Preambles.m \
+                 linux/PreambleEditor.m \
+                 linux/Preambles+Storage.m \
                  linux/PreviewRenderer.m \
                  linux/PreviewWindow.m
 endif
