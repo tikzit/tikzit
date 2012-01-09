@@ -1,0 +1,24 @@
+1 VERSIONINFO
+FILEVERSION     0,7,0,0
+PRODUCTVERSION  0,7,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904E4"
+    BEGIN
+      VALUE "FileDescription", "A graph editor for LaTeX"
+      VALUE "FileVersion", "1.0"
+      VALUE "InternalName", "tikzit"
+      VALUE "LegalCopyright", "Aleks Kissinger, Alex Merry, Chris Heunen"
+      VALUE "OriginalFilename", "tikzit.exe"
+      VALUE "ProductName", "TikZiT"
+      VALUE "ProductVersion", "0.7"
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x809, 1252
+  END
+END
+id ICON "../tikzit.ico"

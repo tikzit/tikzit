@@ -1,0 +1,98 @@
+Notes on how to make a release
+==============================
+
+Updating doc files
+------------------
+
+Put all the user-visible changes since the last release into NEWS.
+
+Make sure the dependency requirements in INSTALL are correct.
+
+
+
+Making the source tarballs
+--------------------------
+
+The version should be set in configure.ac (in AC_INIT)
+and the package should be re-configured
+(run ./configure).
+
+Then run `make dist` to create the source tarball in tar.gz format, and
+`make dist-bzip2` to get it in tar.bz2 format.
+
+
+
+Uploading the source
+--------------------
+
+Update docs/sourceforge/README.mkd
+
+Log into sourceforge.net, go to
+https://sourceforge.net/projects/tikzit/files/
+
+Create a folder called tikzit-[version].
+
+Upload README.mkd.
+
+Upload the tar.bz2 and tar.gz files.
+
+Set the tar.bz2 file as default for everything except windows and mac
+(click the (i) symbol on the right for that file to do this).
+
+
+
+Updating the website
+--------------------
+
+Edit docs/web/link.php, and update the versions.
+
+sftp to
+  [sf-username],tikzit@web.sourceforge.net
+
+Upload link.php into htdocs.
+
+
+
+Updating the packages
+---------------------
+
+Contact Gard Spreemann about the new version by sending him a message
+on Launchpad (https://launchpad.net/~gspreemann).
+
+Update tikzit.spec (the version, the changelog and the dependencies).
+
+Test the spec file:
+- if you don't have ~/rpmbuild, run rpmdev-setuptree
+- copy the tar.bz2 file into ~/rpmbuild/SOURCES
+- copy tikzit.spec into ~/rpmbuild/SPECS
+- cd into ~/rpmbuild/SPECS
+- run `rpmbuild -ba tikzit.spec`
+- run `rpmlint ..` and check the warnings (there will be some that are
+  not important)
+
+Update the OBS packages:
+- https://build.opensuse.org/package/show?package=tikzit&project=home%3Arandomguy3
+- Upload the tar.bz2 file and the tikzit.spec file.
+- Wait for the build to finish
+
+Update the AUR package:
+- http://aur.archlinux.org/packages.php?ID=37119
+
+
+TODO: find out how the Debian build system works
+
+
+Publishing an OSX Update
+-----------------------------------------
+In OSX, the steps to publish an update are as follows. Firstly all updates are signed, so you need the private key 'tikzit_dsa_priv.pem' in the root of your working directory. This is not in the repository (for obvious reasons), so ask Aleks for a copy. Also, make sure you have ruby in your $PATH to do the actual signing.
+
+1. Update the SVN and note the revision number
+2. In TikZiT-Info.plist, set the Bundle Version key to (MAJOR).(MINOR).(SVN REVISION + 1)
+3. In the TikZiT working directory, run scripts/prepare_release.sh
+4. Copy and paste the XML output into docs/web/appcast/tikzit.xml
+5. Update the release notes in docs/web/appcast/rnotes.html
+6. Use SFTP to upload the changed files into htdocs/appcast
+7. Commit the SVN
+
+
+

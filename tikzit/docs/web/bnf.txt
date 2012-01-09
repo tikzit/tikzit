@@ -1,0 +1,31 @@
+<tikzpicture> ::= "\begin{tikzpicture}" <properties>?
+                  <expression>*
+                  "\end{tikzpicture}"
+
+<expression>   ::= <ignore> | <node> | <edge> | <bounding box>
+
+<ignore>       ::= "\begin{pgfonlayer}" DELIMITED_STRING |
+                   "\end{pgfonlayer}"
+
+<properties>   ::= "[" <property> ("," <property>)* "]"
+
+<property>     ::= <symbol>* "=" <value> | <symbol>*
+
+<symbol>       ::= WORD | number
+
+<value>        ::= <symbol>* | QUOTED_STRING
+
+<node>         ::= "\node" <properties>? <node name>
+                      "at" <coords> DELIMITED_STRING ";"
+
+<node name>    ::= "(" (NATURAL_NUMBER | WORD) (".center")? ")"
+
+<coords>       ::= "(" NUMBER "," NUMBER ")"
+
+<edge>         ::= "\draw" <properties>? <node name>
+                      "to" <edge node>? (<node name> | "()") ";"
+
+<edge node>    ::= "node" <properties>? DELIMITED_STRING
+
+<bounding box> ::= "\path" "[use as bounding box]" <coords>
+                      "rectangle" <coords> ";"

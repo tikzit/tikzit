@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+	\path [use as bounding box] (-2,-2) rectangle (2,2);
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (-1.5, 1) {};
+		\node [style=none] (1) at (-0.5, 1) {};
+		\node [style=none] (2) at (0.5, 1) {};
+		\node [style=none] (3) at (1.5, 1) {};
+		\node [style=none] (4) at (-0.5, -1) {};
+		\node [style=none] (5) at (0.5, -1) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [in=-90, out=90, looseness=0.75] (5.center) to (3.center);
+		\draw [in=90, out=90, looseness=0.75] (4.center) to (5.center);
+		\draw [in=270, out=-90, looseness=0.75] (1.center) to (0.center);
+		\draw [in=270, out=-90, looseness=0.75] (3.center) to (2.center);
+		\draw [in=-270, out=-90, looseness=0.75] (0.center) to (4.center);
+		\draw [in=-90, out=-90, looseness=1.75] (2.center) to (1.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

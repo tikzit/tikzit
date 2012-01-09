@@ -1,0 +1,1089 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DDD582C0DA1D0D100B32029 /* TikzDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* TikzDocument.xib */; };
+		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
+		5504C82E11D23595002A1478 /* common.m in Sources */ = {isa = PBXBuildFile; fileRef = 5504C82A11D23595002A1478 /* common.m */; };
+		5504C82F11D23595002A1478 /* parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 5504C82B11D23595002A1478 /* parser.m */; };
+		5504C83011D23595002A1478 /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 5504C82D11D23595002A1478 /* test.m */; };
+		5504C83211D23685002A1478 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5504C83111D23685002A1478 /* main.m */; };
+		5504C84F11D23945002A1478 /* ColorRGB.m in Sources */ = {isa = PBXBuildFile; fileRef = 559EFB6711CB88E300D020F4 /* ColorRGB.m */; };
+		5504C93F11D39422002A1478 /* osx.m in Sources */ = {isa = PBXBuildFile; fileRef = 5504C93E11D39422002A1478 /* osx.m */; };
+		552202C4135F15FD007EA086 /* MultiField.m in Sources */ = {isa = PBXBuildFile; fileRef = 552202C3135F15FD007EA086 /* MultiField.m */; };
+		552202C5135F15FD007EA086 /* MultiField.m in Sources */ = {isa = PBXBuildFile; fileRef = 552202C3135F15FD007EA086 /* MultiField.m */; };
+		55391AF613D324FE007DBE71 /* Preview.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55391AF513D324FE007DBE71 /* Preview.xib */; };
+		55391AF813D3250F007DBE71 /* Preamble.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55391AF713D3250F007DBE71 /* Preamble.xib */; };
+		55391B0213D32608007DBE71 /* PropertyInspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55391B0013D32608007DBE71 /* PropertyInspector.xib */; };
+		55391B0A13D32765007DBE71 /* PropertyInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55391B0913D32765007DBE71 /* PropertyInspectorController.m */; };
+		55397C7914498C22006942FB /* EdgeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7814498C22006942FB /* EdgeStyle.m */; };
+		55397C7C144990EA006942FB /* EdgeStyle+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7B144990EA006942FB /* EdgeStyle+Coder.m */; };
+		55397C7F144999C4006942FB /* PropertyHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7E144999C4006942FB /* PropertyHolder.m */; };
+		55397C811449A877006942FB /* ED_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C801449A877006942FB /* ED_arrow.png */; };
+		55397C831449A8F1006942FB /* ED_tick.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C821449A8F1006942FB /* ED_tick.png */; };
+		55397C851449A9BF006942FB /* ED_none.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C841449A9BF006942FB /* ED_none.png */; };
+		55397C8A1449AB91006942FB /* AH_none.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C871449AB91006942FB /* AH_none.png */; };
+		55397C8B1449AB91006942FB /* AH_plain_tail.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C881449AB91006942FB /* AH_plain_tail.png */; };
+		55397C8D1449ABFC006942FB /* AH_latex_tail.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C8C1449ABFC006942FB /* AH_latex_tail.png */; };
+		55397C901449AC7C006942FB /* AH_latex_head.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C8E1449AC7C006942FB /* AH_latex_head.png */; };
+		55397C911449AC7C006942FB /* AH_plain_head.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C8F1449AC7C006942FB /* AH_plain_head.png */; };
+		553A4C5A144ED3D500AA6FAC /* NilToEmptyStringTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */; };
+		553A9CED1186191C001E0FE9 /* BasicMapTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 553A9CEC1186191C001E0FE9 /* BasicMapTable.m */; };
+		55432E061444BF2D00401BB3 /* GraphElementProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 55432E051444BF2D00401BB3 /* GraphElementProperty.m */; };
+		555B30F911D8BE3300CAECF5 /* emblem-important.png in Resources */ = {isa = PBXBuildFile; fileRef = 555B30F811D8BE3300CAECF5 /* emblem-important.png */; };
+		555B313511D8C6DA00CAECF5 /* color.m in Sources */ = {isa = PBXBuildFile; fileRef = 555B313411D8C6DA00CAECF5 /* color.m */; };
+		555ECE9B1378A3AA0052DB71 /* CALayer+DrawLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 555ECE9A1378A3AA0052DB71 /* CALayer+DrawLabel.m */; };
+		55652DF913E1F2030023F4C6 /* SupportDir.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652DF813E1F2030023F4C6 /* SupportDir.m */; };
+		55652E3B13E1FAEE0023F4C6 /* CircleShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3413E1FAED0023F4C6 /* CircleShape.m */; };
+		55652E3C13E1FAEE0023F4C6 /* RectangleShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3613E1FAED0023F4C6 /* RectangleShape.m */; };
+		55652E3D13E1FAEE0023F4C6 /* RegularPolyShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3813E1FAED0023F4C6 /* RegularPolyShape.m */; };
+		55652E3E13E1FAEE0023F4C6 /* TikzShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3A13E1FAEE0023F4C6 /* TikzShape.m */; };
+		55652E4113E1FB0A0023F4C6 /* Shape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E4013E1FB0A0023F4C6 /* Shape.m */; };
+		55652E5613E1FC660023F4C6 /* cap.tikz in Copy Shapes */ = {isa = PBXBuildFile; fileRef = 55652E5113E1FC660023F4C6 /* cap.tikz */; };
+		55652E5713E1FC660023F4C6 /* copants.tikz in Copy Shapes */ = {isa = PBXBuildFile; fileRef = 55652E5213E1FC660023F4C6 /* copants.tikz */; };
+		55652E5813E1FC660023F4C6 /* cup.tikz in Copy Shapes */ = {isa = PBXBuildFile; fileRef = 55652E5313E1FC660023F4C6 /* cup.tikz */; };
+		55652E5913E1FC660023F4C6 /* oval.tikz in Copy Shapes */ = {isa = PBXBuildFile; fileRef = 55652E5413E1FC660023F4C6 /* oval.tikz */; };
+		55652E5A13E1FC660023F4C6 /* pants.tikz in Copy Shapes */ = {isa = PBXBuildFile; fileRef = 55652E5513E1FC660023F4C6 /* pants.tikz */; };
+		556979431168747B007E5703 /* StylePalette.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556979421168747B007E5703 /* StylePalette.xib */; };
+		5573B8BA11D9FC8D00B5DC5D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5573B8B911D9FC8D00B5DC5D /* Quartz.framework */; };
+		5573B8C211D9FD3200B5DC5D /* PreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5573B8C111D9FD3200B5DC5D /* PreviewController.m */; };
+		5573B90F11DA231A00B5DC5D /* PreambleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5573B90E11DA231A00B5DC5D /* PreambleController.m */; };
+		5573B92111DA259C00B5DC5D /* text-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 5573B92011DA259C00B5DC5D /* text-x-generic.png */; };
+		5573B92511DA273400B5DC5D /* format-indent-less.png in Resources */ = {isa = PBXBuildFile; fileRef = 5573B92411DA273400B5DC5D /* format-indent-less.png */; };
+		5573B92911DA292F00B5DC5D /* Preambles.m in Sources */ = {isa = PBXBuildFile; fileRef = 5573B92811DA292F00B5DC5D /* Preambles.m */; };
+		5573B98811DA377C00B5DC5D /* text-x-script.png in Resources */ = {isa = PBXBuildFile; fileRef = 5573B98711DA377C00B5DC5D /* text-x-script.png */; };
+		5573BDCB11DB4D2600B5DC5D /* Preambles+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5573BDCA11DB4D2600B5DC5D /* Preambles+Coder.m */; };
+		5585E5C2117F681800124513 /* NodeStyle+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5585E5C1117F681800124513 /* NodeStyle+Coder.m */; };
+		5589A9AF11C500060064D310 /* tikzlexer.lm in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AA11C500060064D310 /* tikzlexer.lm */; };
+		5589A9B011C500060064D310 /* tikzparser.ym in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AB11C500060064D310 /* tikzparser.ym */; };
+		5589A9FF11C51E780064D310 /* TikzGraphAssembler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */; };
+		5589AA6C11C542D30064D310 /* TikzGraphAssembler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */; };
+		5589AA6D11C542D30064D310 /* tikzlexer.lm in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AA11C500060064D310 /* tikzlexer.lm */; };
+		5589AA6E11C542D30064D310 /* tikzparser.ym in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AB11C500060064D310 /* tikzparser.ym */; };
+		5589AA7011C542E60064D310 /* BasicMapTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 553A9CEC1186191C001E0FE9 /* BasicMapTable.m */; };
+		5589AA7211C542E60064D310 /* Edge.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BA117B031C009863B2 /* Edge.m */; };
+		5589AA7611C542E60064D310 /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BC117B031C009863B2 /* Graph.m */; };
+		5589AA7811C542E60064D310 /* GraphChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BE117B031C009863B2 /* GraphChange.m */; };
+		5589AA7A11C542E60064D310 /* GraphElementData.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C0117B031C009863B2 /* GraphElementData.m */; };
+		5589AA7C11C542E60064D310 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C2117B031C009863B2 /* Node.m */; };
+		5589AA8011C542E60064D310 /* NodeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C4117B031C009863B2 /* NodeStyle.m */; };
+		5589AA8511C543500064D310 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18CD117B03DD009863B2 /* util.m */; };
+		5589AD4411C633EE0064D310 /* SelectBoxLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589AD4311C633EE0064D310 /* SelectBoxLayer.m */; };
+		558F18C5117B031C009863B2 /* Edge.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BA117B031C009863B2 /* Edge.m */; };
+		558F18C6117B031C009863B2 /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BC117B031C009863B2 /* Graph.m */; };
+		558F18C7117B031C009863B2 /* GraphChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BE117B031C009863B2 /* GraphChange.m */; };
+		558F18C8117B031C009863B2 /* GraphElementData.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C0117B031C009863B2 /* GraphElementData.m */; };
+		558F18C9117B031C009863B2 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C2117B031C009863B2 /* Node.m */; };
+		558F18CA117B031C009863B2 /* NodeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C4117B031C009863B2 /* NodeStyle.m */; };
+		558F18CE117B03DD009863B2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18CB117B03DD009863B2 /* main.m */; };
+		558F18CF117B03DD009863B2 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18CD117B03DD009863B2 /* util.m */; };
+		558F18F7117B043C009863B2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18DA117B043B009863B2 /* AppDelegate.m */; };
+		558F18F9117B043C009863B2 /* EdgeControlLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18DE117B043B009863B2 /* EdgeControlLayer.m */; };
+		558F18FA117B043C009863B2 /* GraphicsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18E0117B043B009863B2 /* GraphicsView.m */; };
+		558F18FB117B043C009863B2 /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18E2117B043B009863B2 /* Grid.m */; };
+		558F18FC117B043C009863B2 /* NodeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18E4117B043B009863B2 /* NodeLayer.m */; };
+		558F18FD117B043C009863B2 /* NodeSelectionLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18E6117B043B009863B2 /* NodeSelectionLayer.m */; };
+		558F18FF117B043C009863B2 /* SelectableCollectionViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18EA117B043B009863B2 /* SelectableCollectionViewItem.m */; };
+		558F1900117B043C009863B2 /* SelectableNodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18EC117B043B009863B2 /* SelectableNodeView.m */; };
+		558F1901117B043C009863B2 /* StylePaletteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18EE117B043B009863B2 /* StylePaletteController.m */; };
+		558F1902117B043C009863B2 /* TikzDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18F0117B043B009863B2 /* TikzDocument.m */; };
+		558F1903117B043C009863B2 /* TikzSourceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18F2117B043B009863B2 /* TikzSourceController.m */; };
+		558F1904117B043C009863B2 /* ToolPaletteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18F4117B043B009863B2 /* ToolPaletteController.m */; };
+		55900AA1135FA918002DD28E /* MultiCombo.m in Sources */ = {isa = PBXBuildFile; fileRef = 55900AA0135FA918002DD28E /* MultiCombo.m */; };
+		55900AA2135FA918002DD28E /* MultiCombo.m in Sources */ = {isa = PBXBuildFile; fileRef = 55900AA0135FA918002DD28E /* MultiCombo.m */; };
+		55900AE3135FB305002DD28E /* emblem-unreadable-grey.png in Resources */ = {isa = PBXBuildFile; fileRef = 55900AE2135FB305002DD28E /* emblem-unreadable-grey.png */; };
+		559EFA4811C7D49800D020F4 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 559EFA4711C7D49800D020F4 /* Sparkle.framework */; };
+		559EFA4E11C7D4BD00D020F4 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 559EFA4711C7D49800D020F4 /* Sparkle.framework */; };
+		559EFA5711C7D95F00D020F4 /* tikzit_dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 559EFA5611C7D95F00D020F4 /* tikzit_dsa_pub.pem */; };
+		559EFB6811CB88E300D020F4 /* ColorRGB.m in Sources */ = {isa = PBXBuildFile; fileRef = 559EFB6711CB88E300D020F4 /* ColorRGB.m */; };
+		55CA98D512EF8FCE008F0368 /* SFBInspectors.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
+		55CA98DA12EF9098008F0368 /* SFBInspectors.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
+		55CA98DD12EF910F008F0368 /* SFBInspectors.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
+		55CA997212F08281008F0368 /* TikzWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CA997112F08281008F0368 /* TikzWindowController.m */; };
+		55CA9AC912F831E5008F0368 /* RColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CA9AC812F831E5008F0368 /* RColor.m */; };
+		55CA9ACA12F831E5008F0368 /* RColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CA9AC812F831E5008F0368 /* RColor.m */; };
+		55D2E0B21186ED950060B4EC /* Graph+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2E0B11186ED950060B4EC /* Graph+Coder.m */; };
+		55D945721165904F0044178C /* tikzitdoc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55D945701165904F0044178C /* tikzitdoc.icns */; };
+		55D945731165904F0044178C /* tikzit.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55D945711165904F0044178C /* tikzit.icns */; };
+		55D949141165D8870044178C /* draw-ellipse.png in Resources */ = {isa = PBXBuildFile; fileRef = 55D949111165D8870044178C /* draw-ellipse.png */; };
+		55D949151165D8870044178C /* draw-path.png in Resources */ = {isa = PBXBuildFile; fileRef = 55D949121165D8870044178C /* draw-path.png */; };
+		55D949161165D8870044178C /* select-rectangular.png in Resources */ = {isa = PBXBuildFile; fileRef = 55D949131165D8870044178C /* select-rectangular.png */; };
+		55E5E99E1215C8E300256F69 /* transform-crop-and-resize.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E5E99D1215C8E300256F69 /* transform-crop-and-resize.png */; };
+		55F9585C1181B09600F99434 /* PickSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F958591181B09600F99434 /* PickSupport.m */; };
+		55F9585D1181B09600F99434 /* Transformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F9585B1181B09600F99434 /* Transformer.m */; };
+		55F9E04511FF54F000F5659E /* NSString+LatexConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F9E04411FF54F000F5659E /* NSString+LatexConstants.m */; };
+		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
+		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
+		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5504C91A11D36CD5002A1478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
+			remoteInfo = TikZiT;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		55652E6613E1FD080023F4C6 /* Copy Shapes */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = shapes;
+			dstSubfolderSpec = 7;
+			files = (
+				55652E5613E1FC660023F4C6 /* cap.tikz in Copy Shapes */,
+				55652E5713E1FC660023F4C6 /* copants.tikz in Copy Shapes */,
+				55652E5813E1FC660023F4C6 /* cup.tikz in Copy Shapes */,
+				55652E5913E1FC660023F4C6 /* oval.tikz in Copy Shapes */,
+				55652E5A13E1FC660023F4C6 /* pants.tikz in Copy Shapes */,
+			);
+			name = "Copy Shapes";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		559EFA5511C7D4DD00D020F4 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				55CA98DA12EF9098008F0368 /* SFBInspectors.framework in Copy Frameworks */,
+				559EFA4E11C7D4BD00D020F4 /* Sparkle.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FBA07B3F13500E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/TikzDocument.xib; sourceTree = "<group>"; };
+		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		2564AD2C0F5327BB00F57823 /* TikZiT_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TikZiT_Prefix.pch; sourceTree = "<group>"; };
+		2A37F4BAFDCFA73011CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
+		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		5504C82A11D23595002A1478 /* common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = common.m; path = src/common/test/common.m; sourceTree = "<group>"; };
+		5504C82B11D23595002A1478 /* parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = parser.m; path = src/common/test/parser.m; sourceTree = "<group>"; };
+		5504C82C11D23595002A1478 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = src/common/test/test.h; sourceTree = "<group>"; };
+		5504C82D11D23595002A1478 /* test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = test.m; path = src/common/test/test.m; sourceTree = "<group>"; };
+		5504C83111D23685002A1478 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = src/osx/test/main.m; sourceTree = "<group>"; };
+		5504C83711D237F5002A1478 /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
+		5504C93E11D39422002A1478 /* osx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = osx.m; path = src/osx/test/osx.m; sourceTree = "<group>"; };
+		552202C2135F15FD007EA086 /* MultiField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiField.h; path = src/osx/MultiField.h; sourceTree = "<group>"; };
+		552202C3135F15FD007EA086 /* MultiField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MultiField.m; path = src/osx/MultiField.m; sourceTree = "<group>"; };
+		55391B0113D32608007DBE71 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PropertyInspector.xib; sourceTree = "<group>"; };
+		55391B0813D32765007DBE71 /* PropertyInspectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertyInspectorController.h; path = src/osx/PropertyInspectorController.h; sourceTree = "<group>"; };
+		55391B0913D32765007DBE71 /* PropertyInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PropertyInspectorController.m; path = src/osx/PropertyInspectorController.m; sourceTree = "<group>"; };
+		55397C7714498C21006942FB /* EdgeStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdgeStyle.h; path = src/common/EdgeStyle.h; sourceTree = "<group>"; };
+		55397C7814498C22006942FB /* EdgeStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EdgeStyle.m; path = src/common/EdgeStyle.m; sourceTree = "<group>"; };
+		55397C7A144990EA006942FB /* EdgeStyle+Coder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "EdgeStyle+Coder.h"; path = "src/osx/EdgeStyle+Coder.h"; sourceTree = "<group>"; };
+		55397C7B144990EA006942FB /* EdgeStyle+Coder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "EdgeStyle+Coder.m"; path = "src/osx/EdgeStyle+Coder.m"; sourceTree = "<group>"; };
+		55397C7D144999C4006942FB /* PropertyHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertyHolder.h; path = src/common/PropertyHolder.h; sourceTree = "<group>"; };
+		55397C7E144999C4006942FB /* PropertyHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PropertyHolder.m; path = src/common/PropertyHolder.m; sourceTree = "<group>"; };
+		55397C801449A877006942FB /* ED_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ED_arrow.png; sourceTree = "<group>"; };
+		55397C821449A8F1006942FB /* ED_tick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ED_tick.png; sourceTree = "<group>"; };
+		55397C841449A9BF006942FB /* ED_none.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ED_none.png; sourceTree = "<group>"; };
+		55397C871449AB91006942FB /* AH_none.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AH_none.png; sourceTree = "<group>"; };
+		55397C881449AB91006942FB /* AH_plain_tail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AH_plain_tail.png; sourceTree = "<group>"; };
+		55397C8C1449ABFC006942FB /* AH_latex_tail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AH_latex_tail.png; sourceTree = "<group>"; };
+		55397C8E1449AC7C006942FB /* AH_latex_head.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AH_latex_head.png; sourceTree = "<group>"; };
+		55397C8F1449AC7C006942FB /* AH_plain_head.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AH_plain_head.png; sourceTree = "<group>"; };
+		553A4C58144ED3D500AA6FAC /* NilToEmptyStringTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NilToEmptyStringTransformer.h; path = src/osx/NilToEmptyStringTransformer.h; sourceTree = "<group>"; };
+		553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NilToEmptyStringTransformer.m; path = src/osx/NilToEmptyStringTransformer.m; sourceTree = "<group>"; };
+		553A9CEB1186191C001E0FE9 /* BasicMapTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasicMapTable.h; path = src/common/BasicMapTable.h; sourceTree = "<group>"; };
+		553A9CEC1186191C001E0FE9 /* BasicMapTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BasicMapTable.m; path = src/common/BasicMapTable.m; sourceTree = "<group>"; };
+		55432E041444BF2D00401BB3 /* GraphElementProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphElementProperty.h; path = src/common/GraphElementProperty.h; sourceTree = "<group>"; };
+		55432E051444BF2D00401BB3 /* GraphElementProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphElementProperty.m; path = src/common/GraphElementProperty.m; sourceTree = "<group>"; };
+		555B30F811D8BE3300CAECF5 /* emblem-important.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emblem-important.png"; sourceTree = "<group>"; };
+		555B313411D8C6DA00CAECF5 /* color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = color.m; path = src/common/test/color.m; sourceTree = "<group>"; };
+		555ECE991378A3AA0052DB71 /* CALayer+DrawLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+DrawLabel.h"; path = "src/osx/CALayer+DrawLabel.h"; sourceTree = "<group>"; };
+		555ECE9A1378A3AA0052DB71 /* CALayer+DrawLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+DrawLabel.m"; path = "src/osx/CALayer+DrawLabel.m"; sourceTree = "<group>"; };
+		555ECF361379E9F80052DB71 /* ShapeNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShapeNames.h; path = src/common/ShapeNames.h; sourceTree = "<group>"; };
+		55652DF713E1F2030023F4C6 /* SupportDir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SupportDir.h; path = src/common/SupportDir.h; sourceTree = "<group>"; };
+		55652DF813E1F2030023F4C6 /* SupportDir.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SupportDir.m; path = src/common/SupportDir.m; sourceTree = "<group>"; };
+		55652E3313E1FAED0023F4C6 /* CircleShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CircleShape.h; path = src/common/CircleShape.h; sourceTree = "<group>"; };
+		55652E3413E1FAED0023F4C6 /* CircleShape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircleShape.m; path = src/common/CircleShape.m; sourceTree = "<group>"; };
+		55652E3513E1FAED0023F4C6 /* RectangleShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RectangleShape.h; path = src/common/RectangleShape.h; sourceTree = "<group>"; };
+		55652E3613E1FAED0023F4C6 /* RectangleShape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RectangleShape.m; path = src/common/RectangleShape.m; sourceTree = "<group>"; };
+		55652E3713E1FAED0023F4C6 /* RegularPolyShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegularPolyShape.h; path = src/common/RegularPolyShape.h; sourceTree = "<group>"; };
+		55652E3813E1FAED0023F4C6 /* RegularPolyShape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegularPolyShape.m; path = src/common/RegularPolyShape.m; sourceTree = "<group>"; };
+		55652E3913E1FAEE0023F4C6 /* TikzShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TikzShape.h; path = src/common/TikzShape.h; sourceTree = "<group>"; };
+		55652E3A13E1FAEE0023F4C6 /* TikzShape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TikzShape.m; path = src/common/TikzShape.m; sourceTree = "<group>"; };
+		55652E3F13E1FB0A0023F4C6 /* Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shape.h; path = src/common/Shape.h; sourceTree = "<group>"; };
+		55652E4013E1FB0A0023F4C6 /* Shape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Shape.m; path = src/common/Shape.m; sourceTree = "<group>"; };
+		55652E5113E1FC660023F4C6 /* cap.tikz */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cap.tikz; sourceTree = "<group>"; };
+		55652E5213E1FC660023F4C6 /* copants.tikz */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = copants.tikz; sourceTree = "<group>"; };
+		55652E5313E1FC660023F4C6 /* cup.tikz */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cup.tikz; sourceTree = "<group>"; };
+		55652E5413E1FC660023F4C6 /* oval.tikz */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = oval.tikz; sourceTree = "<group>"; };
+		55652E5513E1FC660023F4C6 /* pants.tikz */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = pants.tikz; sourceTree = "<group>"; };
+		5573B8B911D9FC8D00B5DC5D /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		5573B8BD11D9FCD400B5DC5D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preview.xib; sourceTree = "<group>"; };
+		5573B8C011D9FD3200B5DC5D /* PreviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreviewController.h; path = src/osx/PreviewController.h; sourceTree = "<group>"; };
+		5573B8C111D9FD3200B5DC5D /* PreviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreviewController.m; path = src/osx/PreviewController.m; sourceTree = "<group>"; };
+		5573B90D11DA231A00B5DC5D /* PreambleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreambleController.h; path = src/osx/PreambleController.h; sourceTree = "<group>"; };
+		5573B90E11DA231A00B5DC5D /* PreambleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreambleController.m; path = src/osx/PreambleController.m; sourceTree = "<group>"; };
+		5573B91011DA233E00B5DC5D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Preamble.xib; sourceTree = "<group>"; };
+		5573B92011DA259C00B5DC5D /* text-x-generic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-x-generic.png"; sourceTree = "<group>"; };
+		5573B92411DA273400B5DC5D /* format-indent-less.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "format-indent-less.png"; sourceTree = "<group>"; };
+		5573B92711DA292F00B5DC5D /* Preambles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Preambles.h; path = src/common/Preambles.h; sourceTree = "<group>"; };
+		5573B92811DA292F00B5DC5D /* Preambles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Preambles.m; path = src/common/Preambles.m; sourceTree = "<group>"; };
+		5573B98711DA377C00B5DC5D /* text-x-script.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-x-script.png"; sourceTree = "<group>"; };
+		5573BDC911DB4D2600B5DC5D /* Preambles+Coder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Preambles+Coder.h"; path = "src/osx/Preambles+Coder.h"; sourceTree = "<group>"; };
+		5573BDCA11DB4D2600B5DC5D /* Preambles+Coder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Preambles+Coder.m"; path = "src/osx/Preambles+Coder.m"; sourceTree = "<group>"; };
+		5585E5C0117F681800124513 /* NodeStyle+Coder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NodeStyle+Coder.h"; path = "src/osx/NodeStyle+Coder.h"; sourceTree = "<group>"; };
+		5585E5C1117F681800124513 /* NodeStyle+Coder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NodeStyle+Coder.m"; path = "src/osx/NodeStyle+Coder.m"; sourceTree = "<group>"; };
+		5589A9AA11C500060064D310 /* tikzlexer.lm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; name = tikzlexer.lm; path = src/common/tikzlexer.lm; sourceTree = "<group>"; };
+		5589A9AB11C500060064D310 /* tikzparser.ym */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; name = tikzparser.ym; path = src/common/tikzparser.ym; sourceTree = "<group>"; };
+		5589A9FD11C51E780064D310 /* TikzGraphAssembler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TikzGraphAssembler.h; path = src/common/TikzGraphAssembler.h; sourceTree = "<group>"; };
+		5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TikzGraphAssembler.m; path = src/common/TikzGraphAssembler.m; sourceTree = "<group>"; };
+		5589AD4211C633EE0064D310 /* SelectBoxLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectBoxLayer.h; path = src/osx/SelectBoxLayer.h; sourceTree = "<group>"; };
+		5589AD4311C633EE0064D310 /* SelectBoxLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SelectBoxLayer.m; path = src/osx/SelectBoxLayer.m; sourceTree = "<group>"; };
+		558F18B9117B031C009863B2 /* Edge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Edge.h; path = src/common/Edge.h; sourceTree = "<group>"; };
+		558F18BA117B031C009863B2 /* Edge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Edge.m; path = src/common/Edge.m; sourceTree = "<group>"; };
+		558F18BB117B031C009863B2 /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Graph.h; path = src/common/Graph.h; sourceTree = "<group>"; };
+		558F18BC117B031C009863B2 /* Graph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Graph.m; path = src/common/Graph.m; sourceTree = "<group>"; };
+		558F18BD117B031C009863B2 /* GraphChange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphChange.h; path = src/common/GraphChange.h; sourceTree = "<group>"; };
+		558F18BE117B031C009863B2 /* GraphChange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphChange.m; path = src/common/GraphChange.m; sourceTree = "<group>"; };
+		558F18BF117B031C009863B2 /* GraphElementData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphElementData.h; path = src/common/GraphElementData.h; sourceTree = "<group>"; };
+		558F18C0117B031C009863B2 /* GraphElementData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphElementData.m; path = src/common/GraphElementData.m; sourceTree = "<group>"; };
+		558F18C1117B031C009863B2 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = src/common/Node.h; sourceTree = "<group>"; };
+		558F18C2117B031C009863B2 /* Node.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Node.m; path = src/common/Node.m; sourceTree = "<group>"; };
+		558F18C3117B031C009863B2 /* NodeStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeStyle.h; path = src/common/NodeStyle.h; sourceTree = "<group>"; };
+		558F18C4117B031C009863B2 /* NodeStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NodeStyle.m; path = src/common/NodeStyle.m; sourceTree = "<group>"; };
+		558F18CB117B03DD009863B2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = src/osx/main.m; sourceTree = "<group>"; };
+		558F18CC117B03DD009863B2 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = src/common/util.h; sourceTree = "<group>"; };
+		558F18CD117B03DD009863B2 /* util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = util.m; path = src/common/util.m; sourceTree = "<group>"; };
+		558F18D9117B043B009863B2 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = src/osx/AppDelegate.h; sourceTree = "<group>"; };
+		558F18DA117B043B009863B2 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = src/osx/AppDelegate.m; sourceTree = "<group>"; };
+		558F18DD117B043B009863B2 /* EdgeControlLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdgeControlLayer.h; path = src/osx/EdgeControlLayer.h; sourceTree = "<group>"; };
+		558F18DE117B043B009863B2 /* EdgeControlLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EdgeControlLayer.m; path = src/osx/EdgeControlLayer.m; sourceTree = "<group>"; };
+		558F18DF117B043B009863B2 /* GraphicsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphicsView.h; path = src/osx/GraphicsView.h; sourceTree = "<group>"; };
+		558F18E0117B043B009863B2 /* GraphicsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphicsView.m; path = src/osx/GraphicsView.m; sourceTree = "<group>"; };
+		558F18E1117B043B009863B2 /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Grid.h; path = src/osx/Grid.h; sourceTree = "<group>"; };
+		558F18E2117B043B009863B2 /* Grid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Grid.m; path = src/osx/Grid.m; sourceTree = "<group>"; };
+		558F18E3117B043B009863B2 /* NodeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeLayer.h; path = src/osx/NodeLayer.h; sourceTree = "<group>"; };
+		558F18E4117B043B009863B2 /* NodeLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NodeLayer.m; path = src/osx/NodeLayer.m; sourceTree = "<group>"; };
+		558F18E5117B043B009863B2 /* NodeSelectionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeSelectionLayer.h; path = src/osx/NodeSelectionLayer.h; sourceTree = "<group>"; };
+		558F18E6117B043B009863B2 /* NodeSelectionLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NodeSelectionLayer.m; path = src/osx/NodeSelectionLayer.m; sourceTree = "<group>"; };
+		558F18E9117B043B009863B2 /* SelectableCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectableCollectionViewItem.h; path = src/osx/SelectableCollectionViewItem.h; sourceTree = "<group>"; };
+		558F18EA117B043B009863B2 /* SelectableCollectionViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SelectableCollectionViewItem.m; path = src/osx/SelectableCollectionViewItem.m; sourceTree = "<group>"; };
+		558F18EB117B043B009863B2 /* SelectableNodeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectableNodeView.h; path = src/osx/SelectableNodeView.h; sourceTree = "<group>"; };
+		558F18EC117B043B009863B2 /* SelectableNodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SelectableNodeView.m; path = src/osx/SelectableNodeView.m; sourceTree = "<group>"; };
+		558F18ED117B043B009863B2 /* StylePaletteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StylePaletteController.h; path = src/osx/StylePaletteController.h; sourceTree = "<group>"; };
+		558F18EE117B043B009863B2 /* StylePaletteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StylePaletteController.m; path = src/osx/StylePaletteController.m; sourceTree = "<group>"; };
+		558F18EF117B043B009863B2 /* TikzDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TikzDocument.h; path = src/osx/TikzDocument.h; sourceTree = "<group>"; };
+		558F18F0117B043B009863B2 /* TikzDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TikzDocument.m; path = src/osx/TikzDocument.m; sourceTree = "<group>"; };
+		558F18F1117B043B009863B2 /* TikzSourceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TikzSourceController.h; path = src/osx/TikzSourceController.h; sourceTree = "<group>"; };
+		558F18F2117B043B009863B2 /* TikzSourceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TikzSourceController.m; path = src/osx/TikzSourceController.m; sourceTree = "<group>"; };
+		558F18F3117B043B009863B2 /* ToolPaletteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolPaletteController.h; path = src/osx/ToolPaletteController.h; sourceTree = "<group>"; };
+		558F18F4117B043B009863B2 /* ToolPaletteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToolPaletteController.m; path = src/osx/ToolPaletteController.m; sourceTree = "<group>"; };
+		55900A9F135FA918002DD28E /* MultiCombo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiCombo.h; path = src/osx/MultiCombo.h; sourceTree = "<group>"; };
+		55900AA0135FA918002DD28E /* MultiCombo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MultiCombo.m; path = src/osx/MultiCombo.m; sourceTree = "<group>"; };
+		55900AE2135FB305002DD28E /* emblem-unreadable-grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emblem-unreadable-grey.png"; sourceTree = "<group>"; };
+		559EFA4711C7D49800D020F4 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		559EFA5611C7D95F00D020F4 /* tikzit_dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tikzit_dsa_pub.pem; sourceTree = "<group>"; };
+		559EFB6611CB88E300D020F4 /* ColorRGB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorRGB.h; path = src/common/ColorRGB.h; sourceTree = "<group>"; };
+		559EFB6711CB88E300D020F4 /* ColorRGB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColorRGB.m; path = src/common/ColorRGB.m; sourceTree = "<group>"; };
+		55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFBInspectors.framework; path = Frameworks/SFBInspectors.framework; sourceTree = "<group>"; };
+		55CA997012F08281008F0368 /* TikzWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TikzWindowController.h; path = src/osx/TikzWindowController.h; sourceTree = "<group>"; };
+		55CA997112F08281008F0368 /* TikzWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TikzWindowController.m; path = src/osx/TikzWindowController.m; sourceTree = "<group>"; };
+		55CA9AC712F831E5008F0368 /* RColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RColor.h; path = src/common/RColor.h; sourceTree = "<group>"; };
+		55CA9AC812F831E5008F0368 /* RColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RColor.m; path = src/common/RColor.m; sourceTree = "<group>"; };
+		55D2E0B01186ED950060B4EC /* Graph+Coder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Graph+Coder.h"; path = "src/osx/Graph+Coder.h"; sourceTree = "<group>"; };
+		55D2E0B11186ED950060B4EC /* Graph+Coder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Graph+Coder.m"; path = "src/osx/Graph+Coder.m"; sourceTree = "<group>"; };
+		55D945701165904F0044178C /* tikzitdoc.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tikzitdoc.icns; sourceTree = "<group>"; };
+		55D945711165904F0044178C /* tikzit.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tikzit.icns; sourceTree = "<group>"; };
+		55D947301165A5D40044178C /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/StylePalette.xib; sourceTree = "<group>"; };
+		55D949111165D8870044178C /* draw-ellipse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "draw-ellipse.png"; sourceTree = "<group>"; };
+		55D949121165D8870044178C /* draw-path.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "draw-path.png"; sourceTree = "<group>"; };
+		55D949131165D8870044178C /* select-rectangular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select-rectangular.png"; sourceTree = "<group>"; };
+		55E5E99D1215C8E300256F69 /* transform-crop-and-resize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "transform-crop-and-resize.png"; sourceTree = "<group>"; };
+		55F958581181B09600F99434 /* PickSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PickSupport.h; path = src/common/PickSupport.h; sourceTree = "<group>"; };
+		55F958591181B09600F99434 /* PickSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PickSupport.m; path = src/common/PickSupport.m; sourceTree = "<group>"; };
+		55F9585A1181B09600F99434 /* Transformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transformer.h; path = src/common/Transformer.h; sourceTree = "<group>"; };
+		55F9585B1181B09600F99434 /* Transformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transformer.m; path = src/common/Transformer.m; sourceTree = "<group>"; };
+		55F9E04311FF54F000F5659E /* NSString+LatexConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+LatexConstants.h"; path = "src/common/NSString+LatexConstants.h"; sourceTree = "<group>"; };
+		55F9E04411FF54F000F5659E /* NSString+LatexConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+LatexConstants.m"; path = "src/common/NSString+LatexConstants.m"; sourceTree = "<group>"; };
+		55FF4E64116A401B000C22B4 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		8D15AC360486D014006FF6A4 /* TikZiT-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "TikZiT-Info.plist"; sourceTree = "<group>"; };
+		8D15AC370486D014006FF6A4 /* TikZiT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TikZiT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5589AA6311C5429C0064D310 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55CA98DD12EF910F008F0368 /* SFBInspectors.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D15AC330486D014006FF6A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
+				559EFA4811C7D49800D020F4 /* Sparkle.framework in Frameworks */,
+				5573B8BA11D9FC8D00B5DC5D /* Quartz.framework in Frameworks */,
+				55CA98D512EF8FCE008F0368 /* SFBInspectors.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
+				55FF4E64116A401B000C22B4 /* libicucore.dylib */,
+				559EFA4711C7D49800D020F4 /* Sparkle.framework */,
+				55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A8FEA54F5311CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
+				13E42FBA07B3F13500E4EEF1 /* CoreData.framework */,
+				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
+				5573B8B911D9FC8D00B5DC5D /* Quartz.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FB0FE9D524F11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D15AC370486D014006FF6A4 /* TikZiT.app */,
+				5504C83711D237F5002A1478 /* tests */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A37F4AAFDCFA73011CA2CEA /* TikZiT */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4ABFDCFA73011CA2CEA /* TikZiT */,
+				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
+				2A37F4B8FDCFA73011CA2CEA /* Resources */,
+				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
+				19C28FB0FE9D524F11CA2CBB /* Products */,
+			);
+			name = TikZiT;
+			sourceTree = "<group>";
+		};
+		2A37F4ABFDCFA73011CA2CEA /* TikZiT */ = {
+			isa = PBXGroup;
+			children = (
+				5504C82611D23477002A1478 /* Test */,
+				55D946141165924F0044178C /* Graph */,
+				55D946071165922F0044178C /* Parser */,
+				55D9467311659F5E0044178C /* Gui */,
+				558F18D9117B043B009863B2 /* AppDelegate.h */,
+				558F18DA117B043B009863B2 /* AppDelegate.m */,
+				55F9E04311FF54F000F5659E /* NSString+LatexConstants.h */,
+				55F9E04411FF54F000F5659E /* NSString+LatexConstants.m */,
+			);
+			name = TikZiT;
+			sourceTree = "<group>";
+		};
+		2A37F4AFFDCFA73011CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				55CA9AC712F831E5008F0368 /* RColor.h */,
+				55CA9AC812F831E5008F0368 /* RColor.m */,
+				558F18CB117B03DD009863B2 /* main.m */,
+				558F18CC117B03DD009863B2 /* util.h */,
+				558F18CD117B03DD009863B2 /* util.m */,
+				2564AD2C0F5327BB00F57823 /* TikZiT_Prefix.pch */,
+				55652DF713E1F2030023F4C6 /* SupportDir.h */,
+				55652DF813E1F2030023F4C6 /* SupportDir.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				55397C8E1449AC7C006942FB /* AH_latex_head.png */,
+				55397C8F1449AC7C006942FB /* AH_plain_head.png */,
+				55397C8C1449ABFC006942FB /* AH_latex_tail.png */,
+				55397C871449AB91006942FB /* AH_none.png */,
+				55397C881449AB91006942FB /* AH_plain_tail.png */,
+				55397C841449A9BF006942FB /* ED_none.png */,
+				55397C821449A8F1006942FB /* ED_tick.png */,
+				55397C801449A877006942FB /* ED_arrow.png */,
+				55652E5013E1FC660023F4C6 /* shapes */,
+				55900AE2135FB305002DD28E /* emblem-unreadable-grey.png */,
+				55E5E99D1215C8E300256F69 /* transform-crop-and-resize.png */,
+				5573B98711DA377C00B5DC5D /* text-x-script.png */,
+				8D15AC360486D014006FF6A4 /* TikZiT-Info.plist */,
+				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
+				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
+				55D949111165D8870044178C /* draw-ellipse.png */,
+				55D949121165D8870044178C /* draw-path.png */,
+				555B30F811D8BE3300CAECF5 /* emblem-important.png */,
+				5573B92411DA273400B5DC5D /* format-indent-less.png */,
+				55D949131165D8870044178C /* select-rectangular.png */,
+				5573B92011DA259C00B5DC5D /* text-x-generic.png */,
+				559EFA5611C7D95F00D020F4 /* tikzit_dsa_pub.pem */,
+				55D945701165904F0044178C /* tikzitdoc.icns */,
+				55D945711165904F0044178C /* tikzit.icns */,
+				55391AF713D3250F007DBE71 /* Preamble.xib */,
+				55391AF513D324FE007DBE71 /* Preview.xib */,
+				55391B0013D32608007DBE71 /* PropertyInspector.xib */,
+				556979421168747B007E5703 /* StylePalette.xib */,
+				1DDD58280DA1D0D100B32029 /* TikzDocument.xib */,
+				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
+				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5504C82611D23477002A1478 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				555B313411D8C6DA00CAECF5 /* color.m */,
+				5504C93E11D39422002A1478 /* osx.m */,
+				5504C82A11D23595002A1478 /* common.m */,
+				5504C83111D23685002A1478 /* main.m */,
+				5504C82B11D23595002A1478 /* parser.m */,
+				5504C82C11D23595002A1478 /* test.h */,
+				5504C82D11D23595002A1478 /* test.m */,
+			);
+			name = Test;
+			sourceTree = "<group>";
+		};
+		55391B0713D326E5007DBE71 /* PropertyInspector */ = {
+			isa = PBXGroup;
+			children = (
+				552202C2135F15FD007EA086 /* MultiField.h */,
+				552202C3135F15FD007EA086 /* MultiField.m */,
+				55900A9F135FA918002DD28E /* MultiCombo.h */,
+				55900AA0135FA918002DD28E /* MultiCombo.m */,
+				55391B0813D32765007DBE71 /* PropertyInspectorController.h */,
+				55391B0913D32765007DBE71 /* PropertyInspectorController.m */,
+			);
+			name = PropertyInspector;
+			sourceTree = "<group>";
+		};
+		55652E5013E1FC660023F4C6 /* shapes */ = {
+			isa = PBXGroup;
+			children = (
+				55652E5113E1FC660023F4C6 /* cap.tikz */,
+				55652E5213E1FC660023F4C6 /* copants.tikz */,
+				55652E5313E1FC660023F4C6 /* cup.tikz */,
+				55652E5413E1FC660023F4C6 /* oval.tikz */,
+				55652E5513E1FC660023F4C6 /* pants.tikz */,
+			);
+			path = shapes;
+			sourceTree = "<group>";
+		};
+		5573B8BF11D9FD1800B5DC5D /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				5573B8C011D9FD3200B5DC5D /* PreviewController.h */,
+				5573B8C111D9FD3200B5DC5D /* PreviewController.m */,
+			);
+			name = Preview;
+			sourceTree = "<group>";
+		};
+		5573B90C11DA22E500B5DC5D /* Preamble */ = {
+			isa = PBXGroup;
+			children = (
+				5573B90D11DA231A00B5DC5D /* PreambleController.h */,
+				5573B90E11DA231A00B5DC5D /* PreambleController.m */,
+				5573B92711DA292F00B5DC5D /* Preambles.h */,
+				5573B92811DA292F00B5DC5D /* Preambles.m */,
+				5573BDC911DB4D2600B5DC5D /* Preambles+Coder.h */,
+				5573BDCA11DB4D2600B5DC5D /* Preambles+Coder.m */,
+			);
+			name = Preamble;
+			sourceTree = "<group>";
+		};
+		55900AFC13605498002DD28E /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				55652E3F13E1FB0A0023F4C6 /* Shape.h */,
+				55652E4013E1FB0A0023F4C6 /* Shape.m */,
+				55652E3313E1FAED0023F4C6 /* CircleShape.h */,
+				55652E3413E1FAED0023F4C6 /* CircleShape.m */,
+				55652E3513E1FAED0023F4C6 /* RectangleShape.h */,
+				55652E3613E1FAED0023F4C6 /* RectangleShape.m */,
+				55652E3713E1FAED0023F4C6 /* RegularPolyShape.h */,
+				55652E3813E1FAED0023F4C6 /* RegularPolyShape.m */,
+				55652E3913E1FAEE0023F4C6 /* TikzShape.h */,
+				55652E3A13E1FAEE0023F4C6 /* TikzShape.m */,
+				555ECF361379E9F80052DB71 /* ShapeNames.h */,
+			);
+			name = Shapes;
+			sourceTree = "<group>";
+		};
+		55D946071165922F0044178C /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				5589A9AA11C500060064D310 /* tikzlexer.lm */,
+				5589A9AB11C500060064D310 /* tikzparser.ym */,
+				5589A9FD11C51E780064D310 /* TikzGraphAssembler.h */,
+				5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */,
+			);
+			name = Parser;
+			sourceTree = "<group>";
+		};
+		55D946141165924F0044178C /* Graph */ = {
+			isa = PBXGroup;
+			children = (
+				55432E041444BF2D00401BB3 /* GraphElementProperty.h */,
+				55432E051444BF2D00401BB3 /* GraphElementProperty.m */,
+				553A9CEB1186191C001E0FE9 /* BasicMapTable.h */,
+				553A9CEC1186191C001E0FE9 /* BasicMapTable.m */,
+				559EFB6611CB88E300D020F4 /* ColorRGB.h */,
+				559EFB6711CB88E300D020F4 /* ColorRGB.m */,
+				558F18B9117B031C009863B2 /* Edge.h */,
+				558F18BA117B031C009863B2 /* Edge.m */,
+				558F18BB117B031C009863B2 /* Graph.h */,
+				558F18BC117B031C009863B2 /* Graph.m */,
+				55D2E0B01186ED950060B4EC /* Graph+Coder.h */,
+				55D2E0B11186ED950060B4EC /* Graph+Coder.m */,
+				558F18BD117B031C009863B2 /* GraphChange.h */,
+				558F18BE117B031C009863B2 /* GraphChange.m */,
+				558F18BF117B031C009863B2 /* GraphElementData.h */,
+				558F18C0117B031C009863B2 /* GraphElementData.m */,
+				558F18C1117B031C009863B2 /* Node.h */,
+				558F18C2117B031C009863B2 /* Node.m */,
+				558F18C3117B031C009863B2 /* NodeStyle.h */,
+				558F18C4117B031C009863B2 /* NodeStyle.m */,
+				5585E5C0117F681800124513 /* NodeStyle+Coder.h */,
+				5585E5C1117F681800124513 /* NodeStyle+Coder.m */,
+				55397C7714498C21006942FB /* EdgeStyle.h */,
+				55397C7814498C22006942FB /* EdgeStyle.m */,
+				55397C7A144990EA006942FB /* EdgeStyle+Coder.h */,
+				55397C7B144990EA006942FB /* EdgeStyle+Coder.m */,
+				55397C7D144999C4006942FB /* PropertyHolder.h */,
+				55397C7E144999C4006942FB /* PropertyHolder.m */,
+			);
+			name = Graph;
+			sourceTree = "<group>";
+		};
+		55D9467311659F5E0044178C /* Gui */ = {
+			isa = PBXGroup;
+			children = (
+				55D9468011659FD50044178C /* GraphicsView */,
+				5573B90C11DA22E500B5DC5D /* Preamble */,
+				5573B8BF11D9FD1800B5DC5D /* Preview */,
+				55391B0713D326E5007DBE71 /* PropertyInspector */,
+				55D9468D11659FF00044178C /* StylePalette */,
+				558F18EF117B043B009863B2 /* TikzDocument.h */,
+				558F18F0117B043B009863B2 /* TikzDocument.m */,
+				558F18F1117B043B009863B2 /* TikzSourceController.h */,
+				558F18F2117B043B009863B2 /* TikzSourceController.m */,
+				558F18F3117B043B009863B2 /* ToolPaletteController.h */,
+				558F18F4117B043B009863B2 /* ToolPaletteController.m */,
+				55CA997012F08281008F0368 /* TikzWindowController.h */,
+				55CA997112F08281008F0368 /* TikzWindowController.m */,
+				553A4C58144ED3D500AA6FAC /* NilToEmptyStringTransformer.h */,
+				553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */,
+			);
+			name = Gui;
+			sourceTree = "<group>";
+		};
+		55D9468011659FD50044178C /* GraphicsView */ = {
+			isa = PBXGroup;
+			children = (
+				55900AFC13605498002DD28E /* Shapes */,
+				558F18DD117B043B009863B2 /* EdgeControlLayer.h */,
+				558F18DE117B043B009863B2 /* EdgeControlLayer.m */,
+				558F18DF117B043B009863B2 /* GraphicsView.h */,
+				558F18E0117B043B009863B2 /* GraphicsView.m */,
+				558F18E1117B043B009863B2 /* Grid.h */,
+				558F18E2117B043B009863B2 /* Grid.m */,
+				558F18E3117B043B009863B2 /* NodeLayer.h */,
+				558F18E4117B043B009863B2 /* NodeLayer.m */,
+				558F18E5117B043B009863B2 /* NodeSelectionLayer.h */,
+				558F18E6117B043B009863B2 /* NodeSelectionLayer.m */,
+				55F958581181B09600F99434 /* PickSupport.h */,
+				55F958591181B09600F99434 /* PickSupport.m */,
+				55F9585A1181B09600F99434 /* Transformer.h */,
+				55F9585B1181B09600F99434 /* Transformer.m */,
+				5589AD4211C633EE0064D310 /* SelectBoxLayer.h */,
+				5589AD4311C633EE0064D310 /* SelectBoxLayer.m */,
+				555ECE991378A3AA0052DB71 /* CALayer+DrawLabel.h */,
+				555ECE9A1378A3AA0052DB71 /* CALayer+DrawLabel.m */,
+			);
+			name = GraphicsView;
+			sourceTree = "<group>";
+		};
+		55D9468D11659FF00044178C /* StylePalette */ = {
+			isa = PBXGroup;
+			children = (
+				558F18E9117B043B009863B2 /* SelectableCollectionViewItem.h */,
+				558F18EA117B043B009863B2 /* SelectableCollectionViewItem.m */,
+				558F18EB117B043B009863B2 /* SelectableNodeView.h */,
+				558F18EC117B043B009863B2 /* SelectableNodeView.m */,
+				558F18ED117B043B009863B2 /* StylePaletteController.h */,
+				558F18EE117B043B009863B2 /* StylePaletteController.m */,
+			);
+			name = StylePalette;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5589AA6411C5429C0064D310 /* tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5589AA8311C543240064D310 /* Build configuration list for PBXNativeTarget "tests" */;
+			buildPhases = (
+				5589AA6211C5429C0064D310 /* Sources */,
+				5589AA6311C5429C0064D310 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5504C91B11D36CD5002A1478 /* PBXTargetDependency */,
+			);
+			name = tests;
+			productName = testparser;
+			productReference = 5504C83711D237F5002A1478 /* tests */;
+			productType = "com.apple.product-type.tool";
+		};
+		8D15AC270486D014006FF6A4 /* TikZiT */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "TikZiT" */;
+			buildPhases = (
+				559EFA5511C7D4DD00D020F4 /* Copy Frameworks */,
+				8D15AC2B0486D014006FF6A4 /* Resources */,
+				55652E6613E1FD080023F4C6 /* Copy Shapes */,
+				8D15AC300486D014006FF6A4 /* Sources */,
+				8D15AC330486D014006FF6A4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TikZiT;
+			productInstallPath = "$(HOME)/Applications";
+			productName = TikZiT;
+			productReference = 8D15AC370486D014006FF6A4 /* TikZiT.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0410;
+				ORGANIZATIONNAME = "Aleks Kissinger";
+			};
+			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "TikZiT" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* TikZiT */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D15AC270486D014006FF6A4 /* TikZiT */,
+				5589AA6411C5429C0064D310 /* tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D15AC2B0486D014006FF6A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
+				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
+				1DDD582C0DA1D0D100B32029 /* TikzDocument.xib in Resources */,
+				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
+				55D945721165904F0044178C /* tikzitdoc.icns in Resources */,
+				55D945731165904F0044178C /* tikzit.icns in Resources */,
+				556979431168747B007E5703 /* StylePalette.xib in Resources */,
+				55D949141165D8870044178C /* draw-ellipse.png in Resources */,
+				55D949151165D8870044178C /* draw-path.png in Resources */,
+				55D949161165D8870044178C /* select-rectangular.png in Resources */,
+				559EFA5711C7D95F00D020F4 /* tikzit_dsa_pub.pem in Resources */,
+				555B30F911D8BE3300CAECF5 /* emblem-important.png in Resources */,
+				55391AF613D324FE007DBE71 /* Preview.xib in Resources */,
+				55391AF813D3250F007DBE71 /* Preamble.xib in Resources */,
+				5573B92111DA259C00B5DC5D /* text-x-generic.png in Resources */,
+				5573B92511DA273400B5DC5D /* format-indent-less.png in Resources */,
+				5573B98811DA377C00B5DC5D /* text-x-script.png in Resources */,
+				55E5E99E1215C8E300256F69 /* transform-crop-and-resize.png in Resources */,
+				55900AE3135FB305002DD28E /* emblem-unreadable-grey.png in Resources */,
+				55391B0213D32608007DBE71 /* PropertyInspector.xib in Resources */,
+				55397C811449A877006942FB /* ED_arrow.png in Resources */,
+				55397C831449A8F1006942FB /* ED_tick.png in Resources */,
+				55397C851449A9BF006942FB /* ED_none.png in Resources */,
+				55397C8A1449AB91006942FB /* AH_none.png in Resources */,
+				55397C8B1449AB91006942FB /* AH_plain_tail.png in Resources */,
+				55397C8D1449ABFC006942FB /* AH_latex_tail.png in Resources */,
+				55397C901449AC7C006942FB /* AH_latex_head.png in Resources */,
+				55397C911449AC7C006942FB /* AH_plain_head.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5589AA6211C5429C0064D310 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5504C84F11D23945002A1478 /* ColorRGB.m in Sources */,
+				5589AA8511C543500064D310 /* util.m in Sources */,
+				5589AA7011C542E60064D310 /* BasicMapTable.m in Sources */,
+				5589AA7211C542E60064D310 /* Edge.m in Sources */,
+				5589AA7611C542E60064D310 /* Graph.m in Sources */,
+				5589AA7811C542E60064D310 /* GraphChange.m in Sources */,
+				5589AA7A11C542E60064D310 /* GraphElementData.m in Sources */,
+				5589AA7C11C542E60064D310 /* Node.m in Sources */,
+				5589AA8011C542E60064D310 /* NodeStyle.m in Sources */,
+				5589AA6C11C542D30064D310 /* TikzGraphAssembler.m in Sources */,
+				5589AA6D11C542D30064D310 /* tikzlexer.lm in Sources */,
+				5589AA6E11C542D30064D310 /* tikzparser.ym in Sources */,
+				5504C82E11D23595002A1478 /* common.m in Sources */,
+				5504C82F11D23595002A1478 /* parser.m in Sources */,
+				5504C83011D23595002A1478 /* test.m in Sources */,
+				5504C83211D23685002A1478 /* main.m in Sources */,
+				5504C93F11D39422002A1478 /* osx.m in Sources */,
+				555B313511D8C6DA00CAECF5 /* color.m in Sources */,
+				55CA9ACA12F831E5008F0368 /* RColor.m in Sources */,
+				552202C4135F15FD007EA086 /* MultiField.m in Sources */,
+				55900AA1135FA918002DD28E /* MultiCombo.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D15AC300486D014006FF6A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				558F18C5117B031C009863B2 /* Edge.m in Sources */,
+				558F18C6117B031C009863B2 /* Graph.m in Sources */,
+				558F18C7117B031C009863B2 /* GraphChange.m in Sources */,
+				558F18C8117B031C009863B2 /* GraphElementData.m in Sources */,
+				558F18C9117B031C009863B2 /* Node.m in Sources */,
+				558F18CA117B031C009863B2 /* NodeStyle.m in Sources */,
+				558F18CE117B03DD009863B2 /* main.m in Sources */,
+				558F18CF117B03DD009863B2 /* util.m in Sources */,
+				558F18F7117B043C009863B2 /* AppDelegate.m in Sources */,
+				558F18F9117B043C009863B2 /* EdgeControlLayer.m in Sources */,
+				558F18FA117B043C009863B2 /* GraphicsView.m in Sources */,
+				558F18FB117B043C009863B2 /* Grid.m in Sources */,
+				558F18FC117B043C009863B2 /* NodeLayer.m in Sources */,
+				558F18FD117B043C009863B2 /* NodeSelectionLayer.m in Sources */,
+				558F18FF117B043C009863B2 /* SelectableCollectionViewItem.m in Sources */,
+				558F1900117B043C009863B2 /* SelectableNodeView.m in Sources */,
+				558F1901117B043C009863B2 /* StylePaletteController.m in Sources */,
+				558F1902117B043C009863B2 /* TikzDocument.m in Sources */,
+				558F1903117B043C009863B2 /* TikzSourceController.m in Sources */,
+				558F1904117B043C009863B2 /* ToolPaletteController.m in Sources */,
+				5585E5C2117F681800124513 /* NodeStyle+Coder.m in Sources */,
+				55F9585C1181B09600F99434 /* PickSupport.m in Sources */,
+				55F9585D1181B09600F99434 /* Transformer.m in Sources */,
+				553A9CED1186191C001E0FE9 /* BasicMapTable.m in Sources */,
+				55D2E0B21186ED950060B4EC /* Graph+Coder.m in Sources */,
+				5589A9AF11C500060064D310 /* tikzlexer.lm in Sources */,
+				5589A9B011C500060064D310 /* tikzparser.ym in Sources */,
+				5589A9FF11C51E780064D310 /* TikzGraphAssembler.m in Sources */,
+				5589AD4411C633EE0064D310 /* SelectBoxLayer.m in Sources */,
+				559EFB6811CB88E300D020F4 /* ColorRGB.m in Sources */,
+				5573B8C211D9FD3200B5DC5D /* PreviewController.m in Sources */,
+				5573B90F11DA231A00B5DC5D /* PreambleController.m in Sources */,
+				5573B92911DA292F00B5DC5D /* Preambles.m in Sources */,
+				5573BDCB11DB4D2600B5DC5D /* Preambles+Coder.m in Sources */,
+				55F9E04511FF54F000F5659E /* NSString+LatexConstants.m in Sources */,
+				55CA997212F08281008F0368 /* TikzWindowController.m in Sources */,
+				55CA9AC912F831E5008F0368 /* RColor.m in Sources */,
+				552202C5135F15FD007EA086 /* MultiField.m in Sources */,
+				55900AA2135FA918002DD28E /* MultiCombo.m in Sources */,
+				555ECE9B1378A3AA0052DB71 /* CALayer+DrawLabel.m in Sources */,
+				55391B0A13D32765007DBE71 /* PropertyInspectorController.m in Sources */,
+				55652DF913E1F2030023F4C6 /* SupportDir.m in Sources */,
+				55652E3B13E1FAEE0023F4C6 /* CircleShape.m in Sources */,
+				55652E3C13E1FAEE0023F4C6 /* RectangleShape.m in Sources */,
+				55652E3D13E1FAEE0023F4C6 /* RegularPolyShape.m in Sources */,
+				55652E3E13E1FAEE0023F4C6 /* TikzShape.m in Sources */,
+				55652E4113E1FB0A0023F4C6 /* Shape.m in Sources */,
+				55432E061444BF2D00401BB3 /* GraphElementProperty.m in Sources */,
+				55397C7914498C22006942FB /* EdgeStyle.m in Sources */,
+				55397C7C144990EA006942FB /* EdgeStyle+Coder.m in Sources */,
+				55397C7F144999C4006942FB /* PropertyHolder.m in Sources */,
+				553A4C5A144ED3D500AA6FAC /* NilToEmptyStringTransformer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5504C91B11D36CD5002A1478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D15AC270486D014006FF6A4 /* TikZiT */;
+			targetProxy = 5504C91A11D36CD5002A1478 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		089C165FFE840EACC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C1660FE840EACC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1DDD58280DA1D0D100B32029 /* TikzDocument.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD58290DA1D0D100B32029 /* English */,
+			);
+			name = TikzDocument.xib;
+			sourceTree = "<group>";
+		};
+		1DDD582A0DA1D0D100B32029 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD582B0DA1D0D100B32029 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A37F4BAFDCFA73011CA2CEA /* English */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		55391AF513D324FE007DBE71 /* Preview.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5573B8BD11D9FCD400B5DC5D /* English */,
+			);
+			name = Preview.xib;
+			sourceTree = "<group>";
+		};
+		55391AF713D3250F007DBE71 /* Preamble.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5573B91011DA233E00B5DC5D /* English */,
+			);
+			name = Preamble.xib;
+			sourceTree = "<group>";
+		};
+		55391B0013D32608007DBE71 /* PropertyInspector.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				55391B0113D32608007DBE71 /* English */,
+			);
+			name = PropertyInspector.xib;
+			sourceTree = "<group>";
+		};
+		556979421168747B007E5703 /* StylePalette.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				55D947301165A5D40044178C /* English */,
+			);
+			name = StylePalette.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5589AA6711C5429E0064D310 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PRODUCT_NAME = tests;
+			};
+			name = Debug;
+		};
+		5589AA6811C5429E0064D310 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PRODUCT_NAME = tests;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C05733C808A9546B00998B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TikZiT_Prefix.pch;
+				INFOPLIST_FILE = "TikZiT-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_NAME = TikZiT;
+				SDKROOT = macosx10.5;
+			};
+			name = Debug;
+		};
+		C05733C908A9546B00998B17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TikZiT_Prefix.pch;
+				INFOPLIST_FILE = "TikZiT-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_NAME = TikZiT;
+				SDKROOT = macosx10.5;
+			};
+			name = Release;
+		};
+		C05733CC08A9546B00998B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				SDKROOT = macosx10.5;
+				SYMROOT = xbuild;
+				USER_HEADER_SEARCH_PATHS = "src/osx src/common";
+				VALID_ARCHS = "i386 x86_64";
+			};
+			name = Debug;
+		};
+		C05733CD08A9546B00998B17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = NO;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				SDKROOT = macosx10.5;
+				SYMROOT = xbuild;
+				USER_HEADER_SEARCH_PATHS = "src/osx src/common";
+				VALID_ARCHS = "i386 x86_64";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5589AA8311C543240064D310 /* Build configuration list for PBXNativeTarget "tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5589AA6711C5429E0064D310 /* Debug */,
+				5589AA6811C5429E0064D310 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "TikZiT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C05733C808A9546B00998B17 /* Debug */,
+				C05733C908A9546B00998B17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "TikZiT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C05733CC08A9546B00998B17 /* Debug */,
+				C05733CD08A9546B00998B17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+}

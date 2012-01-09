@@ -1,0 +1,22 @@
+TikZit is a cross-platform application that allows the creation and modification of TeX diagrams written using the pgf/TikZ macro library. It is especially geared toward rapidly creating "dot"-diagrams for use in academic papers.
+
+It comes in two flavours: MacOSX (Cocoa) and GTK+.  Note that you will need to build from source on UNIX systems (or use distribution packages, if available).
+
+## Requirements
+
+### GTK+ flavour
+* GNUstep (base libraries - 1.18.0 minimum)
+* GTK+ (2.18.0 minimum)
+* poppler (including glib bindings - tested with 0.12.4)
+* An Objective-C compiler (eg: gcc-objc)
+
+## Changes since 0.6:
+
+### GTK+ flavour:
+- Add bounding box support
+- Add support for different node shapes
+- Improved error reporting
+- Add scrolling support (CTRL+mouse wheel)
+- Add a pan tool to move around the graph
+- Add edge and graph property palettes
+

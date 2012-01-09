@@ -1,0 +1,197 @@
+<html>
+<head>
+  <title>TikZiT Manual</title>
+  <link rel="stylesheet" type="text/css" href="main.css" />
+</head>
+
+<body>
+
+<img src="images/web_logo_manual.png" class="heading" />
+  
+<div class="content manual">
+  
+  <p class="info">NOTE: This manual is currently written for the OS X version of TikZiT. However, we try to make the Linux and Windows ports as similar to the Mac version as possible, so much of the info here should still apply.</p>
+
+  <p>TikZiT is a tool for editing graphs written in PGF/TikZ. PGF/TikZ is a
+big macro package for embedding all kinds of diagrams in LaTeX. It's included
+in most TeX distributions, so if you use TeX, you probably already have it.
+Lots of info and examples can be found on <a
+href="http://www.texample.net">texample.net</a>, and the (very extensive)
+manual can be found <a
+href="http://www.ctan.org/tex-archive/graphics/pgf/base/doc/generic/pgf/pgfmanual.pdf">here</a>.</p>
+
+  <p>TikZiT uses <tt>*.tikz</tt> files, which are text files written in a subset of TikZ. Virtually everything TikZiT uses comes from the <tt>\node</tt> command and the <tt>\draw</tt> command. Users can edit a graph by using the GUI or editing the TikZ file from within TikZiT and parsing changes.</p>
+
+  <h2>Basic Graph Editing</h2>
+  
+  <p>TikZiT has four basic tools: <b>Select</b>, <b>Add Vertex</b>, <b>Add Edge</b>, and <b>Crop</b> (Fig. 1). The <b>Select</b> tool is for selecting and moving vertices and edges. For vertices, this works pretty much as you would expect. Edges can be selected by clicking on them directly, which makes their control points become visible in blue (Fig. 2). Click and drag a control point to set the <tt>bend</tt> property of and edge. The radius of the circles indicates the <tt>looseness</tt>.</p>
+  
+  <div style="width:50em;margin:0 auto;">
+    <div class="fig" style="float:left;width:9em">
+      <img src="images/man/tools.png" />
+      <p>Fig.1: The Tool Palette</p>
+    </div>
+      
+    <div class="fig" style="float:left;width:13em">
+      <img src="images/man/bend.png" />
+      <p>Fig.2: Setting the Bend</p>
+    </div>
+    
+    <div class="fig" style="float:left;width:13em">
+      <img src="images/man/bezier.png" />
+      <p>Fig.3: Bezier Mode</p>
+    </div>
+    
+    <div style="clear:both"></div>
+  </div>
+  
+  <p>Double-click and edge to go to <b>Bezier Mode</b> (Fig. 3). The control points in <b>Bezier Mode</b> can be moved independently, and rather than setting <tt>bend</tt>, it sets the <tt>in</tt> and <tt>out</tt> properties of an edge. It is often useful to use the <tt>Shift</tt> key to select multiple edges, making their control points visible. Editing any of those edges' control points will not deselect the edges. Hold down the <tt>&#8984;Command</tt> key to move both control points at once. This is particularly useful for self-loops.</p>
+  
+  <p>The <b>Add Vertex</b> tool adds a new vertex to the graph where you click. It is given the style that is selected in the <b>Style Palette</b>. If no style is selected, an <b>Unstyled Vertex</b> is added. Unstyled vertices are represented as dotted lines around a point, and are invisible. They are useful for making complex paths (Fig. 4) and edges that are not otherwise connected to vertices.</p>
+  
+  <div style="width:55em;margin:0 auto;">
+    <div class="fig" style="float:left;width:15.5em">
+      <img src="images/man/compound.png" />
+      <p>Fig.4: Unstyled Vertices/Compound Path</p>
+    </div>
+      
+    <div class="fig" style="float:left;width:11em">
+      <img src="images/man/new_edge.png" />
+      <p>Fig.5: Adding an Edge</p>
+    </div>
+    
+    <div class="fig" style="float:left;width:13em">
+      <img src="images/man/bounding_box.png" />
+      <p>Fig.6: Setting the Bounding Box</p>
+    </div>
+    
+    <div style="clear:both"></div>
+  </div>
+  
+  <p>The <b>Add Edge</b> tool adds new edges. With the tool selected, click and drag from the source vertex to the target vertex to create an edge (Fig. 5). Although TikZiT doesn't <i>show</i> the direction of the edge, it could still be relevant (e.g. for arrow heads), depending on the style of the edge. Click on a vertex to add a self-loop.</p>
+  
+  <p>Though TikZ computes bounding boxes automatically, if you wish to set one manually, you can do so using the <b>Crop</b> tool. Click and drag a box to set the bounding box. Click anywhere to remove it. The bounding box itself is implemented using a rectangular path with the <tt>use as bounding box</tt> property set.</p>
+
+  <h2>Editing Properties and Styles</h2>
+  
+  <p>All graph, node, and edge properties can be edited using the <b>Property Inspector</b>. This inspector is divided into three parts: one for each type of property. These can be expanded or collapsed using the triangles in the upper left corner of each section. TikZiT handles two kinds of properties: normal properties and atoms. Normal properties are key/value pairs stored with the graph/node/edge. Atoms are just keys, leaving the value of the property itself implicit. Examples are <tt>baseline</tt> or <tt>&lt;-</tt>. To add a new property, click the &quot;<b>+</b>&quot; button in the relevant section. To add a new atom, click the &quot;<b>+<sub>a</sub></b>&quot; button. Use the &quot;<b>-</b>&quot; button to remove a property or atom.</p>
+  
+  <p>You can also use the <b>Property Inspector</b> to edit the labels on nodes. After editing a label, you may need to hit <tt>Return</tt> to apply your changes. Always do this before deselecting the node.</p>
+  
+  <div style="width:45em;margin:0 auto;">
+    <div class="fig" style="float:left;width:17em">
+      <img src="images/man/property_inspector.png" />
+      <p>Fig.7: Property Inspector</p>
+    </div>
+    
+    <div class="fig" style="float:left;width:17em">
+      <img src="images/man/style_inspector.png" />
+      <p>Fig.8: Style Inspector</p>
+    </div>
+    <div style="clear:both"></div>
+  </div>
+    
+  <p>With the <b>Property Inspector</b> you can add a node to an edge by selecting it and clicking the checkbox next to <b>Child Node</b>. This node will be placed in the middle of the edge by default, but you can change this by editing it's properties. Often the atom <tt>auto</tt> is applied to an edge node to position its label a little off the edge. Again, when labelling an edge node, be sure to hit <tt>Return</tt> to apply your changes.</p>
+    
+  <p>The <b>Style Inspector</b> lets you add, remove, and edit styles. You can edit a style's name, shape, foreground colour, background colour, and scale. Note that these properties change how nodes of this style will appear in TikZiT, but not necessarily in the final, built LaTeX. TikZiT styles are meant more as a visual cue for the sake of editing graphs than to produce a nice end result. Use <b>Apply</b> to apply the selected style to the selected nodes and <b>Clear</b> to clear the style.</p>
+
+  <h2>Editing the TikZ Code Directly</h2>
+  
+  <p>TikZiT supports a small subset of the TikZ language. At any point, you can edit the TikZ code manually in the bottom half of the window. Editing the code will cause the main graph display to ghost, and it prevents editing with the GUI until the graph is re-parsed using <tt>&#8984;T</tt>. If the parse was successful, the main graph will un-ghost, and a message saying <font style="color:green">success</font> will be displayed along the bottom of the window. If the parse was unsuccessful, <font style="color:red">parse error</font> will be displayed.</p>
+  
+  <p>As a reference, here is the complete syntax supported by TikZiT:</p>
+  
+  <div class="bnf">
+    <span class="sy1">&lt;</span><span class="re0">tikzpicture</span><span class="sy1">&gt;</span> &nbsp;<span class="sy4">::=</span> <span class="st0">&quot;\begin{tikzpicture}&quot;</span> <span class="sy1">&lt;</span><span class="re0">properties</span><span class="sy4">&gt;</span><span class="sy4">?</span><br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy1">&lt;</span><span class="re0">expression</span><span class="sy1">&gt;</span><span class="sy4">*</span><br />
+
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="st0">&quot;\end{tikzpicture}&quot;</span><br />
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">expression</span><span class="sy1">&gt;</span> &nbsp; <span class="sy4">::=</span> <span class="sy1">&lt;</span><span class="re0">ignore</span><span class="sy1">&gt;</span> <span class="sy4">|</span> <span class="sy1">&lt;</span><span class="re0">node</span><span class="sy1">&gt;</span> <span class="sy4">|</span> <span class="sy1">&lt;</span><span class="re0">edge</span><span class="sy1">&gt;</span> <span class="sy4">|</span> <span class="sy1">&lt;</span><span class="re0">bounding box</span><span class="sy1">&gt;</span><br />
+
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">ignore</span><span class="sy1">&gt;</span> &nbsp; &nbsp; &nbsp; <span class="sy4">::=</span> <span class="st0">&quot;\begin{pgfonlayer}&quot;</span> <span class="st1">DELIMITED_STRING</span> <span class="sy4">|</span><br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;\end{pgfonlayer}&quot;</span><br />
+
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">properties</span><span class="sy1">&gt;</span> &nbsp; <span class="sy4">::=</span> <span class="st0">&quot;[&quot;</span> <span class="sy1">&lt;</span><span class="re0">property</span><span class="sy1">&gt;</span> <span class="br0">&#40;</span><span class="st0">&quot;,&quot;</span> <span class="sy1">&lt;</span><span class="re0">property</span><span class="sy1">&gt;</span><span class="br0">&#41;</span><span class="sy4">*</span> <span class="st0">&quot;]&quot;</span><br />
+
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">property</span><span class="sy1">&gt;</span> &nbsp; &nbsp; <span class="sy4">::=</span> <span class="sy1">&lt;</span><span class="re0">symbol</span><span class="sy1">&gt;</span><span class="sy4">*</span> <span class="st0">&quot;=&quot;</span> <span class="sy1">&lt;</span><span class="re0">value</span><span class="sy1">&gt;</span> <span class="sy4">|</span> <span class="sy1">&lt;</span><span class="re0">symbol</span><span class="sy1">&gt;</span><span class="sy4">*</span><br />
+
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">symbol</span><span class="sy1">&gt;</span> &nbsp; &nbsp; &nbsp; <span class="sy4">::=</span> <span class="st1">WORD</span> <span class="sy4">|</span> <span class="st1">NUMBER</span><br />
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">value</span><span class="sy1">&gt;</span> &nbsp; &nbsp; &nbsp; &nbsp;<span class="sy4">::=</span> <span class="sy1">&lt;</span><span class="re0">symbol</span><span class="sy1">&gt;</span><span class="sy4">*</span> <span class="sy4">|</span> <span class="st1">QUOTED_STRING</span><br />
+
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">node</span><span class="sy1">&gt;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy4">::=</span> <span class="st0">&quot;\node&quot;</span> <span class="sy1">&lt;</span><span class="re0">properties</span><span class="sy1">&gt;</span><span class="sy4">?</span> <span class="sy1">&lt;</span><span class="re0">node name</span><span class="sy1">&gt;</span><br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;at&quot;</span> <span class="sy1">&lt;</span><span class="re0">coords</span><span class="sy1">&gt;</span> <span class="st1">DELIMITED_STRING</span> <span class="st0">&quot;;&quot;</span><br />
+
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">node name</span><span class="sy1">&gt;</span> &nbsp; &nbsp;<span class="sy4">::=</span> <span class="st0">&quot;(&quot;</span> <span class="br0">&#40;</span><span class="st1">NATURAL_NUMBER</span> <span class="sy4">|</span> <span class="st1">WORD</span><span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="st0">&quot;.center&quot;</span><span class="br0">&#41;</span><span class="sy4">?</span> <span class="st0">&quot;)&quot;</span><br />
+
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">coords</span><span class="sy1">&gt;</span> &nbsp; &nbsp; &nbsp; <span class="sy4">::=</span> <span class="st0">&quot;(&quot;</span> <span class="st1">NUMBER</span> <span class="st0">&quot;,&quot;</span> <span class="st1">NUMBER</span> <span class="st0">&quot;)&quot;</span><br />
+    <br />
+
+    <span class="sy1">&lt;</span><span class="re0">edge</span><span class="sy1">&gt;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span class="sy4">::=</span> <span class="st0">&quot;\draw&quot;</span> <span class="sy1">&lt;</span><span class="re0">properties</span><span class="sy1">&gt;</span><span class="sy4">?</span> <span class="sy1">&lt;</span><span class="re0">node name</span><span class="sy1">&gt;</span><br />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;to&quot;</span> <span class="sy1">&lt;</span><span class="re0">edge node</span><span class="sy1">&gt;</span><span class="sy4">?</span> <span class="br0">&#40;</span><span class="sy1">&lt;</span><span class="re0">node name</span><span class="sy1">&gt;</span> <span class="sy4">|</span> <span class="st0">&quot;()&quot;</span><span class="br0">&#41;</span> <span class="st0">&quot;;&quot;</span><br />
+
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">edge node</span><span class="sy1">&gt;</span> &nbsp; &nbsp;<span class="sy4">::=</span> <span class="st0">&quot;node&quot;</span> <span class="sy1">&lt;</span><span class="re0">properties</span><span class="sy1">&gt;</span><span class="sy4">?</span> <span class="st1">DELIMITED_STRING</span><br />
+    <br />
+    <span class="sy1">&lt;</span><span class="re0">bounding box</span><span class="sy1">&gt;</span> <span class="sy4">::=</span> <span class="st0">&quot;\path&quot;</span> <span class="st0">&quot;[use as bounding box]&quot;</span> <span class="sy1">&lt;</span><span class="re0">coords</span><span class="sy1">&gt;</span><br />
+
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="st0">&quot;rectangle&quot;</span> <span class="sy1">&lt;</span><span class="re0">coords</span><span class="sy1">&gt;</span> <span class="st0">&quot;;&quot;</span>
+  </div>
+  
+  <p>Note that <span class="terminal">DELIMITED_STRING</span> means a string delimited by braces (&nbsp;{&nbsp;,&nbsp;}&nbsp;). This string can contain any character, including other braces, provided they are nested correctly. A <span class="terminal">WORD</span> may contain letters, greater-than (&nbsp;&gt;&nbsp;), less-than (&nbsp;&lt;&nbsp;), dash (&nbsp;-&nbsp;), and prime (&nbsp;'&nbsp;). Question mark (&nbsp;?&nbsp;) denotes optional productions, and star (&nbsp;*&nbsp;) denotes repeated ones.</p>
+
+  <h2>Preambles and LaTeX Preview</h2>
+  
+  <p>Use <tt>&#8984;R</tt> to preview the current graph using LaTex. The preview will be shown in a new window. In the event of an error, the LaTeX output is displayed.</p>
+  
+  <div class="fig" style="width:39em;margin:0 auto;">
+    <img src="images/man/preview.png" />
+    <p>Fig.8: LaTeX Preview</p>
+  </div>
+  
+  <p>The <b>Preamble Editor</b> is used to set up the preamble that the LaTeX preview uses. The default preamble will include minimal style definitions, but you will most likely want to use a default preamble. A good strategy is to define all of the TikZ styles in a single LaTeX file, then <tt>\input</tt> that file both in your paper and in the TikZiT preamble.</p>
+  
+  <div class="fig" style="width:52em;margin:0 auto;">
+    <img src="images/man/preambles.png" />
+    <p>Fig.9: Preamble Editor</p>
+  </div>
+  
+  <p>Use the &quot;<b>+</b>&quot; and &quot;<b>-</b>&quot; buttons to add or remove custom preambles. Double-click a preamble's name to change it. Click <b>Insert Styles</b> to paste in the styles from the default preamble at the current cursor location.</p>
+    
+
+  <h2>Custom Shapes</h2>
+  
+  <p>Custom shapes <i>are</i> implemented in TikZiT. To add a custom shape, navigate to the TikZiT support directory: <tt>~/Library/Application Support/TikZiT</tt>. If it doesn't already exist, create a directory called <tt>shapes</tt>. Now, you can add <tt>*.tikz</tt> files to this directory, and they will be included as shapes in TikZiT.</p>
+  
+  <p>Not all graphs will made nice looking shapes. TikZiT builds a shape from a graph by extracting all of the paths in the TikZ graph, and drawing them as (filled) bezier curves.</p>
+  
+  <div class="fig" style="width:17em;margin:0 auto;">
+    <img src="images/man/shape.png" />
+    <p>Fig.10: A Custom Shape</p>
+  </div>
+  
+  <p>The best graphs for defining shapes are single cycles, consisting of unstyled nodes. You can draw a shape as big or small as you like. When the shape is displayed in TikZiT with scale = 1, the shape will fit inside a 4x4 square on the grid. If you make a change to the custom shapes with TikZiT open, click <b>Refresh Shapes</b> in the <b>TikZ</b> menu to refresh the shapes.</p>
+
+  <!--h2>TUTORIAL: Setting up TikZiT for 2D Cobordisms</h2-->
+ 
+ 
+  <div style="clear:both"></div>
+</div>
+
+<div style="text-align:center;margin-top:10px"><a href="index.html">&laquo; back</a></div>
+
+<br />
+<br />
+<br />
+
+</body>
+</html>
+

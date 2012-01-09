@@ -1,0 +1,120 @@
+body {
+	background-color: #ddd;
+	margin: 0px;
+	font-size: 10pt;
+	font-family: "Trebuchet MS",
+	             Tahoma,
+	             "Nimbus Sans L",
+	             sans-serif;
+}
+
+a {
+	color: #555555;
+	font-weight: bold;
+}
+
+a:hover {
+	color: #777777;
+}
+
+img.heading {
+	display:block;
+	margin:10px auto;
+}
+
+.content {
+	padding: 10px 30px;
+	background-color: white;
+}
+
+.info { color: #069; }
+
+.manual h2 {
+	clear: both;
+	margin-top: 1em;
+}
+
+.manual tt {
+	background-color: #eef;
+}
+
+.whiteblock {
+	background-color: white;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.whiteblock a {
+	text-decoration: none;
+}
+
+.bigtext {
+	color: #444444;
+	font-size: 1.5em;
+}
+
+img.osimage {
+	vertical-align: middle;
+	border: 0px;
+}
+
+p.blurb  {
+	margin: 20px auto;
+	width: 600px;
+	text-align: justify;
+}
+
+.links {
+	text-align:center;
+	margin-top: 2em;
+}
+
+dt {
+	margin-top: 0.5em;
+	font-weight: bold;
+}
+
+div.fig {
+	text-align: center;
+	padding: 0.5em 1em;
+	margin: 0em 1em;
+	border: 1px solid #aaa;
+	background-color: #ddd;
+}
+
+div.fig img {
+	border: 1px solid #aaa;
+}
+
+div.fig p {
+	font-size: 0.8em;
+	line-height: 1em;
+	margin-top: 1em;
+	margin-bottom: 0em;
+}
+
+/* syntax highlight styles */
+.bnf  {
+	white-space: nowrap;
+	border: 1px dotted #a0a0a0;
+	padding: 1em;
+	font-family: 'Monaco', 'Courier New', Courier, monospace;
+	font-size: 9pt;
+	line-height: 120%;
+	color: #000;
+}
+
+.bnf .imp {font-weight: bold; color: red;}
+.bnf .co0 {color: #666666; font-style: italic;}
+.bnf .coMULTI {font-style: normal;}
+.bnf .es0 {font-weight: normal;}
+.bnf .sy0, .bnf .re0 {color: #006; font-weight: normal;}
+.bnf .sy1 {color: #000066; font-weight: normal;}
+.bnf .sy2 {color: #000066; font-weight: normal;}
+.bnf .sy3 {color: #000066; font-weight: normal;}
+.bnf .sy4 {color: #000; font-weight: normal;}
+.bnf .st0 {color: #060;}
+.bnf .st1, .terminal {color: #069;}
+.bnf .me {1}
+
