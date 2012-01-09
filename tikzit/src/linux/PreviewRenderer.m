@@ -88,26 +88,24 @@
     // run pdflatex in a bash shell
     NSTask *latexTask = [[NSTask alloc] init];
     [latexTask setCurrentDirectoryPath:tempDir];
-    [latexTask setLaunchPath:@"/bin/bash"];
+    // GNUStep is clever enough to use PATH
+    [latexTask setLaunchPath:@"pdflatex"];
 
-    // This assumes the user has $PATH set up to find pdflatex
-    // This should be improved to take other path setups into account
-    // and to be customisable.
-    NSString *latexCmd = [NSString stringWithFormat:
-        @"pdflatex -interaction=nonstopmode -halt-on-error '%@'\n",
-        texFile];
+    NSArray *args = [NSArray arrayWithObjects:
+        @"-fmt=latex",
+        @"-output-format=pdf",
+        @"-interaction=nonstopmode",
+        @"-halt-on-error",
+        texFile,
+        nil];
+    [latexTask setArguments:args];
 
     NSPipe *pout = [NSPipe pipe];
-    NSPipe *pin = [NSPipe pipe];
     [latexTask setStandardOutput:pout];
-    [latexTask setStandardInput:pin];
 
-    NSFileHandle *latexIn = [pin fileHandleForWriting];
     NSFileHandle *latexOut = [pout fileHandleForReading];
 
     [latexTask launch];
-    [latexIn writeData:[latexCmd dataUsingEncoding:NSUTF8StringEncoding]];
-    [latexIn closeFile];
     [latexTask waitUntilExit];
 
     NSData *data = [latexOut readDataToEndOfFile];
