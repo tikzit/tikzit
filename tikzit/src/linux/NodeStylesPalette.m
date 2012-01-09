@@ -69,11 +69,17 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 		editor = [[NodeStyleEditor alloc] init];
 
         palette = gtk_vbox_new (FALSE, 0);
+		// FIXME: remove this line when we add edge styles
+		gtk_container_set_border_width (GTK_CONTAINER (palette), 6);
+		gtk_box_set_spacing (GTK_BOX (palette), 6);
 		g_object_ref_sink (palette);
 
 		gtk_box_pack_start (GTK_BOX (palette), [editor widget], FALSE, FALSE, 0);
 		gtk_widget_show ([editor widget]);
-		gtk_box_pack_start (GTK_BOX (palette), [selector widget], TRUE, TRUE, 0);
+		GtkWidget *selectorFrame = gtk_frame_new (NULL);
+		gtk_container_add (GTK_CONTAINER (selectorFrame), [selector widget]);
+		gtk_box_pack_start (GTK_BOX (palette), selectorFrame, TRUE, TRUE, 0);
+		gtk_widget_show (selectorFrame);
 		gtk_widget_show ([selector widget]);
 
         GtkBox *buttonBox = GTK_BOX (gtk_hbox_new(FALSE, 5));

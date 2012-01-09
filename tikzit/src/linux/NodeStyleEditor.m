@@ -63,6 +63,7 @@ static void scale_adjustment_changed_cb (GtkAdjustment *widget, NodeStyleEditor 
 	NSAssert(row < row_count, @"row_count is wrong!");
 
 	GtkWidget *l = gtk_label_new (label);
+	gtk_misc_set_alignment (GTK_MISC (l), 0, 0.5);
 	gtk_widget_show (l);
 	gtk_widget_show (w);
 
@@ -97,6 +98,8 @@ static void scale_adjustment_changed_cb (GtkAdjustment *widget, NodeStyleEditor 
 	if (self != nil) {
 		style = nil;
 		table = GTK_TABLE (gtk_table_new (row_count, 2, FALSE));
+		gtk_table_set_col_spacings (table, 6);
+		gtk_table_set_row_spacings (table, 6);
 		gtk_widget_set_sensitive (GTK_WIDGET (table), FALSE);
 		blockSignals = NO;
 

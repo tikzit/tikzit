@@ -43,6 +43,7 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
 - (void) updateGraphPane;
 - (void) updateNodePane;
 - (void) updateEdgePane;
+- (void) _addSplitter;
 - (GtkExpander*) _addExpanderWithName:(const gchar*)name contents:(GtkWidget*)contents;
 @end
 
@@ -112,6 +113,8 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
         g_object_ref_sink (graphPropsExpander);
 
 
+        [self _addSplitter];
+
         /*
          * Node properties
          */
@@ -126,16 +129,23 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
             self);
 
 
+        [self _addSplitter];
+
         /*
          * Edge properties
          */
         GtkBox *edgePropsBox = GTK_BOX (gtk_vbox_new (FALSE, 0));
+	gtk_box_set_spacing (edgePropsBox, 6);
         edgePropsExpander = [self _addExpanderWithName:"Edge properties"
                                               contents:GTK_WIDGET (edgePropsBox)];
         g_object_ref (edgePropsExpander);
 
         gtk_widget_show ([edgeProps widget]);
         gtk_box_pack_start (edgePropsBox, [edgeProps widget], FALSE, TRUE, 0);
+
+        GtkWidget *split = gtk_hseparator_new ();
+        gtk_box_pack_start (edgePropsBox, split, FALSE, FALSE, 0);
+        gtk_widget_show (split);
 
         edgeNodeToggle = GTK_TOGGLE_BUTTON (gtk_check_button_new_with_label ("Child node"));
         g_object_ref (edgeNodeToggle);
@@ -155,6 +165,9 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
             "changed",
             G_CALLBACK (edge_node_label_changed_cb),
             self);
+
+
+        [self _addSplitter];
     }
 
     return self;
@@ -387,17 +400,28 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
     blockUpdates = NO;
 }
 
+- (void) _addSplitter {
+    GtkWidget *split = gtk_hseparator_new ();
+    gtk_box_pack_start (GTK_BOX (propertiesPane),
+                        split,
+                        FALSE, // expand
+                        FALSE, // fill
+                        0); // padding
+    gtk_widget_show (split);
+}
+
 - (GtkExpander*) _addExpanderWithName:(const gchar*)name contents:(GtkWidget*)contents {
-        GtkWidget *exp = gtk_expander_new (name);
-        gtk_box_pack_start (GTK_BOX (propertiesPane),
-                            exp,
-                            FALSE, // expand
-                            TRUE, // fill
-                            0); // padding
-        gtk_widget_show (exp);
-        gtk_container_add (GTK_CONTAINER (exp), contents);
-        gtk_widget_show (contents);
-        return GTK_EXPANDER (exp);
+    GtkWidget *exp = gtk_expander_new (name);
+    gtk_box_pack_start (GTK_BOX (propertiesPane),
+                        exp,
+                        FALSE, // expand
+                        TRUE, // fill
+                        0); // padding
+    gtk_widget_show (exp);
+    gtk_container_set_border_width (GTK_CONTAINER (contents), 6);
+    gtk_container_add (GTK_CONTAINER (exp), contents);
+    gtk_widget_show (contents);
+    return GTK_EXPANDER (exp);
 }
 
 @end
@@ -504,7 +528,7 @@ static GtkWidget *createLabelledEntry (const gchar *labelText, GtkEntry **entry)
         gtk_widget_show (entryWidget);
         //                  container  widget       expand fill  pad
         gtk_box_pack_start (box,       label,       FALSE, TRUE, 5);
-        gtk_box_pack_start (box,       entryWidget, FALSE, TRUE, 0);
+        gtk_box_pack_start (box,       entryWidget, TRUE,  TRUE, 0);
         if (entry)
             *entry = GTK_ENTRY (entryWidget);
         return GTK_WIDGET (box);
@@ -512,10 +536,11 @@ static GtkWidget *createLabelledEntry (const gchar *labelText, GtkEntry **entry)
 
 static GtkWidget *createPropsPaneWithLabelEntry (PropertyListEditor *props, GtkEntry **labelEntry) {
         GtkBox *box = GTK_BOX (gtk_vbox_new (FALSE, 0));
+	gtk_box_set_spacing (box, 6);
 
         GtkWidget *labelWidget = createLabelledEntry ("Label", labelEntry);
         gtk_widget_show (labelWidget);
-        //                  container      widget              expand fill  pad
+        //                  box   widget          expand fill  pad
         gtk_box_pack_start (box,  labelWidget,    FALSE, TRUE, 0);
         gtk_box_pack_start (box,  [props widget], FALSE, TRUE, 0);
         gtk_widget_show ([props widget]);

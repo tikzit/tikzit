@@ -113,8 +113,13 @@ static void remove_clicked_cb (GtkButton *button,
             self);
 
         widget = gtk_vbox_new (FALSE, 0);
+	gtk_box_set_spacing (GTK_BOX (widget), 6);
         g_object_ref_sink (G_OBJECT (widget));
-        gtk_container_add (GTK_CONTAINER (widget), scrolledview);
+
+        GtkWidget *listFrame = gtk_frame_new (NULL);
+        gtk_container_add (GTK_CONTAINER (listFrame), scrolledview);
+        gtk_widget_show (listFrame);
+        gtk_container_add (GTK_CONTAINER (widget), listFrame);
 
         GtkBox *buttonBox = GTK_BOX (gtk_hbox_new(FALSE, 0));
         gtk_box_pack_start (GTK_BOX (widget), GTK_WIDGET (buttonBox), FALSE, FALSE, 0);

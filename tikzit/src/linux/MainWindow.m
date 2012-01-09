@@ -598,7 +598,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_box_pack_start (mainLayout, GTK_WIDGET (propsPane), TRUE, TRUE, 0);
 
     propertyPane = [[PropertyPane alloc] init];
-    gtk_paned_pack1 (propsPane, [propertyPane widget], FALSE, TRUE);
+    GtkWidget *propFrame = gtk_frame_new (NULL);
+    gtk_container_add (GTK_CONTAINER (propFrame), [propertyPane widget]);
+    gtk_paned_pack1 (propsPane, propFrame, FALSE, TRUE);
+    gtk_widget_show (propFrame);
     gtk_widget_show ([propertyPane widget]);
 
     stylesPane = GTK_PANED (gtk_hpaned_new ());
@@ -607,7 +610,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_paned_pack2 (propsPane, GTK_WIDGET (stylesPane), TRUE, TRUE);
 
     stylesPalette = [[NodeStylesPalette alloc] initWithManager:styleManager];
-    gtk_paned_pack2 (stylesPane, [stylesPalette widget], FALSE, TRUE);
+    GtkWidget *stylesFrame = gtk_frame_new (NULL);
+    gtk_container_add (GTK_CONTAINER (stylesFrame), [stylesPalette widget]);
+    gtk_paned_pack2 (stylesPane, stylesFrame, FALSE, TRUE);
+    gtk_widget_show (stylesFrame);
     gtk_widget_show ([stylesPalette widget]);
 
     graphPane = GTK_PANED (gtk_vpaned_new ());
@@ -617,7 +623,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
     surface = [[WidgetSurface alloc] init];
     gtk_widget_show ([surface widget]);
-    gtk_paned_pack1 (graphPane, [surface widget], TRUE, TRUE);
+    GtkWidget *graphFrame = gtk_frame_new (NULL);
+    gtk_container_add (GTK_CONTAINER (graphFrame), [surface widget]);
+    gtk_widget_show (graphFrame);
+    gtk_paned_pack1 (graphPane, graphFrame, TRUE, TRUE);
     [surface setDefaultScale:50.0f];
     [surface setKeepCentered:YES];
     [surface setGrabsFocusOnClick:YES];
@@ -635,7 +644,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     g_object_ref_sink (tikzDisp);
     gtk_widget_show (tikzDisp);
     gtk_container_add (GTK_CONTAINER (tikzScroller), tikzDisp);
-    gtk_paned_pack2 (graphPane, tikzScroller, FALSE, TRUE);
+    GtkWidget *tikzFrame = gtk_frame_new (NULL);
+    gtk_container_add (GTK_CONTAINER (tikzFrame), tikzScroller);
+    gtk_widget_show (tikzFrame);
+    gtk_paned_pack2 (graphPane, tikzFrame, FALSE, TRUE);
 
     statusBar = GTK_STATUSBAR (gtk_statusbar_new ());
     gtk_widget_show (GTK_WIDGET (statusBar));
