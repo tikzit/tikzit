@@ -34,10 +34,9 @@ GdkPixbuf *get_logo (LogoSize size) {
         case LOGO_SIZE_24:
             data = &logo24;
             break;
-/*        case LOGO_SIZE_32:
+        case LOGO_SIZE_32:
             data = &logo32;
             break;
-*/
         case LOGO_SIZE_48:
             data = &logo48;
             break;

@@ -45,12 +45,12 @@ int main (int argc, char *argv[]) {
 
 #ifndef WINDOWS
     GList *icon_list = NULL;
-    g_list_prepend (icon_list, get_logo(LOGO_SIZE_128));
-    g_list_prepend (icon_list, get_logo(LOGO_SIZE_64));
-    g_list_prepend (icon_list, get_logo(LOGO_SIZE_48));
-    //g_list_prepend (icon_list, get_logo(LOGO_SIZE_32));
-    g_list_prepend (icon_list, get_logo(LOGO_SIZE_24));
-    g_list_prepend (icon_list, get_logo(LOGO_SIZE_16));
+    icon_list = g_list_prepend (icon_list, get_logo(LOGO_SIZE_128));
+    icon_list = g_list_prepend (icon_list, get_logo(LOGO_SIZE_64));
+    icon_list = g_list_prepend (icon_list, get_logo(LOGO_SIZE_48));
+    icon_list = g_list_prepend (icon_list, get_logo(LOGO_SIZE_32));
+    icon_list = g_list_prepend (icon_list, get_logo(LOGO_SIZE_24));
+    icon_list = g_list_prepend (icon_list, get_logo(LOGO_SIZE_16));
     gtk_window_set_default_icon_list (icon_list);
     GList *list_head = icon_list;
     while (list_head) {

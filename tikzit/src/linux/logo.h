@@ -20,7 +20,7 @@
 typedef enum {
   LOGO_SIZE_16,
   LOGO_SIZE_24,
-  //LOGO_SIZE_32,
+  LOGO_SIZE_32,
   LOGO_SIZE_48,
   LOGO_SIZE_64,
   LOGO_SIZE_128,

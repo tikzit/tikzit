@@ -44,7 +44,7 @@ Set the tar.bz2 file as default for everything except windows and mac
 Updating the website
 --------------------
 
-Edit docs/web/link.php, and update the versions.
+Edit /trunk/www/htdocs/link.php, and update the versions.
 
 sftp to
   [sf-username],tikzit@web.sourceforge.net

@@ -119,10 +119,11 @@ linux/icondata.m: ../draw-ellipse.png ../draw-path.png ../select-rectangular.png
 		transform_move ../transform-move.png \
 		> $@
 
-linux/logodata.m: ../share/icons/hicolor/16x16/apps/tikzit.png ../share/icons/hicolor/24x24/apps/tikzit.png ../share/icons/hicolor/48x48/apps/tikzit.png ../share/icons/hicolor/64x64/apps/tikzit.png ../share/icons/hicolor/128x128/apps/tikzit.png
+linux/logodata.m: ../share/icons/hicolor/*/apps/tikzit.png
 	$(AM_V_GEN)gdk-pixbuf-csource --struct --static --raw --build-list \
 		logo16 ../share/icons/hicolor/16x16/apps/tikzit.png \
 		logo24 ../share/icons/hicolor/24x24/apps/tikzit.png \
+		logo32 ../share/icons/hicolor/32x32/apps/tikzit.png \
 		logo48 ../share/icons/hicolor/48x48/apps/tikzit.png \
 		logo64 ../share/icons/hicolor/64x64/apps/tikzit.png \
 		logo128 ../share/icons/hicolor/128x128/apps/tikzit.png \
