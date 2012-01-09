@@ -641,6 +641,8 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_widget_show (tikzScroller);
 
     tikzDisp = gtk_text_view_new_with_buffer (tikzBuffer);
+    gtk_text_view_set_left_margin (GTK_TEXT_VIEW (tikzDisp), 3);
+    gtk_text_view_set_right_margin (GTK_TEXT_VIEW (tikzDisp), 3);
     g_object_ref_sink (tikzDisp);
     gtk_widget_show (tikzDisp);
     gtk_container_add (GTK_CONTAINER (tikzScroller), tikzDisp);
