@@ -17,6 +17,7 @@
 
 #import "PreambleEditor.h"
 #import "Preambles.h"
+#import <gdk/gdk.h>
 
 enum {
 	NAME_COLUMN,
@@ -29,6 +30,9 @@ enum {
 static gboolean window_delete_event_cb (GtkWidget *widget,
                                         GdkEvent  *event,
                                         PreambleEditor *editor);
+static gboolean window_focus_out_event_cb (GtkWidget *widget,
+                                           GdkEvent  *event,
+                                           PreambleEditor *editor);
 static void close_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
 static void add_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
 static void remove_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
@@ -53,6 +57,8 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 - (void) addPreamble;
 - (void) deletePreamble;
 - (void) renamePreambleAtPath:(gchar*)path to:(gchar*)newValue;
+- (void) nodeStylePropertyChanged:(NSNotification*)notification;
+- (void) edgeStylePropertyChanged:(NSNotification*)notification;
 @end
 
 // }}}
@@ -77,6 +83,14 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	    preambleSelector = NULL;
 	    blockSignals = NO;
 		adding = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(nodeStylePropertyChanged:)
+                                                     name:@"NodeStylePropertyChanged"
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(edgeStylePropertyChanged:)
+                                                     name:@"EdgeStylePropertyChanged"
+                                                   object:nil];
 	}
 
 	return self;
@@ -187,19 +201,28 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 
 	window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
 	gtk_window_set_title (window, "Preamble editor");
-	gtk_window_set_modal (window, TRUE);
 	gtk_window_set_position (window, GTK_WIN_POS_CENTER_ON_PARENT);
 	gtk_window_set_default_size (window, 600, 400);
 	gtk_window_set_type_hint (window, GDK_WINDOW_TYPE_HINT_DIALOG);
 	if (parentWindow) {
 	    gtk_window_set_transient_for (window, parentWindow);
 	}
+	GdkEventMask mask;
+	g_object_get (G_OBJECT (window), "events", &mask, NULL);
+	mask |= GDK_FOCUS_CHANGE_MASK;
+	g_object_set (G_OBJECT (window), "events", mask, NULL);
 	g_signal_connect (window,
 	                  "delete-event",
 	                  G_CALLBACK (window_delete_event_cb),
 	                  self);
+	g_signal_connect (window,
+	                  "focus-out-event",
+	                  G_CALLBACK (window_focus_out_event_cb),
+	                  self);
 
 	GtkWidget *mainBox = gtk_vbox_new (FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (mainBox), 12);
+	gtk_box_set_spacing (GTK_BOX (mainBox), 18);
 	gtk_container_add (GTK_CONTAINER (window), mainBox);
 
 	GtkPaned *paned = GTK_PANED (gtk_hpaned_new ());
@@ -208,10 +231,15 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	                    TRUE, TRUE, 0);
 
 	GtkWidget *listWidget = [self createPreambleList];
+	GtkWidget *listFrame = gtk_frame_new (NULL);
+	gtk_container_add (GTK_CONTAINER (listFrame), listWidget);
+
 	GtkBox *listBox = GTK_BOX (gtk_vbox_new (FALSE, 0));
-	gtk_box_pack_start (listBox, listWidget, TRUE, TRUE, 0);
+	gtk_box_set_spacing (listBox, 6);
+	gtk_box_pack_start (listBox, listFrame, TRUE, TRUE, 0);
 
 	GtkContainer *listButtonBox = GTK_CONTAINER (gtk_hbox_new (FALSE, 0));
+	gtk_box_set_spacing (GTK_BOX (listButtonBox), 6);
 	gtk_box_pack_start (listBox, GTK_WIDGET (listButtonBox), FALSE, TRUE, 0);
 	GtkWidget *addButton = gtk_button_new_from_stock (GTK_STOCK_ADD);
 	g_signal_connect (addButton,
@@ -229,14 +257,19 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	gtk_paned_pack1 (paned, GTK_WIDGET (listBox), FALSE, TRUE);
 
 	preambleView = GTK_TEXT_VIEW (gtk_text_view_new ());
+	gtk_text_view_set_left_margin (preambleView, 3);
+	gtk_text_view_set_right_margin (preambleView, 3);
 	GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
 	        GTK_POLICY_AUTOMATIC, // horiz
 	        GTK_POLICY_ALWAYS); // vert
 	gtk_container_add (GTK_CONTAINER (scroller), GTK_WIDGET (preambleView));
-	gtk_paned_pack2 (paned, scroller, TRUE, TRUE);
+	GtkWidget *editorFrame = gtk_frame_new (NULL);
+	gtk_container_add (GTK_CONTAINER (editorFrame), scroller);
+	gtk_paned_pack2 (paned, editorFrame, TRUE, TRUE);
 
 	GtkContainer *buttonBox = GTK_CONTAINER (gtk_hbutton_box_new ());
+	gtk_box_set_spacing (GTK_BOX (buttonBox), 6);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonBox), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (mainBox),
 	                    GTK_WIDGET (buttonBox),
@@ -273,6 +306,8 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 }
 
 - (void) save {
+	if (!preambleView)
+		return;
 	if ([self isDefaultPreambleSelected])
 	    return;
 	GtkTextIter start,end;
@@ -285,6 +320,8 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 }
 
 - (void) revert {
+	if (!preambleView)
+		return;
 	GtkTextBuffer *preambleBuffer = gtk_text_view_get_buffer (preambleView);
 	gtk_text_buffer_set_text (preambleBuffer, [[preambles currentPreamble] UTF8String], -1);
 	gtk_text_view_set_editable (preambleView, ![self isDefaultPreambleSelected]);
@@ -424,6 +461,18 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 				-1);
 	}
 }
+
+- (void) nodeStylePropertyChanged:(NSNotification*)notification {
+	if ([self isDefaultPreambleSelected]) {
+		[self revert];
+	}
+}
+
+- (void) edgeStylePropertyChanged:(NSNotification*)notification {
+	if ([self isDefaultPreambleSelected]) {
+		[self revert];
+	}
+}
 @end
 
 // }}}
@@ -436,6 +485,15 @@ static gboolean window_delete_event_cb (GtkWidget *widget,
 	[editor hide];
 	[pool drain];
 	return TRUE; // we dealt with this event
+}
+
+static gboolean window_focus_out_event_cb (GtkWidget *widget,
+                                           GdkEvent  *event,
+                                           PreambleEditor *editor) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[editor save];
+	[pool drain];
+	return FALSE;
 }
 
 static void close_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
