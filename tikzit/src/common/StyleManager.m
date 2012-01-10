@@ -117,6 +117,26 @@
 }
 
 - (void) loadDefaultEdgeStyles {
+	[edgeStyles release];
+	edgeStyles = [[NSMutableArray alloc] initWithCapacity:3];
+
+	EdgeStyle *simple = [EdgeStyle defaultEdgeStyleWithName:@"simple"];
+	[simple setThickness:2.0f];
+	[self listenToEdgeStyle:simple];
+
+	EdgeStyle *arrow = [EdgeStyle defaultEdgeStyleWithName:@"arrow"];
+	[arrow setThickness:2.0f];
+	[arrow setDecorationStyle:ED_Arrow];
+	[self listenToEdgeStyle:arrow];
+
+	EdgeStyle *tick = [EdgeStyle defaultEdgeStyleWithName:@"tick"];
+	[tick setThickness:2.0f];
+	[tick setDecorationStyle:ED_Tick];
+	[self listenToEdgeStyle:tick];
+
+	[edgeStyles addObject:simple];
+	[edgeStyles addObject:arrow];
+	[edgeStyles addObject:tick];
 }
 
 - (void) loadDefaultNodeStyles {
