@@ -54,6 +54,7 @@ enum {
 - (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style usingSurface:(cairo_surface_t*)surface;
 - (void) addStyle:(NodeStyle*)style;
 - (void) postSelectedStyleChanged;
+- (void) clearModel;
 - (void) reloadStyles;
 @end
 
@@ -116,20 +117,6 @@ enum {
     [styleManager release];
 
     [super dealloc];
-}
-
-- (void) clearModel {
-    [self setSelectedStyle:nil];
-    GtkTreeModel *model = GTK_TREE_MODEL (store);
-    GtkTreeIter row;
-    if (gtk_tree_model_get_iter_first (model, &row)) {
-        do {
-            NodeStyle *rowStyle;
-            gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
-            [rowStyle release];
-        } while (gtk_tree_model_iter_next (model, &row));
-    }
-    gtk_list_store_clear (store);
 }
 
 - (StyleManager*) styleManager {
@@ -402,6 +389,20 @@ enum {
 
 - (void) postSelectedStyleChanged {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedStyleChanged" object:self];
+}
+
+- (void) clearModel {
+    [self setSelectedStyle:nil];
+    GtkTreeModel *model = GTK_TREE_MODEL (store);
+    GtkTreeIter row;
+    if (gtk_tree_model_get_iter_first (model, &row)) {
+        do {
+            NodeStyle *rowStyle;
+            gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
+            [rowStyle release];
+        } while (gtk_tree_model_iter_next (model, &row));
+    }
+    gtk_list_store_clear (store);
 }
 
 - (void) reloadStyles {
