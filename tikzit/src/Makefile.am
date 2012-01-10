@@ -95,7 +95,8 @@ tikzit_SOURCES += \
                  linux/PreambleEditor.m \
                  linux/Preambles+Storage.m \
                  linux/PreviewRenderer.m \
-                 linux/PreviewWindow.m
+                 linux/PreviewWindow.m \
+                 linux/SettingsDialog.m
 endif
 
 if WINDOWS

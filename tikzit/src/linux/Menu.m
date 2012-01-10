@@ -225,6 +225,12 @@ static void flip_vert_cb (GtkAction *action, MainWindow *window) {
 }
 
 #ifdef HAVE_POPPLER
+static void show_preferences_cb (GtkAction *action, MainWindow *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [window showSettingsDialog];
+    [pool drain];
+}
+
 static void show_preamble_cb (GtkAction *action, MainWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window editPreambles];
@@ -345,6 +351,10 @@ static const gchar ui_info[] =
 "      <separator/>"
 "      <menuitem action='FlipVert'/>"
 "      <menuitem action='FlipHoriz'/>"
+#ifdef HAVE_POPPLER
+"      <separator/>"
+"      <menuitem action='ShowPreferences'/>"
+#endif
 "    </menu>"
 "    <menu action='ViewMenu'>"
 "      <menu action='ToolbarStyle'>"
@@ -435,6 +445,11 @@ static GtkActionEntry static_entries[] = {
 
     /* EditMenu */
     { "Tool", NULL, N_("_Tool") },
+
+#ifdef HAVE_POPPLER
+    { "ShowPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
+      N_("Edit the TikZiT preferences"), G_CALLBACK (show_preferences_cb) },
+#endif
 
     /* ViewMenu */
     { "ToolbarStyle", NULL, N_("_Toolbar style") },

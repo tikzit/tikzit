@@ -16,9 +16,15 @@
  */
 
 #import "PreviewRenderer.h"
+
 #import "CairoRenderContext.h"
+#import "Configuration.h"
+#import "Preambles.h"
+#import "TikzDocument.h"
 
 @implementation PreviewRenderer
+
+@synthesize preambles,document;
 
 - (id) init {
     [self release];
@@ -26,17 +32,35 @@
     return nil;
 }
 
-- (id) initWithPreambles:(Preambles*)p {
+- (id) initWithPreambles:(Preambles*)p config:(Configuration*)c {
     self = [super init];
 
     if (self) {
         document = nil;
+        config = [c retain];
         preambles = [p retain];
         pdfDocument = NULL;
         pdfPage = NULL;
     }
 
     return self;
+}
+
+- (void) dealloc {
+    [document release];
+    [config release];
+    [preambles release];
+
+    if (pdfDocument) {
+        g_object_unref (pdfDocument);
+        pdfDocument = NULL;
+    }
+    if (pdfPage) {
+        g_object_unref (pdfPage);
+        pdfPage = NULL;
+    }
+
+    [super dealloc];
 }
 
 - (BOOL) update {
@@ -85,11 +109,14 @@
     NSString *pdfFile = [NSString stringWithFormat:@"file://%@/tikzit.pdf", tempDir];
     [tex writeToFile:texFile atomically:YES];
 
-    // run pdflatex in a bash shell
     NSTask *latexTask = [[NSTask alloc] init];
     [latexTask setCurrentDirectoryPath:tempDir];
+
     // GNUStep is clever enough to use PATH
-    [latexTask setLaunchPath:@"pdflatex"];
+    NSString *path = [config stringEntry:@"pdflatex"
+                                 inGroup:@"Previews"
+                             withDefault:@"pdflatex"];
+    [latexTask setLaunchPath:path];
 
     NSArray *args = [NSArray arrayWithObjects:
         @"-fmt=latex",
@@ -105,14 +132,26 @@
 
     NSFileHandle *latexOut = [pout fileHandleForReading];
 
-    [latexTask launch];
-    [latexTask waitUntilExit];
+    BOOL success = NO;
+
+    NS_DURING {
+        [latexTask launch];
+        [latexTask waitUntilExit];
+    } NS_HANDLER {
+        NSString *desc = [NSString stringWithFormat:@"Failed to run '%@'", path];
+        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:2];
+        [errorDetail setValue:desc forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:TZErrorDomain code:TZ_ERR_IO userInfo:errorDetail];
+
+        // remove all temporary files
+        [[NSFileManager defaultManager] removeFileAtPath:tempDir handler:NULL];
+
+        return NO;
+    } NS_ENDHANDLER
 
     NSData *data = [latexOut readDataToEndOfFile];
     NSString *str = [[NSString alloc] initWithData:data
                                           encoding:NSUTF8StringEncoding];
-
-    BOOL success = NO;
 
     if ([latexTask terminationStatus] != 0) {
         if (error) {
@@ -154,20 +193,6 @@
 
 - (BOOL) isValid {
     return pdfPage ? YES : NO;
-}
-
-- (Preambles*) preambles {
-    return preambles;
-}
-
-- (TikzDocument*) document {
-    return document;
-}
-
-- (void) setDocument:(TikzDocument*)doc {
-    [doc retain];
-    [document release];
-    document = doc;
 }
 
 - (double) width {

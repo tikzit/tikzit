@@ -34,8 +34,11 @@
 #endif
 #import "PropertyPane.h"
 #import "RecentManager.h"
-#import "StyleManager.h"
+#ifdef HAVE_POPPLER
+#import "SettingsDialog.h"
+#endif
 #import "Shape.h"
+#import "StyleManager.h"
 #import "StyleManager+Storage.h"
 #import "StylesPane.h"
 #import "SupportDir.h"
@@ -125,6 +128,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         preambles = nil;
         preambleWindow = nil;
         previewWindow = nil;
+        settingsDialog = nil;
         suppressTikzUpdates = NO;
         hasParseError = NO;
 
@@ -156,6 +160,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [propertyPane release];
     [preambleWindow release];
     [previewWindow release];
+    [settingsDialog release];
     [surface release];
     [lastFolder release];
     [document release];
@@ -352,11 +357,21 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 - (void) showPreview {
 #ifdef HAVE_POPPLER
     if (previewWindow == nil) {
-        previewWindow = [[PreviewWindow alloc] initWithPreambles:preambles];
+        previewWindow = [[PreviewWindow alloc] initWithPreambles:preambles config:configFile];
         [previewWindow setParentWindow:mainWindow];
         [previewWindow setDocument:document];
     }
     [previewWindow show];
+#endif
+}
+
+- (void) showSettingsDialog {
+#ifdef HAVE_POPPLER
+    if (settingsDialog == nil) {
+        settingsDialog = [[SettingsDialog alloc] initWithConfiguration:configFile];
+        [settingsDialog setParentWindow:mainWindow];
+    }
+    [settingsDialog show];
 #endif
 }
 

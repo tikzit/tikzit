@@ -101,10 +101,17 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 }
 
 - (void) setParentWindow:(GtkWindow*)parent {
-	parentWindow = parent;
-	if (window) {
-	    gtk_window_set_transient_for (window, parentWindow);
-	}
+    GtkWindow *oldParent = parentWindow;
+
+    if (parent)
+        g_object_ref (parentWindow);
+    parentWindow = parent;
+    if (oldParent)
+        g_object_unref (oldParent);
+
+    if (window) {
+        gtk_window_set_transient_for (window, parentWindow);
+    }
 }
 
 - (void) show {
@@ -141,8 +148,13 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 - (void) dealloc {
 	[preambles release];
 	preambles = nil;
-	gtk_widget_destroy (GTK_WIDGET (window));
-	window = NULL;
+    if (window) {
+        gtk_widget_destroy (GTK_WIDGET (window));
+        window = NULL;
+    }
+    if (parentWindow) {
+        g_object_ref (parentWindow);
+    }
 
 	[super dealloc];
 }
@@ -220,9 +232,8 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	                  G_CALLBACK (window_focus_out_event_cb),
 	                  self);
 
-	GtkWidget *mainBox = gtk_vbox_new (FALSE, 0);
+	GtkWidget *mainBox = gtk_vbox_new (FALSE, 18);
 	gtk_container_set_border_width (GTK_CONTAINER (mainBox), 12);
-	gtk_box_set_spacing (GTK_BOX (mainBox), 18);
 	gtk_container_add (GTK_CONTAINER (window), mainBox);
 
 	GtkPaned *paned = GTK_PANED (gtk_hpaned_new ());
@@ -234,12 +245,10 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	GtkWidget *listFrame = gtk_frame_new (NULL);
 	gtk_container_add (GTK_CONTAINER (listFrame), listWidget);
 
-	GtkBox *listBox = GTK_BOX (gtk_vbox_new (FALSE, 0));
-	gtk_box_set_spacing (listBox, 6);
+	GtkBox *listBox = GTK_BOX (gtk_vbox_new (FALSE, 6));
 	gtk_box_pack_start (listBox, listFrame, TRUE, TRUE, 0);
 
-	GtkContainer *listButtonBox = GTK_CONTAINER (gtk_hbox_new (FALSE, 0));
-	gtk_box_set_spacing (GTK_BOX (listButtonBox), 6);
+	GtkContainer *listButtonBox = GTK_CONTAINER (gtk_hbox_new (FALSE, 6));
 	gtk_box_pack_start (listBox, GTK_WIDGET (listButtonBox), FALSE, TRUE, 0);
 	GtkWidget *addButton = gtk_button_new_from_stock (GTK_STOCK_ADD);
 	g_signal_connect (addButton,
@@ -544,4 +553,4 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 
 // }}}
 
-// vim:ft=objc:ts=4:noet:sts=4:sw=4:foldmethod=marker
+// vim:ft=objc:ts=4:et:sts=4:sw=4:foldmethod=marker

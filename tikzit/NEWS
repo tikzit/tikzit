@@ -4,6 +4,7 @@ tikzit 0.8 (2012-01-??):
 	* Add support for scale to node styles
 	* Add support for editing edge styles
 	* Add support for multiple custom preambles
+	* The path to pdflatex is now configurable
 	* Make everything look a bit better
 
 tikzit 0.7 (2011-12-06):

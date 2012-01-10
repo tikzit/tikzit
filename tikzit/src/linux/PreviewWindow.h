@@ -18,6 +18,7 @@
 #import "TZFoundation.h"
 #import <gtk/gtk.h>
 
+@class Configuration;
 @class Preambles;
 @class PreviewRenderer;
 @class TikzDocument;
@@ -30,7 +31,7 @@
     GtkWindow       *parent;
 }
 
-- (id) initWithPreambles:(Preambles*)p;
+- (id) initWithPreambles:(Preambles*)p config:(Configuration*)c;
 
 - (void) setParentWindow:(GtkWindow*)parent;
 

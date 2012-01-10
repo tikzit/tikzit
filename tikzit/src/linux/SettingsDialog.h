@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,27 +18,23 @@
 #import "TZFoundation.h"
 #import <gtk/gtk.h>
 
-@class Preambles;
+@class Configuration;
 
-@interface PreambleEditor: NSObject {
-    Preambles     *preambles;
+@interface SettingsDialog: NSObject {
+    Configuration *configuration;
 
     // we don't keep any refs, as we control
     // the top window
     GtkWindow     *parentWindow;
     GtkWindow     *window;
-    GtkListStore  *preambleListStore;
-    GtkTreeView   *preambleSelector;
-    GtkTextView   *preambleView;
-    BOOL           blockSignals;
-    BOOL           adding;
+    GtkEntry      *pdflatexPathEntry;
 }
 
-- (id) initWithPreambles:(Preambles*)p;
+@property (retain) Configuration* configuration;
+
+- (id) initWithConfiguration:(Configuration*)c;
 
 - (void) setParentWindow:(GtkWindow*)parent;
-
-- (Preambles*) preambles;
 
 - (void) show;
 - (void) hide;

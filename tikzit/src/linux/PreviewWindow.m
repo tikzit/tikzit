@@ -37,12 +37,12 @@
     return nil;
 }
 
-- (id) initWithPreambles:(Preambles*)p {
+- (id) initWithPreambles:(Preambles*)p config:(Configuration*)c {
     self = [super init];
 
     if (self) {
         parent = NULL;
-        previewer = [[PreviewRenderer alloc] initWithPreambles:p];
+        previewer = [[PreviewRenderer alloc] initWithPreambles:p config:c];
 
         window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
         gtk_window_set_title (window, "Preview");

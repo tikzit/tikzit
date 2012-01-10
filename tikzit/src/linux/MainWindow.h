@@ -27,6 +27,7 @@
 @class Preambles;
 @class PreambleEditor;
 @class PreviewWindow;
+@class SettingsDialog;
 @class StyleManager;
 @class StylesPane;
 @class TikzDocument;
@@ -36,7 +37,7 @@
  */
 @interface MainWindow: NSObject {
     // the main application configuration
-    Configuration *configFile;
+    Configuration     *configFile;
     // maintains the known (user-defined) styles
     StyleManager      *styleManager;
     // maintains the preambles used for previews
@@ -60,6 +61,7 @@
     PropertyPane      *propertyPane;
     PreambleEditor    *preambleWindow;
     PreviewWindow     *previewWindow;
+    SettingsDialog    *settingsDialog;
 
     WidgetSurface     *surface;
 
@@ -130,6 +132,10 @@
  * Show or update the preview window.
  */
 - (void) showPreview;
+/**
+ * Show the settings dialog.
+ */
+- (void) showSettingsDialog;
 
 /**
  * The graph input handler

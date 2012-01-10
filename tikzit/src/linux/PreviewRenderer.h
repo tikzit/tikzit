@@ -17,30 +17,31 @@
 
 #import "TZFoundation.h"
 #import <poppler.h>
-#import "Preambles.h"
+
 #import "Surface.h"
-#import "TikzDocument.h"
+
+@class Configuration;
+@class Preambles;
+@class TikzDocument;
 
 @interface PreviewRenderer: NSObject<RenderDelegate> {
+    Configuration   *config;
     Preambles       *preambles;
     TikzDocument    *document;
     PopplerDocument *pdfDocument;
     PopplerPage     *pdfPage;
 }
 
-- (id) initWithPreambles:(Preambles*)p;
+@property (readonly) Preambles    *preambles;
+@property (retain)   TikzDocument *document;
+@property (readonly) double        height;
+@property (readonly) double        width;
+
+- (id) initWithPreambles:(Preambles*)p config:(Configuration*)c;
 
 - (BOOL) updateWithError:(NSError**)error;
 - (BOOL) update;
 - (BOOL) isValid;
-
-- (Preambles*) preambles;
-
-- (TikzDocument*) document;
-- (void) setDocument:(TikzDocument*)doc;
-
-- (double) width;
-- (double) height;
 
 @end
 
