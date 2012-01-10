@@ -133,4 +133,4 @@ linux/Menu.m: linux/icondata.m
 linux/logo.m: linux/logodata.m
 
 EXTRA_DIST = linux/*.h common/*.h $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym
-MAINTAINERCLEANFILES = $(PARSERFILES)
+MAINTAINERCLEANFILES = $(PARSERFILES) linux/icondata.m linux/logodata.m
