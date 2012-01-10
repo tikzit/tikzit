@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,29 +18,32 @@
 #import "TZFoundation.h"
 #import <gtk/gtk.h>
 
+@class Configuration;
+@class EdgeStylesPalette;
+@class NodeStylesPalette;
 @class StyleManager;
-@class NodeStyleSelector;
-@class NodeStyleEditor;
 @class TikzDocument;
 
-@interface NodeStylesPalette: NSObject {
-    TikzDocument          *document;
-    NodeStyleSelector     *selector;
-    NodeStyleEditor       *editor;
+@interface StylesPane: NSObject {
+    NodeStylesPalette *nodeStyles;
+    EdgeStylesPalette *edgeStyles;
 
-    GtkWidget             *palette;
+    GtkWidget         *stylesPane;
 
-    GtkWidget             *removeStyleButton;
-    GtkWidget             *applyStyleButton;
-    GtkWidget             *clearStyleButton;
+    GtkExpander       *nodeStylesExpander;
+    GtkExpander       *edgeStylesExpander;
 }
 
-@property (retain)   StyleManager *styleManager;
-@property (retain)   TikzDocument *document;
 @property (readonly) GtkWidget    *widget;
+@property (retain)   TikzDocument *document;
+@property (retain)   StyleManager *styleManager;
 
 - (id) initWithManager:(StyleManager*)m;
 
+- (void) restoreUiStateFromConfig:(Configuration*)file group:(NSString*)group;
+- (void) saveUiStateToConfig:(Configuration*)file group:(NSString*)group;
+
 @end
 
-// vim:ft=objc:ts=4:et:sts=4:sw=4:foldmethod=marker
+// vim:ft=objc:ts=8:et:sts=4:sw=4:foldmethod=marker
+

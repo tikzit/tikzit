@@ -22,22 +22,22 @@
 
 @interface NodeStyleEditor: NSObject {
     NodeStyle             *style;
-	GtkTable              *table;
+    GtkTable              *table;
     GtkEntry              *nameEdit;
     GtkComboBox           *shapeNameCombo;
     GtkColorButton        *strokeColorButton;
     GtkWidget             *makeStrokeTexSafeButton;
     GtkColorButton        *fillColorButton;
     GtkWidget             *makeFillTexSafeButton;
-	GtkAdjustment         *scaleAdj;
-	BOOL                   blockSignals;
+    GtkAdjustment         *scaleAdj;
+    BOOL                   blockSignals;
 }
 
-@property (retain) NodeStyle *style;
+@property (retain)   NodeStyle *style;
 @property (readonly) GtkWidget *widget;
 
 - (id) init;
 
 @end
 
-// vim:ft=objc:ts=4:noet:sts=4:sw=4
+// vim:ft=objc:ts=4:et:sts=4:sw=4:foldmethod=marker

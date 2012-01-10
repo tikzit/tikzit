@@ -35,6 +35,8 @@
     NSString *path;
     NSSet *nodesetBeingModified;
     BasicMapTable *nodesetBeingModifiedOldCopy;
+    NSSet *edgesetBeingModified;
+    BasicMapTable *edgesetBeingModifiedOldCopy;
     NSPoint currentNodeShift;
     Node *nodeBeingModified;
     Node *nodeBeingModifiedOldCopy;
@@ -109,6 +111,11 @@
 - (void) modifyEdgeCheckPoint;
 - (void) endModifyEdge;
 - (void) cancelModifyEdge;
+
+- (void) startModifyEdges:(NSSet*)edges;
+- (void) modifyEdgesCheckPoint;
+- (void) endModifyEdges;
+- (void) cancelModifyEdges;
 
 - (void) startChangeBoundingBox;
 - (void) changeBoundingBoxCheckPoint;

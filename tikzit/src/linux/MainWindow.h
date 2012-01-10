@@ -23,12 +23,12 @@
 @class GraphRenderer;
 @class GraphInputHandler;
 @class Menu;
-@class StylesPalette;
-@class StyleManager;
 @class PropertyPane;
 @class Preambles;
 @class PreambleEditor;
 @class PreviewWindow;
+@class StyleManager;
+@class StylesPane;
 @class TikzDocument;
 
 /**
@@ -46,17 +46,17 @@
     GtkWindow         *mainWindow;
     GtkTextBuffer     *tikzBuffer;
     GtkStatusbar      *statusBar;
-    GtkPaned          *propsPane;
-    GtkPaned          *stylesPane;
-    GtkPaned          *graphPane;
-    GtkWidget         *tikzDisp;
+    GtkPaned          *propertyPaneSplitter;
+    GtkPaned          *stylesPaneSplitter;
+    GtkPaned          *tikzPaneSplitter;
+    GtkWidget         *tikzPane;
 
     // Classes that manage parts of the window
     // (or other windows)
     Menu              *menu;
     GraphRenderer     *renderer;
     GraphInputHandler *inputHandler;
-    StylesPalette     *stylesPalette;
+    StylesPane        *stylesPane;
     PropertyPane      *propertyPane;
     PreambleEditor    *preambleWindow;
     PreviewWindow     *previewWindow;

@@ -134,19 +134,19 @@ static const float cpLineWidth = 1.0;
     [context moveTo:c_source];
     [context curveTo:c_target withCp1:c_cp1 andCp2:c_cp2];
 
-	if ([self style] != nil) {
+    if ([self style] != nil) {
         // draw edge decoration
         switch ([[self style] decorationStyle]) {
             case ED_None:
                 break;
             case ED_Tick:
-				[context moveTo:[transformer toScreen:[self leftNormal]]];
-				[context lineTo:[transformer toScreen:[self rightNormal]]];
+                [context moveTo:[transformer toScreen:[self leftNormal]]];
+                [context lineTo:[transformer toScreen:[self rightNormal]]];
                 break;
             case ED_Arrow:
-				[context moveTo:[transformer toScreen:[self leftNormal]]];
-				[context lineTo:[transformer toScreen:[self midTan]]];
-				[context lineTo:[transformer toScreen:[self rightNormal]]];
+                [context moveTo:[transformer toScreen:[self leftNormal]]];
+                [context lineTo:[transformer toScreen:[self midTan]]];
+                [context lineTo:[transformer toScreen:[self rightNormal]]];
                 break;
         }
     }
@@ -157,7 +157,8 @@ static const float cpLineWidth = 1.0;
     [self updateControls];
 
     [context saveState];
-    [context setLineWidth:edgeWidth];
+    const CGFloat lineWidth = style ? [style thickness] : edgeWidth;
+    [context setLineWidth:lineWidth];
     [self createStrokePathInContext:context withTransformer:[surface transformer]];
     RColor color = BlackRColor;
     if (selected) {
@@ -170,11 +171,11 @@ static const float cpLineWidth = 1.0;
         [self renderControlsToSurface:surface withContext:context];
     }
 
-	if ([self hasEdgeNode]) {
-		NSPoint labelPt = [[surface transformer] toScreen:[self mid]];
-		[[self edgeNode] renderLabelAt:labelPt
-			               withContext:context];
-	}
+    if ([self hasEdgeNode]) {
+        NSPoint labelPt = [[surface transformer] toScreen:[self mid]];
+        [[self edgeNode] renderLabelAt:labelPt
+                           withContext:context];
+    }
 }
 
 - (NSRect) renderedBoundsWithTransformer:(Transformer*)t whenSelected:(BOOL)selected {
@@ -205,4 +206,4 @@ static const float cpLineWidth = 1.0;
 
 @end
 
-// vim:ft=objc:ts=4:noet:sts=4:sw=4
+// vim:ft=objc:ts=4:et:sts=4:sw=4

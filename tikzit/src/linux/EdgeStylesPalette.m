@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -15,31 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "NodeStylesPalette.h"
+#import "EdgeStylesPalette.h"
 
-#import "NodeStyleSelector.h"
-#import "NodeStyleEditor.h"
+#import "EdgeStyleSelector.h"
+#import "EdgeStyleEditor.h"
 #import "StyleManager.h"
 #import "TikzDocument.h"
 
 // {{{ Internal interfaces
 // {{{ GTK+ Callbacks
-static void add_style_button_cb (GtkButton *widget, NodeStylesPalette *palette);
-static void remove_style_button_cb (GtkButton *widget, NodeStylesPalette *palette);
-static void apply_style_button_cb (GtkButton *widget, NodeStylesPalette *palette);
-static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette);
+static void add_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette);
+static void remove_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette);
+static void apply_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette);
+static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette);
 // }}}
 // {{{ Notifications
 
-@interface NodeStylesPalette (Notifications)
+@interface EdgeStylesPalette (Notifications)
 - (void) selectedStyleChanged:(NSNotification*)notification;
-- (void) nodeSelectionChanged:(NSNotification*)n;
+- (void) edgeSelectionChanged:(NSNotification*)n;
 @end
 
 // }}}
 // {{{ Private
 
-@interface NodeStylesPalette (Private)
+@interface EdgeStylesPalette (Private)
 - (void) updateButtonState;
 - (void) removeSelectedStyle;
 - (void) applySelectedStyle;
@@ -50,7 +50,7 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 // }}}
 // {{{ API
 
-@implementation NodeStylesPalette
+@implementation EdgeStylesPalette
 
 @synthesize widget=palette;
 
@@ -65,10 +65,12 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 
     if (self) {
         document = nil;
-        selector = [[NodeStyleSelector alloc] initWithStyleManager:m];
-        editor = [[NodeStyleEditor alloc] init];
+        selector = [[EdgeStyleSelector alloc] initWithStyleManager:m];
+        editor = [[EdgeStyleEditor alloc] init];
 
         palette = gtk_vbox_new (FALSE, 0);
+        // FIXME: remove this line when we add edge styles
+        gtk_container_set_border_width (GTK_CONTAINER (palette), 6);
         gtk_box_set_spacing (GTK_BOX (palette), 6);
         g_object_ref_sink (palette);
 
@@ -112,7 +114,7 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 
         applyStyleButton = gtk_button_new_with_label ("Apply");
         g_object_ref_sink (applyStyleButton);
-        gtk_widget_set_tooltip_text (applyStyleButton, "Apply style to selected nodes");
+        gtk_widget_set_tooltip_text (applyStyleButton, "Apply style to selected edges");
         gtk_box_pack_start (bbox2, applyStyleButton, FALSE, FALSE, 5);
         g_signal_connect (G_OBJECT (applyStyleButton),
             "clicked",
@@ -121,7 +123,7 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 
         clearStyleButton = gtk_button_new_with_label ("Clear");
         g_object_ref_sink (clearStyleButton);
-        gtk_widget_set_tooltip_text (clearStyleButton, "Clear style from selected nodes");
+        gtk_widget_set_tooltip_text (clearStyleButton, "Clear style from selected edges");
         gtk_box_pack_start (bbox2, clearStyleButton, FALSE, FALSE, 0);
         g_signal_connect (G_OBJECT (clearStyleButton),
             "clicked",
@@ -166,17 +168,19 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 
     if (document != nil) {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(nodeSelectionChanged:)
-                                                     name:@"NodeSelectionChanged"
+                                                 selector:@selector(edgeSelectionChanged:)
+                                                     name:@"EdgeSelectionChanged"
                                                    object:[document pickSupport]];
     }
 }
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [editor release];
     [selector release];
     [document release];
+
     g_object_unref (palette);
     g_object_unref (removeStyleButton);
     g_object_unref (applyStyleButton);
@@ -190,13 +194,13 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 // }}}
 // {{{ Notifications
 
-@implementation NodeStylesPalette (Notifications)
+@implementation EdgeStylesPalette (Notifications)
 - (void) selectedStyleChanged:(NSNotification*)notification {
     [editor setStyle:[selector selectedStyle]];
     [self updateButtonState];
 }
 
-- (void) nodeSelectionChanged:(NSNotification*)n {
+- (void) edgeSelectionChanged:(NSNotification*)n {
     [self updateButtonState];
 }
 @end
@@ -204,41 +208,41 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 // }}}
 // {{{ Private
 
-@implementation NodeStylesPalette (Private)
+@implementation EdgeStylesPalette (Private)
 - (void) updateButtonState {
-    gboolean hasNodeSelection = [[[document pickSupport] selectedNodes] count] > 0;
+    gboolean hasEdgeSelection = [[[document pickSupport] selectedEdges] count] > 0;
     gboolean hasStyleSelection = [selector selectedStyle] != nil;
 
-    gtk_widget_set_sensitive (applyStyleButton, hasNodeSelection && hasStyleSelection);
-    gtk_widget_set_sensitive (clearStyleButton, hasNodeSelection);
+    gtk_widget_set_sensitive (applyStyleButton, hasEdgeSelection && hasStyleSelection);
+    gtk_widget_set_sensitive (clearStyleButton, hasEdgeSelection);
     gtk_widget_set_sensitive (removeStyleButton, hasStyleSelection);
 }
 
 - (void) removeSelectedStyle {
-    NodeStyle *style = [selector selectedStyle];
+    EdgeStyle *style = [selector selectedStyle];
     if (style)
-        [[selector styleManager] removeNodeStyle:style];
+        [[selector styleManager] removeEdgeStyle:style];
 }
 
 - (void) applySelectedStyle {
-    [document startModifyNodes:[[document pickSupport] selectedNodes]];
+    [document startModifyEdges:[[document pickSupport] selectedEdges]];
 
-    NodeStyle *style = [selector selectedStyle];
-    for (Node *node in [[document pickSupport] selectedNodes]) {
-        [node setStyle:style];
+    EdgeStyle *style = [selector selectedStyle];
+    for (Edge *edge in [[document pickSupport] selectedEdges]) {
+        [edge setStyle:style];
     }
 
-    [document endModifyNodes];
+    [document endModifyEdges];
 }
 
 - (void) clearSelectedStyle {
-    [document startModifyNodes:[[document pickSupport] selectedNodes]];
+    [document startModifyEdges:[[document pickSupport] selectedEdges]];
 
-    for (Node *node in [[document pickSupport] selectedNodes]) {
-        [node setStyle:nil];
+    for (Edge *edge in [[document pickSupport] selectedEdges]) {
+        [edge setStyle:nil];
     }
 
-    [document endModifyNodes];
+    [document endModifyEdges];
 }
 
 @end
@@ -246,29 +250,29 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 // }}}
 // {{{ GTK+ callbacks
 
-static void add_style_button_cb (GtkButton *widget, NodeStylesPalette *palette) {
+static void add_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    NodeStyle *newStyle = [NodeStyle defaultNodeStyleWithName:@"newstyle"];
-    [[palette styleManager] addNodeStyle:newStyle];
-    [[palette styleManager] setActiveNodeStyle:newStyle];
+    EdgeStyle *newStyle = [EdgeStyle defaultEdgeStyleWithName:@"newstyle"];
+    [[palette styleManager] addEdgeStyle:newStyle];
+    [[palette styleManager] setActiveEdgeStyle:newStyle];
 
     [pool drain];
 }
 
-static void remove_style_button_cb (GtkButton *widget, NodeStylesPalette *palette) {
+static void remove_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [palette removeSelectedStyle];
     [pool drain];
 }
 
-static void apply_style_button_cb (GtkButton *widget, NodeStylesPalette *palette) {
+static void apply_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [palette applySelectedStyle];
     [pool drain];
 }
 
-static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette) {
+static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [palette clearSelectedStyle];
     [pool drain];

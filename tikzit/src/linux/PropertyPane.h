@@ -19,8 +19,8 @@
 #import <gtk/gtk.h>
 #import "Configuration.h"
 #import "TikzDocument.h"
-#import "PropertyListEditor.h"
 
+@class PropertyListEditor;
 @class GraphPropertyDelegate;
 @class NodePropertyDelegate;
 @class EdgePropertyDelegate;
@@ -52,16 +52,14 @@
     GtkEntry        *edgeNodeLabelEntry;
 }
 
-@property (readonly) GtkWidget *widget;
+@property (readonly) GtkWidget    *widget;
+@property (retain)   TikzDocument *document;
 
 - (id) init;
-
-- (TikzDocument*) document;
-- (void) setDocument:(TikzDocument*)doc;
 
 - (void) restoreUiStateFromConfig:(Configuration*)file group:(NSString*)group;
 - (void) saveUiStateToConfig:(Configuration*)file group:(NSString*)group;
 
 @end
 
-// vim:ft=objc:ts=8:et:sts=4:sw=4
+// vim:ft=objc:ts=8:et:sts=4:sw=4:foldmethod=marker

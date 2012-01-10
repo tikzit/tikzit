@@ -37,7 +37,7 @@
 #import "StyleManager.h"
 #import "Shape.h"
 #import "StyleManager+Storage.h"
-#import "NodeStylesPalette.h"
+#import "StylesPane.h"
 #import "SupportDir.h"
 #import "TikzDocument.h"
 #import "WidgetSurface.h"
@@ -152,7 +152,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [menu release];
     [renderer release];
     [inputHandler release];
-    [stylesPalette release];
+    [stylesPane release];
     [propertyPane release];
     [preambleWindow release];
     [previewWindow release];
@@ -163,10 +163,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     g_object_unref (mainWindow);
     g_object_unref (tikzBuffer);
     g_object_unref (statusBar);
-    g_object_unref (propsPane);
-    g_object_unref (stylesPane);
-    g_object_unref (graphPane);
-    g_object_unref (tikzDisp);
+    g_object_unref (propertyPaneSplitter);
+    g_object_unref (stylesPaneSplitter);
+    g_object_unref (tikzPaneSplitter);
+    g_object_unref (tikzPane);
 
     [super dealloc];
 }
@@ -455,6 +455,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
     [styleManager saveStylesUsingConfigurationName:@"styles"];
     [propertyPane saveUiStateToConfig:configFile group:@"PropertyPane"];
+    [stylesPane saveUiStateToConfig:configFile group:@"StylesPane"];
 
     if (lastFolder != nil) {
         [configFile setStringEntry:@"lastFolder" inGroup:@"Paths" value:lastFolder];
@@ -592,41 +593,41 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_container_add (GTK_CONTAINER (toolbarBox), [menu toolbar]);
     gtk_widget_show ([menu toolbar]);
 
-    propsPane = GTK_PANED (gtk_hpaned_new ());
-    g_object_ref_sink (propsPane);
-    gtk_widget_show (GTK_WIDGET (propsPane));
-    gtk_box_pack_start (mainLayout, GTK_WIDGET (propsPane), TRUE, TRUE, 0);
+    propertyPaneSplitter = GTK_PANED (gtk_hpaned_new ());
+    g_object_ref_sink (propertyPaneSplitter);
+    gtk_widget_show (GTK_WIDGET (propertyPaneSplitter));
+    gtk_box_pack_start (mainLayout, GTK_WIDGET (propertyPaneSplitter), TRUE, TRUE, 0);
 
     propertyPane = [[PropertyPane alloc] init];
     GtkWidget *propFrame = gtk_frame_new (NULL);
     gtk_container_add (GTK_CONTAINER (propFrame), [propertyPane widget]);
-    gtk_paned_pack1 (propsPane, propFrame, FALSE, TRUE);
+    gtk_paned_pack1 (propertyPaneSplitter, propFrame, FALSE, TRUE);
     gtk_widget_show (propFrame);
     gtk_widget_show ([propertyPane widget]);
 
-    stylesPane = GTK_PANED (gtk_hpaned_new ());
-    g_object_ref_sink (stylesPane);
-    gtk_widget_show (GTK_WIDGET (stylesPane));
-    gtk_paned_pack2 (propsPane, GTK_WIDGET (stylesPane), TRUE, TRUE);
+    stylesPaneSplitter = GTK_PANED (gtk_hpaned_new ());
+    g_object_ref_sink (stylesPaneSplitter);
+    gtk_widget_show (GTK_WIDGET (stylesPaneSplitter));
+    gtk_paned_pack2 (propertyPaneSplitter, GTK_WIDGET (stylesPaneSplitter), TRUE, TRUE);
 
-    stylesPalette = [[NodeStylesPalette alloc] initWithManager:styleManager];
+    stylesPane = [[StylesPane alloc] initWithManager:styleManager];
     GtkWidget *stylesFrame = gtk_frame_new (NULL);
-    gtk_container_add (GTK_CONTAINER (stylesFrame), [stylesPalette widget]);
-    gtk_paned_pack2 (stylesPane, stylesFrame, FALSE, TRUE);
+    gtk_container_add (GTK_CONTAINER (stylesFrame), [stylesPane widget]);
+    gtk_paned_pack2 (stylesPaneSplitter, stylesFrame, FALSE, TRUE);
     gtk_widget_show (stylesFrame);
-    gtk_widget_show ([stylesPalette widget]);
+    gtk_widget_show ([stylesPane widget]);
 
-    graphPane = GTK_PANED (gtk_vpaned_new ());
-    g_object_ref_sink (graphPane);
-    gtk_widget_show (GTK_WIDGET (graphPane));
-    gtk_paned_pack1 (stylesPane, GTK_WIDGET (graphPane), TRUE, TRUE);
+    tikzPaneSplitter = GTK_PANED (gtk_vpaned_new ());
+    g_object_ref_sink (tikzPaneSplitter);
+    gtk_widget_show (GTK_WIDGET (tikzPaneSplitter));
+    gtk_paned_pack1 (stylesPaneSplitter, GTK_WIDGET (tikzPaneSplitter), TRUE, TRUE);
 
     surface = [[WidgetSurface alloc] init];
     gtk_widget_show ([surface widget]);
     GtkWidget *graphFrame = gtk_frame_new (NULL);
     gtk_container_add (GTK_CONTAINER (graphFrame), [surface widget]);
     gtk_widget_show (graphFrame);
-    gtk_paned_pack1 (graphPane, graphFrame, TRUE, TRUE);
+    gtk_paned_pack1 (tikzPaneSplitter, graphFrame, TRUE, TRUE);
     [surface setDefaultScale:50.0f];
     [surface setKeepCentered:YES];
     [surface setGrabsFocusOnClick:YES];
@@ -640,16 +641,16 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     GtkWidget *tikzScroller = gtk_scrolled_window_new (NULL, NULL);
     gtk_widget_show (tikzScroller);
 
-    tikzDisp = gtk_text_view_new_with_buffer (tikzBuffer);
-    gtk_text_view_set_left_margin (GTK_TEXT_VIEW (tikzDisp), 3);
-    gtk_text_view_set_right_margin (GTK_TEXT_VIEW (tikzDisp), 3);
-    g_object_ref_sink (tikzDisp);
-    gtk_widget_show (tikzDisp);
-    gtk_container_add (GTK_CONTAINER (tikzScroller), tikzDisp);
+    tikzPane = gtk_text_view_new_with_buffer (tikzBuffer);
+    gtk_text_view_set_left_margin (GTK_TEXT_VIEW (tikzPane), 3);
+    gtk_text_view_set_right_margin (GTK_TEXT_VIEW (tikzPane), 3);
+    g_object_ref_sink (tikzPane);
+    gtk_widget_show (tikzPane);
+    gtk_container_add (GTK_CONTAINER (tikzScroller), tikzPane);
     GtkWidget *tikzFrame = gtk_frame_new (NULL);
     gtk_container_add (GTK_CONTAINER (tikzFrame), tikzScroller);
     gtk_widget_show (tikzFrame);
-    gtk_paned_pack2 (graphPane, tikzFrame, FALSE, TRUE);
+    gtk_paned_pack2 (tikzPaneSplitter, tikzFrame, FALSE, TRUE);
 
     statusBar = GTK_STATUSBAR (gtk_statusbar_new ());
     gtk_widget_show (GTK_WIDGET (statusBar));
@@ -670,17 +671,18 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     }
     int panePos = [configFile integerEntry:@"toolboxWidth" inGroup:@"mainWindow"];
     if (panePos > 0) {
-        gtk_paned_set_position (propsPane, panePos);
+        gtk_paned_set_position (propertyPaneSplitter, panePos);
     }
     panePos = [configFile integerEntry:@"styleboxWidth" inGroup:@"mainWindow"];
     if (panePos > 0) {
-        gtk_paned_set_position (stylesPane, panePos);
+        gtk_paned_set_position (stylesPaneSplitter, panePos);
     }
     panePos = [configFile integerEntry:@"graphHeight" inGroup:@"mainWindow"];
     if (panePos > 0) {
-        gtk_paned_set_position (graphPane, panePos);
+        gtk_paned_set_position (tikzPaneSplitter, panePos);
     }
     [propertyPane restoreUiStateFromConfig:configFile group:@"PropertyPane"];
+    [stylesPane restoreUiStateFromConfig:configFile group:@"StylesPane"];
 }
 
 - (void) _connectSignals {
@@ -693,15 +695,15 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         "key-press-event",
         G_CALLBACK (tz_hijack_key_press),
         NULL);
-    g_signal_connect (G_OBJECT (propsPane),
+    g_signal_connect (G_OBJECT (propertyPaneSplitter),
         "notify::position",
         G_CALLBACK (toolbox_divider_position_changed_cb),
         self);
-    g_signal_connect (G_OBJECT (stylesPane),
+    g_signal_connect (G_OBJECT (stylesPaneSplitter),
         "notify::position",
         G_CALLBACK (stylebox_divider_position_changed_cb),
         self);
-    g_signal_connect (G_OBJECT (graphPane),
+    g_signal_connect (G_OBJECT (tikzPaneSplitter),
         "notify::position",
         G_CALLBACK (graph_divider_position_changed_cb),
         self);
@@ -775,10 +777,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     if (hasError && !hasParseError) {
         gtk_statusbar_push (statusBar, 1, "Parse error");
         GdkColor color = {0, 65535, 61184, 61184};
-        gtk_widget_modify_base (tikzDisp, GTK_STATE_NORMAL, &color);
+        gtk_widget_modify_base (tikzPane, GTK_STATE_NORMAL, &color);
     } else if (!hasError && hasParseError) {
         gtk_statusbar_pop (statusBar, 1);
-        gtk_widget_modify_base (tikzDisp, GTK_STATE_NORMAL, NULL);
+        gtk_widget_modify_base (tikzPane, GTK_STATE_NORMAL, NULL);
     }
     hasParseError = hasError;
 }
@@ -866,7 +868,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     document = newDoc;
 
     [renderer setDocument:document];
-    [stylesPalette setDocument:document];
+    [stylesPane setDocument:document];
     [propertyPane setDocument:document];
 #ifdef HAVE_POPPLER
     [previewWindow setDocument:document];

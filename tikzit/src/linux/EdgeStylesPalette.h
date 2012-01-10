@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,14 +19,14 @@
 #import <gtk/gtk.h>
 
 @class StyleManager;
-@class NodeStyleSelector;
-@class NodeStyleEditor;
+@class EdgeStyleSelector;
+@class EdgeStyleEditor;
 @class TikzDocument;
 
-@interface NodeStylesPalette: NSObject {
+@interface EdgeStylesPalette: NSObject {
     TikzDocument          *document;
-    NodeStyleSelector     *selector;
-    NodeStyleEditor       *editor;
+    EdgeStyleSelector     *selector;
+    EdgeStyleEditor       *editor;
 
     GtkWidget             *palette;
 

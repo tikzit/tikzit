@@ -16,6 +16,7 @@
  */
 
 #import "PropertyPane.h"
+#import "PropertyListEditor.h"
 #import "GraphElementProperty.h"
 #import "gtkhelpers.h"
 

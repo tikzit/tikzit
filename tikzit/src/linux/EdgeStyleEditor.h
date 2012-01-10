@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,28 +18,21 @@
 #import "TZFoundation.h"
 #import <gtk/gtk.h>
 
-@class StyleManager;
-@class NodeStyleSelector;
-@class NodeStyleEditor;
-@class TikzDocument;
+@class EdgeStyle;
 
-@interface NodeStylesPalette: NSObject {
-    TikzDocument          *document;
-    NodeStyleSelector     *selector;
-    NodeStyleEditor       *editor;
-
-    GtkWidget             *palette;
-
-    GtkWidget             *removeStyleButton;
-    GtkWidget             *applyStyleButton;
-    GtkWidget             *clearStyleButton;
+@interface EdgeStyleEditor: NSObject {
+    EdgeStyle             *style;
+    GtkTable              *table;
+    GtkEntry              *nameEdit;
+    GtkComboBox           *decorationCombo;
+    GtkAdjustment         *thicknessAdj;
+    BOOL                   blockSignals;
 }
 
-@property (retain)   StyleManager *styleManager;
-@property (retain)   TikzDocument *document;
-@property (readonly) GtkWidget    *widget;
+@property (retain)   EdgeStyle *style;
+@property (readonly) GtkWidget *widget;
 
-- (id) initWithManager:(StyleManager*)m;
+- (id) init;
 
 @end
 

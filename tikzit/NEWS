@@ -2,6 +2,9 @@ tikzit 0.8 (2012-01-??):
 	* Compilers without basic Objective C 2 support cannot be
 	  used to compile TikZiT any more
 	* Add support for scale to node styles
+	* Add support for editing edge styles
+	* Add support for multiple custom preambles
+	* Make everything look a bit better
 
 tikzit 0.7 (2011-12-06):
 	* Add bounding box support

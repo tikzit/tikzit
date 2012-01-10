@@ -28,6 +28,9 @@ tikzit_SOURCES = linux/CairoRenderContext.m \
                  linux/Configuration.m \
                  linux/Edge+Render.m \
                  linux/EdgeStyle+Storage.m \
+                 linux/EdgeStyleEditor.m \
+                 linux/EdgeStyleSelector.m \
+                 linux/EdgeStylesPalette.m \
                  linux/FileChooserDialog.m \
                  linux/GraphInputHandler.m \
                  linux/GraphRenderer.m \
@@ -47,6 +50,7 @@ tikzit_SOURCES = linux/CairoRenderContext.m \
                  linux/RecentManager.m \
                  linux/Shape+Render.m \
                  linux/StyleManager+Storage.m \
+                 linux/StylesPane.m \
                  linux/TikzDocument.m \
                  linux/WidgetSurface.m \
                  linux/cairo_helpers.m \
@@ -129,8 +133,21 @@ linux/logodata.m: ../share/icons/hicolor/*/apps/tikzit.png
 		logo128 ../share/icons/hicolor/128x128/apps/tikzit.png \
 		> $@
 
+linux/edgedecdata.m: ../AH_*.png ../ED_*.png
+	$(AM_V_GEN)gdk-pixbuf-csource --struct --static --raw --build-list \
+		AH_none_pixdata ../AH_none.png \
+		AH_latex_head_pixdata ../AH_latex_head.png \
+		AH_latex_tail_pixdata ../AH_latex_tail.png \
+		AH_plain_head_pixdata ../AH_plain_head.png \
+		AH_plain_tail_pixdata ../AH_plain_tail.png \
+		ED_none_pixdata ../ED_none.png \
+		ED_arrow_pixdata ../ED_arrow.png \
+		ED_tick_pixdata ../ED_tick.png \
+		> $@
+
 linux/Menu.m: linux/icondata.m
 linux/logo.m: linux/logodata.m
+linux/EdgeStyleEditor.m: linux/edgedecdata.m
 
 EXTRA_DIST = linux/*.h common/*.h $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym
 MAINTAINERCLEANFILES = $(PARSERFILES) linux/icondata.m linux/logodata.m

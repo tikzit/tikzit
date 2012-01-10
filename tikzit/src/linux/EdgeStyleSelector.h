@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,9 +19,9 @@
 #import <gtk/gtk.h>
 #import "StyleManager.h"
 
-@interface NodeStyleSelector: NSObject {
+@interface EdgeStyleSelector: NSObject {
     GtkListStore        *store;
-    GtkIconView         *view;
+    GtkTreeView         *view;
     StyleManager        *styleManager;
     BOOL                 linkedToActiveStyle;
     BOOL                 suppressSetActiveStyle;
@@ -53,7 +53,7 @@
 
              When this changes, a SelectedStyleChanged notification will be posted
  */
-@property (assign) NodeStyle *selectedStyle;
+@property (assign) EdgeStyle *selectedStyle;
 
 /*!
  * Initialise with the default style manager
@@ -66,4 +66,4 @@
 
 @end
 
-// vim:ft=objc:ts=8:et:sts=4:sw=4
+// vim:ft=objc:ts=8:et:sts=4:sw=4:foldmethod=marker

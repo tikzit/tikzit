@@ -523,6 +523,40 @@
 - (void) endModifyEdge { [self _finishModifyEdgeCancelled:NO]; }
 - (void) cancelModifyEdge { [self _finishModifyEdgeCancelled:YES]; }
 
+- (void) startModifyEdges:(NSSet*)edges {
+    if (edgesetBeingModified != nil) {
+        [NSException raise:@"NSInternalInconsistencyException" format:@"Already modifying an edge set"];
+    }
+
+    edgesetBeingModified = [edges copy];
+    edgesetBeingModifiedOldCopy = [[Graph edgeTableForEdges:edges] retain];
+}
+
+- (void) modifyEdgesCheckPoint {
+    [self regenerateTikz];
+    GraphChange *change = [GraphChange propertyChangeOfEdgesFromOldCopies:edgesetBeingModifiedOldCopy
+                                       toNewCopies:[Graph edgeTableForEdges:edgesetBeingModified]];
+    [self postIncompleteGraphChange:change];
+}
+
+- (void) _finishModifyEdgesCancelled:(BOOL)cancelled {
+    if (edgesetBeingModified == nil) {
+        [NSException raise:@"NSInternalInconsistencyException" format:@"Not modifying an edge"];
+    }
+
+    GraphChange *change = [GraphChange propertyChangeOfEdgesFromOldCopies:edgesetBeingModifiedOldCopy
+                                       toNewCopies:[Graph edgeTableForEdges:edgesetBeingModified]];
+    [self _finishModifySequence:change withName:@"Modify edges" cancelled:cancelled];
+
+    [edgesetBeingModified release];
+    edgesetBeingModified = nil;
+    [edgesetBeingModifiedOldCopy release];
+    edgesetBeingModifiedOldCopy = nil;
+}
+
+- (void) endModifyEdges { [self _finishModifyEdgesCancelled:NO]; }
+- (void) cancelModifyEdges { [self _finishModifyEdgesCancelled:YES]; }
+
 - (void) startChangeBoundingBox {
     oldGraphBounds = [graph boundingBox];
 }

@@ -142,6 +142,24 @@
 	}
 }
 
+- (BasicMapTable*)oldEdgeTable { return oldEdgeTable; }
+
+- (void)setOldEdgeTable:(BasicMapTable*)tab {
+	if (oldEdgeTable != tab) {
+		[oldEdgeTable release];
+		oldEdgeTable = [tab retain];
+	}
+}
+
+- (BasicMapTable*)nwEdgeTable { return nwEdgeTable; }
+
+- (void)setNwEdgeTable:(BasicMapTable*)tab {
+	if (nwEdgeTable != tab) {
+		[nwEdgeTable release];
+		nwEdgeTable = [tab retain];
+	}
+}
+
 - (NSRect)oldBoundingBox { return oldBoundingBox; }
 
 - (void)setOldBoundingBox:(NSRect)bbox {
@@ -204,6 +222,11 @@
 			[inverse setOldEdge:[self nwEdge]];
 			[inverse setNwEdge:[self oldEdge]];
 			break;
+		case EdgesPropertyChange:
+			[inverse setChangeType:EdgesPropertyChange];
+			[inverse setOldEdgeTable:[self nwEdgeTable]];
+			[inverse setNwEdgeTable:[self oldEdgeTable]];
+			break;
 		case NodesShift:
 			[inverse setChangeType:NodesShift];
 			[inverse setAffectedNodes:[self affectedNodes]];
@@ -240,6 +263,8 @@
 	[oldEdge release];
 	[oldNodeTable release];
 	[nwNodeTable release];
+	[oldEdgeTable release];
+	[nwEdgeTable release];
 	
 	[super dealloc];
 }
@@ -284,6 +309,15 @@
 	[gc setEdgeRef:e];
 	[gc setOldEdge:old];
 	[gc setNwEdge:nw];
+	return [gc autorelease];
+}
+
++ (GraphChange*)propertyChangeOfEdgesFromOldCopies:(BasicMapTable*)oldC
+									   toNewCopies:(BasicMapTable*)newC {
+	GraphChange *gc = [[GraphChange alloc] init];
+	[gc setChangeType:EdgesPropertyChange];
+	[gc setOldEdgeTable:oldC];
+	[gc setNwEdgeTable:newC];
 	return [gc autorelease];
 }
 

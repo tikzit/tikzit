@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "NodeStyleSelector.h"
+#import "EdgeStyleSelector.h"
 
 #import "CairoRenderContext.h"
 #import "Shape.h"
@@ -27,7 +27,7 @@
 
 // {{{ Internal interfaces
 // {{{ Signals
-static void selection_changed_cb (GtkIconView *widget, NodeStyleSelector *mgr);
+static void selection_changed_cb (GtkTreeSelection *sel, EdgeStyleSelector *mgr);
 // }}}
 
 enum {
@@ -37,7 +37,7 @@ enum {
     STYLES_N_COLS
 };
 
-@interface NodeStyleSelector (Notifications)
+@interface EdgeStyleSelector (Notifications)
 - (void) stylesReplaced:(NSNotification*)notification;
 - (void) styleAdded:(NSNotification*)notification;
 - (void) styleRemoved:(NSNotification*)notification;
@@ -47,12 +47,13 @@ enum {
 - (void) selectionChanged;
 @end
 
-@interface NodeStyleSelector (Private)
-- (cairo_surface_t*) createNodeIconSurface;
-- (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style;
+@interface EdgeStyleSelector (Private)
+- (void) clearModel;
+- (cairo_surface_t*) createEdgeIconSurface;
+- (GdkPixbuf*) pixbufOfEdgeInStyle:(EdgeStyle*)style;
 - (GdkPixbuf*) pixbufFromSurface:(cairo_surface_t*)surface;
-- (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style usingSurface:(cairo_surface_t*)surface;
-- (void) addStyle:(NodeStyle*)style;
+- (GdkPixbuf*) pixbufOfEdgeInStyle:(EdgeStyle*)style usingSurface:(cairo_surface_t*)surface;
+- (void) addStyle:(EdgeStyle*)style;
 - (void) postSelectedStyleChanged;
 - (void) reloadStyles;
 @end
@@ -60,7 +61,7 @@ enum {
 // }}}
 // {{{ API
 
-@implementation NodeStyleSelector
+@implementation EdgeStyleSelector
 
 - (id) init {
     self = [self initWithStyleManager:[StyleManager manager]];
@@ -80,16 +81,25 @@ enum {
                                     G_TYPE_POINTER);
         g_object_ref (store);
 
-        view = GTK_ICON_VIEW (gtk_icon_view_new ());
+        view = GTK_TREE_VIEW (gtk_tree_view_new_with_model (GTK_TREE_MODEL (store)));
+        gtk_tree_view_set_headers_visible (view, FALSE);
         g_object_ref (view);
 
-        gtk_icon_view_set_model (view, GTK_TREE_MODEL (store));
-        gtk_icon_view_set_pixbuf_column (view, STYLES_ICON_COL);
-        gtk_icon_view_set_tooltip_column (view, STYLES_NAME_COL);
-        gtk_icon_view_set_selection_mode (view, GTK_SELECTION_SINGLE);
+        GtkCellRenderer *renderer;
+        GtkTreeViewColumn *column;
+        renderer = gtk_cell_renderer_pixbuf_new ();
+        column = gtk_tree_view_column_new_with_attributes ("Preview",
+                                                           renderer,
+                                                           "pixbuf", STYLES_ICON_COL,
+                                                           NULL);
+        gtk_tree_view_append_column (view, column);
+        gtk_tree_view_set_tooltip_column (view, STYLES_NAME_COL);
 
-        g_signal_connect (G_OBJECT (view),
-                          "selection-changed",
+        GtkTreeSelection *sel = gtk_tree_view_get_selection (view);
+        gtk_tree_selection_set_mode (sel, GTK_SELECTION_SINGLE);
+
+        g_signal_connect (G_OBJECT (sel),
+                          "changed",
                           G_CALLBACK (selection_changed_cb),
                           self);
 
@@ -97,7 +107,7 @@ enum {
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(stylePropertyChanged:)
-                                                     name:@"NodeStylePropertyChanged"
+                                                     name:@"EdgeStylePropertyChanged"
                                                    object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(shapeDictionaryReplaced:)
@@ -118,20 +128,6 @@ enum {
     [super dealloc];
 }
 
-- (void) clearModel {
-    [self setSelectedStyle:nil];
-    GtkTreeModel *model = GTK_TREE_MODEL (store);
-    GtkTreeIter row;
-    if (gtk_tree_model_get_iter_first (model, &row)) {
-        do {
-            NodeStyle *rowStyle;
-            gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
-            [rowStyle release];
-        } while (gtk_tree_model_iter_next (model, &row));
-    }
-    gtk_list_store_clear (store);
-}
-
 - (StyleManager*) styleManager {
     return styleManager;
 }
@@ -145,19 +141,19 @@ enum {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:styleManager];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(stylesReplaced:)
-                                                 name:@"NodeStylesReplaced"
+                                                 name:@"EdgeStylesReplaced"
                                                object:m];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(styleAdded:)
-                                                 name:@"NodeStyleAdded"
+                                                 name:@"EdgeStyleAdded"
                                                object:m];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(styleRemoved:)
-                                                 name:@"NodeStyleRemoved"
+                                                 name:@"EdgeStyleRemoved"
                                                object:m];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(activeStyleChanged:)
-                                                 name:@"ActiveNodeStyleChanged"
+                                                 name:@"ActiveEdgeStyleChanged"
                                                object:m];
 
     [styleManager release];
@@ -177,37 +173,32 @@ enum {
 - (void) setLinkedToActiveStyle:(BOOL)linked {
     linkedToActiveStyle = linked;
     if (linkedToActiveStyle) {
-        NodeStyle *style = [self selectedStyle];
-        if ([styleManager activeNodeStyle] != style) {
-            [self setSelectedStyle:[styleManager activeNodeStyle]];
+        EdgeStyle *style = [self selectedStyle];
+        if ([styleManager activeEdgeStyle] != style) {
+            [self setSelectedStyle:[styleManager activeEdgeStyle]];
         }
     }
 }
 
-- (NodeStyle*) selectedStyle {
-    GList *list = gtk_icon_view_get_selected_items (view);
-    if (!list) {
+- (EdgeStyle*) selectedStyle {
+    GtkTreeSelection *sel = gtk_tree_view_get_selection (view);
+    GtkTreeIter iter;
+
+    if (!gtk_tree_selection_get_selected (sel, NULL, &iter)) {
         return nil;
     }
-    if (list->next != NULL) {
-        NSLog(@"Multiple selected items in NodeStyleSelector!");
-    }
 
-    GtkTreePath *path = (GtkTreePath*) list->data;
-    GtkTreeIter iter;
-    gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
-    NodeStyle *style = nil;
+    EdgeStyle *style = nil;
     gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, STYLES_PTR_COL, &style, -1);
-
-    g_list_foreach (list, (GFunc)gtk_tree_path_free, NULL);
-    g_list_free (list);
 
     return style;
 }
 
-- (void) setSelectedStyle:(NodeStyle*)style {
+- (void) setSelectedStyle:(EdgeStyle*)style {
+    GtkTreeSelection *sel = gtk_tree_view_get_selection (view);
+
     if (style == nil) {
-        gtk_icon_view_unselect_all (view);
+        gtk_tree_selection_unselect_all (sel);
         return;
     }
 
@@ -215,12 +206,12 @@ enum {
     GtkTreeIter row;
     if (gtk_tree_model_get_iter_first (m, &row)) {
         do {
-            NodeStyle *rowStyle;
+            EdgeStyle *rowStyle;
             gtk_tree_model_get (m, &row, STYLES_PTR_COL, &rowStyle, -1);
             if (style == rowStyle) {
-                gtk_icon_view_unselect_all (view);
+                gtk_tree_selection_unselect_all (sel);
                 GtkTreePath *path = gtk_tree_model_get_path (m, &row);
-                gtk_icon_view_select_path (view, path);
+                gtk_tree_selection_select_path (sel, path);
                 gtk_tree_path_free (path);
                 // styleManager.activeStyle will be updated by the GTK+ callback
                 return;
@@ -234,7 +225,7 @@ enum {
 // }}}
 // {{{ Notifications
 
-@implementation NodeStyleSelector (Notifications)
+@implementation EdgeStyleSelector (Notifications)
 
 - (void) stylesReplaced:(NSNotification*)notification {
     [self reloadStyles];
@@ -245,13 +236,13 @@ enum {
 }
 
 - (void) styleRemoved:(NSNotification*)notification {
-    NodeStyle *style = [[notification userInfo] objectForKey:@"style"];
+    EdgeStyle *style = [[notification userInfo] objectForKey:@"style"];
 
     GtkTreeModel *model = GTK_TREE_MODEL (store);
     GtkTreeIter row;
     if (gtk_tree_model_get_iter_first (model, &row)) {
         do {
-            NodeStyle *rowStyle;
+            EdgeStyle *rowStyle;
             gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
             if (style == rowStyle) {
                 gtk_list_store_remove (store, &row);
@@ -264,27 +255,27 @@ enum {
 
 - (void) activeStyleChanged:(NSNotification*)notification {
     if (linkedToActiveStyle) {
-        NodeStyle *style = [self selectedStyle];
-        if ([styleManager activeNodeStyle] != style) {
-            [self setSelectedStyle:[styleManager activeNodeStyle]];
+        EdgeStyle *style = [self selectedStyle];
+        if ([styleManager activeEdgeStyle] != style) {
+            [self setSelectedStyle:[styleManager activeEdgeStyle]];
         }
     }
 }
 
 - (void) stylePropertyChanged:(NSNotification*)notification {
-    NodeStyle *style = [notification object];
+    EdgeStyle *style = [notification object];
 
     GtkTreeModel *model = GTK_TREE_MODEL (store);
     GtkTreeIter row;
     if (gtk_tree_model_get_iter_first (model, &row)) {
         do {
-            NodeStyle *rowStyle;
+            EdgeStyle *rowStyle;
             gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
             if (style == rowStyle) {
                 if ([@"name" isEqual:[[notification userInfo] objectForKey:@"propertyName"]]) {
                     gtk_list_store_set (store, &row, STYLES_NAME_COL, [[style name] UTF8String], -1);
                 } else if (![@"scale" isEqual:[[notification userInfo] objectForKey:@"propertyName"]]) {
-                    GdkPixbuf *pixbuf = [self pixbufOfNodeInStyle:style];
+                    GdkPixbuf *pixbuf = [self pixbufOfEdgeInStyle:style];
                     gtk_list_store_set (store, &row, STYLES_ICON_COL, pixbuf, -1);
                     gdk_pixbuf_unref (pixbuf);
                 }
@@ -299,9 +290,9 @@ enum {
 
 - (void) selectionChanged {
     if (linkedToActiveStyle) {
-        NodeStyle *style = [self selectedStyle];
-        if ([styleManager activeNodeStyle] != style) {
-            [styleManager setActiveNodeStyle:style];
+        EdgeStyle *style = [self selectedStyle];
+        if ([styleManager activeEdgeStyle] != style) {
+            [styleManager setActiveEdgeStyle:style];
         }
     }
     [self postSelectedStyleChanged];
@@ -311,14 +302,28 @@ enum {
 // }}}
 // {{{ Private
 
-@implementation NodeStyleSelector (Private)
-- (cairo_surface_t*) createNodeIconSurface {
-    return cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 24, 24);
+@implementation EdgeStyleSelector (Private)
+- (void) clearModel {
+    [self setSelectedStyle:nil];
+    GtkTreeModel *model = GTK_TREE_MODEL (store);
+    GtkTreeIter row;
+    if (gtk_tree_model_get_iter_first (model, &row)) {
+        do {
+            EdgeStyle *rowStyle;
+            gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
+            [rowStyle release];
+        } while (gtk_tree_model_iter_next (model, &row));
+    }
+    gtk_list_store_clear (store);
 }
 
-- (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style {
-    cairo_surface_t *surface = [self createNodeIconSurface];
-    GdkPixbuf *pixbuf = [self pixbufOfNodeInStyle:style usingSurface:surface];
+- (cairo_surface_t*) createEdgeIconSurface {
+    return cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 48, 18);
+}
+
+- (GdkPixbuf*) pixbufOfEdgeInStyle:(EdgeStyle*)style {
+    cairo_surface_t *surface = [self createEdgeIconSurface];
+    GdkPixbuf *pixbuf = [self pixbufOfEdgeInStyle:style usingSurface:surface];
     cairo_surface_destroy (surface);
     return pixbuf;
 }
@@ -359,33 +364,56 @@ enum {
     return pixbuf;
 }
 
-- (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style usingSurface:(cairo_surface_t*)surface {
-    Shape *shape = [Shape shapeForName:[style shapeName]];
+- (GdkPixbuf*) pixbufOfEdgeInStyle:(EdgeStyle*)style usingSurface:(cairo_surface_t*)surface {
+    Transformer *transformer = [Transformer defaultTransformer];
+    [transformer setFlippedAboutXAxis:YES];
 
     int width = cairo_image_surface_get_width (surface);
     int height = cairo_image_surface_get_height (surface);
     NSRect pixbufBounds = NSMakeRect(0.0, 0.0, width, height);
-    const CGFloat lineWidth = [style strokeThickness];
-    Transformer *shapeTrans = [Transformer transformerToFit:[shape boundingRect]
-                                             intoScreenRect:NSInsetRect(pixbufBounds, lineWidth, lineWidth)
-                                          flippedAboutXAxis:YES];
+    NSRect graphBounds = [transformer rectFromScreen:pixbufBounds];
+
+    NSPoint mid = NSMakePoint (NSMidX (graphBounds), NSMidY (graphBounds));
+    NSPoint start = NSMakePoint (NSMinX (graphBounds) + 0.1f, mid.y);
+    NSPoint end = NSMakePoint (NSMaxX (graphBounds) - 0.1f, mid.y);
+    NSPoint midTan = NSMakePoint (mid.x + 0.1f, mid.y);
+    NSPoint leftNormal = NSMakePoint (mid.x, mid.y - 0.1f);
+    NSPoint rightNormal = NSMakePoint (mid.x, mid.y + 0.1f);
 
     CairoRenderContext *context = [[CairoRenderContext alloc] initForSurface:surface];
     [context clearSurface];
-    [shape drawPathWithTransform:shapeTrans andContext:context];
-    [context setLineWidth:lineWidth];
-    [context strokePathWithColor:[[style strokeColorRGB] rColor]
-                andFillWithColor:[[style fillColorRGB] rColor]];
+
+    [context startPath];
+    [context moveTo:[transformer toScreen:start]];
+    [context lineTo:[transformer toScreen:end]];
+
+    switch ([style decorationStyle]) {
+        case ED_None:
+            break;
+        case ED_Tick:
+            [context moveTo:[transformer toScreen:leftNormal]];
+            [context lineTo:[transformer toScreen:rightNormal]];
+            break;
+        case ED_Arrow:
+            [context moveTo:[transformer toScreen:leftNormal]];
+            [context lineTo:[transformer toScreen:midTan]];
+            [context lineTo:[transformer toScreen:rightNormal]];
+            break;
+    }
+
+    [context setLineWidth:[style thickness]];
+    [context strokePathWithColor:BlackRColor];
+
     [context release];
 
     return [self pixbufFromSurface:surface];
 }
 
-- (void) addStyle:(NodeStyle*)style usingSurface:(cairo_surface_t*)surface {
+- (void) addStyle:(EdgeStyle*)style usingSurface:(cairo_surface_t*)surface {
     GtkTreeIter iter;
     gtk_list_store_append (store, &iter);
 
-    GdkPixbuf *pixbuf = [self pixbufOfNodeInStyle:style usingSurface:surface];
+    GdkPixbuf *pixbuf = [self pixbufOfEdgeInStyle:style usingSurface:surface];
     gtk_list_store_set (store, &iter,
             STYLES_NAME_COL, [[style name] UTF8String],
             STYLES_ICON_COL, pixbuf,
@@ -394,8 +422,8 @@ enum {
     gdk_pixbuf_unref (pixbuf);
 }
 
-- (void) addStyle:(NodeStyle*)style {
-    cairo_surface_t *surface = [self createNodeIconSurface];
+- (void) addStyle:(EdgeStyle*)style {
+    cairo_surface_t *surface = [self createEdgeIconSurface];
     [self addStyle:style usingSurface:surface];
     cairo_surface_destroy (surface);
 }
@@ -406,7 +434,7 @@ enum {
 
 - (void) reloadStyles {
     [self clearModel];
-    for (NodeStyle *style in [styleManager nodeStyles]) {
+    for (EdgeStyle *style in [styleManager edgeStyles]) {
         [self addStyle:style];
     }
 }
@@ -415,7 +443,7 @@ enum {
 // }}}
 // {{{ GTK+ callbacks
 
-static void selection_changed_cb (GtkIconView *view, NodeStyleSelector *mgr) {
+static void selection_changed_cb (GtkTreeSelection *sel, EdgeStyleSelector *mgr) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [mgr selectionChanged];
     [pool drain];
@@ -423,3 +451,4 @@ static void selection_changed_cb (GtkIconView *view, NodeStyleSelector *mgr) {
 // }}}
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4:foldmethod=marker
+

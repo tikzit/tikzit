@@ -425,14 +425,25 @@
 			[[ch nodeRef] setPropertiesFromNode:[ch nwNode]];
 			break;
 		case NodesPropertyChange:
-			en = [[ch nwNodeTable] keyEnumerator];
-			Node *key;
-			while ((key = [en nextObject])) {
-				[key setPropertiesFromNode:[[ch nwNodeTable] objectForKey:key]];
+			{
+				en = [[ch nwNodeTable] keyEnumerator];
+				Node *key;
+				while ((key = [en nextObject])) {
+					[key setPropertiesFromNode:[[ch nwNodeTable] objectForKey:key]];
+				}
 			}
 			break;
 		case EdgePropertyChange:
 			[[ch edgeRef] setPropertiesFromEdge:[ch nwEdge]];
+			break;
+		case EdgesPropertyChange:
+			{
+				en = [[ch nwEdgeTable] keyEnumerator];
+				Edge *key;
+				while ((key = [en nextObject])) {
+					[key setPropertiesFromEdge:[[ch nwEdgeTable] objectForKey:key]];
+				}
+			}
 			break;
 		case NodesShift:
 			en = [[ch affectedNodes] objectEnumerator];

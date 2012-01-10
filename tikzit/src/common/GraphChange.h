@@ -31,6 +31,7 @@ typedef enum {
 	NodePropertyChange,
 	EdgePropertyChange,
 	NodesPropertyChange,
+	EdgesPropertyChange,
 	NodesShift,
 	NodesFlip,
 	BoundingBoxChange,
@@ -63,6 +64,7 @@ typedef enum {
 	Node *oldNode, *nwNode;
 	Edge *oldEdge, *nwEdge;
 	BasicMapTable *oldNodeTable, *nwNodeTable;
+	BasicMapTable *oldEdgeTable, *nwEdgeTable;
 	NSRect oldBoundingBox, nwBoundingBox;
 	GraphElementData *oldGraphData, *nwGraphData;
 }
@@ -146,6 +148,18 @@ typedef enum {
 @property (retain) BasicMapTable *nwNodeTable;
 
 /*!
+ @property   oldEdgeTable
+ @brief      A a table containing copies of a set of edges pre-change.
+ */
+@property (retain) BasicMapTable *oldEdgeTable;
+
+/*!
+ @property   nwEdgeTable
+ @brief      A a table containing copies of a set of edges post-change.
+ */
+@property (retain) BasicMapTable *nwEdgeTable;
+
+/*!
  @property   oldBoundingBox
  @brief      The old bounding box.
  */
@@ -225,6 +239,19 @@ typedef enum {
  @result     A property change of a set of nodes.
  */
 + (GraphChange*)propertyChangeOfNodesFromOldCopies:(BasicMapTable*)oldC
+									   toNewCopies:(BasicMapTable*)newC;
+
+/*!
+ @brief      Construct a property change of set of edges.
+ @details    Construct a property change of set of edges. oldC and newC should be
+             constructed using the class method [Graph edgeTableForEdges:] before
+             and after the property change, respectively. The affected edges are
+             keys(oldC) = keys(newC).
+ @param      oldC a table of copies of edges pre-change
+ @param      newC a table of copies of edges post-change
+ @result     A property change of a set of edges.
+ */
++ (GraphChange*)propertyChangeOfEdgesFromOldCopies:(BasicMapTable*)oldC
 									   toNewCopies:(BasicMapTable*)newC;
 
 
