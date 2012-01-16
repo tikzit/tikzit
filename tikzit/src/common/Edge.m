@@ -72,6 +72,13 @@
 	return NO;
 }
 
+- (NSPoint) _findContactPointOn:(Node*)node at:(float)angle {
+	return [node point];
+	Transformer *shapeTrans = [node shapeTransformer];
+	NSRect searchArea = [node boundsUsingShapeTransform:shapeTrans];
+	NSPoint 
+}
+
 - (void)updateControls {
 	// check for external modification to the node locations
 	if (src.x != [source point].x || src.y != [source point].y ||
@@ -90,9 +97,6 @@
 		float angleSrc = 0.0f;
 		float angleTarg = 0.0f;
 		
-		bend = normaliseAngleDeg (bend);
-		inAngle = normaliseAngleDeg (inAngle);
-		outAngle = normaliseAngleDeg (outAngle);
 		if (bendMode == EdgeBendModeBasic) {
 			float angle = good_atan(dx, dy);
 			float bnd = (float)bend * (M_PI / 180.0f);
@@ -102,6 +106,9 @@
 			angleSrc = (float)outAngle * (M_PI / 180.0f);
 			angleTarg = (float)inAngle * (M_PI / 180.0f);
 		}
+
+		head = [self _findContactPointOn:source at:angleSrc];
+		tail = [self _findContactPointOn:target at:angleTarg];
 		
 		// give a default distance for self-loops
 		float cdist = (dx==0.0f && dy==0.0f) ? weight : sqrt(dx*dx + dy*dy) * weight;
@@ -139,8 +146,8 @@
 	float angle = good_atan(dx, dy);
 	float bnd = (float)bend * (M_PI / 180.0f);
 	
-	outAngle = round((angle - bnd) * (180.0f/M_PI));
-	inAngle = round((M_PI + angle + bnd) * (180.0f/M_PI));
+	[self setOutAngle:round((angle - bnd) * (180.0f/M_PI))];
+	[self setInAngle:round((M_PI + angle + bnd) * (180.0f/M_PI))];
 	dirty = YES;
 }
 
@@ -155,9 +162,7 @@
 	bend1 = outAngle - angle;
 	bend2 = angle - inAngle;
 	
-	bend = (bend1 + bend2) / 2;
-	
-	dirty = YES;
+	[self setBend:(bend1 + bend2) / 2];
 }
 
 - (BOOL)isSelfLoop {
@@ -200,13 +205,13 @@
 
 - (int)inAngle {return inAngle;}
 - (void)setInAngle:(int)a {
-	inAngle = a;
+	inAngle = normaliseAngleDeg (a);
 	dirty = YES;
 }
 
 - (int)outAngle {return outAngle;}
 - (void)setOutAngle:(int)a {
-	outAngle = a;
+	outAngle = normaliseAngleDeg (a);
 	dirty = YES;
 }
 
@@ -218,7 +223,7 @@
 
 - (int)bend {return bend;}
 - (void)setBend:(int)b {
-	bend = b;
+	bend = normaliseAngleDeg (b);
 	dirty = YES;
 }
 
@@ -368,22 +373,22 @@
 	bendMode = EdgeBendModeBasic;
 	
 	if ([data isAtomSet:@"bend left"]) {
-		bend = -30;
+		[self setBend:-30];
 	} else if ([data isAtomSet:@"bend right"]) {
-		bend = 30;
+		[self setBend:30];
 	} else if ([data propertyForKey:@"bend left"] != nil) {
 		NSString *bnd = [data propertyForKey:@"bend left"];
-		bend = -[bnd intValue];
+		[self setBend:-[bnd intValue]];
 	} else if ([data propertyForKey:@"bend right"] != nil) {
 		NSString *bnd = [data propertyForKey:@"bend right"];
-		bend = [bnd intValue];
+		[self setBend:[bnd intValue]];
 	} else {
-		bend = 0;
+		[self setBend:0];
 		
 		if ([data propertyForKey:@"in"] != nil && [data propertyForKey:@"out"] != nil) {
 			bendMode = EdgeBendModeInOut;
-			inAngle = [[data propertyForKey:@"in"] intValue];
-			outAngle = [[data propertyForKey:@"out"] intValue];
+			[self setInAngle:[[data propertyForKey:@"in"] intValue]];
+			[self setOutAngle:[[data propertyForKey:@"out"] intValue]];
 		}
 	}
 	
@@ -492,7 +497,7 @@
     inAngle = outAngle;
     outAngle = f;
     
-    bend = -1 * bend;
+    [self setBend:-bend];
     
     dirty = YES;
 }

@@ -67,6 +67,8 @@ typedef enum {
 	// these are all cached values computed from the above
 	NSPoint src;
 	NSPoint targ;
+	NSPoint head;
+	NSPoint tail;
 	NSPoint cp1;
 	NSPoint cp2;
 	NSPoint mid;

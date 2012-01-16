@@ -29,6 +29,9 @@
 #import "NodeStyle.h"
 #import "GraphElementData.h"
 
+@class Shape;
+@class Transformer;
+
 /*!
  @class Node
  @brief A graph node, with associated location and style data.
@@ -40,6 +43,14 @@
 	NSString *label;
 	GraphElementData *data;
 }
+
+/*!
+ @property   shape
+ @brief      The shape to use
+ @detail     This is a convenience property that resolves the shape name
+             from the style, and uses a circle if there is no style.
+ */
+@property (readonly) Shape *shape;
 
 /*!
  @property   point
@@ -84,6 +95,38 @@
  @result     A node.
  */
 - (id)init;
+
+/*!
+ @brief    Composes the shape transformer with another transformer
+ @param t  The transform to apply before the shape transform
+ @result   A transformer that first maps according to t, then according
+           to -shapeTransformer.
+ */
+- (Transformer*) shapeTransformerFromTransformer:(Transformer*)t;
+
+/*!
+ @brief    A transformer that may be used to convert the shape to the
+           right position and scale
+ */
+- (Transformer*) shapeTransformer;
+
+/*!
+ @brief             The bounding rect in the given co-ordinate system
+ @detail            This is the bounding rect of the shape (after being
+                    suitably translated and scaled).  The label is not
+					considered.
+ @param shapeTrans  The mapping from graph co-ordinates to the required
+                    co-ordinates
+ @result            The bounding rectangle
+ */
+- (NSRect) boundsUsingShapeTransform:(Transformer*)shapeTrans;
+
+/*!
+ @brief    The bounding rect in graph co-ordinates
+ @detail   This is the bounding rect of the shape (after being suitably
+           translated and scaled).  The label is not considered.
+ */
+- (NSRect) boundingRect;
 
 /*!
  @brief      Try to attach a style of the correct name from the given style list.

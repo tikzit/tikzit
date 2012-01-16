@@ -82,6 +82,91 @@ float bezierInterpolate(float dist, float c0, float c1, float c2, float c3) {
 			(dist*dist*dist) * c3;
 }
 
+void lineCoeffsFromPoints(NSPoint p1, NSPoint p2, float *A, float *B, float *C) {
+	*A = p2.y - p1.y;
+	*B = p1.x - p2.x;
+	*C = (*A) * p1.x + (*B) * p1.y;
+}
+
+static BOOL lineSegmentContainsPoint(NSPoint l1, NSPoint l2, float x, float y) {
+	float maxX = l1.x > l2.x ? l2.x : l1.x;
+	float minX = l1.x > l2.x ? l1.x : l2.x;
+	float maxY = l1.y > l2.y ? l2.y : l1.y;
+	float minY = l1.y > l2.y ? l1.y : l2.y;
+	return x >= minX && x <= maxX && y >= minY && y <= maxY;
+}
+
+BOOL lineSegmentsIntersect(NSPoint l1start, NSPoint l1end, NSPoint l2start, NSPoint l2end, NSPoint *result) {
+	// Ax + By = C
+	float A1, B1, C1;
+	lineCoeffsFromPoints(l1start, l1end, &A1, &B1, &C1);
+	float A2, B2, C2;
+	lineCoeffsFromPoints(l2start, l2end, &A2, &B2, &C2);
+
+	float det = A1*B2 - A2*B1;
+	if (det == 0.0f) {
+		// parallel
+		return NO;
+	} else {
+		float x = (B2*C1 - B1*C2)/det;
+		float y = (A1*C2 - A2*C1)/det;
+
+		if (lineSegmentContainsPoint(l1start, l1end, x, y) &&
+				lineSegmentContainsPoint(l2start, l2end, x, y)) {
+			if (result) {
+				(*result).x = x;
+				(*result).y = y;
+			}
+			return YES;
+		}
+	}
+	return NO;
+}
+
+BOOL lineSegmentIntersectsRect(NSPoint lineStart, NSPoint lineEnd, NSRect rect) {
+	const float rectMaxX = NSMaxX(rect);
+	const float rectMinX = NSMinX(rect);
+	const float rectMaxY = NSMaxY(rect);
+	const float rectMinY = NSMinY(rect);
+
+	// check if the segment is entirely to one side of the rect
+	if (lineStart.x > rectMaxX && lineEnd.x > rectMaxX) {
+		return NO;
+	}
+	if (lineStart.x < rectMinX && lineEnd.x < rectMinX) {
+		return NO;
+	}
+	if (lineStart.y > rectMaxY && lineEnd.y > rectMaxY) {
+		return NO;
+	}
+	if (lineStart.y < rectMinY && lineEnd.y < rectMinY) {
+		return NO;
+	}
+
+	// Now check whether the (infinite) line intersects the rect
+	// (if it does, so does the segment, due to above checks)
+
+	// Ax + By = C
+	float A, B, C;
+	lineCoeffsFromPoints(lineStart, lineEnd, &A, &B, &C);
+
+	const float tlVal = A * rectMinX + B * rectMaxY - C;
+	const float trVal = A * rectMaxX + B * rectMaxY - C;
+	const float blVal = A * rectMinX + B * rectMinY - C;
+	const float brVal = A * rectMaxX + B * rectMinY - C;
+
+	if (tlVal < 0 && trVal < 0 && blVal < 0 && brVal < 0) {
+		// rect below line
+		return NO;
+	}
+	if (tlVal > 0 && trVal > 0 && blVal > 0 && brVal > 0) {
+		// rect above line
+		return NO;
+	}
+
+	return YES;
+}
+
 float roundToNearest(float stepSize, float val) {
 	if (stepSize==0.0f) return val;
 	else return round(val/stepSize)*stepSize;
@@ -92,10 +177,10 @@ float radiansToDegrees (float radians) {
 }
 
 int normaliseAngleDeg (int degrees) {
-	while (degrees >= 360) {
+	while (degrees > 180) {
 		degrees -= 360;
 	}
-	while (degrees <= -360) {
+	while (degrees <= -180) {
 		degrees += 360;
 	}
 	return degrees;
@@ -111,3 +196,4 @@ NSString *alphaHex(unsigned short sh) {
 }
 
 
+// vi:ft=objc:noet:ts=4:sts=4:sw=4

@@ -21,7 +21,6 @@
 #import "Shape+Render.h"
 #import "ShapeNames.h"
 
-#define DEFAULT_STROKE_WIDTH 2.0f
 #define MAX_LABEL_LENGTH 10
 #define LABEL_PADDING_X 2
 #define LABEL_PADDING_Y 2
@@ -29,30 +28,7 @@
 @implementation Node (Render)
 
 - (Transformer*) shapeTransformerForSurface:(id<Surface>)surface {
-    Transformer *transformer = [[[surface transformer] copy] autorelease];
-    NSPoint screenPos = [[surface transformer] toScreen:point];
-    [transformer setOrigin:screenPos];
-    CGFloat scale = [[surface transformer] scale];
-    if (style) {
-        scale *= [style scale];
-    }
-    [transformer setScale:scale];
-    return transformer;
-}
-
-- (Shape*) shape {
-    if (style) {
-        return [Shape shapeForName:[style shapeName]];
-    } else {
-        return [Shape shapeForName:SHAPE_CIRCLE];
-    }
-}
-
-- (NSRect) boundsUsingShapeTransform:(Transformer*)shapeTrans {
-    float strokeThickness = style ? [style strokeThickness] : DEFAULT_STROKE_WIDTH;
-    NSRect screenBounds = [shapeTrans rectToScreen:[[self shape] boundingRect]];
-    screenBounds = NSInsetRect(screenBounds, -strokeThickness, -strokeThickness);
-    return screenBounds;
+    return [self shapeTransformerFromTransformer:[surface transformer]];
 }
 
 - (NSRect) boundsOnSurface:(id<Surface>)surface {
@@ -147,7 +123,7 @@
 
 - (void) renderToSurface:(id <Surface>)surface withContext:(id<RenderContext>)context state:(enum NodeState)state {
     Transformer *shapeTrans = [self shapeTransformerForSurface:surface];
-    float strokeThickness = style ? [style strokeThickness] : DEFAULT_STROKE_WIDTH;
+    float strokeThickness = style ? [style strokeThickness] : [NodeStyle defaultStrokeThickness];
 
     [context saveState];
 
@@ -185,7 +161,7 @@
         return NO;
     }
 
-    float strokeThickness = style ? [style strokeThickness] : DEFAULT_STROKE_WIDTH;
+    float strokeThickness = style ? [style strokeThickness] : [NodeStyle defaultStrokeThickness];
     id<RenderContext> ctx = [surface createRenderContext];
     [ctx setLineWidth:strokeThickness];
     [[self shape] drawPathWithTransform:shapeTrans andContext:ctx];

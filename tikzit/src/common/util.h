@@ -26,6 +26,14 @@
 #define M_PI 3.141592654
 #endif
 
+#ifndef MAX
+#define MAX(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef MIN
+#define MIN(a,b) (((a) < (b)) ? (a) : (b))
+#endif
+
 /*!
  @brief      Compute a bounding rectangle for two given points.
  @param      p1 a point.
@@ -85,6 +93,25 @@ float good_atan(float dx, float dy);
  */
 float bezierInterpolate(float dist, float c0, float c1, float c2, float c3);
 
+/*!
+ * @brief          Find whether two line segments intersect
+ * @param l1start  The starting point of line segment 1
+ * @param l1end    The ending point of line segment 1
+ * @param l2start  The starting point of line segment 2
+ * @param l2end    The ending point of line segment 2
+ * @param result   A location to store the intersection point
+ * @result         YES if they intersect, NO if they do not
+ */
+BOOL lineSegmentsIntersect(NSPoint l1start, NSPoint l1end, NSPoint l2start, NSPoint l2end, NSPoint *result);
+
+/*!
+ * @brief            Find whether a line segment enters a rectangle
+ * @param lineStart  The starting point of the line segment
+ * @param lineEnd    The ending point of the line segment
+ * @param rect       The rectangle
+ * @result           YES if they intersect, NO if they do not
+ */
+BOOL lineSegmentIntersectsRect(NSPoint lineStart, NSPoint lineEnd, NSRect rect);
 
 /*!
  @brief      Round val to nearest stepSize

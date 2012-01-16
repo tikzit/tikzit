@@ -93,6 +93,8 @@
 @property (readonly) BOOL strokeColorIsKnown;
 @property (readonly) BOOL fillColorIsKnown;
 
++ (int) defaultStrokeThickness;
+
 /*!
  @brief      Designated initializer. Construct a blank style with name 'new'.
  @result     A default style.

@@ -73,7 +73,7 @@
 	if ([node style] != nil) {
 		return [node.style strokeThickness];
 	} else {
-		return 1;
+		return [NodeStyle defaultStrokeThickness];
 	}
 }
 

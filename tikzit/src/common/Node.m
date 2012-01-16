@@ -23,6 +23,9 @@
 
 #import "Node.h"
 
+#import "Shape.h"
+#import "ShapeNames.h"
+
 
 @implementation Node
 
@@ -39,6 +42,46 @@
 - (id)init {
 	[self initWithPoint:NSMakePoint(0.0f, 0.0f)];
 	return self;
+}
+
+- (Shape*) shape {
+    if (style) {
+        return [Shape shapeForName:[style shapeName]];
+    } else {
+        return [Shape shapeForName:SHAPE_CIRCLE];
+    }
+}
+
+- (Transformer*) shapeTransformerFromTransformer:(Transformer*)t {
+	// we take a copy to keep the reflection attributes
+    Transformer *transformer = [[t copy] autorelease];
+    NSPoint screenPos = [t toScreen:point];
+    [transformer setOrigin:screenPos];
+    float scale = [t scale];
+    if (style) {
+        scale *= [style scale];
+    }
+    [transformer setScale:scale];
+    return transformer;
+}
+
+- (Transformer*) shapeTransformer {
+    float scale = 1.0f;
+    if (style) {
+        scale = [style scale];
+	}
+    return [Transformer transformerWithOrigin:point andScale:scale];
+}
+
+- (NSRect) boundsUsingShapeTransform:(Transformer*)shapeTrans {
+    float strokeThickness = style ? [style strokeThickness] : [NodeStyle defaultStrokeThickness];
+    NSRect screenBounds = [shapeTrans rectToScreen:[[self shape] boundingRect]];
+    screenBounds = NSInsetRect(screenBounds, -strokeThickness, -strokeThickness);
+    return screenBounds;
+}
+
+- (NSRect) boundingRect {
+	return [self boundsUsingShapeTransform:[self shapeTransformer]];
 }
 
 - (BOOL)attachStyleFromTable:(NSArray*)styles {

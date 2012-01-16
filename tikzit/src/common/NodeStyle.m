@@ -26,11 +26,12 @@
 
 @implementation NodeStyle
 
++ (int) defaultStrokeThickness { return 1; }
 
 - (id)init {
 	self = [super initWithNotificationName:@"NodeStylePropertyChanged"];
 	if (self != nil) {
-		strokeThickness = 1;
+		strokeThickness = [NodeStyle defaultStrokeThickness];
 		scale = 1.0f;
 		strokeColorRGB = [[ColorRGB alloc] initWithRed:0 green:0 blue:0];
 		fillColorRGB = [[ColorRGB alloc] initWithRed:255 green:255 blue:255];
