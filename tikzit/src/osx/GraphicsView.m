@@ -999,7 +999,7 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 }
 
 - (void)selectAll:(id)sender {
-	[pickSupport selectAllNodes:graph.nodes];
+	[pickSupport selectAllNodes:[NSSet setWithArray:[graph nodes]]];
 	
 	for (Node *n in [graph nodes]) {
 		[[[nodeLayers objectForKey:n] selection] select];
@@ -1031,7 +1031,7 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 }
 
 - (void)copy:(id)sender {
-	if ([pickSupport selectedNodes].count != 0) {
+	if ([[pickSupport selectedNodes] count] != 0) {
 		Graph *clip = [graph copyOfSubgraphWithNodes:[pickSupport selectedNodes]];
 		NSString *tikz = [clip tikz];
 		NSData *data = [tikz dataUsingEncoding:NSUTF8StringEncoding];
@@ -1099,6 +1099,42 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 		}
 		
 	}
+}
+
+- (void)bringForward:(id)sender {
+    NSString *oldTikz = [graph tikz];
+	[graph bringNodesForward:[pickSupport selectedNodes]];
+    [graph bringEdgesForward:[pickSupport selectedEdges]];
+	[self registerUndo:oldTikz withActionName:@"Bring Forward"];
+	[self postGraphChange];
+	[self refreshLayers];
+}
+
+- (void)sendBackward:(id)sender {
+    NSString *oldTikz = [graph tikz];
+	[graph sendNodesBackward:[pickSupport selectedNodes]];
+    [graph sendEdgesBackward:[pickSupport selectedEdges]];
+	[self registerUndo:oldTikz withActionName:@"Send Backward"];
+	[self postGraphChange];
+	[self refreshLayers];
+}
+
+- (void)bringToFront:(id)sender {
+    NSString *oldTikz = [graph tikz];
+	[graph bringNodesToFront:[pickSupport selectedNodes]];
+    [graph bringEdgesToFront:[pickSupport selectedEdges]];
+	[self registerUndo:oldTikz withActionName:@"Bring to Front"];
+	[self postGraphChange];
+	[self refreshLayers];
+}
+
+- (void)sendToBack:(id)sender {
+    NSString *oldTikz = [graph tikz];
+	[graph sendNodesToBack:[pickSupport selectedNodes]];
+    [graph sendEdgesToBack:[pickSupport selectedEdges]];
+	[self registerUndo:oldTikz withActionName:@"Send to Back"];
+	[self postGraphChange];
+	[self refreshLayers];
 }
 
 - (void)flipHorizonal:(id)sender {

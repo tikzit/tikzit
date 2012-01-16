@@ -32,11 +32,10 @@
 	boundingBox = NSMakeRect(0, 0, 0, 0);
 	graphLock = [[NSRecursiveLock alloc] init];
 	[graphLock lock];
-	nodes = [[NSMutableSet alloc] initWithCapacity:10];
-	edges = [[NSMutableSet alloc] initWithCapacity:10];
+	nodes = [[NSMutableArray alloc] initWithCapacity:10];
+	edges = [[NSMutableArray alloc] initWithCapacity:10];
 	inEdges = nil;
 	outEdges = nil;
-	dirty = YES;
 	[graphLock unlock];
 	return self;
 }
@@ -44,12 +43,6 @@
 - (void)sync {
 	[graphLock lock];
 	if (dirty) {
-		[nodesCache release];
-		nodesCache = [nodes copy];
-		[edgesCache release];
-		edgesCache = [edges copy];
-		
-		
 		[inEdges release];
 		[outEdges release];
 		inEdges = [[BasicMapTable alloc] init];
@@ -83,19 +76,17 @@
 	[graphLock unlock];
 }
 
-- (NSSet*)nodes {
-	[self sync];
-	return nodesCache;
+- (NSArray*)nodes {
+	return nodes;
 }
 
-- (NSSet*)edges {
-	[self sync];
-	return edgesCache;
+- (NSArray*)edges {
+	return edges;
 }
 
 - (NSRect)bounds {
 	[graphLock lock];
-	NSRect b = [Graph boundsForNodeSet:nodes];
+	NSRect b = [Graph boundsForNodes:nodes];
 	[graphLock unlock];
 	return b;
 }
@@ -148,38 +139,40 @@
 	[graphLock unlock];
 }
 
-
 - (GraphChange*)addNode:(Node *)node{
-	[graphLock lock];
-	[nodes addObject:node];
-	dirty = YES;
-	[graphLock unlock];
-	
-	return [GraphChange graphAdditionWithNodes:[NSSet setWithObject:node]
+    [graphLock lock];
+    NSSet *addedNode;
+    
+    // addNode is a no-op if graph already contains node
+	if (![nodes containsObject:node]) {
+        [nodes addObject:node];
+        dirty = YES;
+        addedNode = [NSSet setWithObject:node];
+    } else {
+        addedNode = [NSSet set];
+    }
+    [graphLock unlock];
+    
+	return [GraphChange graphAdditionWithNodes:addedNode
 										 edges:[NSSet set]];
 }
 
 - (GraphChange*)removeNode:(Node*)node {
-	[graphLock lock];
-	
-	NSMutableSet *affectedEdges = [NSMutableSet set];
+    [graphLock lock];
+    NSMutableSet *affectedEdges = [NSMutableSet set];
 	for (Edge *e in edges) {
 		if ([e source] == node || [e target] == node) {
 			[affectedEdges addObject:e];
 		}
 	}
-	
 	for (Edge *e in affectedEdges) {
 		[edges removeObject:e];
 	}
-	
 	[nodes removeObject:node];
-	
 	dirty = YES;
-	
-	[graphLock unlock];
-	
-	return [GraphChange graphDeletionWithNodes:[NSSet setWithObject:node]
+    [graphLock unlock];
+    
+    return [GraphChange graphDeletionWithNodes:[NSSet setWithObject:node]
 										 edges:affectedEdges];
 }
 
@@ -209,13 +202,22 @@
 	return [GraphChange graphDeletionWithNodes:nds edges:affectedEdges];
 }
 
-- (GraphChange*)addEdge:(Edge *)edge {
-	[graphLock lock];
-	[edges addObject:edge];
-	dirty = YES;
-	[graphLock unlock];
-	return [GraphChange graphAdditionWithNodes:[NSSet set]
-										 edges:[NSSet setWithObject:edge]];
+- (GraphChange*)addEdge:(Edge*)edge {
+    [graphLock lock];
+    NSSet *addedEdge;
+    
+    // addEdge is a no-op if graph already contains edge
+    if (![edges containsObject:edge]) {
+        [edges addObject:edge];
+        dirty = YES;
+        addedEdge = [NSSet setWithObject:edge];
+    } else {
+        addedEdge = [NSSet set];
+    }
+    [graphLock unlock];
+    
+    return [GraphChange graphAdditionWithNodes:[NSSet set]
+										 edges:addedEdge];
 }
 
 - (GraphChange*)removeEdge:(Edge *)edge {
@@ -244,44 +246,190 @@
 	return [self addEdge:[Edge edgeWithSource:source andTarget:target]];
 }
 
-- (GraphChange*)shiftNodes:(NSSet*)ns byPoint:(NSPoint)p {
-	NSEnumerator *en = [ns objectEnumerator];
-	Node *n;
+- (GraphChange*)shiftNodes:(id<NSFastEnumeration>)ns byPoint:(NSPoint)p {
 	NSPoint newLoc;
-	while ((n = [en nextObject])) {
+    NSMutableSet *nodeSet = [NSMutableSet setWithCapacity:5];
+	for (Node *n in ns) {
 		newLoc = NSMakePoint([n point].x + p.x, [n point].y + p.y);
 		[n setPoint:newLoc];
+        [nodeSet addObject:n];
 	}
-	return [GraphChange shiftNodes:ns byPoint:p];
+	return [GraphChange shiftNodes:nodeSet byPoint:p];
+}
+
+- (int)indexOfNode:(Node *)node {
+    return [nodes indexOfObject:node];
+}
+
+- (void)setIndex:(int)idx ofNode:(Node *)node {
+    [graphLock lock];
+    
+    if ([nodes containsObject:node]) {
+        [nodes removeObject:node];
+        [nodes insertObject:node atIndex:idx]; 
+    }
+    
+    [graphLock unlock];
+}
+
+- (int)indexOfEdge:(Edge *)edge {
+    return [edges indexOfObject:edge];
+}
+
+- (void)setIndex:(int)idx ofEdge:(Edge *)edge {
+    [graphLock lock];
+    
+    if ([edges containsObject:edge]) {
+        [edges removeObject:edge];
+        [edges insertObject:edge atIndex:idx];
+    }
+    
+    [graphLock unlock];
+}
+
+- (GraphChange*)bringNodesForward:(NSSet*)nodeSet {
+    [graphLock lock];
+    // start at the top of the array and work backwards
+    for (int i = [nodes count]-2; i >= 0; --i) {
+        if ( [nodeSet containsObject:[nodes objectAtIndex:i]] &&
+            ![nodeSet containsObject:[nodes objectAtIndex:i+1]])
+        {
+            [self setIndex:(i+1) ofNode:[nodes objectAtIndex:i]];
+        }
+    }
+    [graphLock unlock];
+    
+    return nil;
+}
+
+- (GraphChange*)bringNodesToFront:(NSSet*)nodeSet {
+    int i = 0, top = [nodes count]-1;
+    
+    while (i <= top) {
+        if ([nodeSet containsObject:[nodes objectAtIndex:i]]) {
+            [self setIndex:([nodes count]-1) ofNode:[nodes objectAtIndex:i]];
+            --top;
+        } else {
+            ++i;
+        }
+    }
+    
+    return nil;
+}
+
+- (GraphChange*)bringEdgesForward:(NSSet*)edgeSet {
+    [graphLock lock];
+    // start at the top of the array and work backwards
+    for (int i = [edges count]-2; i >= 0; --i) {
+        if ( [edgeSet containsObject:[edges objectAtIndex:i]] &&
+            ![edgeSet containsObject:[edges objectAtIndex:i+1]])
+        {
+            [self setIndex:(i+1) ofEdge:[edges objectAtIndex:i]];
+        }
+    }
+    [graphLock unlock];
+    
+    return nil;
+}
+
+- (GraphChange*)bringEdgesToFront:(NSSet*)edgeSet {
+    int i = 0, top = [edges count]-1;
+    
+    while (i <= top) {
+        if ([edgeSet containsObject:[edges objectAtIndex:i]]) {
+            [self setIndex:([edges count]-1) ofEdge:[edges objectAtIndex:i]];
+            --top;
+        } else {
+            ++i;
+        }
+    }
+    
+    return nil;
+}
+
+- (GraphChange*)sendNodesBackward:(NSSet*)nodeSet {
+    [graphLock lock];
+    // start at the top of the array and work backwards
+    for (int i = 1; i < [nodes count]; ++i) {
+        if ( [nodeSet containsObject:[nodes objectAtIndex:i]] &&
+            ![nodeSet containsObject:[nodes objectAtIndex:i-1]])
+        {
+            [self setIndex:(i-1) ofNode:[nodes objectAtIndex:i]];
+        }
+    }
+    [graphLock unlock];
+    
+    return nil;
+}
+
+- (GraphChange*)sendEdgesBackward:(NSSet*)edgeSet {
+    [graphLock lock];
+    // start at the top of the array and work backwards
+    for (int i = 1; i < [edges count]; ++i) {
+        if ( [edgeSet containsObject:[edges objectAtIndex:i]] &&
+            ![edgeSet containsObject:[edges objectAtIndex:i-1]])
+        {
+            [self setIndex:(i-1) ofEdge:[edges objectAtIndex:i]];
+        }
+    }
+    [graphLock unlock];
+    
+    return nil;
+}
+
+- (GraphChange*)sendNodesToBack:(NSSet*)nodeSet {
+    int i = [nodes count]-1, bot = 0;
+    
+    while (i >= bot) {
+        if ([nodeSet containsObject:[nodes objectAtIndex:i]]) {
+            [self setIndex:0 ofNode:[nodes objectAtIndex:i]];
+            ++bot;
+        } else {
+            --i;
+        }
+    }
+    
+    return nil;
+}
+
+- (GraphChange*)sendEdgesToBack:(NSSet*)edgeSet {
+    int i = [edges count]-1, bot = 0;
+    
+    while (i >= bot) {
+        if ([edgeSet containsObject:[edges objectAtIndex:i]]) {
+            [self setIndex:0 ofEdge:[edges objectAtIndex:i]];
+            ++bot;
+        } else {
+            --i;
+        }
+    }
+    
+    return nil;
 }
 
 - (GraphChange*)insertGraph:(Graph*)g {
 	[graphLock lock];
-	NSEnumerator *en;
-	Node *n;
-	Edge *e;
 	
-	en = [[g nodes] objectEnumerator];
-	while ((n = [en nextObject])) {
-		[nodes addObject:n];
+	for (Node *n in [g nodes]) {
+		[self addNode:n];
 	}
 	
-	en = [[g edges] objectEnumerator];
-	while ((e = [en nextObject])) {
-		[edges addObject:e];
+	for (Edge *e in [g edges]) {
+		[self addEdge:e];
 	}
 	
 	dirty = YES;
 	
 	[graphLock unlock];
+    
 	
-	return [GraphChange graphAdditionWithNodes:[g nodes] edges:[g edges]];
+	return [GraphChange graphAdditionWithNodes:[NSSet setWithArray:[g nodes]] edges:[NSSet setWithArray:[g edges]]];
 }
 
 - (void)flipNodes:(NSSet*)nds horizontal:(BOOL)horiz {
 	[graphLock lock];
 	
-	NSRect bds = [Graph boundsForNodeSet:nds];
+	NSRect bds = [Graph boundsForNodes:nds];
 	float ctr;
 	if (horiz) ctr = bds.origin.x + (bds.size.width/2);
 	else ctr = bds.origin.y + (bds.size.height/2);
@@ -364,7 +512,7 @@
 - (NSSet*)pathCover {
 	[self sync];
 	
-	NSMutableSet *remainingEdges = [edges mutableCopy];
+	NSMutableSet *remainingEdges = [NSMutableSet setWithArray:edges];
 	NSMutableSet *cover = [NSMutableSet set];
 	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -488,15 +636,14 @@
 			[NSNumber numberWithFloat:boundingBox.origin.y + boundingBox.size.height]];
 	}
 	
-	NSArray *sortedNodeList = [[nodes allObjects]
-				     sortedArrayUsingSelector:@selector(compareTo:)];
+//	NSArray *sortedNodeList = [[nodes allObjects]
+//				     sortedArrayUsingSelector:@selector(compareTo:)];
 	//NSMutableDictionary *nodeNames = [NSMutableDictionary dictionary];
 	
 	if ([nodes count] > 0) [code appendFormat:@"\t\\begin{pgfonlayer}{nodelayer}\n"];
 	
-	int i;
-	for (i = 0; i < [sortedNodeList count]; ++i) {
-		Node *n = [sortedNodeList objectAtIndex:i];
+	int i = 0;
+	for (Node *n in nodes) {
 		[n updateData];
 		[n setName:[NSString stringWithFormat:@"%d", i]];
 		[code appendFormat:@"\t\t\\node %@ (%d) at (%@, %@) {%@};\n",
@@ -506,6 +653,7 @@
 			[NSNumber numberWithFloat:[n point].y],
 			[n label]
 		];
+        i++;
 	}
 	
 	if ([nodes count] > 0) [code appendFormat:@"\t\\end{pgfonlayer}\n"];
@@ -549,8 +697,6 @@
 	[graphLock lock];
 	[nodes release];
 	[edges release];
-	[nodesCache release];
-	[edgesCache release];
 	[data release];
 	[inEdges release];
 	[outEdges release];
@@ -584,25 +730,26 @@
 	return tab;
 }
 
-+ (NSRect)boundsForNodeSet:(NSSet*)nds {
+
++ (NSRect)boundsForNodes:(id<NSFastEnumeration>)nds {
 	NSPoint tl, br;
-	Node *n;
 	NSPoint p;
-	NSEnumerator *en = [nds objectEnumerator];
-	if ((n = [en nextObject])==nil) {
-		return NSMakeRect(0, 0, 0, 0);
-	}
-	p = [n point];
-	tl = p;
-	br = p;
-	while ((n = [en nextObject])) {
-		p = [n point];
-		if (p.x < tl.x) tl.x = p.x;
-		if (p.y > tl.y) tl.y = p.y;
-		if (p.x > br.x) br.x = p.x;
-		if (p.y < br.y) br.y = p.y;
-	}
-	return NSRectAroundPoints(tl, br);
+    BOOL hasPoints = NO;
+    for (Node *n in nds) {
+        p = [n point];
+        if (!hasPoints) {
+            tl = p;
+            br = p;
+            hasPoints = YES;
+        } else {
+            if (p.x < tl.x) tl.x = p.x;
+            if (p.y > tl.y) tl.y = p.y;
+            if (p.x > br.x) br.x = p.x;
+            if (p.y < br.y) br.y = p.y;
+        }
+    }
+    
+    return (hasPoints) ? NSRectAroundPoints(tl, br) : NSMakeRect(0, 0, 0, 0);
 }
 
 @end

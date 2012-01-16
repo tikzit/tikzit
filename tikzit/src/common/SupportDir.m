@@ -49,7 +49,6 @@
 + (void)createUserSupportDir {
 #ifdef __APPLE__
 	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSError *error = nil;
 	[fileManager createDirectoryAtPath:[SupportDir userSupportDir]
 	       withIntermediateDirectories:YES
 	                        attributes:nil

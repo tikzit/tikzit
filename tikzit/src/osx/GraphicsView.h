@@ -121,6 +121,7 @@ typedef enum {
 - (void)copy:(id)sender;
 - (void)paste:(id)sender;
 - (void)delete:(id)sender;
+- (void)bringForward:(id)sender;
 - (void)flipHorizonal:(id)sender;
 - (void)flipVertical:(id)sender;
 - (void)reverseEdgeDirection:(id)sender;

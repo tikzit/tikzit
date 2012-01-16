@@ -46,12 +46,12 @@
 			 by calling applyGraphChange on [change inverse].
  */
 @interface Graph : NSObject {
-	NSLock *graphLock;
-	BOOL dirty; // this bit keeps track of whether nodesCache and edgesCache are up to date
-	NSMutableSet *nodes;
-	NSMutableSet *edges;
-	NSSet *nodesCache;
-	NSSet *edgesCache;
+	NSRecursiveLock *graphLock;
+	BOOL dirty; // keep track of when inEdges and outEdges need an update
+	NSMutableArray *nodes;
+	NSMutableArray *edges;
+//	NSSet *nodesCache;
+//	NSSet *edgesCache;
 	
 	BasicMapTable *inEdges;
 	BasicMapTable *outEdges;
@@ -72,7 +72,7 @@
  @details    The node set is cached internally, so no need to lock
              the graph when enumerating.
  */
-@property (readonly) NSSet *nodes;
+@property (readonly) NSArray *nodes;
 
 /*!
  @property   edges
@@ -80,7 +80,7 @@
  @details    The edge set is cached internally, so no need to lock
              the graph when enumerating.
  */
-@property (readonly) NSSet *edges;
+@property (readonly) NSArray *edges;
 
 /*!
  @property   boundingBox
@@ -189,6 +189,69 @@
 - (GraphChange*)addEdgeFrom:(Node*)source to:(Node*)target;
 
 /*!
+ @brief      Return the z-index for a given node (lower is farther back).
+ @param      node a node in the graph
+ @result     An <tt>int</tt>
+ */
+- (int)indexOfNode:(Node*)node;
+
+/*!
+ @brief      Set the z-index for a given node (lower is farther back).
+ @param      idx a new z-index
+ @param      node a node in the graph
+ */
+- (void)setIndex:(int)idx ofNode:(Node*)node;
+
+/*!
+ @brief      Bring set of nodes forward by one.
+ @param      nodeSet a set of nodes
+ */
+- (GraphChange*)bringNodesForward:(NSSet*)nodeSet;
+
+/*!
+ @brief      Bring set of nodes to the front.
+ @param      nodeSet a set of nodes
+ */
+- (GraphChange*)bringNodesToFront:(NSSet*)nodeSet;
+
+/*!
+ @brief      Bring set of edges to the front.
+ @param      edgeSet a set of edges
+ */
+- (GraphChange*)bringEdgesToFront:(NSSet*)edgeSet;
+
+/*!
+ @brief      Bring set of edges forward by one.
+ @param      edgeSet a set of edges
+ */
+- (GraphChange*)bringEdgesForward:(NSSet*)edgeSet;
+
+/*!
+ @brief      Send set of nodes backward by one.
+ @param      nodeSet a set of nodes
+ */
+- (GraphChange*)sendNodesBackward:(NSSet*)nodeSet;
+
+/*!
+ @brief      Send set of edges backward by one.
+ @param      edgeSet a set of edges
+ */
+- (GraphChange*)sendEdgesBackward:(NSSet*)edgeSet;
+
+/*!
+ @brief      Send set of nodes to back.
+ @param      nodeSet a set of nodes
+ */
+- (GraphChange*)sendNodesToBack:(NSSet*)nodeSet;
+
+/*!
+ @brief      Send set of edges to back.
+ @param      edgeSet a set of edges
+ */
+- (GraphChange*)sendEdgesToBack:(NSSet*)edgeSet;
+
+
+/*!
  @brief      Transform every node in the graph to screen space.
  @param      t a transformer
  */
@@ -200,7 +263,7 @@
  @param      p an x and y distance, given as an NSPoint.
  @result     A <tt>GraphChange</tt> recording this action.
  */
-- (GraphChange*)shiftNodes:(NSSet*)ns byPoint:(NSPoint)p;
+- (GraphChange*)shiftNodes:(id<NSFastEnumeration>)ns byPoint:(NSPoint)p;
 
 /*!
  @brief      Insert the given graph into this one. Used for copy
@@ -243,6 +306,7 @@
  */
 - (NSString*)tikz;
 
+
 /*!
  @brief      Copy the node set and return a table of copies, whose
              keys are the original nodes. This is used to save the state
@@ -263,10 +327,10 @@
 
 /*!
  @brief      Compute the bounds for a set of nodes.
- @param      nds a set of nodes.
+ @param      nds an enumerable collection of nodes.
  @result     The bounds.
  */
-+ (NSRect)boundsForNodeSet:(NSSet *)nds;
++ (NSRect)boundsForNodes:(id<NSFastEnumeration>)nds;
 
 /*!
  @brief      Factory method for constructing graphs.
