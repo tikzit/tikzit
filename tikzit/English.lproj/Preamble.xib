@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">11B26</string>
+		<string key="IBDocument.SystemVersion">11C74</string>
 		<string key="IBDocument.InterfaceBuilderVersion">1617</string>
-		<string key="IBDocument.AppKitVersion">1138</string>
-		<string key="IBDocument.HIToolboxVersion">566.00</string>
+		<string key="IBDocument.AppKitVersion">1138.23</string>
+		<string key="IBDocument.HIToolboxVersion">567.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">1617</string>
@@ -436,10 +436,10 @@
 																<string>WebURLsWithTitlesPboardType</string>
 																<string>public.url</string>
 															</set>
-															<string key="NSFrameSize">{484, 14}</string>
+															<string key="NSFrameSize">{469, 14}</string>
 															<reference key="NSSuperview" ref="731534325"/>
 															<reference key="NSWindow"/>
-															<reference key="NSNextKeyView" ref="743020768"/>
+															<reference key="NSNextKeyView" ref="610235341"/>
 															<object class="NSTextContainer" key="NSTextContainer" id="906465762">
 																<object class="NSLayoutManager" key="NSLayoutManager">
 																	<object class="NSTextStorage" key="NSTextStorage">
@@ -455,7 +455,7 @@
 																	<nil key="NSDelegate"/>
 																</object>
 																<reference key="NSTextView" ref="581312847"/>
-																<double key="NSWidth">484</double>
+																<double key="NSWidth">469</double>
 																<int key="NSTCFlags">1</int>
 															</object>
 															<object class="NSTextViewSharedData" key="NSSharedData">
@@ -499,7 +499,7 @@
 															<nil key="NSDelegate"/>
 														</object>
 													</array>
-													<string key="NSFrame">{{1, 1}, {484, 419}}</string>
+													<string key="NSFrame">{{1, 1}, {469, 419}}</string>
 													<reference key="NSSuperview" ref="711248178"/>
 													<reference key="NSWindow"/>
 													<reference key="NSNextKeyView" ref="581312847"/>
@@ -537,6 +537,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 													<string key="NSFrame">{{470, 1}, {15, 419}}</string>
 													<reference key="NSSuperview" ref="711248178"/>
 													<reference key="NSWindow"/>
+													<reference key="NSNextKeyView"/>
 													<reference key="NSTarget" ref="711248178"/>
 													<string key="NSAction">_doScroller:</string>
 													<double key="NSCurValue">1</double>
@@ -559,7 +560,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 											<string key="NSFrameSize">{486, 421}</string>
 											<reference key="NSSuperview" ref="994346876"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="731534325"/>
+											<reference key="NSNextKeyView" ref="743020768"/>
 											<int key="NSsFlags">133138</int>
 											<reference key="NSVScroller" ref="610235341"/>
 											<reference key="NSHScroller" ref="743020768"/>

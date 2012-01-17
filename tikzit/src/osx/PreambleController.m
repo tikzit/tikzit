@@ -123,7 +123,7 @@
 	if ([[toolbar selectedItemIdentifier] isEqualToString:[defaultToolbarItem itemIdentifier]]) {
 		[self setCurrentPreamble:@"default"];
 		[textView setBackgroundColor:ghostColor];
-	} else if ([toolbar.selectedItemIdentifier isEqualToString:[customToolbarItem itemIdentifier]]) {
+	} else if ([[toolbar selectedItemIdentifier] isEqualToString:[customToolbarItem itemIdentifier]]) {
 		NSString *key = nil;
 		if ([selectionIndexes count]==1) {
 			int i = [selectionIndexes firstIndex];
@@ -133,8 +133,8 @@
 			[self setCurrentPreamble:key];
 			//NSLog(@"preamble set to %@", key);
 		} else {
-			[self setCurrentPreamble:@"default"];
-			//NSLog(@"preamble set to default");
+			[self setCurrentPreamble:@"custom"];
+			//NSLog(@"preamble set to custom");
 		}
 		[textView setBackgroundColor:[NSColor whiteColor]];
 	}

@@ -43,7 +43,7 @@ static PreviewController *preview = nil;
 
 - (void)runLatex:(id)tikz {
 	// Only build one tex file at a time, so we don't get funky results.
-	[latexLock lock];
+	//[latexLock lock];
 	[progressIndicator startAnimation:self];
 	
 	int fnum = typesetCount++;
@@ -117,7 +117,7 @@ static PreviewController *preview = nil;
 	}
 	
 	[progressIndicator stopAnimation:self];
-	[latexLock unlock];
+	//[latexLock unlock];
 }
 
 - (void)buildTikz:(NSString*)tikz {
