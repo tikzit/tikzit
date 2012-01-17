@@ -465,7 +465,7 @@
 			}
 		}
 	}
-	
+
 	[graphLock unlock];
 }
 
@@ -481,16 +481,16 @@
 
 - (Graph*)copyOfSubgraphWithNodes:(NSSet*)nds {
 	[graphLock lock];
-	
+
 	NSMapTable *newNds = [Graph nodeTableForNodes:nds];
 	Graph* newGraph = [[Graph graph] retain];
-	
+
 	NSEnumerator *en = [newNds objectEnumerator];
 	Node *nd;
 	while ((nd = [en nextObject])) {
 		[newGraph addNode:nd];
 	}
-	
+
 	en = [edges objectEnumerator];
 	Edge *e;
 	while ((e = [en nextObject])) {
@@ -502,19 +502,19 @@
 			[e1 release]; // e1 belongs to newGraph
 		}
 	}
-	
+
 	[graphLock unlock];
-	
+
 	return newGraph;
 }
 
 - (NSSet*)pathCover {
 	[self sync];
 	
-	NSMutableSet *remainingEdges = [NSMutableSet setWithArray:edges];
 	NSMutableSet *cover = [NSMutableSet set];
-	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	NSMutableSet *remainingEdges = [NSMutableSet setWithArray:edges];
 	
 	while ([remainingEdges count] != 0) {
 		NSMutableArray *path = [[NSMutableArray alloc] init];
@@ -542,7 +542,6 @@
 	}
 	
 	[pool drain];
-	[remainingEdges release];
 	return cover;
 }
 
