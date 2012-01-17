@@ -24,7 +24,6 @@
 #import "Node.h"
 
 #import "Shape.h"
-#import "ShapeNames.h"
 
 
 @implementation Node
@@ -48,7 +47,7 @@
     if (style) {
         return [Shape shapeForName:[style shapeName]];
     } else {
-        return [Shape shapeForName:SHAPE_CIRCLE];
+        return nil;
     }
 }
 
@@ -74,10 +73,13 @@
 }
 
 - (NSRect) boundsUsingShapeTransform:(Transformer*)shapeTrans {
-    float strokeThickness = style ? [style strokeThickness] : [NodeStyle defaultStrokeThickness];
-    NSRect screenBounds = [shapeTrans rectToScreen:[[self shape] boundingRect]];
-    screenBounds = NSInsetRect(screenBounds, -strokeThickness, -strokeThickness);
-    return screenBounds;
+	//if (style) {
+		return [shapeTrans rectToScreen:[[self shape] boundingRect]];
+	/*} else {
+		NSRect r = NSZeroRect;
+		r.origin = [shapeTrans toScreen:[self point]];
+		return r;
+	}*/
 }
 
 - (NSRect) boundingRect {

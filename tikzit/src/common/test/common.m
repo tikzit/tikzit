@@ -23,10 +23,12 @@
 #import "test/test.h"
 void testParser();
 void testColor();
+void testMaths();
 
 void testCommon() {
 	startTestBlock(@"common");
 	testParser();
 	testColor();
+	testMaths();
 	endTestBlock(@"common");
 }

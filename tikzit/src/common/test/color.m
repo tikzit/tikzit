@@ -23,7 +23,11 @@
 #import "test/test.h"
 #import "ColorRGB.h"
 
+#ifdef STAND_ALONE
+void runTests() {
+#else
 void testColor() {
+#endif
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	startTestBlock(@"color");
 	

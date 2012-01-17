@@ -22,6 +22,7 @@
 //  
 
 #import "Edge.h"
+#import "Shape.h"
 #import "util.h"
 
 @implementation Edge
@@ -73,7 +74,37 @@
 }
 
 - (NSPoint) _findContactPointOn:(Node*)node at:(float)angle {
-	return [node point];
+	NSPoint rayStart = [node point];
+	Shape *shape = [node shape];
+	if (shape == nil) {
+		return rayStart;
+	}
+
+	Transformer *shapeTrans = [node shapeTransformer];
+	NSRect searchArea = [node boundsUsingShapeTransform:shapeTrans];
+	if (!NSPointInRect(rayStart, searchArea)) {
+		return rayStart;
+	}
+
+	NSPoint rayEnd = findExitPointOfRay (rayStart, angle, searchArea);
+
+	for (NSArray *path in [shape paths]) {
+		for (Edge *curve in path) {
+			NSPoint intersect;
+			[curve updateControls];
+			if (lineSegmentIntersectsBezier (rayStart, rayEnd,
+					[shapeTrans toScreen:curve->head],
+					[shapeTrans toScreen:curve->cp1],
+					[shapeTrans toScreen:curve->cp2],
+					[shapeTrans toScreen:curve->tail],
+					&intersect)) {
+				// we just keep shortening the line
+				rayStart = intersect;
+			}
+		}
+	}
+
+	return rayStart;
 }
 
 - (void)updateControls {
@@ -188,6 +219,16 @@
 - (NSPoint)rightNormal {
     [self updateControls];
 	return NSMakePoint(mid.x - (mid.y - midTan.y), mid.y + (mid.x - midTan.x));
+}
+
+- (NSPoint) head {
+	[self updateControls];
+	return head;
+}
+
+- (NSPoint) tail {
+	[self updateControls];
+	return tail;
 }
 
 - (NSPoint)cp1 {

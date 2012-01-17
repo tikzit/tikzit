@@ -57,13 +57,64 @@ static NSString *indents[6] =
 
 @end
 
+BOOL fuzzyCompare(float f1, float f2) {
+	return (ABS(f1 - f2) <= 0.00001f * MAX(1.0f,MIN(ABS(f1), ABS(f2))));
+}
+
+BOOL fuzzyComparePoints (NSPoint p1, NSPoint p2) {
+	return fuzzyCompare (p1.x, p2.x) && fuzzyCompare (p1.y, p2.y);
+}
+
+void pass(NSString *msg) {
+	PUTS(@"%@[%@PASS%@] %@", INDENT, GREEN, OFF, msg);
+	++PASSES;
+}
+
+void fail(NSString *msg) {
+	PUTS(@"%@[%@FAIL%@] %@", INDENT, RED, OFF, msg);
+	++FAILS;
+}
+
 void TEST(NSString *msg, BOOL test) {
 	if (test) {
-		PUTS(@"%@[%@PASS%@] %@", INDENT, GREEN, OFF, msg);
-		++PASSES;
+		pass (msg);
 	} else {
-		PUTS(@"%@[%@FAIL%@] %@", INDENT, RED, OFF, msg);
-		++FAILS;
+		fail (msg);
+	}
+}
+
+void assertRectsEqual (NSString *msg, NSRect r1, NSRect r2) {
+	BOOL equal = fuzzyCompare (r1.origin.x, r2.origin.x) &&
+	             fuzzyCompare (r1.origin.y, r2.origin.y) &&
+	             fuzzyCompare (r1.size.width, r2.size.width) &&
+	             fuzzyCompare (r1.size.height, r2.size.height);
+	if (equal) {
+		pass (msg);
+	} else {
+		failFmt(@"%@ (expected (%f,%f:%fx%f) but got (%f,%f:%fx%f))",
+				msg,
+				r2.origin.x, r2.origin.y, r2.size.width, r2.size.height,
+				r1.origin.x, r1.origin.y, r1.size.width, r1.size.height);
+	}
+}
+
+void assertPointsEqual (NSString *msg, NSPoint p1, NSPoint p2) {
+	BOOL equal = fuzzyCompare (p1.x, p2.x) && fuzzyCompare (p1.y, p2.y);
+	if (equal) {
+		pass (msg);
+	} else {
+		failFmt(@"%@ (expected (%f,%f) but got (%f,%f)",
+				msg,
+				p2.x, p2.y,
+				p1.x, p1.y);
+	}
+}
+
+void assertFloatsEqual (NSString *msg, float f1, float f2) {
+	if (fuzzyCompare (f1, f2)) {
+		pass (msg);
+	} else {
+		failFmt(@"%@ (expected %f but got %f", msg, f2, f1);
 	}
 }
 
@@ -102,3 +153,23 @@ void setColorEnabled(BOOL b) {
 		OFF = @"";
 	}
 }
+
+#ifdef STAND_ALONE
+void runTests();
+
+int main() {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+	setColorEnabled (YES);
+	startTests();
+
+	runTests();
+
+	endTests();
+
+	[pool drain];
+	return 0;
+}
+#endif
+
+// vim:ft=objc:ts=4:sts=4:sw=4:noet

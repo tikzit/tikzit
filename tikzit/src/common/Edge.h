@@ -142,14 +142,36 @@ typedef enum {
 @property (assign) EdgeBendMode bendMode;
 
 /*!
+ @property   head
+ @brief      The starting point of the edge.
+ @detail     This value is computed based on the source, target and
+             either bend or in/out angles.  It is where the edge
+			 makes contact with the source node.
+ */
+@property (readonly) NSPoint head;
+
+/*!
+ @property   tail
+ @brief      The ending point of the edge.
+ @detail     This value is computed based on the source, target and
+             either bend or in/out angles.  It is where the edge
+			 makes contact with the target node.
+ */
+@property (readonly) NSPoint tail;
+
+/*!
  @property   cp1
- @brief      The first control point. Computed from the source, target, and bend.
+ @brief      The first control point of the edge.
+ @detail     This value is computed based on the source, target and
+             either bend or in/out angles.
  */
 @property (readonly) NSPoint cp1;
 
 /*!
  @property   cp2
- @brief      The second control point. Computed from the source, target, and bend.
+ @brief      The second control point of the edge.
+ @detail     This value is computed based on the source, target and
+             either bend or in/out angles.
  */
 @property (readonly) NSPoint cp2;
 

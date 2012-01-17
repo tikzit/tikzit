@@ -82,17 +82,28 @@ float bezierInterpolate(float dist, float c0, float c1, float c2, float c3) {
 			(dist*dist*dist) * c3;
 }
 
-void lineCoeffsFromPoints(NSPoint p1, NSPoint p2, float *A, float *B, float *C) {
+NSPoint bezierInterpolateFull (float dist, NSPoint c0, NSPoint c1, NSPoint c2, NSPoint c3) {
+	return NSMakePoint (bezierInterpolate (dist, c0.x, c1.x, c2.x, c3.x),
+	                    bezierInterpolate (dist, c0.y, c1.y, c2.y, c3.y));
+}
+
+static void lineCoeffsFromPoints(NSPoint p1, NSPoint p2, float *A, float *B, float *C) {
 	*A = p2.y - p1.y;
 	*B = p1.x - p2.x;
 	*C = (*A) * p1.x + (*B) * p1.y;
 }
 
+static void lineCoeffsFromPointAndAngle(NSPoint p, float angle, float *A, float *B, float *C) {
+	*A = sin (angle);
+	*B = -cos (angle);
+	*C = (*A) * p.x + (*B) * p.y;
+}
+
 static BOOL lineSegmentContainsPoint(NSPoint l1, NSPoint l2, float x, float y) {
-	float maxX = l1.x > l2.x ? l2.x : l1.x;
-	float minX = l1.x > l2.x ? l1.x : l2.x;
-	float maxY = l1.y > l2.y ? l2.y : l1.y;
-	float minY = l1.y > l2.y ? l1.y : l2.y;
+	float minX = MIN(l1.x, l2.x);
+	float maxX = MAX(l1.x, l2.x);
+	float minY = MIN(l1.y, l2.y);
+	float maxY = MAX(l1.y, l2.y);
 	return x >= minX && x <= maxX && y >= minY && y <= maxY;
 }
 
@@ -121,6 +132,36 @@ BOOL lineSegmentsIntersect(NSPoint l1start, NSPoint l1end, NSPoint l2start, NSPo
 		}
 	}
 	return NO;
+}
+
+BOOL lineSegmentIntersectsBezier (NSPoint lstart, NSPoint lend, NSPoint c0, NSPoint c1, NSPoint c2, NSPoint c3, NSPoint *result) {
+	NSRect curveBounds = NSRectAround4Points(c0, c1, c2, c3);
+	if (!lineSegmentIntersectsRect(lstart, lend, curveBounds))
+		return NO;
+
+	const int divisions = 20;
+	const float chunkSize = 1.0f/(float)divisions;
+	float chunkStart = 0.0f;
+	BOOL found = NO;
+
+	for (int i = 0; i < divisions; ++i) {
+		float chunkEnd = chunkStart + chunkSize;
+
+		NSPoint p1 = bezierInterpolateFull (chunkStart, c0, c1, c2, c3);
+		NSPoint p2 = bezierInterpolateFull (chunkEnd, c0, c1, c2, c3);
+
+		NSPoint p;
+		if (lineSegmentsIntersect (lstart, lend, p1, p2, &p)) {
+			lstart = p;
+			found = YES;
+		}
+
+		chunkStart = chunkEnd;
+	}
+	if (found && result) {
+		*result = lstart;
+	}
+	return found;
 }
 
 BOOL lineSegmentIntersectsRect(NSPoint lineStart, NSPoint lineEnd, NSRect rect) {
@@ -167,6 +208,92 @@ BOOL lineSegmentIntersectsRect(NSPoint lineStart, NSPoint lineEnd, NSRect rect) 
 	return YES;
 }
 
+NSPoint findExitPointOfRay (NSPoint p, float angle_rads, NSRect rect) {
+	const float rectMinX = NSMinX (rect);
+	const float rectMaxX = NSMaxX (rect);
+	const float rectMinY = NSMinY (rect);
+	const float rectMaxY = NSMaxY (rect);
+
+	const float angle = normaliseAngleRad (angle_rads);
+
+	// special case the edges
+	if (p.y == rectMaxY && angle > 0 && angle < M_PI) {
+		// along the top of the box
+		return p;
+	}
+	if (p.y == rectMinY && angle < 0 && angle > -M_PI) {
+		// along the bottom of the box
+		return p;
+	}
+	if (p.x == rectMaxX && angle > -M_PI/2.0f && angle < M_PI/2.0f) {
+		// along the right of the box
+		return p;
+	}
+	if (p.x == rectMinX && (angle > M_PI/2.0f || angle < -M_PI/2.0f)) {
+		// along the left of the box
+		return p;
+	}
+
+	float A1, B1, C1;
+	lineCoeffsFromPointAndAngle(p, angle, &A1, &B1, &C1);
+	//NSLog(@"Ray is %fx + %fy = %f", A1, B1, C1);
+
+	const float tlAngle = normaliseAngleRad (good_atan (rectMinX - p.x, rectMaxY - p.y));
+	const float trAngle = normaliseAngleRad (good_atan (rectMaxX - p.x, rectMaxY - p.y));
+	if (angle <= tlAngle && angle >= trAngle) {
+		// exit top
+		float A2, B2, C2;
+		lineCoeffsFromPoints(NSMakePoint (rectMinX, rectMaxY),
+		                     NSMakePoint (rectMaxX, rectMaxY),
+							 &A2, &B2, &C2);
+		float det = A1*B2 - A2*B1;
+		NSCAssert(det != 0.0f, @"Parallel lines?");
+		NSPoint intersect = NSMakePoint ((B2*C1 - B1*C2)/det,
+		                                 (A1*C2 - A2*C1)/det);
+		return intersect;
+	}
+
+	const float brAngle = normaliseAngleRad (good_atan (rectMaxX - p.x, rectMinY - p.y));
+	if (angle <= trAngle && angle >= brAngle) {
+		// exit right
+		float A2, B2, C2;
+		lineCoeffsFromPoints(NSMakePoint (rectMaxX, rectMaxY),
+		                     NSMakePoint (rectMaxX, rectMinY),
+							 &A2, &B2, &C2);
+		//NSLog(@"Edge is %fx + %fy = %f", A2, B2, C2);
+		float det = A1*B2 - A2*B1;
+		NSCAssert(det != 0.0f, @"Parallel lines?");
+		NSPoint intersect = NSMakePoint ((B2*C1 - B1*C2)/det,
+		                                 (A1*C2 - A2*C1)/det);
+		return intersect;
+	}
+
+	const float blAngle = normaliseAngleRad (good_atan (rectMinX - p.x, rectMinY - p.y));
+	if (angle <= brAngle && angle >= blAngle) {
+		// exit bottom
+		float A2, B2, C2;
+		lineCoeffsFromPoints(NSMakePoint (rectMaxX, rectMinY),
+		                     NSMakePoint (rectMinX, rectMinY),
+							 &A2, &B2, &C2);
+		float det = A1*B2 - A2*B1;
+		NSCAssert(det != 0.0f, @"Parallel lines?");
+		NSPoint intersect = NSMakePoint ((B2*C1 - B1*C2)/det,
+		                                 (A1*C2 - A2*C1)/det);
+		return intersect;
+	} else {
+		// exit left
+		float A2, B2, C2;
+		lineCoeffsFromPoints(NSMakePoint (rectMinX, rectMaxY),
+		                     NSMakePoint (rectMinX, rectMinY),
+							 &A2, &B2, &C2);
+		float det = A1*B2 - A2*B1;
+		NSCAssert(det != 0.0f, @"Parallel lines?");
+		NSPoint intersect = NSMakePoint ((B2*C1 - B1*C2)/det,
+		                                 (A1*C2 - A2*C1)/det);
+		return intersect;
+	}
+}
+
 float roundToNearest(float stepSize, float val) {
 	if (stepSize==0.0f) return val;
 	else return round(val/stepSize)*stepSize;
@@ -184,6 +311,16 @@ int normaliseAngleDeg (int degrees) {
 		degrees += 360;
 	}
 	return degrees;
+}
+
+float normaliseAngleRad (float rads) {
+	while (rads > M_PI) {
+		rads -= 2 * M_PI;
+	}
+	while (rads <= -M_PI) {
+		rads += 2 * M_PI;
+	}
+	return rads;
 }
 
 static char ahex[] =

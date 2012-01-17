@@ -23,7 +23,12 @@
 #import "test/test.h"
 #import "TikzGraphAssembler.h"
 
+
+#ifdef STAND_ALONE
+void runTests() {
+#else
 void testParser() {
+#endif
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	startTestBlock(@"parser");
 	

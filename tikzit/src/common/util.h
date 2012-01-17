@@ -91,7 +91,18 @@ float good_atan(float dx, float dy);
  @param      c3 the x (resp. y) coordinate of the end point.
  @result     The x (resp. y) coordinate of the point at 'dist'.
  */
-float bezierInterpolate(float dist, float c0, float c1, float c2, float c3);
+float bezierInterpolate (float dist, float c0, float c1, float c2, float c3);
+
+/*!
+ @brief      Interpolate along a bezier curve to the given distance.
+ @param      dist a distance from 0 to 1 spanning the whole curve.
+ @param      c0 the x start point.
+ @param      c1 the x first control point.
+ @param      c2 the x second control point.
+ @param      c3 the x end point.
+ @result     The point at 'dist'.
+ */
+NSPoint bezierInterpolateFull (float dist, NSPoint c0, NSPoint c1, NSPoint c2, NSPoint c3);
 
 /*!
  * @brief          Find whether two line segments intersect
@@ -102,7 +113,21 @@ float bezierInterpolate(float dist, float c0, float c1, float c2, float c3);
  * @param result   A location to store the intersection point
  * @result         YES if they intersect, NO if they do not
  */
-BOOL lineSegmentsIntersect(NSPoint l1start, NSPoint l1end, NSPoint l2start, NSPoint l2end, NSPoint *result);
+BOOL lineSegmentsIntersect (NSPoint l1start, NSPoint l1end, NSPoint l2start, NSPoint l2end, NSPoint *result);
+
+/*!
+ * @brief         Find whether a line segment intersects a bezier curve
+ * @detail        Always finds the intersection furthest along the line segment
+ * @param lstart  The starting point of the line segment
+ * @param lend    The ending point of the line segment
+ * @param c0      The starting point of the bezier curve
+ * @param c1      The first control point of the bezier curve
+ * @param c2      The second control point of the bezier curve
+ * @param c3      The ending point of the bezier curve
+ * @param result  A location to store the intersection point
+ * @result        YES if they intersect, NO if they do not
+ */
+BOOL lineSegmentIntersectsBezier (NSPoint lstart, NSPoint lend, NSPoint c0, NSPoint c1, NSPoint c2, NSPoint c3, NSPoint *result);
 
 /*!
  * @brief            Find whether a line segment enters a rectangle
@@ -111,7 +136,16 @@ BOOL lineSegmentsIntersect(NSPoint l1start, NSPoint l1end, NSPoint l2start, NSPo
  * @param rect       The rectangle
  * @result           YES if they intersect, NO if they do not
  */
-BOOL lineSegmentIntersectsRect(NSPoint lineStart, NSPoint lineEnd, NSRect rect);
+BOOL lineSegmentIntersectsRect (NSPoint lineStart, NSPoint lineEnd, NSRect rect);
+
+/*!
+ * @brief            Find where a ray exits a rectangle
+ * @param rayStart   The starting point of the ray; must be contained in rect
+ * @param angle_rads The angle of the ray, in radians
+ * @param rect       The rectangle
+ * @result           The point at which the ray leaves the rect
+ */
+NSPoint findExitPointOfRay (NSPoint rayStart, float angle_rads, NSRect rect);
 
 /*!
  @brief      Round val to nearest stepSize
@@ -126,9 +160,14 @@ float roundToNearest(float stepSize, float val);
 float radiansToDegrees(float radians);
 
 /*!
- @brief      Normalises an angle (in degrees) to fall between -359 and 359
+ @brief      Normalises an angle (in degrees) to fall between -179 and 180
  */
 int normaliseAngleDeg (int degrees);
+
+/*!
+ @brief      Normalises an angle (in radians) to fall in the range (-pi,pi]
+ */
+float normaliseAngleRad (float rads);
 
 /*!
  @brief      Express a byte as alpha-only hex, with digits (0..16) -> (a..jA..F)

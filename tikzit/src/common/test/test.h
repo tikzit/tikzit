@@ -26,8 +26,17 @@
 {}
 @end
 
+BOOL fuzzyCompare (float f1, float f2);
+BOOL fuzzyComparePoints (NSPoint p1, NSPoint p2);
+
 void setColorEnabled(BOOL b);
+
+void pass(NSString *msg);
+void fail(NSString *msg);
 void TEST(NSString *msg, BOOL test);
+void assertRectsEqual (NSString *msg, NSRect val, NSRect exp);
+void assertPointsEqual (NSString *msg, NSPoint val, NSPoint exp);
+void assertFloatsEqual (NSString *msg, float val, float exp);
 
 void startTests();
 void endTests();
@@ -39,3 +48,10 @@ void endTestBlock(NSString *name);
 	NSString *_str = [[NSString alloc] initWithFormat:fmt, ##__VA_ARGS__]; \
 	printf("%s\n", [_str UTF8String]); \
 	[_str release]; }
+
+#define failFmt(fmt, ...) { \
+	NSString *_fstr = [[NSString alloc] initWithFormat:fmt, ##__VA_ARGS__]; \
+	fail(_fstr); \
+	[_fstr release]; }
+
+// vim:ft=objc:ts=4:sts=4:sw=4:noet

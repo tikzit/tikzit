@@ -140,7 +140,7 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
     if (node == nil) {
         return;
     }
-    NSRect nodeRect = [node boundsWithLabelOnSurface:surface];
+    NSRect nodeRect = [node renderBoundsWithLabelForSurface:surface];
     nodeRect = NSInsetRect (nodeRect, -2.0f, -2.0f);
     [surface invalidateRect:nodeRect];
 }
@@ -170,7 +170,7 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
 }
 
 - (BOOL) point:(NSPoint)p fuzzyHitsNode:(Node*)node {
-    NSRect bounds = [node boundsOnSurface:surface];
+    NSRect bounds = [node renderBoundsForSurface:surface];
     return NSPointInRect(p, bounds);
 }
 
@@ -307,13 +307,13 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
 - (void) invalidateHalfEdge {
     if (halfEdgeOrigin != nil) {
         NSRect invRect = NSRectAroundPoints(halfEdgeEnd, halfEdgeOriginPoint);
-        invRect = NSUnionRect(invRect, [halfEdgeOrigin boundsWithLabelOnSurface:surface]);
+        invRect = NSUnionRect(invRect, [halfEdgeOrigin renderBoundsWithLabelForSurface:surface]);
 
         NSEnumerator *enumerator = [doc nodeEnumerator];
         Node *node;
         while ((node = [enumerator nextObject]) != nil) {
             if ([self point:halfEdgeEnd fuzzyHitsNode:node]) {
-                invRect = NSUnionRect(invRect, [node boundsWithLabelOnSurface:surface]);
+                invRect = NSUnionRect(invRect, [node renderBoundsWithLabelForSurface:surface]);
             }
         }
         [surface invalidateRect:NSInsetRect (invRect, -2.0f, -2.0f)];

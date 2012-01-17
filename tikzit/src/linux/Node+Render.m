@@ -27,16 +27,31 @@
 
 @implementation Node (Render)
 
+- (Shape*) shapeToRender {
+    if (style) {
+        return [Shape shapeForName:[style shapeName]];
+    } else {
+        return [Shape shapeForName:SHAPE_CIRCLE];
+    }
+}
+
 - (Transformer*) shapeTransformerForSurface:(id<Surface>)surface {
     return [self shapeTransformerFromTransformer:[surface transformer]];
 }
 
-- (NSRect) boundsOnSurface:(id<Surface>)surface {
-    return [self boundsUsingShapeTransform:[self shapeTransformerForSurface:surface]];
+- (NSRect) renderBoundsUsingShapeTransform:(Transformer*)shapeTrans {
+    float strokeThickness = style ? [style strokeThickness] : [NodeStyle defaultStrokeThickness];
+    NSRect screenBounds = [shapeTrans rectToScreen:[[self shapeToRender] boundingRect]];
+    screenBounds = NSInsetRect(screenBounds, -strokeThickness, -strokeThickness);
+    return screenBounds;
 }
 
-- (NSRect) boundsWithLabelOnSurface:(id<Surface>)surface {
-    NSRect nodeBounds = [self boundsOnSurface:surface];
+- (NSRect) renderBoundsForSurface:(id<Surface>)surface {
+    return [self renderBoundsUsingShapeTransform:[self shapeTransformerForSurface:surface]];
+}
+
+- (NSRect) renderBoundsWithLabelForSurface:(id<Surface>)surface {
+    NSRect nodeBounds = [self renderBoundsForSurface:surface];
     NSRect labelRect = NSZeroRect;
     if (![label isEqual:@""]) {
         id<RenderContext> cr = [surface createRenderContext];
@@ -127,7 +142,7 @@
 
     [context saveState];
 
-    [[self shape] drawPathWithTransform:shapeTrans andContext:context];
+    [[self shapeToRender] drawPathWithTransform:shapeTrans andContext:context];
 
     [context setLineWidth:strokeThickness];
     if (!style) {
@@ -145,7 +160,7 @@
             alpha = 0.25f;
         RColor selectionColor = MakeSolidRColor(0.61f, 0.735f, 1.0f);
 
-        [[self shape] drawPathWithTransform:shapeTrans andContext:context];
+        [[self shapeToRender] drawPathWithTransform:shapeTrans andContext:context];
         [context strokePathWithColor:selectionColor andFillWithColor:selectionColor usingAlpha:alpha];
     }
 
@@ -156,7 +171,7 @@
 - (BOOL) hitByPoint:(NSPoint)p onSurface:(id<Surface>)surface {
     Transformer *shapeTrans = [self shapeTransformerForSurface:surface];
 
-    NSRect screenBounds = [self boundsUsingShapeTransform:shapeTrans];
+    NSRect screenBounds = [self renderBoundsUsingShapeTransform:shapeTrans];
     if (!NSPointInRect(p, screenBounds)) {
         return NO;
     }
@@ -164,7 +179,7 @@
     float strokeThickness = style ? [style strokeThickness] : [NodeStyle defaultStrokeThickness];
     id<RenderContext> ctx = [surface createRenderContext];
     [ctx setLineWidth:strokeThickness];
-    [[self shape] drawPathWithTransform:shapeTrans andContext:ctx];
+    [[self shapeToRender] drawPathWithTransform:shapeTrans andContext:ctx];
     return [ctx strokeIncludesPoint:p] || [ctx fillIncludesPoint:p];
 }
 

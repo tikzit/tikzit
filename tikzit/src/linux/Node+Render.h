@@ -30,8 +30,8 @@ enum NodeState {
 
 - (Transformer*) shapeTransformerForSurface:(id<Surface>)surface;
 // the total rendered bounds, excluding label
-- (NSRect) boundsOnSurface:(id<Surface>)surface;
-- (NSRect) boundsWithLabelOnSurface:(id<Surface>)surface;
+- (NSRect) renderBoundsForSurface:(id<Surface>)surface;
+- (NSRect) renderBoundsWithLabelForSurface:(id<Surface>)surface;
 - (NSString*) renderedLabel;
 - (NSSize) renderedLabelSizeInContext:(id<RenderContext>)context;
 - (void) renderLabelToSurface:(id<Surface>)surface withContext:(id<RenderContext>)context;
