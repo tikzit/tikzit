@@ -21,6 +21,10 @@
 #import "util.h"
 #import "math.h"
 
+static BOOL fuzzyCompare(float f1, float f2) {
+	return (ABS(f1 - f2) <= 0.00001f * MIN(ABS(f1), ABS(f2)));
+}
+
 NSRect NSRectAroundPointsWithPadding(NSPoint p1, NSPoint p2, float padding) {
 	return NSMakeRect(MIN(p1.x,p2.x)-padding,
 					  MIN(p1.y,p2.y)-padding,
@@ -104,7 +108,10 @@ static BOOL lineSegmentContainsPoint(NSPoint l1, NSPoint l2, float x, float y) {
 	float maxX = MAX(l1.x, l2.x);
 	float minY = MIN(l1.y, l2.y);
 	float maxY = MAX(l1.y, l2.y);
-	return x >= minX && x <= maxX && y >= minY && y <= maxY;
+	return (x >= minX || fuzzyCompare (x, minX)) &&
+	       (x <= maxX || fuzzyCompare (x, maxX)) &&
+		   (y >= minY || fuzzyCompare (y, minY)) &&
+		   (y <= maxY || fuzzyCompare (y, maxY));
 }
 
 BOOL lineSegmentsIntersect(NSPoint l1start, NSPoint l1end, NSPoint l2start, NSPoint l2end, NSPoint *result) {
