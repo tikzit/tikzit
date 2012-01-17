@@ -35,7 +35,6 @@
 #import "Node.h"
 #import "Edge.h"
 #import "GraphChange.h"
-#import "BasicMapTable.h"
 #import "Transformer.h"
 
 /*!
@@ -53,8 +52,8 @@
 //	NSSet *nodesCache;
 //	NSSet *edgesCache;
 	
-	BasicMapTable *inEdges;
-	BasicMapTable *outEdges;
+	NSMapTable *inEdges;
+	NSMapTable *outEdges;
 	
 	GraphElementData *data;
 	NSRect boundingBox;
@@ -312,18 +311,18 @@
              keys are the original nodes. This is used to save the state
 	         of a set of nodes in a GraphChange.
  @param      nds a set of nodes.
- @result     A <tt>BasicMapTable</tt> of node copies.
+ @result     A <tt>NSMapTable</tt> of node copies.
  */
-+ (BasicMapTable*)nodeTableForNodes:(NSSet*)nds;
++ (NSMapTable*)nodeTableForNodes:(NSSet*)nds;
 
 /*!
  @brief      Copy the edge set and return a table of copies, whose
              keys are the original edges. This is used to save the state
 	         of a set of edges in a GraphChange.
  @param      es a set of edges.
- @result     A <tt>BasicMapTable</tt> of edge copies.
+ @result     A <tt>NSMapTable</tt> of edge copies.
  */
-+ (BasicMapTable*)edgeTableForEdges:(NSSet*)es;
++ (NSMapTable*)edgeTableForEdges:(NSSet*)es;
 
 /*!
  @brief      Compute the bounds for a set of nodes.

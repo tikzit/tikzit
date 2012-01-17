@@ -124,36 +124,36 @@
 	}
 }
 
-- (BasicMapTable*)oldNodeTable { return oldNodeTable; }
+- (NSMapTable*)oldNodeTable { return oldNodeTable; }
 
-- (void)setOldNodeTable:(BasicMapTable*)tab {
+- (void)setOldNodeTable:(NSMapTable*)tab {
 	if (oldNodeTable != tab) {
 		[oldNodeTable release];
 		oldNodeTable = [tab retain];
 	}
 }
 
-- (BasicMapTable*)nwNodeTable { return nwNodeTable; }
+- (NSMapTable*)nwNodeTable { return nwNodeTable; }
 
-- (void)setNwNodeTable:(BasicMapTable*)tab {
+- (void)setNwNodeTable:(NSMapTable*)tab {
 	if (nwNodeTable != tab) {
 		[nwNodeTable release];
 		nwNodeTable = [tab retain];
 	}
 }
 
-- (BasicMapTable*)oldEdgeTable { return oldEdgeTable; }
+- (NSMapTable*)oldEdgeTable { return oldEdgeTable; }
 
-- (void)setOldEdgeTable:(BasicMapTable*)tab {
+- (void)setOldEdgeTable:(NSMapTable*)tab {
 	if (oldEdgeTable != tab) {
 		[oldEdgeTable release];
 		oldEdgeTable = [tab retain];
 	}
 }
 
-- (BasicMapTable*)nwEdgeTable { return nwEdgeTable; }
+- (NSMapTable*)nwEdgeTable { return nwEdgeTable; }
 
-- (void)setNwEdgeTable:(BasicMapTable*)tab {
+- (void)setNwEdgeTable:(NSMapTable*)tab {
 	if (nwEdgeTable != tab) {
 		[nwEdgeTable release];
 		nwEdgeTable = [tab retain];
@@ -294,8 +294,8 @@
 	return [gc autorelease];
 }
 
-+ (GraphChange*)propertyChangeOfNodesFromOldCopies:(BasicMapTable*)oldC
-									   toNewCopies:(BasicMapTable*)newC {
++ (GraphChange*)propertyChangeOfNodesFromOldCopies:(NSMapTable*)oldC
+									   toNewCopies:(NSMapTable*)newC {
 	GraphChange *gc = [[GraphChange alloc] init];
 	[gc setChangeType:NodesPropertyChange];
 	[gc setOldNodeTable:oldC];
@@ -312,8 +312,8 @@
 	return [gc autorelease];
 }
 
-+ (GraphChange*)propertyChangeOfEdgesFromOldCopies:(BasicMapTable*)oldC
-									   toNewCopies:(BasicMapTable*)newC {
++ (GraphChange*)propertyChangeOfEdgesFromOldCopies:(NSMapTable*)oldC
+									   toNewCopies:(NSMapTable*)newC {
 	GraphChange *gc = [[GraphChange alloc] init];
 	[gc setChangeType:EdgesPropertyChange];
 	[gc setOldEdgeTable:oldC];

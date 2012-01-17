@@ -22,7 +22,6 @@
 //  
 
 #import "ColorRGB.h"
-#import "BasicMapTable.h"
 #import "util.h"
 
 typedef struct {
@@ -180,7 +179,7 @@ static const ColorRGBEntry kColors[147] = {
 	{ @"YellowGreen",             154, 205,  50 }
 };
 
-static BasicMapTable *colorHash = nil; 
+static NSMapTable *colorHash = nil; 
 
 @implementation ColorRGB
 
@@ -285,7 +284,7 @@ static BasicMapTable *colorHash = nil;
 }
 
 + (void)makeColorHash {
-	BasicMapTable *h = [[BasicMapTable alloc] init];
+	NSMapTable *h = [[NSMapTable alloc] init];
 	int i;
 	for (i = 0; i < 147; ++i) {
 		ColorRGB *col = [[ColorRGB alloc] initWithRed:kColors[i].r

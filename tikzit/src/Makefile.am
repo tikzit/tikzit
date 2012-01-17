@@ -59,7 +59,6 @@ tikzit_SOURCES = linux/CairoRenderContext.m \
                  linux/logo.m \
                  linux/mkdtemp.m \
                  linux/main.m \
-                 common/BasicMapTable.m \
                  common/CircleShape.m \
                  common/ColorRGB.m \
                  common/Edge.m \

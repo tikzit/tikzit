@@ -34,9 +34,9 @@
     NSString *tikz;
     NSString *path;
     NSSet *nodesetBeingModified;
-    BasicMapTable *nodesetBeingModifiedOldCopy;
+    NSMapTable *nodesetBeingModifiedOldCopy;
     NSSet *edgesetBeingModified;
-    BasicMapTable *edgesetBeingModifiedOldCopy;
+    NSMapTable *edgesetBeingModifiedOldCopy;
     NSPoint currentNodeShift;
     Node *nodeBeingModified;
     Node *nodeBeingModifiedOldCopy;

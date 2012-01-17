@@ -22,7 +22,6 @@
 //  
 
 #import "Graph.h"
-#import "BasicMapTable.h"
 
 @implementation Graph
 
@@ -45,8 +44,8 @@
 	if (dirty) {
 		[inEdges release];
 		[outEdges release];
-		inEdges = [[BasicMapTable alloc] init];
-		outEdges = [[BasicMapTable alloc] init];
+		inEdges = [[NSMapTable alloc] init];
+		outEdges = [[NSMapTable alloc] init];
 		
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		
@@ -483,7 +482,7 @@
 - (Graph*)copyOfSubgraphWithNodes:(NSSet*)nds {
 	[graphLock lock];
 	
-	BasicMapTable *newNds = [Graph nodeTableForNodes:nds];
+	NSMapTable *newNds = [Graph nodeTableForNodes:nds];
 	Graph* newGraph = [[Graph graph] retain];
 	
 	NSEnumerator *en = [newNds objectEnumerator];
@@ -710,8 +709,8 @@
 	return [[[self alloc] init] autorelease];
 }
 
-+ (BasicMapTable*)nodeTableForNodes:(NSSet*)nds {
-	BasicMapTable *tab = [BasicMapTable mapTable];
++ (NSMapTable*)nodeTableForNodes:(NSSet*)nds {
+	NSMapTable *tab = [NSMapTable mapTableWithStrongToStrongObjects];
 	for (Node *n in nds) {
 		Node *ncopy = [n copy];
 		[tab setObject:ncopy forKey:n];
@@ -720,8 +719,8 @@
 	return tab;
 }
 
-+ (BasicMapTable*)edgeTableForEdges:(NSSet*)es {
-	BasicMapTable *tab = [BasicMapTable mapTable];
++ (NSMapTable*)edgeTableForEdges:(NSSet*)es {
+	NSMapTable *tab = [NSMapTable mapTableWithStrongToStrongObjects];
 	for (Edge *e in es) {
 		Edge *ecopy = [e copy];
 		[tab setObject:ecopy forKey:e];

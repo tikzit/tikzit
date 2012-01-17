@@ -23,7 +23,6 @@
 
 #import "Node.h"
 #import "Edge.h"
-#import "BasicMapTable.h"
 
 typedef enum {
 	GraphAddition,
@@ -63,8 +62,8 @@ typedef enum {
 
 	Node *oldNode, *nwNode;
 	Edge *oldEdge, *nwEdge;
-	BasicMapTable *oldNodeTable, *nwNodeTable;
-	BasicMapTable *oldEdgeTable, *nwEdgeTable;
+	NSMapTable *oldNodeTable, *nwNodeTable;
+	NSMapTable *oldEdgeTable, *nwEdgeTable;
 	NSRect oldBoundingBox, nwBoundingBox;
 	GraphElementData *oldGraphData, *nwGraphData;
 }
@@ -139,25 +138,25 @@ typedef enum {
  @property   oldNodeTable
  @brief      A a table containing copies of a set of nodes pre-change.
  */
-@property (retain) BasicMapTable *oldNodeTable;
+@property (retain) NSMapTable *oldNodeTable;
 
 /*!
  @property   nwNodeTable
  @brief      A a table containing copies of a set of nodes post-change.
  */
-@property (retain) BasicMapTable *nwNodeTable;
+@property (retain) NSMapTable *nwNodeTable;
 
 /*!
  @property   oldEdgeTable
  @brief      A a table containing copies of a set of edges pre-change.
  */
-@property (retain) BasicMapTable *oldEdgeTable;
+@property (retain) NSMapTable *oldEdgeTable;
 
 /*!
  @property   nwEdgeTable
  @brief      A a table containing copies of a set of edges post-change.
  */
-@property (retain) BasicMapTable *nwEdgeTable;
+@property (retain) NSMapTable *nwEdgeTable;
 
 /*!
  @property   oldBoundingBox
@@ -238,8 +237,8 @@ typedef enum {
  @param      newC a table of copies of nodes post-change
  @result     A property change of a set of nodes.
  */
-+ (GraphChange*)propertyChangeOfNodesFromOldCopies:(BasicMapTable*)oldC
-									   toNewCopies:(BasicMapTable*)newC;
++ (GraphChange*)propertyChangeOfNodesFromOldCopies:(NSMapTable*)oldC
+									   toNewCopies:(NSMapTable*)newC;
 
 /*!
  @brief      Construct a property change of set of edges.
@@ -251,8 +250,8 @@ typedef enum {
  @param      newC a table of copies of edges post-change
  @result     A property change of a set of edges.
  */
-+ (GraphChange*)propertyChangeOfEdgesFromOldCopies:(BasicMapTable*)oldC
-									   toNewCopies:(BasicMapTable*)newC;
++ (GraphChange*)propertyChangeOfEdgesFromOldCopies:(NSMapTable*)oldC
+									   toNewCopies:(NSMapTable*)newC;
 
 
 /*!
