@@ -5,10 +5,10 @@ APP_BUNDLE=xbuild/Release/$PROJECT_NAME.app
 
 VERSION=$(defaults read "$(pwd)/$APP_BUNDLE/Contents/Info" CFBundleVersion)
 DOWNLOAD_BASE_URL="http://tikzit.sourceforge.net/appcast"
-RELEASENOTES_URL="$DOWNLOAD_BASE_URL/rnotes.html"
+RELEASENOTES_URL="$DOWNLOAD_BASE_URL/rnotes-devel.html"
 
 ARCHIVE_FILENAME="$PROJECT_NAME $VERSION.tar.bz2"
-ARCHIVE_PATH="docs/web/appcast/files/$ARCHIVE_FILENAME"
+ARCHIVE_PATH="../www/htdocs/appcast/files/$ARCHIVE_FILENAME"
 DOWNLOAD_URL="$DOWNLOAD_BASE_URL/files/$ARCHIVE_FILENAME"
 
 if [ -e "$ARCHIVE_PATH" ]; then
