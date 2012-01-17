@@ -107,6 +107,22 @@
 	return rayStart;
 }
 
+- (NSPoint) _findTanFor:(NSPoint)pt usingSpanFrom:(float)t1 to:(float)t2 {
+	float dx = bezierInterpolate(t2, head.x, cp1.x, cp2.x, tail.x) - 
+		       bezierInterpolate(t1, head.x, cp1.x, cp2.x, tail.x);
+	float dy = bezierInterpolate(t2, head.y, cp1.y, cp2.y, tail.y) -
+		       bezierInterpolate(t1, head.y, cp1.y, cp2.y, tail.y);
+
+	// normalise
+	float len = sqrt(dx*dx+dy*dy);
+	if (len != 0) {
+		dx = (dx/len) * 0.1f;
+		dy = (dy/len) * 0.1f;
+	}
+
+	return NSMakePoint (pt.x + dx, pt.y + dy);
+}
+
 - (void)updateControls {
 	// check for external modification to the node locations
 	if (src.x != [source point].x || src.y != [source point].y ||
@@ -146,24 +162,12 @@
 		
 		cp2 = NSMakePoint(targ.x + (cdist * cos(angleTarg)),
 						  targ.y + (cdist * sin(angleTarg)));
-		
-		mid.x = bezierInterpolate(0.5f, src.x, cp1.x, cp2.x, targ.x);
-		mid.y = bezierInterpolate(0.5f, src.y, cp1.y, cp2.y, targ.y);
-        
-        dx = bezierInterpolate(0.6f, src.x, cp1.x, cp2.x, targ.x) - 
-             bezierInterpolate(0.4f, src.x, cp1.x, cp2.x, targ.x);
-        dy = bezierInterpolate(0.6f, src.y, cp1.y, cp2.y, targ.y) -
-             bezierInterpolate(0.4f, src.y, cp1.y, cp2.y, targ.y);
-        
-        // normalise
-        float len = sqrt(dx*dx+dy*dy);
-        if (len != 0) {
-            dx = (dx/len) * 0.1f;
-            dy = (dy/len) * 0.1f;
-        }
-        
-        midTan.x = mid.x + dx;
-        midTan.y = mid.y + dy;
+
+		mid = bezierInterpolateFull (0.5f, head, cp1, cp2, tail);
+        midTan = [self _findTanFor:mid usingSpanFrom:0.4f to:0.6f];
+
+        headTan = [self _findTanFor:head usingSpanFrom:0.0f to:0.1f];
+        tailTan = [self _findTanFor:tail usingSpanFrom:1.0f to:0.9f];
 	}
 	dirty = NO;
 }
@@ -219,6 +223,26 @@
 - (NSPoint)rightNormal {
     [self updateControls];
 	return NSMakePoint(mid.x - (mid.y - midTan.y), mid.y + (mid.x - midTan.x));
+}
+
+- (NSPoint)leftHeadNormal {
+	[self updateControls];
+	return NSMakePoint(headTan.x + (head.y - headTan.y), headTan.y - (head.x - headTan.x));
+}
+
+- (NSPoint)rightHeadNormal {
+    [self updateControls];
+	return NSMakePoint(headTan.x - (head.y - headTan.y), headTan.y + (head.x - headTan.x));
+}
+
+- (NSPoint)leftTailNormal {
+	[self updateControls];
+	return NSMakePoint(tailTan.x + (tail.y - tailTan.y), tailTan.y - (tail.x - tailTan.x));
+}
+
+- (NSPoint)rightTailNormal {
+    [self updateControls];
+	return NSMakePoint(tailTan.x - (tail.y - tailTan.y), tailTan.y + (tail.x - tailTan.x));
 }
 
 - (NSPoint) head {

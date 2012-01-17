@@ -73,6 +73,8 @@ typedef enum {
 	NSPoint cp2;
 	NSPoint mid;
     NSPoint midTan;
+    NSPoint headTan;
+    NSPoint tailTan;
 }
 
 /*!
@@ -198,6 +200,26 @@ typedef enum {
  @brief      The second point in a line perp. to the edge coming from mid-point. (right side)
  */
 @property (readonly) NSPoint rightNormal;
+
+/*!
+ @property   leftHeadNormal
+ */
+@property (readonly) NSPoint leftHeadNormal;
+
+/*!
+ @property   rightHeadNormal
+ */
+@property (readonly) NSPoint rightHeadNormal;
+
+/*!
+ @property   leftTailNormal
+ */
+@property (readonly) NSPoint leftTailNormal;
+
+/*!
+ @property   rightTailNormal
+ */
+@property (readonly) NSPoint rightTailNormal;
 
 /*!
  @property   isSelfLoop

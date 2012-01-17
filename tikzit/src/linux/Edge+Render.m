@@ -124,6 +124,43 @@ static const float cpLineWidth = 1.0;
     [context restoreState];
 }
 
+- (void) createArrowStrokePathInContext:(id<RenderContext>)context withTransformer:(Transformer*)transformer {
+    [context startPath];
+
+    if ([self style] != nil) {
+        switch ([[self style] headStyle]) {
+            case AH_None:
+                break;
+            case AH_Plain:
+                [context moveTo:[transformer toScreen:[self leftHeadNormal]]];
+                [context lineTo:[transformer toScreen:head]];
+                [context lineTo:[transformer toScreen:[self rightHeadNormal]]];
+                break;
+            case AH_Latex:
+                [context moveTo:[transformer toScreen:[self leftHeadNormal]]];
+                [context lineTo:[transformer toScreen:head]];
+                [context lineTo:[transformer toScreen:[self rightHeadNormal]]];
+                [context closeSubPath];
+                break;
+        }
+        switch ([[self style] tailStyle]) {
+            case AH_None:
+                break;
+            case AH_Plain:
+                [context moveTo:[transformer toScreen:[self leftTailNormal]]];
+                [context lineTo:[transformer toScreen:tail]];
+                [context lineTo:[transformer toScreen:[self rightTailNormal]]];
+                break;
+            case AH_Latex:
+                [context moveTo:[transformer toScreen:[self leftTailNormal]]];
+                [context lineTo:[transformer toScreen:tail]];
+                [context lineTo:[transformer toScreen:[self rightTailNormal]]];
+                [context closeSubPath];
+                break;
+        }
+    }
+}
+
 - (void) createStrokePathInContext:(id<RenderContext>)context withTransformer:(Transformer*)transformer {
     NSPoint c_head = [transformer toScreen:head];
     NSPoint c_cp1 = [transformer toScreen:cp1];
@@ -149,8 +186,8 @@ static const float cpLineWidth = 1.0;
                 [context lineTo:[transformer toScreen:[self rightNormal]]];
                 break;
         }
-    }
 
+    }
 }
 
 - (void) renderToSurface:(id <Surface>)surface withContext:(id<RenderContext>)context selected:(BOOL)selected {
@@ -159,12 +196,17 @@ static const float cpLineWidth = 1.0;
     [context saveState];
     const CGFloat lineWidth = style ? [style thickness] : edgeWidth;
     [context setLineWidth:lineWidth];
-    [self createStrokePathInContext:context withTransformer:[surface transformer]];
     RColor color = BlackRColor;
     if (selected) {
         color.alpha = 0.5;
     }
+
+    [self createStrokePathInContext:context withTransformer:[surface transformer]];
     [context strokePathWithColor:color];
+
+    [self createArrowStrokePathInContext:context withTransformer:[surface transformer]];
+    [context strokePathWithColor:color andFillWithColor:color];
+
     [context restoreState];
 
     if (selected) {
