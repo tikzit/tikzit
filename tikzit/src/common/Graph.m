@@ -44,8 +44,8 @@
 	if (dirty) {
 		[inEdges release];
 		[outEdges release];
-		inEdges = [[NSMapTable alloc] init];
-		outEdges = [[NSMapTable alloc] init];
+		inEdges = [[NSMapTable alloc] initWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableStrongMemory capacity:10];
+		outEdges = [[NSMapTable alloc] initWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableStrongMemory capacity:10];
 		
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		

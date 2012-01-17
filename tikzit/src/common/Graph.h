@@ -49,8 +49,6 @@
 	BOOL dirty; // keep track of when inEdges and outEdges need an update
 	NSMutableArray *nodes;
 	NSMutableArray *edges;
-//	NSSet *nodesCache;
-//	NSSet *edgesCache;
 	
 	NSMapTable *inEdges;
 	NSMapTable *outEdges;
