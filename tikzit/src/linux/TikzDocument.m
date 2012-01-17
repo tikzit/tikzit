@@ -298,7 +298,7 @@
 
     // select everything from the clipboard
     [pickSupport deselectAllEdges];
-    [pickSupport selectAllNodes:[g nodes] replacingSelection:YES];
+    [pickSupport selectAllNodes:[NSSet setWithArray:[g nodes]] replacingSelection:YES];
 }
 
 - (void) pasteFromTikz:(NSString*)t {

@@ -200,7 +200,7 @@ static void delete_cb (GtkAction *action, MainWindow *window) {
 static void select_all_cb (GtkAction *action, MainWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     TikzDocument *document = [window activeDocument];
-    [[document pickSupport] selectAllNodes:[[document graph] nodes]];
+    [[document pickSupport] selectAllNodes:[NSSet setWithArray:[[document graph] nodes]]];
     [pool drain];
 }
 

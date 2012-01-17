@@ -74,9 +74,6 @@
 
 - (NSPoint) _findContactPointOn:(Node*)node at:(float)angle {
 	return [node point];
-	Transformer *shapeTrans = [node shapeTransformer];
-	NSRect searchArea = [node boundsUsingShapeTransform:shapeTrans];
-	NSPoint 
 }
 
 - (void)updateControls {
