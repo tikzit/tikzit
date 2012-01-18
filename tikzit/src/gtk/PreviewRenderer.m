@@ -138,6 +138,8 @@
         [latexTask launch];
         [latexTask waitUntilExit];
     } NS_HANDLER {
+        NSLog(@"Failed to run '%@'; error was: %@", path, [localException reason]);
+        (void)localException;
         NSString *desc = [NSString stringWithFormat:@"Failed to run '%@'", path];
         NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:2];
         [errorDetail setValue:desc forKey:NSLocalizedDescriptionKey];

@@ -36,8 +36,10 @@ static gboolean window_focus_out_event_cb (GtkWidget *widget,
 static void close_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
 static void add_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
 static void remove_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
+/*
 static void undo_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
 static void redo_button_clicked_cb (GtkButton *widget, PreambleEditor *editor);
+*/
 static void preamble_name_edited_cb (GtkCellRendererText *renderer,
                                      gchar               *path,
                                      gchar               *new_text,
@@ -523,6 +525,7 @@ static void remove_button_clicked_cb (GtkButton *widget, PreambleEditor *editor)
 	[pool drain];
 }
 
+/*
 static void undo_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSLog(@"Undo");
@@ -534,6 +537,7 @@ static void redo_button_clicked_cb (GtkButton *widget, PreambleEditor *editor) {
 	NSLog(@"Redo");
 	[pool drain];
 }
+*/
 
 static void preamble_name_edited_cb (GtkCellRendererText *renderer,
                                      gchar               *path,
