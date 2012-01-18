@@ -23,7 +23,8 @@
 @interface Edge (Render)
 
 + (float) controlPointRadius;
-- (void) renderControlsToSurface:(id<Surface>)surface withContext:(id<RenderContext>)context;
+- (void) renderControlsInContext:(id<RenderContext>)context withTransformer:(Transformer*)transformer;
+- (void) renderBasicEdgeInContext:(id<RenderContext>)context withTransformer:(Transformer*)t selected:(BOOL)selected;
 - (void) renderToSurface:(id<Surface>)surface withContext:(id<RenderContext>)context selected:(BOOL)selected;
 - (NSRect) renderedBoundsWithTransformer:(Transformer*)t whenSelected:(BOOL)selected;
 - (BOOL) hitByPoint:(NSPoint)p onSurface:(id<Surface>)surface withFuzz:(float)fuzz;

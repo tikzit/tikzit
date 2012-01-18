@@ -42,9 +42,7 @@ static const float cpLineWidth = 1.0;
     }
 }
 
-- (void) renderControlsToSurface:(id <Surface>)surface withContext:(id<RenderContext>)context {
-    Transformer *transformer = [surface transformer];
-
+- (void) renderControlsInContext:(id<RenderContext>)context withTransformer:(Transformer*)transformer {
     [context saveState];
 
     [self updateControls];
@@ -124,38 +122,45 @@ static const float cpLineWidth = 1.0;
     [context restoreState];
 }
 
-- (void) createArrowStrokePathInContext:(id<RenderContext>)context withTransformer:(Transformer*)transformer {
-    [context startPath];
+- (void) renderArrowStrokePathInContext:(id<RenderContext>)context withTransformer:(Transformer*)transformer color:(RColor)color {
 
     if ([self style] != nil) {
         switch ([[self style] headStyle]) {
             case AH_None:
                 break;
             case AH_Plain:
+                [context startPath];
                 [context moveTo:[transformer toScreen:[self leftHeadNormal]]];
                 [context lineTo:[transformer toScreen:head]];
                 [context lineTo:[transformer toScreen:[self rightHeadNormal]]];
+                [context strokePathWithColor:color];
                 break;
             case AH_Latex:
+                [context startPath];
                 [context moveTo:[transformer toScreen:[self leftHeadNormal]]];
                 [context lineTo:[transformer toScreen:head]];
                 [context lineTo:[transformer toScreen:[self rightHeadNormal]]];
                 [context closeSubPath];
+                [context strokePathWithColor:color andFillWithColor:color];
                 break;
         }
         switch ([[self style] tailStyle]) {
             case AH_None:
                 break;
             case AH_Plain:
+                [context startPath];
                 [context moveTo:[transformer toScreen:[self leftTailNormal]]];
                 [context lineTo:[transformer toScreen:tail]];
                 [context lineTo:[transformer toScreen:[self rightTailNormal]]];
+                [context strokePathWithColor:color];
                 break;
             case AH_Latex:
+                [context startPath];
                 [context moveTo:[transformer toScreen:[self leftTailNormal]]];
                 [context lineTo:[transformer toScreen:tail]];
                 [context lineTo:[transformer toScreen:[self rightTailNormal]]];
                 [context closeSubPath];
+                [context strokePathWithColor:color andFillWithColor:color];
                 break;
         }
     }
@@ -190,10 +195,10 @@ static const float cpLineWidth = 1.0;
     }
 }
 
-- (void) renderToSurface:(id <Surface>)surface withContext:(id<RenderContext>)context selected:(BOOL)selected {
+- (void) renderBasicEdgeInContext:(id<RenderContext>)context withTransformer:(Transformer*)t selected:(BOOL)selected {
     [self updateControls];
-
     [context saveState];
+
     const CGFloat lineWidth = style ? [style thickness] : edgeWidth;
     [context setLineWidth:lineWidth];
     RColor color = BlackRColor;
@@ -201,16 +206,19 @@ static const float cpLineWidth = 1.0;
         color.alpha = 0.5;
     }
 
-    [self createStrokePathInContext:context withTransformer:[surface transformer]];
+    [self createStrokePathInContext:context withTransformer:t];
     [context strokePathWithColor:color];
 
-    [self createArrowStrokePathInContext:context withTransformer:[surface transformer]];
-    [context strokePathWithColor:color andFillWithColor:color];
+    [self renderArrowStrokePathInContext:context withTransformer:t color:color];
 
     [context restoreState];
+}
+
+- (void) renderToSurface:(id <Surface>)surface withContext:(id<RenderContext>)context selected:(BOOL)selected {
+    [self renderBasicEdgeInContext:context withTransformer:[surface transformer] selected:selected];
 
     if (selected) {
-        [self renderControlsToSurface:surface withContext:context];
+        [self renderControlsInContext:context withTransformer:[surface transformer]];
     }
 
     if ([self hasEdgeNode]) {

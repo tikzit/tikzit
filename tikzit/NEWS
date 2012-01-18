@@ -8,6 +8,7 @@ tikzit 0.8 (2012-01-??):
 	* Make everything look a bit better
 	* Edges now start from the edge of a node, not the centre,
 	  which is what tikz does
+	* Edges can now have arrow heads and arrow tails
 
 tikzit 0.7 (2011-12-06):
 	* Add bounding box support

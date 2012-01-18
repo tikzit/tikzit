@@ -18,6 +18,9 @@
 #import "EdgeStyleSelector.h"
 
 #import "CairoRenderContext.h"
+#import "Edge.h"
+#import "Edge+Render.h"
+#import "Node.h"
 #import "Shape.h"
 #import "Shape+Render.h"
 #import "ShapeNames.h"
@@ -373,37 +376,16 @@ enum {
     NSRect pixbufBounds = NSMakeRect(0.0, 0.0, width, height);
     NSRect graphBounds = [transformer rectFromScreen:pixbufBounds];
 
-    NSPoint mid = NSMakePoint (NSMidX (graphBounds), NSMidY (graphBounds));
-    NSPoint start = NSMakePoint (NSMinX (graphBounds) + 0.1f, mid.y);
-    NSPoint end = NSMakePoint (NSMaxX (graphBounds) - 0.1f, mid.y);
-    NSPoint midTan = NSMakePoint (mid.x + 0.1f, mid.y);
-    NSPoint leftNormal = NSMakePoint (mid.x, mid.y - 0.1f);
-    NSPoint rightNormal = NSMakePoint (mid.x, mid.y + 0.1f);
+    NSPoint start = NSMakePoint (NSMinX (graphBounds) + 0.1f, NSMidY (graphBounds));
+    NSPoint end = NSMakePoint (NSMaxX (graphBounds) - 0.1f, NSMidY (graphBounds));
+    Node *src = [Node nodeWithPoint:start];
+    Node *tgt = [Node nodeWithPoint:end];
+    Edge *e = [Edge edgeWithSource:src andTarget:tgt];
+    [e setStyle:style];
 
     CairoRenderContext *context = [[CairoRenderContext alloc] initForSurface:surface];
     [context clearSurface];
-
-    [context startPath];
-    [context moveTo:[transformer toScreen:start]];
-    [context lineTo:[transformer toScreen:end]];
-
-    switch ([style decorationStyle]) {
-        case ED_None:
-            break;
-        case ED_Tick:
-            [context moveTo:[transformer toScreen:leftNormal]];
-            [context lineTo:[transformer toScreen:rightNormal]];
-            break;
-        case ED_Arrow:
-            [context moveTo:[transformer toScreen:leftNormal]];
-            [context lineTo:[transformer toScreen:midTan]];
-            [context lineTo:[transformer toScreen:rightNormal]];
-            break;
-    }
-
-    [context setLineWidth:[style thickness]];
-    [context strokePathWithColor:BlackRColor];
-
+    [e renderBasicEdgeInContext:context withTransformer:transformer selected:NO];
     [context release];
 
     return [self pixbufFromSurface:surface];

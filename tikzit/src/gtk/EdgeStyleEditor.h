@@ -25,6 +25,8 @@
     GtkTable              *table;
     GtkEntry              *nameEdit;
     GtkComboBox           *decorationCombo;
+    GtkComboBox           *headArrowCombo;
+    GtkComboBox           *tailArrowCombo;
     GtkAdjustment         *thicknessAdj;
     BOOL                   blockSignals;
 }
