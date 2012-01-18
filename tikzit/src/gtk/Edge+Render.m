@@ -162,14 +162,14 @@ static const float cpLineWidth = 1.0;
 }
 
 - (void) createStrokePathInContext:(id<RenderContext>)context withTransformer:(Transformer*)transformer {
-    NSPoint c_head = [transformer toScreen:head];
+    NSPoint c_tail = [transformer toScreen:tail];
     NSPoint c_cp1 = [transformer toScreen:cp1];
     NSPoint c_cp2 = [transformer toScreen:cp2];
-    NSPoint c_tail = [transformer toScreen:tail];
+    NSPoint c_head = [transformer toScreen:head];
 
     [context startPath];
-    [context moveTo:c_head];
-    [context curveTo:c_tail withCp1:c_cp1 andCp2:c_cp2];
+    [context moveTo:c_tail];
+    [context curveTo:c_head withCp1:c_cp1 andCp2:c_cp2];
 
     if ([self style] != nil) {
         // draw edge decoration

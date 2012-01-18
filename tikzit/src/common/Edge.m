@@ -93,10 +93,10 @@
 			NSPoint intersect;
 			[curve updateControls];
 			if (lineSegmentIntersectsBezier (rayStart, rayEnd,
-					[shapeTrans toScreen:curve->head],
+					[shapeTrans toScreen:curve->tail],
 					[shapeTrans toScreen:curve->cp1],
 					[shapeTrans toScreen:curve->cp2],
-					[shapeTrans toScreen:curve->tail],
+					[shapeTrans toScreen:curve->head],
 					&intersect)) {
 				// we just keep shortening the line
 				rayStart = intersect;
@@ -108,10 +108,10 @@
 }
 
 - (NSPoint) _findTanFor:(NSPoint)pt usingSpanFrom:(float)t1 to:(float)t2 {
-	float dx = bezierInterpolate(t2, head.x, cp1.x, cp2.x, tail.x) - 
-		       bezierInterpolate(t1, head.x, cp1.x, cp2.x, tail.x);
-	float dy = bezierInterpolate(t2, head.y, cp1.y, cp2.y, tail.y) -
-		       bezierInterpolate(t1, head.y, cp1.y, cp2.y, tail.y);
+	float dx = bezierInterpolate(t2, tail.x, cp1.x, cp2.x, head.x) - 
+		       bezierInterpolate(t1, tail.x, cp1.x, cp2.x, head.x);
+	float dy = bezierInterpolate(t2, tail.y, cp1.y, cp2.y, head.y) -
+		       bezierInterpolate(t1, tail.y, cp1.y, cp2.y, head.y);
 
 	// normalise
 	float len = sqrt(dx*dx+dy*dy);
@@ -151,8 +151,8 @@
 			angleTarg = (float)inAngle * (M_PI / 180.0f);
 		}
 
-		head = [self _findContactPointOn:source at:angleSrc];
-		tail = [self _findContactPointOn:target at:angleTarg];
+		tail = [self _findContactPointOn:source at:angleSrc];
+		head = [self _findContactPointOn:target at:angleTarg];
 		
 		// give a default distance for self-loops
 		float cdist = (dx==0.0f && dy==0.0f) ? weight : sqrt(dx*dx + dy*dy) * weight;
@@ -163,11 +163,11 @@
 		cp2 = NSMakePoint(targ.x + (cdist * cos(angleTarg)),
 						  targ.y + (cdist * sin(angleTarg)));
 
-		mid = bezierInterpolateFull (0.5f, head, cp1, cp2, tail);
+		mid = bezierInterpolateFull (0.5f, tail, cp1, cp2, head);
         midTan = [self _findTanFor:mid usingSpanFrom:0.4f to:0.6f];
 
-        headTan = [self _findTanFor:head usingSpanFrom:0.0f to:0.1f];
-        tailTan = [self _findTanFor:tail usingSpanFrom:1.0f to:0.9f];
+        tailTan = [self _findTanFor:tail usingSpanFrom:0.0f to:0.1f];
+        headTan = [self _findTanFor:head usingSpanFrom:1.0f to:0.9f];
 	}
 	dirty = NO;
 }
