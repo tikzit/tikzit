@@ -12,7 +12,7 @@ AC_OUTPUT(Makefile
           src/Makefile
           share/Makefile
 )
-AC_CONFIG_SRCDIR([src/linux/main.m])
+AC_CONFIG_SRCDIR([src/gtk/main.m])
 
 m4_include([m4/objc.m4])
 

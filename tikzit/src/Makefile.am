@@ -9,7 +9,7 @@ AM_OBJCFLAGS = @GNUSTEPOBJCFLAGS@ \
                @GDK_PIXBUF_CFLAGS@ \
                @POPPLER_CFLAGS@ \
                 -I common \
-                -I linux \
+                -I gtk \
                 -DTIKZITSHAREDIR=\"$(sharedir)\" \
                 -std=c99 \
                 -D_GNU_SOURCE
@@ -22,43 +22,43 @@ PARSERFILES = common/tikzlexer.m common/tikzparser.m common/tikzparser.h
 
 bin_PROGRAMS = tikzit
 BUILT_SOURCES = $(PARSERFILES)
-tikzit_SOURCES = linux/CairoRenderContext.m \
-                 linux/ColorRGB+IntegerListStorage.m \
-                 linux/ColorRGB+Gtk.m \
-                 linux/Configuration.m \
-                 linux/Edge+Render.m \
-                 linux/EdgeStyle+Storage.m \
-                 linux/EdgeStyleEditor.m \
-                 linux/EdgeStyleSelector.m \
-                 linux/EdgeStylesPalette.m \
-                 linux/FileChooserDialog.m \
-                 linux/GraphInputHandler.m \
-                 linux/GraphRenderer.m \
-                 linux/MainWindow.m \
-                 linux/Menu.m \
-                 linux/Node+Render.m \
-                 linux/NodeStyle+Gtk.m \
-                 linux/NodeStyle+Storage.m \
-                 linux/NodeStyleEditor.m \
-                 linux/NodeStyleSelector.m \
-                 linux/NodeStylesPalette.m \
-                 linux/NSError+Glib.m \
-                 linux/NSFileManager+Glib.m \
-                 linux/NSString+Glib.m \
-                 linux/PropertyPane.m \
-                 linux/PropertyListEditor.m \
-                 linux/RecentManager.m \
-                 linux/Shape+Render.m \
-                 linux/StyleManager+Storage.m \
-                 linux/StylesPane.m \
-                 linux/TikzDocument.m \
-                 linux/WidgetSurface.m \
-                 linux/cairo_helpers.m \
-                 linux/clipboard.m \
-                 linux/gtkhelpers.m \
-                 linux/logo.m \
-                 linux/mkdtemp.m \
-                 linux/main.m \
+tikzit_SOURCES = gtk/CairoRenderContext.m \
+                 gtk/ColorRGB+IntegerListStorage.m \
+                 gtk/ColorRGB+Gtk.m \
+                 gtk/Configuration.m \
+                 gtk/Edge+Render.m \
+                 gtk/EdgeStyle+Storage.m \
+                 gtk/EdgeStyleEditor.m \
+                 gtk/EdgeStyleSelector.m \
+                 gtk/EdgeStylesPalette.m \
+                 gtk/FileChooserDialog.m \
+                 gtk/GraphInputHandler.m \
+                 gtk/GraphRenderer.m \
+                 gtk/MainWindow.m \
+                 gtk/Menu.m \
+                 gtk/Node+Render.m \
+                 gtk/NodeStyle+Gtk.m \
+                 gtk/NodeStyle+Storage.m \
+                 gtk/NodeStyleEditor.m \
+                 gtk/NodeStyleSelector.m \
+                 gtk/NodeStylesPalette.m \
+                 gtk/NSError+Glib.m \
+                 gtk/NSFileManager+Glib.m \
+                 gtk/NSString+Glib.m \
+                 gtk/PropertyPane.m \
+                 gtk/PropertyListEditor.m \
+                 gtk/RecentManager.m \
+                 gtk/Shape+Render.m \
+                 gtk/StyleManager+Storage.m \
+                 gtk/StylesPane.m \
+                 gtk/TikzDocument.m \
+                 gtk/WidgetSurface.m \
+                 gtk/cairo_helpers.m \
+                 gtk/clipboard.m \
+                 gtk/gtkhelpers.m \
+                 gtk/logo.m \
+                 gtk/mkdtemp.m \
+                 gtk/main.m \
                  common/CircleShape.m \
                  common/ColorRGB.m \
                  common/Edge.m \
@@ -91,11 +91,11 @@ tikzit_SOURCES = linux/CairoRenderContext.m \
 if HAVE_POPPLER
 tikzit_SOURCES += \
                  common/Preambles.m \
-                 linux/PreambleEditor.m \
-                 linux/Preambles+Storage.m \
-                 linux/PreviewRenderer.m \
-                 linux/PreviewWindow.m \
-                 linux/SettingsDialog.m
+                 gtk/PreambleEditor.m \
+                 gtk/Preambles+Storage.m \
+                 gtk/PreviewRenderer.m \
+                 gtk/PreviewWindow.m \
+                 gtk/SettingsDialog.m
 endif
 
 if WINDOWS
@@ -114,7 +114,7 @@ common/tikzparser.m: common/tikzparser.ym
 
 common/tikzparser.h: common/tikzparser.m
 
-linux/icondata.m: ../draw-ellipse.png ../draw-path.png ../select-rectangular.png ../transform-crop-and-resize.png ../transform-move.png
+gtk/icondata.m: ../draw-ellipse.png ../draw-path.png ../select-rectangular.png ../transform-crop-and-resize.png ../transform-move.png
 	$(AM_V_GEN)gdk-pixbuf-csource --struct --static --raw --build-list \
 		draw_ellipse ../draw-ellipse.png \
 		draw_path ../draw-path.png \
@@ -123,7 +123,7 @@ linux/icondata.m: ../draw-ellipse.png ../draw-path.png ../select-rectangular.png
 		transform_move ../transform-move.png \
 		> $@
 
-linux/logodata.m: ../share/icons/hicolor/*/apps/tikzit.png
+gtk/logodata.m: ../share/icons/hicolor/*/apps/tikzit.png
 	$(AM_V_GEN)gdk-pixbuf-csource --struct --static --raw --build-list \
 		logo16 ../share/icons/hicolor/16x16/apps/tikzit.png \
 		logo24 ../share/icons/hicolor/24x24/apps/tikzit.png \
@@ -133,7 +133,7 @@ linux/logodata.m: ../share/icons/hicolor/*/apps/tikzit.png
 		logo128 ../share/icons/hicolor/128x128/apps/tikzit.png \
 		> $@
 
-linux/edgedecdata.m: ../AH_*.png ../ED_*.png
+gtk/edgedecdata.m: ../AH_*.png ../ED_*.png
 	$(AM_V_GEN)gdk-pixbuf-csource --struct --static --raw --build-list \
 		AH_none_pixdata ../AH_none.png \
 		AH_latex_head_pixdata ../AH_latex_head.png \
@@ -145,9 +145,9 @@ linux/edgedecdata.m: ../AH_*.png ../ED_*.png
 		ED_tick_pixdata ../ED_tick.png \
 		> $@
 
-linux/Menu.m: linux/icondata.m
-linux/logo.m: linux/logodata.m
-linux/EdgeStyleEditor.m: linux/edgedecdata.m
+gtk/Menu.m: gtk/icondata.m
+gtk/logo.m: gtk/logodata.m
+gtk/EdgeStyleEditor.m: gtk/edgedecdata.m
 
-EXTRA_DIST = linux/*.h common/*.h $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym
-MAINTAINERCLEANFILES = $(PARSERFILES) linux/icondata.m linux/logodata.m linux/edgedecdata.m
+EXTRA_DIST = gtk/*.h common/*.h $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym
+MAINTAINERCLEANFILES = $(PARSERFILES) gtk/icondata.m gtk/logodata.m gtk/edgedecdata.m

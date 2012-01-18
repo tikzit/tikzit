@@ -22,6 +22,6 @@
 //
 #import "test/test.h"
 
-void testLinux() {
+void testGtk() {
   
 }
