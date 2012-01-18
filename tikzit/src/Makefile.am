@@ -150,4 +150,4 @@ linux/logo.m: linux/logodata.m
 linux/EdgeStyleEditor.m: linux/edgedecdata.m
 
 EXTRA_DIST = linux/*.h common/*.h $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym
-MAINTAINERCLEANFILES = $(PARSERFILES) linux/icondata.m linux/logodata.m
+MAINTAINERCLEANFILES = $(PARSERFILES) linux/icondata.m linux/logodata.m linux/edgedecdata.m
