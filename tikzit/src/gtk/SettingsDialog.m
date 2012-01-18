@@ -72,7 +72,7 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     GtkWindow *oldParent = parentWindow;
 
     if (parent)
-        g_object_ref (parentWindow);
+        g_object_ref (parent);
     parentWindow = parent;
     if (oldParent)
         g_object_unref (oldParent);
