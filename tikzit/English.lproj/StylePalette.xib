@@ -79,12 +79,14 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrameSize">{193, 313}</string>
 							<reference key="NSSuperview" ref="888499738"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView"/>
 							<string key="NSClassName">SFBInspectorView</string>
 						</object>
 					</object>
 					<string key="NSFrameSize">{193, 313}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="981650066"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
@@ -996,7 +998,7 @@
 					<object class="NSPopUpButton" id="1043573347">
 						<reference key="NSNextResponder" ref="108806395"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{138, 155}, {54, 26}}</string>
+						<string key="NSFrame">{{133, 155}, {60, 26}}</string>
 						<reference key="NSSuperview" ref="108806395"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="357854280"/>
@@ -1004,12 +1006,12 @@
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSPopUpButtonCell" key="NSCell" id="488427516">
 							<int key="NSCellFlags">-2076049856</int>
-							<int key="NSCellFlags2">2048</int>
+							<int key="NSCellFlags2">67110912</int>
 							<reference key="NSSupport" ref="926794154"/>
 							<string key="NSCellIdentifier">_NS:179</string>
 							<reference key="NSControlView" ref="1043573347"/>
 							<int key="NSButtonFlags">109199615</int>
-							<int key="NSButtonFlags2">1</int>
+							<int key="NSButtonFlags2">129</int>
 							<string key="NSAlternateContents"/>
 							<string key="NSKeyEquivalent"/>
 							<int key="NSPeriodicDelay">400</int>
@@ -1083,7 +1085,7 @@
 					<object class="NSPopUpButton" id="131796564">
 						<reference key="NSNextResponder" ref="108806395"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{2, 155}, {54, 26}}</string>
+						<string key="NSFrame">{{2, 155}, {60, 26}}</string>
 						<reference key="NSSuperview" ref="108806395"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="735115134"/>
@@ -1096,7 +1098,7 @@
 							<string key="NSCellIdentifier">_NS:179</string>
 							<reference key="NSControlView" ref="131796564"/>
 							<int key="NSButtonFlags">109199615</int>
-							<int key="NSButtonFlags2">1</int>
+							<int key="NSButtonFlags2">129</int>
 							<string key="NSAlternateContents"/>
 							<string key="NSKeyEquivalent"/>
 							<int key="NSPeriodicDelay">400</int>
@@ -1256,7 +1258,7 @@
 					<object class="NSPopUpButton" id="735115134">
 						<reference key="NSNextResponder" ref="108806395"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{52, 155}, {90, 26}}</string>
+						<string key="NSFrame">{{59, 155}, {77, 26}}</string>
 						<reference key="NSSuperview" ref="108806395"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1043573347"/>
@@ -1269,7 +1271,7 @@
 							<string key="NSCellIdentifier">_NS:179</string>
 							<reference key="NSControlView" ref="735115134"/>
 							<int key="NSButtonFlags">109199615</int>
-							<int key="NSButtonFlags2">1</int>
+							<int key="NSButtonFlags2">129</int>
 							<string key="NSAlternateContents"/>
 							<string key="NSKeyEquivalent"/>
 							<int key="NSPeriodicDelay">400</int>

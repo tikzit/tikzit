@@ -33,7 +33,6 @@
 		55397C901449AC7C006942FB /* AH_latex_head.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C8E1449AC7C006942FB /* AH_latex_head.png */; };
 		55397C911449AC7C006942FB /* AH_plain_head.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C8F1449AC7C006942FB /* AH_plain_head.png */; };
 		553A4C5A144ED3D500AA6FAC /* NilToEmptyStringTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */; };
-		553A9CED1186191C001E0FE9 /* BasicMapTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 553A9CEC1186191C001E0FE9 /* BasicMapTable.m */; };
 		55432E061444BF2D00401BB3 /* GraphElementProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 55432E051444BF2D00401BB3 /* GraphElementProperty.m */; };
 		555B30F911D8BE3300CAECF5 /* emblem-important.png in Resources */ = {isa = PBXBuildFile; fileRef = 555B30F811D8BE3300CAECF5 /* emblem-important.png */; };
 		555B313511D8C6DA00CAECF5 /* color.m in Sources */ = {isa = PBXBuildFile; fileRef = 555B313411D8C6DA00CAECF5 /* color.m */; };
@@ -65,7 +64,6 @@
 		5589AA6C11C542D30064D310 /* TikzGraphAssembler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */; };
 		5589AA6D11C542D30064D310 /* tikzlexer.lm in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AA11C500060064D310 /* tikzlexer.lm */; };
 		5589AA6E11C542D30064D310 /* tikzparser.ym in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AB11C500060064D310 /* tikzparser.ym */; };
-		5589AA7011C542E60064D310 /* BasicMapTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 553A9CEC1186191C001E0FE9 /* BasicMapTable.m */; };
 		5589AA7211C542E60064D310 /* Edge.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BA117B031C009863B2 /* Edge.m */; };
 		5589AA7611C542E60064D310 /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BC117B031C009863B2 /* Graph.m */; };
 		5589AA7811C542E60064D310 /* GraphChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BE117B031C009863B2 /* GraphChange.m */; };
@@ -200,8 +198,6 @@
 		55397C8F1449AC7C006942FB /* AH_plain_head.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AH_plain_head.png; sourceTree = "<group>"; };
 		553A4C58144ED3D500AA6FAC /* NilToEmptyStringTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NilToEmptyStringTransformer.h; path = src/osx/NilToEmptyStringTransformer.h; sourceTree = "<group>"; };
 		553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NilToEmptyStringTransformer.m; path = src/osx/NilToEmptyStringTransformer.m; sourceTree = "<group>"; };
-		553A9CEB1186191C001E0FE9 /* BasicMapTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasicMapTable.h; path = src/common/BasicMapTable.h; sourceTree = "<group>"; };
-		553A9CEC1186191C001E0FE9 /* BasicMapTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BasicMapTable.m; path = src/common/BasicMapTable.m; sourceTree = "<group>"; };
 		55432E041444BF2D00401BB3 /* GraphElementProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphElementProperty.h; path = src/common/GraphElementProperty.h; sourceTree = "<group>"; };
 		55432E051444BF2D00401BB3 /* GraphElementProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphElementProperty.m; path = src/common/GraphElementProperty.m; sourceTree = "<group>"; };
 		555B30F811D8BE3300CAECF5 /* emblem-important.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emblem-important.png"; sourceTree = "<group>"; };
@@ -556,8 +552,6 @@
 			children = (
 				55432E041444BF2D00401BB3 /* GraphElementProperty.h */,
 				55432E051444BF2D00401BB3 /* GraphElementProperty.m */,
-				553A9CEB1186191C001E0FE9 /* BasicMapTable.h */,
-				553A9CEC1186191C001E0FE9 /* BasicMapTable.m */,
 				559EFB6611CB88E300D020F4 /* ColorRGB.h */,
 				559EFB6711CB88E300D020F4 /* ColorRGB.m */,
 				558F18B9117B031C009863B2 /* Edge.h */,
@@ -761,7 +755,6 @@
 			files = (
 				5504C84F11D23945002A1478 /* ColorRGB.m in Sources */,
 				5589AA8511C543500064D310 /* util.m in Sources */,
-				5589AA7011C542E60064D310 /* BasicMapTable.m in Sources */,
 				5589AA7211C542E60064D310 /* Edge.m in Sources */,
 				5589AA7611C542E60064D310 /* Graph.m in Sources */,
 				5589AA7811C542E60064D310 /* GraphChange.m in Sources */,
@@ -810,7 +803,6 @@
 				5585E5C2117F681800124513 /* NodeStyle+Coder.m in Sources */,
 				55F9585C1181B09600F99434 /* PickSupport.m in Sources */,
 				55F9585D1181B09600F99434 /* Transformer.m in Sources */,
-				553A9CED1186191C001E0FE9 /* BasicMapTable.m in Sources */,
 				55D2E0B21186ED950060B4EC /* Graph+Coder.m in Sources */,
 				5589A9AF11C500060064D310 /* tikzlexer.lm in Sources */,
 				5589A9B011C500060064D310 /* tikzparser.ym in Sources */,

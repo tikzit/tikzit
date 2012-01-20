@@ -319,8 +319,8 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
     // Save the graphics state before doing the hit detection.
     CGContextSaveGState(ctx);
 	
-	NSPoint src = [transformer toScreen:[[edge source] point]];
-	NSPoint targ = [transformer toScreen:[[edge target] point]];
+	NSPoint src = [transformer toScreen:[edge tail]];
+	NSPoint targ = [transformer toScreen:[edge head]];
 	NSPoint cp1 = [transformer toScreen:[edge cp1]];
 	NSPoint cp2 = [transformer toScreen:[edge cp2]];
 	
@@ -811,8 +811,8 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 
 - (void)drawEdge:(Edge*)e onLayer:(CALayer*)layer inContext:(CGContextRef)context {
 	CGContextSaveGState(context);
-	NSPoint src = [transformer toScreen:[[e source] point]];
-	NSPoint targ = [transformer toScreen:[[e target] point]];
+	NSPoint src = [transformer toScreen:[e tail]];
+	NSPoint targ = [transformer toScreen:[e head]];
 	NSPoint cp1 = [transformer toScreen:[e cp1]];
 	NSPoint cp2 = [transformer toScreen:[e cp2]];
 	
@@ -835,6 +835,14 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 	CGContextMoveToPoint(context, src.x+sshortx, src.y+sshorty);
 	CGContextAddCurveToPoint(context, cp1.x, cp1.y, cp2.x, cp2.y, targ.x+tshortx, targ.y+tshorty);
 	
+    
+    float lineWidth = [transformer scaleToScreen:0.04f];
+	
+	CGContextSetLineWidth(context, lineWidth);
+	CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+    CGContextSetRGBFillColor(context, 0, 0, 0, 1);
+	CGContextStrokePath(context);
+    
 	if ([e style] != nil) {
         NSPoint p1,p2,p3;
         
@@ -847,6 +855,7 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
                 p2 = [transformer toScreen:[e rightNormal]];
                 CGContextMoveToPoint(context, p1.x, p1.y);
                 CGContextAddLineToPoint(context, p2.x, p2.y);
+                CGContextStrokePath(context);
                 break;
             case ED_Arrow:
                 p1 = [transformer toScreen:[e leftNormal]];
@@ -855,30 +864,61 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
                 CGContextMoveToPoint(context, p1.x, p1.y);
                 CGContextAddLineToPoint(context, p2.x, p2.y);
                 CGContextAddLineToPoint(context, p3.x, p3.y);
+                CGContextStrokePath(context);
+                break;
+        }
+        
+        // draw arrow head
+        switch ([[e style] headStyle]) {
+            case AH_None:
+                break;
+            case AH_Plain:
+                p1 = [transformer toScreen:[e leftHeadNormal]];
+                p2 = [transformer toScreen:[e head]];
+                p3 = [transformer toScreen:[e rightHeadNormal]];
+                CGContextMoveToPoint(context, p1.x, p1.y);
+                CGContextAddLineToPoint(context, p2.x, p2.y);
+                CGContextAddLineToPoint(context, p3.x, p3.y);
+                CGContextStrokePath(context);
+                break;
+            case AH_Latex:
+                p1 = [transformer toScreen:[e leftHeadNormal]];
+                p2 = [transformer toScreen:[e head]];
+                p3 = [transformer toScreen:[e rightHeadNormal]];
+                CGContextMoveToPoint(context, p1.x, p1.y);
+                CGContextAddLineToPoint(context, p2.x, p2.y);
+                CGContextAddLineToPoint(context, p3.x, p3.y);
+                CGContextClosePath(context);
+                CGContextFillPath(context);
+                break;
+        }
+        
+        // draw arrow tail
+        switch ([[e style] tailStyle]) {
+            case AH_None:
+                break;
+            case AH_Plain:
+                p1 = [transformer toScreen:[e leftTailNormal]];
+                p2 = [transformer toScreen:[e tail]];
+                p3 = [transformer toScreen:[e rightTailNormal]];
+                CGContextMoveToPoint(context, p1.x, p1.y);
+                CGContextAddLineToPoint(context, p2.x, p2.y);
+                CGContextAddLineToPoint(context, p3.x, p3.y);
+                CGContextStrokePath(context);
+                break;
+            case AH_Latex:
+                p1 = [transformer toScreen:[e leftTailNormal]];
+                p2 = [transformer toScreen:[e tail]];
+                p3 = [transformer toScreen:[e rightTailNormal]];
+                CGContextMoveToPoint(context, p1.x, p1.y);
+                CGContextAddLineToPoint(context, p2.x, p2.y);
+                CGContextAddLineToPoint(context, p3.x, p3.y);
+                CGContextClosePath(context);
+                CGContextFillPath(context);
                 break;
         }
     }
     
-    
-	// OLD DRAW TICK CODE:
-	//		float dx = targ.x - src.x;
-	//		float dy = targ.y - src.y;
-	//		float dist = sqrt(dx*dx+dy*dy);
-	//		if (dist!=0) {
-	//			CGContextMoveToPoint(context,
-	//								 round(mid.x + 4.0f * dy/dist),
-	//								 round(mid.y - 4.0f * dx/dist));
-	//			CGContextAddLineToPoint(context,
-	//									round(mid.x - 4.0f * dy/dist),
-	//									round(mid.y + 4.0f * dx/dist));
-	//		}
-	
-	
-	float lineWidth = [transformer scaleToScreen:0.04f];
-	
-	CGContextSetLineWidth(context, lineWidth);
-	CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
-	CGContextStrokePath(context);
 	
 	CGContextRestoreGState(context);
 	

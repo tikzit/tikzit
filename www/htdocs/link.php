@@ -1,8 +1,9 @@
 <?
-$dmg_ver = "0.4";
+$dmg_ver = "0.8";
 $src_ver = "0.7";
 $win_ver = "0.7";
 $file_root = "http://sourceforge.net/projects/tikzit/files";
+
 
 $urls = array(
 'src' => "$file_root/tikzit-$src_ver/tikzit-$src_ver.tar.gz/download",
