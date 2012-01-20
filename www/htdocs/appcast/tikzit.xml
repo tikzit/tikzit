@@ -216,6 +216,36 @@
       sparkle:dsaSignature="MC0CFQCQcIRg1e7Tln7x38QfEIKI765HrgIUEg75W11DamhXdZ69Awq+Scevo04="
     />
   </item>
+  
+    <item>
+    <title>Version 0.8.382</title>
+    <sparkle:releaseNotesLink>
+      http://tikzit.sourceforge.net/appcast/rnotes-devel.html
+    </sparkle:releaseNotesLink>
+    <pubDate>Tue, 17 Jan 2012 12:17:05 +0000</pubDate>
+    <enclosure
+      url="http://tikzit.sourceforge.net/appcast/files/TikZiT 0.8.382.tar.bz2"
+      sparkle:version="0.8.382"
+      type="application/octet-stream"
+      length="970912"
+      sparkle:dsaSignature="MCwCFDrf2656Q0IfjO/9CyW8e5d89SoMAhQXFdVm3oaIafNnrB6HoKV2wDhhig=="
+    />
+  </item>
+  
+  <item>
+    <title>Version 0.8.398</title>
+    <sparkle:releaseNotesLink>
+      http://tikzit.sourceforge.net/appcast/rnotes-devel.html
+    </sparkle:releaseNotesLink>
+    <pubDate>Fri, 20 Jan 2012 16:38:28 +0000</pubDate>
+    <enclosure
+      url="http://tikzit.sourceforge.net/appcast/files/TikZiT 0.8.398.tar.bz2"
+      sparkle:version="0.8.398"
+      type="application/octet-stream"
+      length="978426"
+      sparkle:dsaSignature="MCwCFEIbCwvXLxZLNYdV48lMZSrR1HszAhROMGQ+k/Dz/ErQHQ6Rv8Q6tjkb2g=="
+    />
+  </item>
 
     
 </channel>
