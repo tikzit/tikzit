@@ -42,7 +42,7 @@
 #ifdef __APPLE__
 	return [[NSBundle mainBundle] resourcePath];
 #else
-	return @TIKZITSHAREDIR; // TODO: improve + support windows
+	return @TIKZITSHAREDIR;
 #endif
 }
 
