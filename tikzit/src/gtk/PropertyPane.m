@@ -394,7 +394,7 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
         [edgePropDelegate setEdge:nil];
         [edgeProps setData:nil];
         [edgeNodeProps setData:nil];
-        gtk_entry_set_text (nodeLabelEntry, "");
+        gtk_entry_set_text (edgeNodeLabelEntry, "");
         gtk_widget_set_sensitive (gtk_bin_get_child (GTK_BIN (edgePropsExpander)), FALSE);
     }
 
