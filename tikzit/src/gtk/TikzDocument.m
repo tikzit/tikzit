@@ -690,6 +690,95 @@
     }
 }
 
+// FIXME: undo
+- (void) bringSelectionForward {
+    BOOL hasNodeSelection = [[pickSupport selectedNodes] count] > 0;
+    BOOL hasEdgeSelection = [[pickSupport selectedEdges] count] > 0;
+    if (!hasNodeSelection && !hasEdgeSelection)
+        return;
+
+    //[self startUndoGroup];
+    if (hasNodeSelection) {
+        /*GraphChange *change =*/
+        [graph bringNodesForward:[pickSupport selectedNodes]];
+        //[self registerUndoForChange:change];
+    }
+    if (hasEdgeSelection) {
+        /*GraphChange *change =*/
+        [graph bringEdgesForward:[pickSupport selectedEdges]];
+        //[self registerUndoForChange:change];
+    }
+    //[self nameAndEndUndoGroup:@"Bring forward"];
+    [self regenerateTikz];
+    //[self postGraphChange:change];
+}
+
+- (void) bringSelectionToFront {
+    BOOL hasNodeSelection = [[pickSupport selectedNodes] count] > 0;
+    BOOL hasEdgeSelection = [[pickSupport selectedEdges] count] > 0;
+    if (!hasNodeSelection && !hasEdgeSelection)
+        return;
+
+    //[self startUndoGroup];
+    if (hasNodeSelection) {
+        /*GraphChange *change =*/
+        [graph bringNodesToFront:[pickSupport selectedNodes]];
+        //[self registerUndoForChange:change];
+    }
+    if (hasEdgeSelection) {
+        /*GraphChange *change =*/
+        [graph bringEdgesToFront:[pickSupport selectedEdges]];
+        //[self registerUndoForChange:change];
+    }
+    //[self nameAndEndUndoGroup:@"Bring to front"];
+    [self regenerateTikz];
+    //[self postGraphChange:change];
+}
+
+- (void) sendSelectionBackward {
+    BOOL hasNodeSelection = [[pickSupport selectedNodes] count] > 0;
+    BOOL hasEdgeSelection = [[pickSupport selectedEdges] count] > 0;
+    if (!hasNodeSelection && !hasEdgeSelection)
+        return;
+
+    //[self startUndoGroup];
+    if (hasNodeSelection) {
+        /*GraphChange *change =*/
+        [graph sendNodesBackward:[pickSupport selectedNodes]];
+        //[self registerUndoForChange:change];
+    }
+    if (hasEdgeSelection) {
+        /*GraphChange *change =*/
+        [graph sendNodesBackward:[pickSupport selectedEdges]];
+        //[self registerUndoForChange:change];
+    }
+    //[self nameAndEndUndoGroup:@"Send backward"];
+    [self regenerateTikz];
+    //[self postGraphChange:change];
+}
+
+- (void) sendSelectionToBack {
+    BOOL hasNodeSelection = [[pickSupport selectedNodes] count] > 0;
+    BOOL hasEdgeSelection = [[pickSupport selectedEdges] count] > 0;
+    if (!hasNodeSelection && !hasEdgeSelection)
+        return;
+
+    //[self startUndoGroup];
+    if (hasNodeSelection) {
+        /*GraphChange *change =*/
+        [graph sendNodesToBack:[pickSupport selectedNodes]];
+        //[self registerUndoForChange:change];
+    }
+    if (hasEdgeSelection) {
+        /*GraphChange *change =*/
+        [graph sendNodesToBack:[pickSupport selectedEdges]];
+        //[self registerUndoForChange:change];
+    }
+    //[self nameAndEndUndoGroup:@"Send to back"];
+    [self regenerateTikz];
+    //[self postGraphChange:change];
+}
+
 - (BOOL) saveCopyToPath: (NSString*)p error: (NSError**)error {
     if (!p) {
         [NSException raise:@"No document path" format:@"No path given"];
@@ -785,6 +874,10 @@
 }
 
 - (void) completedGraphChange:(GraphChange*)change withName:(NSString*)name {
+    if (change == nil) {
+        NSLog(@"No graph change given for change %@", name);
+        return;
+    }
     [self registerUndoGroupForChange:change withName:name];
     [self regenerateTikz];
     [self postGraphChange:change];

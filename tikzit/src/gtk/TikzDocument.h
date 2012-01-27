@@ -153,6 +153,10 @@
 - (void) insertGraph:(Graph*)g;
 - (void) flipSelectedNodesHorizontally;
 - (void) flipSelectedNodesVertically;
+- (void) bringSelectionForward;
+- (void) bringSelectionToFront;
+- (void) sendSelectionBackward;
+- (void) sendSelectionToBack;
 
 - (BOOL) saveCopyToPath: (NSString*)path error: (NSError**)error;
 - (BOOL) saveToPath: (NSString*)path error: (NSError**)error;

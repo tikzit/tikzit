@@ -224,6 +224,30 @@ static void flip_vert_cb (GtkAction *action, MainWindow *window) {
     [pool drain];
 }
 
+static void bring_forward_cb (GtkAction *action, MainWindow *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [[window activeDocument] bringSelectionForward];
+    [pool drain];
+}
+
+static void send_backward_cb (GtkAction *action, MainWindow *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [[window activeDocument] sendSelectionBackward];
+    [pool drain];
+}
+
+static void bring_to_front_cb (GtkAction *action, MainWindow *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [[window activeDocument] bringSelectionToFront];
+    [pool drain];
+}
+
+static void send_to_back_cb (GtkAction *action, MainWindow *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [[window activeDocument] sendSelectionToBack];
+    [pool drain];
+}
+
 #ifdef HAVE_POPPLER
 static void show_preferences_cb (GtkAction *action, MainWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -351,6 +375,13 @@ static const gchar ui_info[] =
 "      <separator/>"
 "      <menuitem action='FlipVert'/>"
 "      <menuitem action='FlipHoriz'/>"
+"      <separator/>"
+"      <menu action='Arrange'>"
+"        <menuitem action='SendToBack'/>"
+"        <menuitem action='SendBackward'/>"
+"        <menuitem action='BringForward'/>"
+"        <menuitem action='BringToFront'/>"
+"      </menu>"
 #ifdef HAVE_POPPLER
 "      <separator/>"
 "      <menuitem action='ShowPreferences'/>"
@@ -446,6 +477,8 @@ static GtkActionEntry static_entries[] = {
     /* EditMenu */
     { "Tool", NULL, N_("_Tool") },
 
+    { "Arrange", NULL, N_("_Arrange") },
+
 #ifdef HAVE_POPPLER
     { "ShowPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
       N_("Edit the TikZiT preferences"), G_CALLBACK (show_preferences_cb) },
@@ -527,6 +560,18 @@ static GtkActionEntry document_entries[] = {
 
     { "FlipVert", NULL, N_("Flip nodes _vertically"), NULL,
       N_("Flip the selected nodes vertically"), G_CALLBACK (flip_vert_cb) },
+
+    { "SendToBack", NULL, N_("Send to _back"), NULL,
+      N_("Send the selected nodes and edges to the back of the graph"), G_CALLBACK (send_to_back_cb) },
+
+    { "SendBackward", NULL, N_("Send b_ackward"), NULL,
+      N_("Send the selected nodes and edges backward"), G_CALLBACK (send_backward_cb) },
+
+    { "BringForward", NULL, N_("Bring f_orward"), NULL,
+      N_("Bring the selected nodes and edges forward"), G_CALLBACK (bring_forward_cb) },
+
+    { "BringToFront", NULL, N_("Bring to _front"), NULL,
+      N_("Bring the selected nodes and edges to the front of the graph"), G_CALLBACK (bring_to_front_cb) },
 
     /* ViewMenu */
 #ifdef HAVE_POPPLER
