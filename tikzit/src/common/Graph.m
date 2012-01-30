@@ -287,6 +287,7 @@
 }
 
 - (GraphChange*)bringNodesForward:(NSSet*)nodeSet {
+	NSArray *oldOrder = [nodes copy];
     [graphLock lock];
     // start at the top of the array and work backwards
     for (int i = [nodes count]-2; i >= 0; --i) {
@@ -296,12 +297,15 @@
             [self setIndex:(i+1) ofNode:[nodes objectAtIndex:i]];
         }
     }
+	GraphChange *change = [GraphChange nodeOrderChangeFrom:oldOrder to:nodes moved:nodeSet];
     [graphLock unlock];
+	[oldOrder release];
     
-    return nil;
+    return change;
 }
 
 - (GraphChange*)bringNodesToFront:(NSSet*)nodeSet {
+	NSArray *oldOrder = [nodes copy];
     int i = 0, top = [nodes count]-1;
     
     while (i <= top) {
@@ -312,12 +316,15 @@
             ++i;
         }
     }
+	GraphChange *change = [GraphChange nodeOrderChangeFrom:oldOrder to:nodes moved:nodeSet];
+	[oldOrder release];
     
-    return nil;
+    return change;
 }
 
 - (GraphChange*)bringEdgesForward:(NSSet*)edgeSet {
     [graphLock lock];
+	NSArray *oldOrder = [edges copy];
     // start at the top of the array and work backwards
     for (int i = [edges count]-2; i >= 0; --i) {
         if ( [edgeSet containsObject:[edges objectAtIndex:i]] &&
@@ -326,12 +333,15 @@
             [self setIndex:(i+1) ofEdge:[edges objectAtIndex:i]];
         }
     }
+	GraphChange *change = [GraphChange edgeOrderChangeFrom:oldOrder to:edges moved:edgeSet];
     [graphLock unlock];
+	[oldOrder release];
     
-    return nil;
+    return change;
 }
 
 - (GraphChange*)bringEdgesToFront:(NSSet*)edgeSet {
+	NSArray *oldOrder = [edges copy];
     int i = 0, top = [edges count]-1;
     
     while (i <= top) {
@@ -342,12 +352,15 @@
             ++i;
         }
     }
+	GraphChange *change = [GraphChange edgeOrderChangeFrom:oldOrder to:edges moved:edgeSet];
+	[oldOrder release];
     
-    return nil;
+    return change;
 }
 
 - (GraphChange*)sendNodesBackward:(NSSet*)nodeSet {
     [graphLock lock];
+	NSArray *oldOrder = [nodes copy];
     // start at the top of the array and work backwards
     for (int i = 1; i < [nodes count]; ++i) {
         if ( [nodeSet containsObject:[nodes objectAtIndex:i]] &&
@@ -356,13 +369,16 @@
             [self setIndex:(i-1) ofNode:[nodes objectAtIndex:i]];
         }
     }
+	GraphChange *change = [GraphChange nodeOrderChangeFrom:oldOrder to:nodes moved:nodeSet];
     [graphLock unlock];
+	[oldOrder release];
     
-    return nil;
+    return change;
 }
 
 - (GraphChange*)sendEdgesBackward:(NSSet*)edgeSet {
     [graphLock lock];
+	NSArray *oldOrder = [edges copy];
     // start at the top of the array and work backwards
     for (int i = 1; i < [edges count]; ++i) {
         if ( [edgeSet containsObject:[edges objectAtIndex:i]] &&
@@ -371,12 +387,15 @@
             [self setIndex:(i-1) ofEdge:[edges objectAtIndex:i]];
         }
     }
+	GraphChange *change = [GraphChange edgeOrderChangeFrom:oldOrder to:edges moved:edgeSet];
     [graphLock unlock];
+	[oldOrder release];
     
-    return nil;
+    return change;
 }
 
 - (GraphChange*)sendNodesToBack:(NSSet*)nodeSet {
+	NSArray *oldOrder = [nodes copy];
     int i = [nodes count]-1, bot = 0;
     
     while (i >= bot) {
@@ -387,11 +406,14 @@
             --i;
         }
     }
+	GraphChange *change = [GraphChange nodeOrderChangeFrom:oldOrder to:nodes moved:nodeSet];
+	[oldOrder release];
     
-    return nil;
+    return change;
 }
 
 - (GraphChange*)sendEdgesToBack:(NSSet*)edgeSet {
+	NSArray *oldOrder = [edges copy];
     int i = [edges count]-1, bot = 0;
     
     while (i >= bot) {
@@ -402,8 +424,10 @@
             --i;
         }
     }
+	GraphChange *change = [GraphChange edgeOrderChangeFrom:oldOrder to:edges moved:edgeSet];
+	[oldOrder release];
     
-    return nil;
+    return change;
 }
 
 - (GraphChange*)insertGraph:(Graph*)g {
@@ -554,18 +578,18 @@
 		case GraphAddition:
 			en = [[ch affectedNodes] objectEnumerator];
 			while ((n = [en nextObject])) [nodes addObject:n];
-			
+
 			en = [[ch affectedEdges] objectEnumerator];
 			while ((e = [en nextObject])) [edges addObject:e];
-			
+
 			break;
 		case GraphDeletion:
 			en = [[ch affectedEdges] objectEnumerator];
 			while ((e = [en nextObject])) [edges removeObject:e];
-			
+
 			en = [[ch affectedNodes] objectEnumerator];
 			while ((n = [en nextObject])) [nodes removeObject:n];
-			
+
 			break;
 		case NodePropertyChange:
 			[[ch nodeRef] setPropertiesFromNode:[ch nwNode]];
@@ -609,8 +633,14 @@
 		case GraphPropertyChange:
 			[self setData:[ch nwGraphData]];
 			break;
+		case NodeOrderChange:
+			[nodes setArray:[ch newNodeOrder]];
+			break;
+		case EdgeOrderChange:
+			[edges setArray:[ch newEdgeOrder]];
+			break;
 	}
-	
+
 	dirty = YES;
 	[graphLock unlock];
 }

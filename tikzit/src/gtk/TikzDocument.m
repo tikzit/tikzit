@@ -697,20 +697,23 @@
     if (!hasNodeSelection && !hasEdgeSelection)
         return;
 
-    //[self startUndoGroup];
+    [self startUndoGroup];
+    GraphChange *nodeChange;
+    GraphChange *edgeChange;
     if (hasNodeSelection) {
-        /*GraphChange *change =*/
-        [graph bringNodesForward:[pickSupport selectedNodes]];
-        //[self registerUndoForChange:change];
+        nodeChange = [graph bringNodesForward:[pickSupport selectedNodes]];
+        [self registerUndoForChange:nodeChange];
     }
     if (hasEdgeSelection) {
-        /*GraphChange *change =*/
-        [graph bringEdgesForward:[pickSupport selectedEdges]];
-        //[self registerUndoForChange:change];
+        edgeChange = [graph bringEdgesForward:[pickSupport selectedEdges]];
+        [self registerUndoForChange:edgeChange];
     }
-    //[self nameAndEndUndoGroup:@"Bring forward"];
+    [self nameAndEndUndoGroup:@"Bring forward"];
     [self regenerateTikz];
-    //[self postGraphChange:change];
+    if (hasNodeSelection)
+        [self postGraphChange:nodeChange];
+    if (hasEdgeSelection)
+        [self postGraphChange:edgeChange];
 }
 
 - (void) bringSelectionToFront {
@@ -719,20 +722,23 @@
     if (!hasNodeSelection && !hasEdgeSelection)
         return;
 
-    //[self startUndoGroup];
+    [self startUndoGroup];
+    GraphChange *nodeChange;
+    GraphChange *edgeChange;
     if (hasNodeSelection) {
-        /*GraphChange *change =*/
-        [graph bringNodesToFront:[pickSupport selectedNodes]];
-        //[self registerUndoForChange:change];
+        nodeChange = [graph bringNodesToFront:[pickSupport selectedNodes]];
+        [self registerUndoForChange:nodeChange];
     }
     if (hasEdgeSelection) {
-        /*GraphChange *change =*/
-        [graph bringEdgesToFront:[pickSupport selectedEdges]];
-        //[self registerUndoForChange:change];
+        edgeChange = [graph bringEdgesToFront:[pickSupport selectedEdges]];
+        [self registerUndoForChange:edgeChange];
     }
-    //[self nameAndEndUndoGroup:@"Bring to front"];
+    [self nameAndEndUndoGroup:@"Bring to front"];
     [self regenerateTikz];
-    //[self postGraphChange:change];
+    if (hasNodeSelection)
+        [self postGraphChange:nodeChange];
+    if (hasEdgeSelection)
+        [self postGraphChange:edgeChange];
 }
 
 - (void) sendSelectionBackward {
@@ -741,20 +747,23 @@
     if (!hasNodeSelection && !hasEdgeSelection)
         return;
 
-    //[self startUndoGroup];
+    [self startUndoGroup];
+    GraphChange *nodeChange;
+    GraphChange *edgeChange;
     if (hasNodeSelection) {
-        /*GraphChange *change =*/
-        [graph sendNodesBackward:[pickSupport selectedNodes]];
-        //[self registerUndoForChange:change];
+        nodeChange = [graph sendNodesBackward:[pickSupport selectedNodes]];
+        [self registerUndoForChange:nodeChange];
     }
     if (hasEdgeSelection) {
-        /*GraphChange *change =*/
-        [graph sendNodesBackward:[pickSupport selectedEdges]];
-        //[self registerUndoForChange:change];
+        edgeChange = [graph sendNodesBackward:[pickSupport selectedEdges]];
+        [self registerUndoForChange:edgeChange];
     }
-    //[self nameAndEndUndoGroup:@"Send backward"];
+    [self nameAndEndUndoGroup:@"Send backward"];
     [self regenerateTikz];
-    //[self postGraphChange:change];
+    if (hasNodeSelection)
+        [self postGraphChange:nodeChange];
+    if (hasEdgeSelection)
+        [self postGraphChange:edgeChange];
 }
 
 - (void) sendSelectionToBack {
@@ -763,20 +772,23 @@
     if (!hasNodeSelection && !hasEdgeSelection)
         return;
 
-    //[self startUndoGroup];
+    [self startUndoGroup];
+    GraphChange *nodeChange;
+    GraphChange *edgeChange;
     if (hasNodeSelection) {
-        /*GraphChange *change =*/
-        [graph sendNodesToBack:[pickSupport selectedNodes]];
-        //[self registerUndoForChange:change];
+        nodeChange = [graph sendNodesToBack:[pickSupport selectedNodes]];
+        [self registerUndoForChange:nodeChange];
     }
     if (hasEdgeSelection) {
-        /*GraphChange *change =*/
-        [graph sendNodesToBack:[pickSupport selectedEdges]];
-        //[self registerUndoForChange:change];
+        edgeChange = [graph sendNodesToBack:[pickSupport selectedEdges]];
+        [self registerUndoForChange:edgeChange];
     }
-    //[self nameAndEndUndoGroup:@"Send to back"];
+    [self nameAndEndUndoGroup:@"Send to back"];
     [self regenerateTikz];
-    //[self postGraphChange:change];
+    if (hasNodeSelection)
+        [self postGraphChange:nodeChange];
+    if (hasEdgeSelection)
+        [self postGraphChange:edgeChange];
 }
 
 - (BOOL) saveCopyToPath: (NSString*)p error: (NSError**)error {

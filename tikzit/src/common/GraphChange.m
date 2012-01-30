@@ -36,220 +36,84 @@
 	return self;
 }
 
-- (ChangeType)changeType { return changeType; }
+@synthesize changeType;
+@synthesize shiftPoint, horizontal;
+@synthesize affectedEdges, affectedNodes;
+@synthesize edgeRef, nodeRef;
 
-- (void)setChangeType:(ChangeType)ct {
-	changeType = ct;
-}
+@synthesize oldNode, nwNode;
+@synthesize oldEdge, nwEdge;
+@synthesize oldNodeTable, nwNodeTable;
+@synthesize oldEdgeTable, nwEdgeTable;
 
-- (BOOL)horizontal { return horizontal; }
-- (void)setHorizontal:(BOOL)b {
-	horizontal = b;
-}
+@synthesize oldBoundingBox, nwBoundingBox;
 
-- (NSPoint)shiftPoint { return shiftPoint; }
-- (void)setShiftPoint:(NSPoint)p {
-	shiftPoint = p;
-}
+@synthesize oldGraphData, nwGraphData;
 
-- (NSSet*)affectedNodes { return affectedNodes; }
-
-- (void)setAffectedNodes:(NSSet*)set {
-	if (affectedNodes != set) {
-		[affectedNodes release];
-		affectedNodes = [[NSSet alloc] initWithSet:set];
-	}
-}
-
-- (NSSet*)affectedEdges { return affectedEdges; }
-
-- (void)setAffectedEdges:(NSSet*)set {
-	if (affectedEdges != set) {
-		[affectedEdges release];
-		affectedEdges = [[NSSet alloc] initWithSet:set];
-	}
-}
-
-- (Node*)nodeRef { return nodeRef; }
-
-- (void)setNodeRef:(Node*)nd {
-	if (nodeRef != nd) {
-		[nodeRef release];
-		nodeRef = [nd retain];
-	}
-}
-
-- (Node*)oldNode { return oldNode; }
-
-- (void)setOldNode:(Node*)nd {
-	if (oldNode != nd) {
-		[oldNode release];
-		oldNode = [nd copy];
-	}
-}
-
-- (Node*)nwNode { return nwNode; }
-
-- (void)setNwNode:(Node*)nd {
-	if (nwNode != nd) {
-		[nwNode release];
-		nwNode = [nd copy];
-	}
-}
-
-- (Edge*)edgeRef { return edgeRef; }
-
-- (void)setEdgeRef:(Edge*)ed {
-	if (edgeRef != ed) {
-		[edgeRef release];
-		edgeRef = [ed retain];
-	}
-}
-
-- (Edge*)oldEdge { return oldEdge; }
-
-- (void)setOldEdge:(Edge*)ed {
-	if (oldEdge != ed) {
-		[oldEdge release];
-		oldEdge = [ed copy];
-	}
-}
-
-- (Edge*)nwEdge { return nwEdge; }
-
-- (void)setNwEdge:(Edge*)ed {
-	if (nwEdge != ed) {
-		[nwEdge release];
-		nwEdge = [ed copy];
-	}
-}
-
-- (NSMapTable*)oldNodeTable { return oldNodeTable; }
-
-- (void)setOldNodeTable:(NSMapTable*)tab {
-	if (oldNodeTable != tab) {
-		[oldNodeTable release];
-		oldNodeTable = [tab retain];
-	}
-}
-
-- (NSMapTable*)nwNodeTable { return nwNodeTable; }
-
-- (void)setNwNodeTable:(NSMapTable*)tab {
-	if (nwNodeTable != tab) {
-		[nwNodeTable release];
-		nwNodeTable = [tab retain];
-	}
-}
-
-- (NSMapTable*)oldEdgeTable { return oldEdgeTable; }
-
-- (void)setOldEdgeTable:(NSMapTable*)tab {
-	if (oldEdgeTable != tab) {
-		[oldEdgeTable release];
-		oldEdgeTable = [tab retain];
-	}
-}
-
-- (NSMapTable*)nwEdgeTable { return nwEdgeTable; }
-
-- (void)setNwEdgeTable:(NSMapTable*)tab {
-	if (nwEdgeTable != tab) {
-		[nwEdgeTable release];
-		nwEdgeTable = [tab retain];
-	}
-}
-
-- (NSRect)oldBoundingBox { return oldBoundingBox; }
-
-- (void)setOldBoundingBox:(NSRect)bbox {
-	oldBoundingBox = bbox;
-}
-
-- (NSRect)nwBoundingBox { return nwBoundingBox; }
-
-- (void)setNwBoundingBox:(NSRect)bbox {
-	nwBoundingBox = bbox;
-}
-
-- (GraphElementData*)oldGraphData {
-	return oldGraphData;
-}
-
-- (void)setOldGraphData:(GraphElementData*)data {
-	id origOGD = oldGraphData;
-	oldGraphData = [data copy];
-	[origOGD release];
-}
-
-- (GraphElementData*)nwGraphData {
-	return nwGraphData;
-}
-
-- (void)setNwGraphData:(GraphElementData*)data {
-	id origNGD = nwGraphData;
-	nwGraphData = [data copy];
-	[origNGD release];
-}
+@synthesize oldNodeOrder, newNodeOrder;
+@synthesize oldEdgeOrder, newEdgeOrder;
 
 - (GraphChange*)invert {
 	GraphChange *inverse = [[GraphChange alloc] init];
+	[inverse setChangeType:[self changeType]];
 	switch ([self changeType]) {
 		case GraphAddition:
 			[inverse setChangeType:GraphDeletion];
-			[inverse setAffectedNodes:[self affectedNodes]];
-			[inverse setAffectedEdges:[self affectedEdges]];
+			inverse->affectedNodes = [affectedNodes retain];
+			inverse->affectedEdges = [affectedEdges retain];
 			break;
 		case GraphDeletion:
 			[inverse setChangeType:GraphAddition];
-			[inverse setAffectedNodes:[self affectedNodes]];
-			[inverse setAffectedEdges:[self affectedEdges]];
+			inverse->affectedNodes = [affectedNodes retain];
+			inverse->affectedEdges = [affectedEdges retain];
 			break;
 		case NodePropertyChange:
-			[inverse setChangeType:NodePropertyChange];
-			[inverse setNodeRef:[self nodeRef]];
-			[inverse setOldNode:[self nwNode]];
-			[inverse setNwNode:[self oldNode]];
+			inverse->nodeRef = [nodeRef retain];
+			inverse->oldNode = [nwNode retain];
+			inverse->nwNode = [oldNode retain];
 			break;
 		case NodesPropertyChange:
-			[inverse setChangeType:NodesPropertyChange];
-			[inverse setOldNodeTable:[self nwNodeTable]];
-			[inverse setNwNodeTable:[self oldNodeTable]];
+			inverse->oldNodeTable = [nwNodeTable retain];
+			inverse->nwNodeTable = [oldNodeTable retain];
 			break;
 		case EdgePropertyChange:
-			[inverse setChangeType:EdgePropertyChange];
-			[inverse setEdgeRef:[self edgeRef]];
-			[inverse setOldEdge:[self nwEdge]];
-			[inverse setNwEdge:[self oldEdge]];
+			inverse->edgeRef = [edgeRef retain];
+			inverse->oldEdge = [nwEdge retain];
+			inverse->nwEdge = [oldEdge retain];
 			break;
 		case EdgesPropertyChange:
-			[inverse setChangeType:EdgesPropertyChange];
-			[inverse setOldEdgeTable:[self nwEdgeTable]];
-			[inverse setNwEdgeTable:[self oldEdgeTable]];
+			inverse->oldEdgeTable = [nwEdgeTable retain];
+			inverse->nwEdgeTable = [oldEdgeTable retain];
 			break;
 		case NodesShift:
-			[inverse setChangeType:NodesShift];
-			[inverse setAffectedNodes:[self affectedNodes]];
+			inverse->affectedNodes = [affectedNodes retain];
 			[inverse setShiftPoint:NSMakePoint(-[self shiftPoint].x,
 											   -[self shiftPoint].y)];
 			break;
 		case NodesFlip:
-			[inverse setChangeType:NodesFlip];
-			[inverse setAffectedNodes:[self affectedNodes]];
+			inverse->affectedNodes = [affectedNodes retain];
 			[inverse setHorizontal:[self horizontal]];
 			break;
 		case BoundingBoxChange:
-			[inverse setChangeType:BoundingBoxChange];
-			[inverse setOldBoundingBox:[self nwBoundingBox]];
-			[inverse setNwBoundingBox:[self oldBoundingBox]];
+			inverse->oldBoundingBox = nwBoundingBox;
+			inverse->nwBoundingBox = oldBoundingBox;
 			break;
 		case GraphPropertyChange:
-			[inverse setChangeType:GraphPropertyChange];
-			[inverse setOldGraphData:[self nwGraphData]];
-			[inverse setNwGraphData:[self oldGraphData]];
+			inverse->oldGraphData = [nwGraphData retain];
+			inverse->nwGraphData = [oldGraphData retain];
+			break;
+		case NodeOrderChange:
+			inverse->affectedNodes = [affectedNodes retain];
+			inverse->oldNodeOrder = [newNodeOrder retain];
+			inverse->newNodeOrder = [oldNodeOrder retain];
+			break;
+		case EdgeOrderChange:
+			inverse->affectedEdges = [affectedEdges retain];
+			inverse->oldEdgeOrder = [newEdgeOrder retain];
+			inverse->newEdgeOrder = [oldEdgeOrder retain];
 			break;
 	}
-	
+
 	return [inverse autorelease];
 }
 
@@ -350,6 +214,24 @@
 	[gc setChangeType:GraphPropertyChange];
 	[gc setOldGraphData:oldData];
 	[gc setNwGraphData:newData];
+	return [gc autorelease];
+}
+
++ (GraphChange*)nodeOrderChangeFrom:(NSArray*)old to:(NSArray*)new moved:(NSSet*)affected {
+	GraphChange *gc = [[GraphChange alloc] init];
+	[gc setChangeType:NodeOrderChange];
+	[gc setAffectedNodes:affected];
+	[gc setOldNodeOrder:old];
+	[gc setNewNodeOrder:new];
+	return [gc autorelease];
+}
+
++ (GraphChange*)edgeOrderChangeFrom:(NSArray*)old to:(NSArray*)new moved:(NSSet*)affected {
+	GraphChange *gc = [[GraphChange alloc] init];
+	[gc setChangeType:EdgeOrderChange];
+	[gc setAffectedEdges:affected];
+	[gc setOldEdgeOrder:old];
+	[gc setNewEdgeOrder:new];
 	return [gc autorelease];
 }
 

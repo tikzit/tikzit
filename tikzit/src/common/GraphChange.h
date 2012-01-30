@@ -34,7 +34,9 @@ typedef enum {
 	NodesShift,
 	NodesFlip,
 	BoundingBoxChange,
-	GraphPropertyChange
+	GraphPropertyChange,
+	NodeOrderChange,
+	EdgeOrderChange
 } ChangeType;
 
 /*!
@@ -66,6 +68,9 @@ typedef enum {
 	NSMapTable *oldEdgeTable, *nwEdgeTable;
 	NSRect oldBoundingBox, nwBoundingBox;
 	GraphElementData *oldGraphData, *nwGraphData;
+
+	NSArray *oldNodeOrder, *newNodeOrder;
+	NSArray *oldEdgeOrder, *newEdgeOrder;
 }
 
 /*!
@@ -183,6 +188,30 @@ typedef enum {
 @property (copy) GraphElementData *nwGraphData;
 
 /*!
+ @property   oldNodeOrder
+ @brief      The old node list.
+ */
+@property (copy) NSArray *oldNodeOrder;
+
+/*!
+ @property   newNodeOrder
+ @brief      The new node list.
+ */
+@property (copy) NSArray *newNodeOrder;
+
+/*!
+ @property   oldEdgeOrder
+ @brief      The old edge list.
+ */
+@property (copy) NSArray *oldEdgeOrder;
+
+/*!
+ @property   newEdgeOrder
+ @brief      The new edge list.
+ */
+@property (copy) NSArray *newEdgeOrder;
+
+/*!
  @brief      Invert a GraphChange.
  @details    Invert a GraphChange. Calling [graph applyGraphChange:[[graph msg:...] invert]]
              should leave the graph unchanged for any method of Graph that returns a
@@ -286,6 +315,22 @@ typedef enum {
  @result     A graph property change.
  */
 + (GraphChange*)propertyChangeOfGraphFrom:(GraphElementData*)oldData to:(GraphElementData*)newData;
+
+/*!
+ @brief      Construct a node order change
+ @param old  The old ordering
+ @param new  The new ordering
+ @result     A node order change
+ */
++ (GraphChange*)nodeOrderChangeFrom:(NSArray*)old to:(NSArray*)new moved:(NSSet*)affected;
+
+/*!
+ @brief      Construct an edge order change
+ @param old  The old ordering
+ @param new  The new ordering
+ @result     A edge order change
+ */
++ (GraphChange*)edgeOrderChangeFrom:(NSArray*)old to:(NSArray*)new moved:(NSSet*)affected;
 
 @end
 
