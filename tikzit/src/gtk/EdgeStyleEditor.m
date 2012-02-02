@@ -27,6 +27,7 @@
 #import "edgedecdata.m"
 #pragma GCC diagnostic pop
 
+// {{{ Data Types
 enum {
     DEC_NAME_COL = 0,
     DEC_PREVIEW_COL,
@@ -60,6 +61,7 @@ static guint n_ah_tail_entries = G_N_ELEMENTS (ah_tail_entries);
 
 static const guint row_count = 5;
 
+// }}}
 // {{{ Internal interfaces
 // {{{ GTK+ Callbacks
 static void style_name_edit_changed_cb (GtkEditable *widget, EdgeStyleEditor *editor);
