@@ -105,7 +105,7 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 - (void) setParentWindow:(GtkWindow*)parent {
     GtkWindow *oldParent = parentWindow;
 
-    if (parent)
+    if (parentWindow)
         g_object_ref (parentWindow);
     parentWindow = parent;
     if (oldParent)
