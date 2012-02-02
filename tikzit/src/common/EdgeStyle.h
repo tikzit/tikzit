@@ -51,6 +51,8 @@ typedef enum {
 @property (assign) EdgeDectorationStyle decorationStyle;
 @property (assign) float thickness;
 
+@property (readonly) NSString *tikz;
+
 - (id)init;
 - (id)initWithName:(NSString*)nm;
 + (EdgeStyle*)defaultEdgeStyleWithName:(NSString*)nm;

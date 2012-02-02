@@ -104,6 +104,38 @@
 	}
 }
 
+- (NSString*)tikz {
+	NSMutableString *buf = [NSMutableString stringWithFormat:@"\\tikzstyle{%@}=[", name];
+
+	if (tailStyle == AH_Plain)
+		[buf appendString:@"<"];
+	else if (tailStyle == AH_Latex)
+		[buf appendString:@"latex"];
+
+	[buf appendString:@"-"];
+
+	if (headStyle == AH_Plain)
+		[buf appendString:@">"];
+	else if (headStyle == AH_Latex)
+		[buf appendString:@"latex"];
+
+	if (decorationStyle != ED_None) {
+		[buf appendString:@",postaction={decorate},decoration={markings,mark="];
+		if (decorationStyle == ED_Arrow)
+			[buf appendString:@"at position .5 with {\\arrow{>}}"];
+		else if (decorationStyle == ED_Tick)
+			[buf appendString:@"at position .5 with {\\draw (0,-0.1) -- (0,0.1);}"];
+		[buf appendString:@"}"];
+	}
+
+	if (thickness != 1.0f) {
+		[buf appendFormat:@",line width=%.3f", thickness];
+	}
+
+	[buf appendString:@"]"];
+	return buf;
+}
+
 - (void)dealloc {
     [name release];
     [super dealloc];

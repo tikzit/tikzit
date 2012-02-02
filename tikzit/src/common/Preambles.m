@@ -28,6 +28,7 @@ static NSString *PREAMBLE_HEAD =
 @"\\documentclass{article}\n"
 @"\\usepackage[svgnames]{xcolor}\n"
 @"\\usepackage{tikz}\n"
+@"\\usetikzlibrary{decorations.markings}\n"
 @"\\pagestyle{empty}\n"
 @"\n"
 @"\\pgfdeclarelayer{edgelayer}\n"
@@ -102,7 +103,7 @@ static NSString *POSTAMBLE =
 	NSMutableString *colbuf = [NSMutableString string];
 	NSMutableSet *colors = [NSMutableSet setWithCapacity:2*[styles count]];
 	for (NodeStyle *st in styles) {
-		[buf appendFormat:@"%@", [st tikz]];
+		[buf appendFormat:@"%@\n", [st tikz]];
 		ColorRGB *fill = [st fillColorRGB];
 		ColorRGB *stroke = [st strokeColorRGB];
 		if ([fill name] == nil && ![colors containsObject:fill]) {
@@ -117,8 +118,12 @@ static NSString *POSTAMBLE =
 			 [fill hexName], [fill redFloat], [fill greenFloat], [fill blueFloat]];
 		}
 	}
+	[buf appendString:@"\n"];
+	for (EdgeStyle *st in [styleManager edgeStyles]) {
+		[buf appendFormat:@"%@\n", [st tikz]];
+	}
 	
-	NSString *defs = [[NSString alloc] initWithFormat:@"%@%@", colbuf, buf];
+	NSString *defs = [[NSString alloc] initWithFormat:@"%@\n%@", colbuf, buf];
 	
 	[pool drain];
 	return [defs autorelease];

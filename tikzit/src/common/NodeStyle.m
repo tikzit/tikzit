@@ -135,28 +135,25 @@
 }
 
 - (NSString*)tikz {
-	NSString *fillName, *strokeName;
-	
-	NSMutableString *buf = [NSMutableString string];
-	
-	fillName = [fillColorRGB name];
-	strokeName = [strokeColorRGB name];
-	
+	NSString *fillName = [fillColorRGB name];
+	NSString *strokeName = [strokeColorRGB name];
+	NSString *stroke = @"";
+	if (strokeThickness != 1) {
+		stroke = [NSString stringWithFormat:@",line width=%@ pt",
+					 [NSNumber numberWithFloat:(float)strokeThickness * 0.4f]];
+	}
+
 	// If the colors are unknown, fall back on hexnames. These should be defined as colors
 	// in the Preambles class.
 	if (fillName == nil) fillName = [fillColorRGB hexName];
 	if (strokeName == nil) strokeName = [strokeColorRGB hexName];
-	
-	[buf appendFormat:@"\\tikzstyle{%@}=[%@,fill=%@,draw=%@%@]\n",
+
+	return [NSString stringWithFormat:@"\\tikzstyle{%@}=[%@,fill=%@,draw=%@%@]",
 		name,
 		shapeName,
 		fillName,
 		strokeName,
-		(strokeThickness != 1) ?
-			[NSString stringWithFormat:@",line width=%@ pt",
-			 [NSNumber numberWithFloat:(float)strokeThickness * 0.4f]] : @""];
-	
-	return buf;
+		stroke];
 }
 
 - (BOOL)strokeColorIsKnown {
