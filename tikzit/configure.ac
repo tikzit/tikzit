@@ -122,4 +122,12 @@ esac
 
 AM_CONDITIONAL([WINDOWS],[test "x$have_msw" = "xyes"])
 
+AS_IF([test "x$with_poppler" != "xno"],
+  [AS_IF([test "x$have_poppler" != "xyes"],
+    AC_MSG_WARN([poppler-glib was not found; preview support will be disabled])
+    )]
+  )
+
 AC_OUTPUT
+
+# vi:sts=2:sw=2:et
