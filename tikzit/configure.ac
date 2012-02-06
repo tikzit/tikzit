@@ -50,6 +50,11 @@ AS_IF([test "x$GNUSTEPLIBS" = "x"],
 AC_SUBST([GNUSTEPOBJCFLAGS])
 AC_SUBST([GNUSTEPLIBS])
 
+TZ_OBJC_FOUNDATION
+AS_IF([test "x$tz_cv_objc_foundation" != "xyes"],
+  [AC_MSG_ERROR([Objective C Foundation not found -- missing gnustep-base?])])
+AC_SUBST([GNUSTEPOBJCFLAGS])
+
 AC_ARG_WITH([poppler], AS_HELP_STRING([--without-poppler], [Ignore presence of poppler, disabling preview support]))
 
 AS_IF([test "x$with_poppler" != "xno"],

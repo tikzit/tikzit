@@ -1,3 +1,50 @@
+# Checks for a working Foundation
+# tz_cv_objc_foundation
+# to either "yes" or "no"
+#
+AC_DEFUN([TZ_OBJC_FOUNDATION],
+[
+tz_old_objcflags="$OBJCFLAGS"
+OBJCFLAGS="$OBJCFLAGS `eval "gnustep-config --objc-flags"`"
+
+AC_CACHE_CHECK([for Objective C Foundation],
+	       [tz_cv_objc_foundation],
+[AC_COMPILE_IFELSE(
+  [AC_LANG_SOURCE([[
+#import <Foundation/Foundation.h>
+
+@interface TestObj : NSObject {
+	int intVar;
+	NSObject *objVar;
+	NSString *strVar;
+}
+-(id)init;
+@end
+
+@implementation TestObj
+-(id)init {
+	self = [super init];
+	intVar = 0;
+	objVar = nil;
+	strVar = @"Foo";
+	return self;
+}
+@end
+
+int main(void) {
+	TestObj *obj = [[TestObj alloc] init];
+	[obj release];
+	return 0;
+}
+   ]])],
+  [tz_cv_objc_foundation=yes],
+  [tz_cv_objc_foundation=no])])
+
+OBJCFLAGS="$tz_old_objcflags"
+
+])
+
+
 # Checks for Objective C 2 feature support
 # and sets the shell variables
 # tz_cv_objc_properties
