@@ -42,10 +42,10 @@ AC_SUBST([CAIRO_CFLAGS])
 AC_SUBST([CAIRO_LIBS])
 
 GNUSTEPOBJCFLAGS=`eval "gnustep-config --objc-flags"`
-AS_IF([test "x$GNUSTEPOBJCFLAGS" = ""],
+AS_IF([test "x$GNUSTEPOBJCFLAGS" = "x"],
   [AC_MSG_ERROR([GNUstep not found])])
 GNUSTEPLIBS=`eval "gnustep-config --base-libs"`
-AS_IF([test "x$GNUSTEPLIBS" = ""],
+AS_IF([test "x$GNUSTEPLIBS" = "x"],
   [AC_MSG_ERROR([GNUstep not found])])
 AC_SUBST([GNUSTEPOBJCFLAGS])
 AC_SUBST([GNUSTEPLIBS])
