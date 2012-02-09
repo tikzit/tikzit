@@ -631,7 +631,7 @@
 			[self setBoundingBox:[ch nwBoundingBox]];
 			break;
 		case GraphPropertyChange:
-			[self setData:[ch nwGraphData]];
+			[data setArray:[ch nwGraphData]];
 			break;
 		case NodeOrderChange:
 			[nodes setArray:[ch newNodeOrder]];
