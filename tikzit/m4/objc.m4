@@ -4,8 +4,9 @@
 #
 AC_DEFUN([TZ_OBJC_FOUNDATION],
 [
+AC_LANG_ASSERT([Objective C])
 tz_old_objcflags="$OBJCFLAGS"
-OBJCFLAGS="$OBJCFLAGS `eval "gnustep-config --objc-flags"`"
+OBJCFLAGS="$OBJCFLAGS $TZ_TEST_OBJCFLAGS"
 
 AC_CACHE_CHECK([for Objective C Foundation],
 	       [tz_cv_objc_foundation],
@@ -41,7 +42,6 @@ int main(void) {
   [tz_cv_objc_foundation=no])])
 
 OBJCFLAGS="$tz_old_objcflags"
-
 ])
 
 
@@ -54,8 +54,9 @@ OBJCFLAGS="$tz_old_objcflags"
 #
 AC_DEFUN([TZ_OBJC2_FEATURES],
 [
+AC_LANG_ASSERT([Objective C])
 tz_old_objcflags="$OBJCFLAGS"
-OBJCFLAGS="$OBJCFLAGS `eval "gnustep-config --objc-flags"`"
+OBJCFLAGS="$OBJCFLAGS $TZ_TEST_OBJCFLAGS"
 
 AC_CACHE_CHECK([for Objective C 2 @property support],
 	       [tz_cv_objc_properties],

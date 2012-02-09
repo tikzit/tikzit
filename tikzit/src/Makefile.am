@@ -4,19 +4,15 @@ else
 sharedir = @datarootdir@/tikzit
 endif
 
-AM_OBJCFLAGS = @GNUSTEPOBJCFLAGS@ \
+AM_OBJCFLAGS = @FOUNDATION_OBJCFLAGS@ \
                @GTK_CFLAGS@ \
-               @GDK_PIXBUF_CFLAGS@ \
-               @POPPLER_CFLAGS@ \
                 -I common \
                 -I gtk \
                 -DTIKZITSHAREDIR=\"$(sharedir)\" \
                 -std=c99 \
                 -D_GNU_SOURCE
-LIBS = @GNUSTEPLIBS@ \
-       @GTK_LIBS@ \
-       @GDK_PIXBUF_LIBS@ \
-       @POPPLER_LIBS@
+LIBS = @FOUNDATION_LIBS@ \
+       @GTK_LIBS@
 AM_YFLAGS = -d
 PARSERFILES = common/tikzlexer.m common/tikzparser.m common/tikzparser.h
 

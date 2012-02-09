@@ -25,56 +25,50 @@ AM_PROG_LEX
 AC_PROG_YACC
 
 # Checks for libraries.
-PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.16.0])
-AC_SUBST([GTK_CFLAGS])
-AC_SUBST([GTK_LIBS])
-
-PKG_CHECK_MODULES([GDK_PIXBUF], [gdk-pixbuf-2.0 >= 2.16.0])
-AC_SUBST([GDK_PIXBUF_CFLAGS])
-AC_SUBST([GDK_PIXBUF_LIBS])
-
-PKG_CHECK_MODULES([PANGO], [pango >= 1.16])
-AC_SUBST([PANGO_CFLAGS])
-AC_SUBST([PANGO_LIBS])
-
-PKG_CHECK_MODULES([CAIRO], [cairo >= 1.4])
-AC_SUBST([CAIRO_CFLAGS])
-AC_SUBST([CAIRO_LIBS])
-
-GNUSTEPOBJCFLAGS=`eval "gnustep-config --objc-flags"`
-AS_IF([test "x$GNUSTEPOBJCFLAGS" = "x"],
+FOUNDATION_OBJCFLAGS=`eval "gnustep-config --objc-flags"`
+AS_IF([test "x$FOUNDATION_OBJCFLAGS" = "x"],
   [AC_MSG_ERROR([GNUstep not found])])
-GNUSTEPLIBS=`eval "gnustep-config --base-libs"`
-AS_IF([test "x$GNUSTEPLIBS" = "x"],
+FOUNDATION_LIBS=`eval "gnustep-config --base-libs"`
+AS_IF([test "x$FOUNDATION_LIBS" = "x"],
   [AC_MSG_ERROR([GNUstep not found])])
-AC_SUBST([GNUSTEPOBJCFLAGS])
-AC_SUBST([GNUSTEPLIBS])
+AC_SUBST([FOUNDATION_OBJCFLAGS])
+AC_SUBST([FOUNDATION_LIBS])
+
+TZ_TEST_OBJCFLAGS="$FOUNDATION_OBJCFLAGS"
+TZ_TEST_LDFLAGS="$FOUNDATION_LIBS"
 
 TZ_OBJC_FOUNDATION
 AS_IF([test "x$tz_cv_objc_foundation" != "xyes"],
-  [AC_MSG_ERROR([Objective C Foundation not found -- missing gnustep-base?])])
-AC_SUBST([GNUSTEPOBJCFLAGS])
+  [AC_MSG_ERROR([Objective C Foundation not found -- missing gnustep-base(-devel)?])])
 
 AC_ARG_WITH([poppler], AS_HELP_STRING([--without-poppler], [Ignore presence of poppler, disabling preview support]))
 
 AS_IF([test "x$with_poppler" != "xno"],
-  [PKG_CHECK_MODULES([POPPLER],
-                     [poppler-glib],
-                     [have_poppler=yes],
-                     [have_poppler=no])],
-  [have_poppler=no])
-
-AS_IF([test "x$have_poppler" = "xyes"],
   [
-   AC_SUBST([POPPLER_CFLAGS])
-   AC_SUBST([POPPLER_LIBS])
-   AC_DEFINE(HAVE_POPPLER, 1)
+    AC_MSG_CHECKING([for poppler-glib])
+    PKG_CHECK_EXISTS([poppler-glib >= 0.10],
+                     [have_poppler=yes],
+                     [have_poppler=no])
+    AS_IF([test "x$have_poppler" = "xyes"],
+      [
+        AC_MSG_RESULT([yes])
+        AC_DEFINE(HAVE_POPPLER, 1)
+      ],
+      [
+        AC_MSG_RESULT([no])
+        AS_IF([test "x$with_poppler" = "xyes"],
+              [AC_MSG_ERROR([poppler requested but not found (note that poppler-glib is required)])]
+             )
+      ])
   ],
-  [AS_IF([test "x$with_poppler" = "xyes"],
-         [AC_MSG_ERROR([foo requested but not found])]
-        )
-  ])
+  [have_poppler=no])
 AM_CONDITIONAL([HAVE_POPPLER],[test "x$have_poppler" = "xyes"])
+
+# Test all the pkg-config stuff together, so that
+# dependencies and duplicate flags are correctly handled
+AS_IF([test "x$have_poppler" = "xyes"],
+  [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.16.0 gdk-pixbuf-2.0 >= 2.16.0 pango >= 1.16 cairo >= 1.4 poppler-glib >= 0.10])],
+  [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.16.0 gdk-pixbuf-2.0 >= 2.16.0 pango >= 1.16 cairo >= 1.4])])
 
 # Checks for header files.
 AC_FUNC_ALLOCA
