@@ -899,6 +899,9 @@
     for (Node *n in [g nodes]) {
         [n attachStyleFromTable:[styleManager nodeStyles]];
     }
+    for (Edge *e in [g edges]) {
+        [e attachStyleFromTable:[styleManager edgeStyles]];
+    }
 }
 
 - (void) regenerateTikz {
