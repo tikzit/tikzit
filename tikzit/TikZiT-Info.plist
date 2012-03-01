@@ -5,7 +5,7 @@
 	<key>SUPublicDSAKeyFile</key>
 	<string>tikzit_dsa_pub.pem</string>
 	<key>SUFeedURL</key>
-	<string>http://tikzit.sourceforge.net/appcast/tikzit-devel.xml</string>
+	<string>http://tikzit.sourceforge.net/appcast/tikzit.xml</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
@@ -46,11 +46,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.8 RC1</string>
+	<string>0.8</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.8.382</string>
+	<string>0.8.398</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSMainNibFile</key>

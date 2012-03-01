@@ -70,8 +70,10 @@ static PreviewController *preview = nil;
 	[NSString stringWithFormat:
 	 @"if [ -e ~/.profile ]; then source ~/.profile; fi\n"
 	 @"if [ -e ~/.bashrc ]; then source ~/.bashrc; fi\n"
-	 @"pdflatex -interaction=nonstopmode -halt-on-error '%@'\n",
+	 @"pdflatex -interaction=nonstopmode -output-format=pdf -halt-on-error '%@'\n",
 	 texFile];
+    
+    //NSLog(@"Telling bash: %@", latexCmd);
 	
 	NSPipe *pout = [NSPipe pipe];
 	NSPipe *pin = [NSPipe pipe];
@@ -84,18 +86,19 @@ static PreviewController *preview = nil;
 	[latexTask launch];
 	[latexIn writeData:[latexCmd dataUsingEncoding:NSUTF8StringEncoding]];
 	[latexIn closeFile];
-	[latexTask waitUntilExit];
+    
 	
 	NSData *data = [latexOut readDataToEndOfFile];
 	NSString *str = [[NSString alloc] initWithData:data
 										  encoding:NSUTF8StringEncoding];
 	
+    [latexTask waitUntilExit];
 	if ([latexTask terminationStatus] != 0) {
 		[errorTextView setHidden:YES];
-		errorText.string = [@"\nAN ERROR HAS OCCURRED, PDFLATEX SAID:\n\n" stringByAppendingString:str];
+		[errorText setString:[@"\nAN ERROR HAS OCCURRED, PDFLATEX SAID:\n\n" stringByAppendingString:str]];
 		[errorTextView setHidden:NO];
 	} else {
-		errorText.string = @"";
+		[errorText setString:@""];
 		[errorTextView setHidden:YES];
 		
 		data = [NSData dataWithContentsOfFile:pdfFile];
