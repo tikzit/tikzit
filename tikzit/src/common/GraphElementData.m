@@ -119,8 +119,8 @@
 	return ([s isEqualToString:@""]) ? @"" : [NSString stringWithFormat:@"[%@]", s];
 }
 
-- (id)copy {
-	GraphElementData *cp = [[GraphElementData alloc] init];
+- (id)copyWithZone:(NSZone *)zone {
+	GraphElementData *cp = [[GraphElementData allocWithZone:zone] init];
 	NSEnumerator *en = [properties objectEnumerator];
 	GraphElementProperty *p, *p2;
 	while ((p = [en nextObject]) != nil) {

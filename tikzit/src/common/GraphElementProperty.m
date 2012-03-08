@@ -102,13 +102,13 @@
 	return [self matches:object];
 }
 
-- (id)copy {
+- (id)copyWithZone:(NSZone*)zone {
 	if (isAtom) {
-		return [[GraphElementProperty alloc] initWithAtomName:[self key]];
+		return [[GraphElementProperty allocWithZone:zone] initWithAtomName:[self key]];
 	} else if (isKeyMatch) {
-		return [[GraphElementProperty alloc] initWithKeyMatching:[self key]];
+		return [[GraphElementProperty allocWithZone:zone] initWithKeyMatching:[self key]];
 	} else {
-		return [[GraphElementProperty alloc] initWithPropertyValue:[self value] forKey:[self key]];
+		return [[GraphElementProperty allocWithZone:zone] initWithPropertyValue:[self value] forKey:[self key]];
 	}
 }
 

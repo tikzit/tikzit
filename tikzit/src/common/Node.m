@@ -34,7 +34,6 @@
 	style = nil;
 	label = @"";
 	point = p;
-	//[self updateData];
 	return self;
 }
 
@@ -122,12 +121,6 @@
 	[self setLabel:[nd label]];
 }
 
-- (id)copy {
-	Node *cp = [[Node alloc] init];
-	[cp setPropertiesFromNode:self];
-	return cp;
-}
-
 + (Node*)nodeWithPoint:(NSPoint)p {
 	return [[[Node alloc] initWithPoint:p] autorelease];
 }
@@ -149,56 +142,21 @@
 	}
 }
 
-
-- (NSString*)name {
-	return name;
-}
-
-- (void)setName:(NSString *)s {
-	if (name != s) {
-		[name release];
-		name = [s copy];
-	}
-}
-
-- (NSString*)label {
-	return label;
-}
-
-- (void)setLabel:(NSString *)s {
-	if (label != s) {
-		[label release];
-		label = [s copy];
-	}
-}
-
-- (GraphElementData*)data {
-	return data;
-}
-
-- (void)setData:(GraphElementData*)dt {
-	if (data != dt) {
-		[data release];
-		data = [dt copy];
-	}
-}
-
-- (NSPoint)point {
-    return point;
-}
-
-- (void)setPoint:(NSPoint)value {
-	point = value;
-}
+@synthesize name;
+@synthesize label;
+@synthesize point;
+@synthesize data;
 
 - (NodeStyle*)style {
 	return style;
 }
 
 - (void)setStyle:(NodeStyle *)st {
-	NodeStyle *oldStyle = style;
-	style = [st retain];
-	[oldStyle release];
+	if (style != st) {
+		NodeStyle *oldStyle = style;
+		style = [st retain];
+		[oldStyle release];
+	}
 	[self updateData];
 }
 
@@ -210,7 +168,9 @@
 }
 
 - (id)copyWithZone:(NSZone*)z {
-	return nil;
+	Node *cp = [[Node allocWithZone:z] init];
+	[cp setPropertiesFromNode:self];
+	return cp;
 }
 
 @end

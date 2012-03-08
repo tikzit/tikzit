@@ -48,7 +48,7 @@ typedef enum {
              also contains methods for computing the bezier control points
              and the midpoint of the curve.
  */
-@interface Edge : NSObject {
+@interface Edge : NSObject<NSCopying> {
 	Node *source;
 	Node *target;
 	Node *edgeNode;
@@ -351,12 +351,6 @@ typedef enum {
  @brief      Reverse edge direction, updating bend/inAngle/outAngle/etc
  */
 - (void)reverse;
-
-/*!
- @brief      Copy this edge.
- @result     A copy of this edge.
- */
-- (id)copy;
 
 /*!
  @brief      Factory method to make a blank edge.

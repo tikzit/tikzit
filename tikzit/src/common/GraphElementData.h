@@ -87,8 +87,6 @@
  */
 - (NSString*)stringList;
 
-- (id)copy;
-
 @end
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4

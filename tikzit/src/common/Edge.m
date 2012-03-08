@@ -571,8 +571,8 @@
 	[super dealloc];
 }
 
-- (id)copy {
-	Edge *cp = [[Edge alloc] init];
+- (id)copyWithZone:(NSZone*)zone {
+	Edge *cp = [[Edge allocWithZone:zone] init];
 	[cp setSource:[self source]];
 	[cp setTarget:[self target]];
 	[cp setPropertiesFromEdge:self];

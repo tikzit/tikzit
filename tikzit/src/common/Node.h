@@ -36,7 +36,7 @@
  @class Node
  @brief A graph node, with associated location and style data.
  */
-@interface Node : NSObject {
+@interface Node : NSObject<NSCopying> {
 	NSPoint point;
 	NodeStyle *style;
 	NSString *name;
@@ -139,12 +139,6 @@
  @brief      Set node properties from <tt>GraphElementData</tt>.
  */
 - (void)updateData;
-
-/*!
- @brief      Copy this node.
- @result     A copy of this node.
- */
-- (id)copy;
 
 /*!
  @brief      Set properties of this node to match the given node.

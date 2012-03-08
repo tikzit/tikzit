@@ -28,7 +28,7 @@
  @brief A property. I.e. a single entry in a node's/edge's/graph's 
         GraphElementData table.
  */
-@interface GraphElementProperty : NSObject {
+@interface GraphElementProperty : NSObject<NSCopying> {
 	NSString *key;
 	NSString *value;
 	BOOL isAtom;
@@ -79,12 +79,6 @@
  @result     A boolean.
  */
 - (BOOL)isEqual:(id)object;
-
-/*!
- @brief      Make a deep copy of this property.
- @result     A new property.
- */
-- (id)copy;
 
 @end
 

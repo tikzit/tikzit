@@ -40,41 +40,12 @@
 @synthesize shiftPoint, horizontal;
 @synthesize affectedEdges, affectedNodes;
 @synthesize edgeRef, nodeRef;
-
-// For some reason, gcc screws up the typing for these
-// properties when we use @synthesize, so instead we
-// define them manually.
-- (Node*) nwNode { return nwNode; }
-- (void) setNwNode:(Node*)e {
-	Node *cp = [e copy];
-	[nwNode release];
-	nwNode = cp;
-}
-- (Node*) oldNode { return oldNode; }
-- (void) setOldNode:(Node*)e {
-	Node *cp = [e copy];
-	[oldNode release];
-	oldNode = cp;
-}
-- (Edge*) nwEdge { return nwEdge; }
-- (void) setNwEdge:(Edge*)e {
-	Edge *cp = [e copy];
-	[nwEdge release];
-	nwEdge = cp;
-}
-- (Edge*) oldEdge { return oldEdge; }
-- (void) setOldEdge:(Edge*)e {
-	Edge *cp = [e copy];
-	[oldEdge release];
-	oldEdge = cp;
-}
+@synthesize nwNode, oldNode;
+@synthesize nwEdge, oldEdge;
 @synthesize oldNodeTable, nwNodeTable;
 @synthesize oldEdgeTable, nwEdgeTable;
-
 @synthesize oldBoundingBox, nwBoundingBox;
-
 @synthesize oldGraphData, nwGraphData;
-
 @synthesize oldNodeOrder, newNodeOrder;
 @synthesize oldEdgeOrder, newEdgeOrder;
 
