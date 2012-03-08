@@ -25,6 +25,7 @@
 
 #ifndef __APPLE__
 #import <glib.h>
+#import "stat.h"
 #endif
 
 @implementation SupportDir
@@ -55,7 +56,7 @@
 	                             error:NULL];
 #else
 	// NSFileManager is slightly dodgy on Windows
-	g_mkdir_with_parents ([[SupportDir userSupportDir] UTF8String], 700);
+	g_mkdir_with_parents ([[SupportDir userSupportDir] UTF8String], S_IRUSR | S_IWUSR | S_IXUSR);
 #endif
 }
 
