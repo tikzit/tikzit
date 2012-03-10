@@ -570,9 +570,9 @@
 }
 
 - (void)dealloc {
-	[self setSource:nil];
-	[self setTarget:nil];
-	[self setData:nil];
+	[source release];
+	[target release];
+	[data release];
 	[super dealloc];
 }
 

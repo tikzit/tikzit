@@ -173,9 +173,9 @@
 }
 
 - (void)dealloc {
-	[self setName:nil];
-	[self setStyle:nil];
-	[self setData:nil];
+	[name release];
+	[style release];
+	[data release];
 	[super dealloc];
 }
 

@@ -47,11 +47,11 @@
 
 - (void)dealloc {
 	[graphLock lock];
-	[nodes release];
-	[edges release];
-	[data release];
 	[inEdges release];
 	[outEdges release];
+	[edges release];
+	[nodes release];
+	[data release];
 	[graphLock unlock];
 	[graphLock release];
 	
