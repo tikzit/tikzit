@@ -70,7 +70,6 @@
 @property (readonly) NSString *undoName;
 @property (readonly) NSString *redoName;
 
-- (BOOL) validateTikz:(NSString**)tikz error:(NSError**)error;
 - (BOOL) setTikz:(NSString*)t;
 
 - (Graph*) cutSelection;
