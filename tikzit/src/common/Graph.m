@@ -26,17 +26,36 @@
 @implementation Graph
 
 - (Graph*)init {
-	[super init];
-	data = [[GraphElementData alloc] init];
-	boundingBox = NSMakeRect(0, 0, 0, 0);
-	graphLock = [[NSRecursiveLock alloc] init];
-	[graphLock lock];
-	nodes = [[NSMutableArray alloc] initWithCapacity:10];
-	edges = [[NSMutableArray alloc] initWithCapacity:10];
-	inEdges = nil;
-	outEdges = nil;
-	[graphLock unlock];
+	self = [super init];
+	if (self != nil) {
+		data = [[GraphElementData alloc] init];
+		boundingBox = NSMakeRect(0, 0, 0, 0);
+		graphLock = [[NSRecursiveLock alloc] init];
+		nodes = [[NSMutableArray alloc] initWithCapacity:10];
+		edges = [[NSMutableArray alloc] initWithCapacity:10];
+		inEdges = nil;
+		outEdges = nil;
+	}
 	return self;
+}
+
+- (id) copyWithZone:(NSZone*)zone {
+	Graph *newGraph = [self copyOfSubgraphWithNodes:[NSSet setWithArray:nodes] zone:zone];
+	[newGraph setData:[self data]];
+	return newGraph;
+}
+
+- (void)dealloc {
+	[graphLock lock];
+	[nodes release];
+	[edges release];
+	[data release];
+	[inEdges release];
+	[outEdges release];
+	[graphLock unlock];
+	[graphLock release];
+	
+	[super dealloc];
 }
 
 - (void)sync {
@@ -75,32 +94,29 @@
 	[graphLock unlock];
 }
 
-- (NSArray*)nodes {
-	return nodes;
+@synthesize nodes;
+@synthesize edges;
+
+@synthesize data;
+- (void) insertObject:(GraphElementProperty*)gep
+		inDataAtIndex:(NSUInteger)index {
+	[data insertObject:gep atIndex:index];
+}
+- (void) removeObjectFromDataAtIndex:(NSUInteger)index {
+	[data removeObjectAtIndex:index];
+}
+- (void) replaceObjectInDataAtIndex:(NSUInteger)index
+						 withObject:(GraphElementProperty*)gep {
+	[data replaceObjectAtIndex:index withObject:gep];
 }
 
-- (NSArray*)edges {
-	return edges;
-}
+@synthesize boundingBox;
 
 - (NSRect)bounds {
 	[graphLock lock];
 	NSRect b = [Graph boundsForNodes:nodes];
 	[graphLock unlock];
 	return b;
-}
-
-- (GraphElementData*)data { return data; }
-- (void)setData:(GraphElementData *)dt {
-	if (data != dt) {
-		[data release];
-		data = [dt copy];
-	}
-}
-
-- (NSRect)boundingBox { return boundingBox; }
-- (void)setBoundingBox:(NSRect)r {
-	boundingBox = r;
 }
 
 - (BOOL)hasBoundingBox {
@@ -504,22 +520,22 @@
 }
 
 - (Graph*)copyOfSubgraphWithNodes:(NSSet*)nds {
+	return [self copyOfSubgraphWithNodes:nds zone:NSDefaultMallocZone()];
+}
+
+- (Graph*)copyOfSubgraphWithNodes:(NSSet*)nds zone:(NSZone*)zone {
 	[graphLock lock];
 
-	NSMapTable *newNds = [Graph nodeTableForNodes:nds];
-	Graph* newGraph = [[Graph graph] retain];
+	NSMapTable *newNds = [Graph nodeTableForNodes:nds withZone:zone];
+	Graph* newGraph = [[Graph allocWithZone:zone] init];
 
-	NSEnumerator *en = [newNds objectEnumerator];
-	Node *nd;
-	while ((nd = [en nextObject])) {
+	for (Node *nd in newNds) {
 		[newGraph addNode:nd];
 	}
 
-	en = [edges objectEnumerator];
-	Edge *e;
-	while ((e = [en nextObject])) {
+	for (Edge *e in edges) {
 		if ([nds containsObject:[e source]] && [nds containsObject:[e target]]) {
-			Edge *e1 = [e copy];
+			Edge *e1 = [e copyWithZone:zone];
 			[e1 setSource:[newNds objectForKey:[e source]]];
 			[e1 setTarget:[newNds objectForKey:[e target]]];
 			[newGraph addEdge:e1];
@@ -721,27 +737,21 @@
 	return code;
 }
 
-- (void)dealloc {
-	[graphLock lock];
-	[nodes release];
-	[edges release];
-	[data release];
-	[inEdges release];
-	[outEdges release];
-	[graphLock unlock];
-	[graphLock release];
-	
-	[super dealloc];
-}
-
 + (Graph*)graph {
 	return [[[self alloc] init] autorelease];
 }
 
 + (NSMapTable*)nodeTableForNodes:(NSSet*)nds {
-	NSMapTable *tab = [NSMapTable mapTableWithStrongToStrongObjects];
+	return [self nodeTableForNodes:nds withZone:NSDefaultMallocZone()];
+}
+
++ (NSMapTable*)nodeTableForNodes:(NSSet*)nds withZone:(NSZone*)zone {
+	NSMapTable *tab = [[NSMapTable allocWithZone:zone]
+							  initWithKeyOptions:NSMapTableStrongMemory
+									valueOptions:NSMapTableStrongMemory
+										capacity:[nds count]];
 	for (Node *n in nds) {
-		Node *ncopy = [n copy];
+		Node *ncopy = [n copyWithZone:zone];
 		[tab setObject:ncopy forKey:n];
 		[ncopy release]; // tab should still retain ncopy.
 	}
@@ -749,9 +759,16 @@
 }
 
 + (NSMapTable*)edgeTableForEdges:(NSSet*)es {
-	NSMapTable *tab = [NSMapTable mapTableWithStrongToStrongObjects];
+	return [self edgeTableForEdges:es withZone:NSDefaultMallocZone()];
+}
+
++ (NSMapTable*)edgeTableForEdges:(NSSet*)es withZone:(NSZone*)zone {
+	NSMapTable *tab = [[NSMapTable allocWithZone:zone]
+							  initWithKeyOptions:NSMapTableStrongMemory
+									valueOptions:NSMapTableStrongMemory
+										capacity:[es count]];
 	for (Edge *e in es) {
-		Edge *ecopy = [e copy];
+		Edge *ecopy = [e copyWithZone:zone];
 		[tab setObject:ecopy forKey:e];
 		[ecopy release]; // tab should still retain ecopy.
 	}

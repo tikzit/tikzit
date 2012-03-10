@@ -145,7 +145,19 @@
 @synthesize name;
 @synthesize label;
 @synthesize point;
+
 @synthesize data;
+- (void) insertObject:(GraphElementProperty*)gep
+		inDataAtIndex:(NSUInteger)index {
+	[data insertObject:gep atIndex:index];
+}
+- (void) removeObjectFromDataAtIndex:(NSUInteger)index {
+	[data removeObjectAtIndex:index];
+}
+- (void) replaceObjectInDataAtIndex:(NSUInteger)index
+						 withObject:(GraphElementProperty*)gep {
+	[data replaceObjectAtIndex:index withObject:gep];
+}
 
 - (NodeStyle*)style {
 	return style;

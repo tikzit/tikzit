@@ -25,14 +25,14 @@
 
 @implementation EdgeStyle
 
-- (id)init {
+- (id)initWithName:(NSString*)nm {
     self = [super initWithNotificationName:@"EdgeStylePropertyChanged"];
 
 	if (self != nil) {
 		headStyle = AH_None;
 		tailStyle = AH_None;
 		decorationStyle = ED_None;
-		name = @"new";
+		name = nm;
 		category = nil;
 		thickness = 1.0f;
 	}
@@ -40,14 +40,26 @@
     return self;
 }
 
-- (id)initWithName:(NSString*)nm {
-	self = [self init];
-
-	if (self != nil) {
-		[self setName:nm];
-	}
-
+- (id)init {
+	self = [self initWithName:@"new"];
 	return self;
+}
+
+- (id)copyWithZone:(NSZone*)zone {
+	EdgeStyle *style = [[EdgeStyle allocWithZone:zone] init];
+	[style setName:[self name]];
+	[style setCategory:[self category]];
+	[style setHeadStyle:[self headStyle]];
+	[style setTailStyle:[self tailStyle]];
+	[style setDecorationStyle:[self decorationStyle]];
+	[style setThickness:[self thickness]];
+	return style;
+}
+
+- (void)dealloc {
+    [name release];
+    [category release];
+    [super dealloc];
 }
 
 + (EdgeStyle*)defaultEdgeStyleWithName:(NSString*)nm {
@@ -134,11 +146,6 @@
 
 	[buf appendString:@"]"];
 	return buf;
-}
-
-- (void)dealloc {
-    [name release];
-    [super dealloc];
 }
 
 @end

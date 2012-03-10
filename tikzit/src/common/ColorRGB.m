@@ -263,8 +263,8 @@ static NSMapTable *colorHash = nil;
 	return dr*dr + dg*dg + db*db;
 }
 
-- (id)copy {
-	ColorRGB *col = [[ColorRGB alloc] initWithRed:red green:green blue:blue];
+- (id)copyWithZone:(NSZone*)zone {
+	ColorRGB *col = [[ColorRGB allocWithZone:zone] initWithRed:red green:green blue:blue];
 	return col;
 }
 

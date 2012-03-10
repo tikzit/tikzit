@@ -45,11 +45,23 @@
  */
 @property (readonly) NSSet *selectedNodes;
 
+// KVC methods
+- (void)addSelectedNodesObject:(Node*)node;
+- (void)addSelectedNodes:(NSSet*)nodes;
+- (void)removeSelectedNodesObject:(Node*)node;
+- (void)removeSelectedNodes:(NSSet*)nodes;
+
 /*!
  @property   selectedEdges
  @brief      A set of selected edges.
  */
 @property (readonly) NSSet *selectedEdges;
+
+// KVC methods
+- (void)addSelectedEdgesObject:(Edge*)edge;
+- (void)addSelectedEdges:(NSSet*)edges;
+- (void)removeSelectedEdgesObject:(Edge*)edge;
+- (void)removeSelectedEdges:(NSSet*)edges;
 
 /*!
  @brief      Check if a node is selected.

@@ -83,6 +83,13 @@ typedef enum {
  */
 @property (copy) GraphElementData *data;
 
+// KVC methods
+- (void) insertObject:(GraphElementProperty*)gep
+		inDataAtIndex:(NSUInteger)index;
+- (void) removeObjectFromDataAtIndex:(NSUInteger)index;
+- (void) replaceObjectInDataAtIndex:(NSUInteger)index
+						 withObject:(GraphElementProperty*)gep;
+
 /*!
  @property   style
  @brief      Edge style.

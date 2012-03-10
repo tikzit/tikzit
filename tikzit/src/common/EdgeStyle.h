@@ -36,7 +36,7 @@ typedef enum {
     ED_Tick = 2
 } EdgeDectorationStyle;
 
-@interface EdgeStyle : PropertyHolder {
+@interface EdgeStyle : PropertyHolder <NSCopying> {
     ArrowHeadStyle headStyle, tailStyle;
     EdgeDectorationStyle decorationStyle;
     float thickness;

@@ -53,8 +53,56 @@
 	return [[[PickSupport alloc] init] autorelease];
 }
 
-- (NSSet*)selectedNodes { return selectedNodes; }
-- (NSSet*)selectedEdges { return selectedEdges; }
+@synthesize selectedNodes;
+- (void)addSelectedNodesObject:(Node*)node {
+	return [self selectNode:node];
+}
+- (void)addSelectedNodes:(NSSet*)nodes {
+	return [self selectAllNodes:nodes replacingSelection:NO];
+}
+- (void)removeSelectedNodesObject:(Node*)node {
+	return [self deselectNode:node];
+}
+- (void)removeSelectedNodes:(NSSet*)nodes {
+	if ([selectedNodes count] > 0) {
+		[selectedNodes minusSet:nodes];
+		[[NSNotificationCenter defaultCenter]
+			postNotificationName:@"NodeSelectionReplaced"
+			object:self];
+		[self postNodeSelectionChanged];
+	}
+}
+
+@synthesize selectedEdges;
+- (void)addSelectedEdgesObject:(Edge*)edge {
+	return [self selectEdge:edge];
+}
+- (void)addSelectedEdges:(NSSet*)edges {
+	if (selectedEdges == edges) {
+		return;
+	}
+	if ([edges count] == 0) {
+		return;
+	}
+
+	[selectedEdges unionSet:edges];
+	[[NSNotificationCenter defaultCenter]
+		postNotificationName:@"EdgeSelectionReplaced"
+		object:self];
+	[self postEdgeSelectionChanged];
+}
+- (void)removeSelectedEdgesObject:(Edge*)edge {
+	return [self deselectEdge:edge];
+}
+- (void)removeSelectedEdges:(NSSet*)edges {
+	if ([selectedEdges count] > 0 && [edges count] > 0) {
+		[selectedEdges minusSet:edges];
+		[[NSNotificationCenter defaultCenter]
+			postNotificationName:@"EdgeSelectionReplaced"
+			object:self];
+		[self postEdgeSelectionChanged];
+	}
+}
 
 - (BOOL)isNodeSelected:(Node*)nd {
 	return [selectedNodes containsObject:nd];

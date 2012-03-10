@@ -37,6 +37,18 @@
 	return self;
 }
 
+- (id) copyWithZone:(NSZone*)zone {
+	return [[Grid allocWithZone:zone]
+			initWithSpacing:spacing
+			   subdivisions:cellSubdivisions
+				transformer:transformer];
+}
+
+- (void) dealloc {
+	[transformer release];
+	[super dealloc];
+}
+
 - (int) cellSubdivisions {
 	return cellSubdivisions;
 }
@@ -167,11 +179,6 @@
 	[self _renderAxesWithContext:context origin:origin];
     
 	[context restoreState];
-}
-
-- (void) dealloc {
-	[transformer release];
-	[super dealloc];
 }
 
 @end

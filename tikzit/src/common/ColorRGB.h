@@ -24,7 +24,7 @@
 #import <Foundation/Foundation.h>
 #import "RColor.h"
 
-@interface ColorRGB : NSObject {
+@interface ColorRGB : NSObject<NSCopying> {
 	unsigned short red, green, blue;
 }
 

@@ -44,7 +44,7 @@
 			 Graph changes can be re-done by calling applyGraphChange. They can be undone
 			 by calling applyGraphChange on [change inverse].
  */
-@interface Graph : NSObject {
+@interface Graph : NSObject <NSCopying> {
 	NSRecursiveLock *graphLock;
 	BOOL dirty; // keep track of when inEdges and outEdges need an update
 	NSMutableArray *nodes;
@@ -62,6 +62,13 @@
  @brief      Data associated with the graph.
  */
 @property (copy) GraphElementData *data;
+
+// KVC methods
+- (void) insertObject:(GraphElementProperty*)gep
+		inDataAtIndex:(NSUInteger)index;
+- (void) removeObjectFromDataAtIndex:(NSUInteger)index;
+- (void) replaceObjectInDataAtIndex:(NSUInteger)index
+						 withObject:(GraphElementProperty*)gep;
 
 /*!
  @property   nodes
@@ -127,6 +134,14 @@
  @result     A subgraph.
  */
 - (Graph*)copyOfSubgraphWithNodes:(NSSet*)nds;
+
+/*!
+ @brief      Gives a copy of the full subgraph with the given nodes.
+ @param      nds a set of nodes.
+ @param      zone an allocation zone
+ @result     A subgraph.
+ */
+- (Graph*)copyOfSubgraphWithNodes:(NSSet*)nds zone:(NSZone*)zone;
 
 /*!
  @brief      Gives a set of edge-arrays that partition all of the edges in the graph.
@@ -313,6 +328,8 @@
  */
 + (NSMapTable*)nodeTableForNodes:(NSSet*)nds;
 
++ (NSMapTable*)nodeTableForNodes:(NSSet*)nds withZone:(NSZone*)zone;
+
 /*!
  @brief      Copy the edge set and return a table of copies, whose
              keys are the original edges. This is used to save the state
@@ -321,6 +338,8 @@
  @result     A <tt>NSMapTable</tt> of edge copies.
  */
 + (NSMapTable*)edgeTableForEdges:(NSSet*)es;
+
++ (NSMapTable*)edgeTableForEdges:(NSSet*)es withZone:(NSZone*)zone;
 
 /*!
  @brief      Compute the bounds for a set of nodes.

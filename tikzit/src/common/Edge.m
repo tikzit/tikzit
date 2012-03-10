@@ -372,12 +372,17 @@
 #endif
 }
 
-- (GraphElementData*)data {return data;}
-- (void)setData:(GraphElementData*)dt {
-	if (data != dt) {
-		[data release];
-		data = [dt copy];
-	}
+@synthesize data;
+- (void) insertObject:(GraphElementProperty*)gep
+		inDataAtIndex:(NSUInteger)index {
+	[data insertObject:gep atIndex:index];
+}
+- (void) removeObjectFromDataAtIndex:(NSUInteger)index {
+	[data removeObjectAtIndex:index];
+}
+- (void) replaceObjectInDataAtIndex:(NSUInteger)index
+						 withObject:(GraphElementProperty*)gep {
+	[data replaceObjectAtIndex:index withObject:gep];
 }
 
 - (void)updateData {

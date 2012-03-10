@@ -34,7 +34,7 @@
              which should be implemented in a platform-specific category. For
              OS X, this is NodeStyle+Coder.
  */
-@interface NodeStyle : PropertyHolder {
+@interface NodeStyle : PropertyHolder <NSCopying> {
 	int strokeThickness;
 	float scale;
 	ColorRGB *strokeColorRGB;

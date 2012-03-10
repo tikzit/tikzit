@@ -39,6 +39,12 @@
 - (id)objectAtIndex:(NSUInteger)index {
 	return [properties objectAtIndex:index];
 }
+- (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
+	return [properties objectsAtIndexes:indexes];
+}
+- (void) getObjects:(id*)buffer range:(NSRange)range {
+	[properties getObjects:buffer range:range];
+}
 - (void)insertObject:(id)anObject atIndex:(NSUInteger)index {
 	[properties insertObject:anObject atIndex:index];
 }
@@ -121,13 +127,11 @@
 
 - (id)copyWithZone:(NSZone *)zone {
 	GraphElementData *cp = [[GraphElementData allocWithZone:zone] init];
-	NSEnumerator *en = [properties objectEnumerator];
-	GraphElementProperty *p, *p2;
-	while ((p = [en nextObject]) != nil) {
-        p2 = [p copy];
-        [cp addObject:p2];
-        [p2 release];
-    }
+	for (GraphElementProperty *p in properties) {
+		GraphElementProperty *p2 = [p copy];
+		[cp addObject:p2];
+		[p2 release];
+	}
 	return cp;
 }
 

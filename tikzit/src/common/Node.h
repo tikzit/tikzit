@@ -29,6 +29,7 @@
 #import "NodeStyle.h"
 #import "GraphElementData.h"
 
+@class GraphElementProperty;
 @class Shape;
 @class Transformer;
 
@@ -82,6 +83,13 @@
  @brief      Associated extra data.
  */
 @property (copy) GraphElementData *data;
+
+// KVC methods
+- (void) insertObject:(GraphElementProperty*)gep
+		inDataAtIndex:(NSUInteger)index;
+- (void) removeObjectFromDataAtIndex:(NSUInteger)index;
+- (void) replaceObjectInDataAtIndex:(NSUInteger)index
+						 withObject:(GraphElementProperty*)gep;
 
 /*!
  @brief      Initialize a new node with the given point.

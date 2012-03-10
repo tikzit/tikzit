@@ -107,6 +107,16 @@ float const PIXELS_PER_UNIT = 50;
 	return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+	Transformer *cp = [[[self class] allocWithZone:zone] init];
+	if (cp) {
+		cp->origin = origin;
+		cp->x_scale = x_scale;
+		cp->y_scale = y_scale;
+	}
+	return cp;
+}
+
 - (NSPoint)origin { return origin; }
 - (void)setOrigin:(NSPoint)o {
 	origin = o;
@@ -189,14 +199,6 @@ float const PIXELS_PER_UNIT = 50;
 	r1.size.width = [self scaleToScreen:r.size.width];
 	r1.size.height = [self scaleToScreen:r.size.height];
 	return r1;
-}
-
-- (id)copyWithZone:(NSZone *)zone {
-	Transformer *cp = [[[self class] allocWithZone:zone] init];
-	cp->origin = origin;
-	cp->x_scale = x_scale;
-	cp->y_scale = y_scale;
-	return cp;
 }
 
 - (BOOL)isEqual:(id)object {

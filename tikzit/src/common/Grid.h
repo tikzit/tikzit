@@ -25,7 +25,7 @@
  * The grid is divided into cells, and each cell is further subdivided.
  * These subdivisions are the snap points for the grid.
  */
-@interface Grid: NSObject {
+@interface Grid: NSObject <NSCopying> {
 	Transformer *transformer;
 	float spacing;
 	int cellSubdivisions;

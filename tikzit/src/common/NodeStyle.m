@@ -28,7 +28,7 @@
 
 + (int) defaultStrokeThickness { return 1; }
 
-- (id)init {
+- (id)initWithName:(NSString*)nm {
 	self = [super initWithNotificationName:@"NodeStylePropertyChanged"];
 	if (self != nil) {
 		strokeThickness = [NodeStyle defaultStrokeThickness];
@@ -36,19 +36,39 @@
 		strokeColorRGB = [[ColorRGB alloc] initWithRed:0 green:0 blue:0];
 		fillColorRGB = [[ColorRGB alloc] initWithRed:255 green:255 blue:255];
 		
-		name = @"new";
+		name = nm;
 		category = nil;
 		shapeName = SHAPE_CIRCLE;
 	}
 	return self;
 }
 
-- (id)initWithName:(NSString*)nm {
-	self = [self init];
-	if (self != nil) {
-		[self setName:nm];
-	}
+- (id)init {
+	self = [self initWithName:@"new"];
 	return self;
+}
+
+- (id)copyWithZone:(NSZone*)zone {
+	NodeStyle *style = [[NodeStyle allocWithZone:zone] init];
+
+	[style setStrokeThickness:[self strokeThickness]];
+	[style setScale:[self scale]];
+	[style setStrokeColorRGB:[self strokeColorRGB]];
+	[style setFillColorRGB:[self fillColorRGB]];
+	[style setName:[self name]];
+	[style setShapeName:[self shapeName]];
+	[style setCategory:[self category]];
+
+	return style;
+}
+
+- (void)dealloc {
+	[name release];
+	[category release];
+	[shapeName release];
+	[strokeColorRGB release];
+	[fillColorRGB release];
+	[super dealloc];
 }
 
 + (NodeStyle*)defaultNodeStyleWithName:(NSString*)nm {
@@ -162,11 +182,6 @@
 
 - (BOOL)fillColorIsKnown {
 	return ([fillColorRGB name] != nil);
-}
-
-- (void)dealloc {
-	[self setName:nil];
-	[super dealloc];
 }
 
 @end
