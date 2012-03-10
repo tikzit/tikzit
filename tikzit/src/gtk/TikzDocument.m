@@ -151,17 +151,7 @@
     [super dealloc];
 }
 
-- (Graph*) graph {
-    return graph;
-}
-
-- (PickSupport*) pickSupport {
-    return pickSupport;
-}
-
-- (NSString*) path {
-    return path;
-}
+@synthesize graph, pickSupport, path;
 
 - (NSString*) name {
     if (path) {
@@ -244,6 +234,21 @@
 
 - (NSString*) tikz {
     return tikz;
+}
+
+- (BOOL) validateTikz:(NSString**)t error:(NSError**)error {
+    if (*t == nil) {
+        return NO;
+    }
+    if (t == tikz || [t isEqual:tikz]) {
+        return YES;
+    }
+
+    TikzGraphAssembler *a = [TikzGraphAssembler assembler];
+    BOOL success = [a parseTikz:*t];
+    if (!success && error != NULL) {
+    }
+    return success;
 }
 
 - (BOOL) setTikz:(NSString*)t {

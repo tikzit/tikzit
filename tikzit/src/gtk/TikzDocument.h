@@ -57,18 +57,21 @@
 - (id) initWithTikz:(NSString*)t styleManager:(StyleManager*)manager;
 - (id) initFromFile:(NSString*)path styleManager:(StyleManager*)manager error:(NSError**)error;
 
-- (Graph*) graph;
-- (PickSupport*) pickSupport;
-- (NSString*) path;
-- (NSString*) name;
-- (NSString*) suggestedFileName;
-- (BOOL) hasUnsavedChanges;
+@property (readonly) Graph *graph;
+@property (readonly) PickSupport *pickSupport;
+@property (readonly) NSString *path;
+@property (readonly) NSString *name;
+@property (readonly) NSString *suggestedFileName;
+@property (readonly) BOOL hasUnsavedChanges;
+@property (retain)   StyleManager *styleManager;
+@property (readonly) NSString *tikz;
+@property (readonly) BOOL canUndo;
+@property (readonly) BOOL canRedo;
+@property (readonly) NSString *undoName;
+@property (readonly) NSString *redoName;
 
-- (StyleManager*) styleManager;
-- (void) setStyleManager:(StyleManager*)manager;
-
-- (NSString*) tikz;
-- (BOOL) setTikz:(NSString*)tikz;
+- (BOOL) validateTikz:(NSString**)tikz error:(NSError**)error;
+- (BOOL) setTikz:(NSString*)t;
 
 - (Graph*) cutSelection;
 - (Graph*) copySelection;
@@ -81,12 +84,8 @@
 - (NSEnumerator*) nodeEnumerator;
 - (NSEnumerator*) edgeEnumerator;
 
-- (BOOL) canUndo;
 - (void) undo;
-- (BOOL) canRedo;
 - (void) redo;
-- (NSString*) undoName;
-- (NSString*) redoName;
 
 - (void) startUndoGroup;
 - (void) nameAndEndUndoGroup:(NSString*)nm;
