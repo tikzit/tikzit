@@ -25,7 +25,8 @@ enum {
     TZ_ERR_BADFORMAT,
     TZ_ERR_IO,
     TZ_ERR_TOOL_FAILED,
-    TZ_ERR_NOTDIRECTORY
+    TZ_ERR_NOTDIRECTORY,
+    TZ_ERR_PARSE
 };
 
 NSString* const TZToolOutputErrorKey;

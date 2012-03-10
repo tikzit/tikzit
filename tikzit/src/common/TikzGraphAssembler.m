@@ -22,6 +22,7 @@
 //  
 
 #import "TikzGraphAssembler.h"
+#import "NSError+Tikzit.h"
 
 extern int yyparse(void);
 extern int yylex(void);  
@@ -36,7 +37,10 @@ static id currentAssembler = nil;
 void yyerror(const char *str) {
 	NSLog(@"Parse error: %s", str);
 	if (currentAssembler != nil) {
-		[currentAssembler invalidate];
+		NSError *error = [NSError
+			errorWithMessage:[NSString stringWithCString:str]
+						code:TZ_ERR_PARSE];
+		[currentAssembler invalidateWithError:error];
 	}
 }
 
@@ -56,6 +60,7 @@ int yywrap() {
 }
 
 - (Graph*)graph { return graph; }
+- (NSError*)lastError { return lastError; }
 
 - (GraphElementData *)data {
 	if (currentNode != nil) {
@@ -95,6 +100,7 @@ int yywrap() {
 	yylex_destroy();
 	
 	[nodeMap release];
+	nodeMap = nil;
 	
 	currentAssembler = nil;
 	[pool drain];
@@ -144,12 +150,19 @@ int yywrap() {
 
 - (void)dealloc {
 	[graph release];
+	[lastError release];
 	[super dealloc];
 }
 
 - (void)invalidate {
 	[graph release];
 	graph = nil;
+	lastError = nil;
+}
+
+- (void)invalidateWithError:(NSError*)error {
+	[self invalidate];
+	lastError = [error retain];
 }
 
 + (void)setup {

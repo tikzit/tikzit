@@ -41,20 +41,34 @@
 
 @implementation TikzDocument
 
-+ (TikzDocument*) documentWithStyleManager:(StyleManager*)manager {
++ (TikzDocument*) documentWithStyleManager:(StyleManager*)manager
+{
     return [[[TikzDocument alloc] initWithStyleManager:manager] autorelease];
 }
 
-+ (TikzDocument*) documentWithGraph:(Graph*)g styleManager:(StyleManager*)manager {
-    return [[[TikzDocument alloc] initWithGraph:g styleManager:manager] autorelease];
++ (TikzDocument*) documentWithGraph:(Graph*)g
+                       styleManager:(StyleManager*)manager
+{
+    return [[[TikzDocument alloc] initWithGraph:g
+                                   styleManager:manager] autorelease];
 }
 
-+ (TikzDocument*) documentWithTikz:(NSString*)t styleManager:(StyleManager*)manager {
-    return [[[TikzDocument alloc] initWithTikz:t styleManager:manager] autorelease];
++ (TikzDocument*) documentWithTikz:(NSString*)t
+                      styleManager:(StyleManager*)manager
+                             error:(NSError**)error
+{
+    return [[[TikzDocument alloc] initWithTikz:t
+                                  styleManager:manager
+                                         error:error] autorelease];
 }
 
-+ (TikzDocument*) documentFromFile:(NSString*)pth styleManager:(StyleManager*)manager error:(NSError**)error {
-    return [[[TikzDocument alloc] initFromFile:pth styleManager:manager error:error] autorelease];
++ (TikzDocument*) documentFromFile:(NSString*)pth
+                      styleManager:(StyleManager*)manager
+                             error:(NSError**)error
+{
+    return [[[TikzDocument alloc] initFromFile:pth
+                                  styleManager:manager
+                                         error:error] autorelease];
 }
 
 
@@ -102,12 +116,19 @@
     return self;
 }
 
-- (id) initWithTikz:(NSString*)t styleManager:(StyleManager*)manager {
+- (id) initWithTikz:(NSString*)t
+       styleManager:(StyleManager*)manager
+              error:(NSError**)error
+{
     self = [self initWithStyleManager:manager];
 
     if (self) {
         [undoManager disableUndoRegistration];
-        [self setTikz:t];
+        BOOL success = [self updateTikz:t error:error];
+        if (!success) {
+            [self release];
+            return nil;
+        }
         [undoManager enableUndoRegistration];
         hasChanges = NO;
     }
@@ -115,7 +136,10 @@
     return self;
 }
 
-- (id) initFromFile:(NSString*)pth styleManager:(StyleManager*)manager error:(NSError**)error {
+- (id) initFromFile:(NSString*)pth
+       styleManager:(StyleManager*)manager
+              error:(NSError**)error
+{
     NSStringEncoding enc; // we can't pass in NULL here...
     NSString *t = [NSString stringWithContentsOfFile:pth
                             usedEncoding:&enc error:error];
@@ -124,7 +148,7 @@
         return nil;
     }
 
-    self = [self initWithTikz:t styleManager:manager];
+    self = [self initWithTikz:t styleManager:manager error:error];
 
     if (self) {
         [self setPath:pth];
@@ -224,10 +248,6 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TikzChanged" object:self];
 }
 
-- (void) postParseError {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ParseError" object:self];
-}
-
 - (void) postUndoStackChanged {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UndoStackChanged" object:self];
 }
@@ -236,7 +256,27 @@
     return tikz;
 }
 
-- (BOOL) setTikz:(NSString*)t {
+- (BOOL) validateTikz:(NSString**)t error:(NSError**)error {
+    if (*t == nil) {
+        return NO;
+    }
+    if (*t == tikz || [*t isEqual:tikz]) {
+        return YES;
+    }
+
+    TikzGraphAssembler *a = [TikzGraphAssembler assembler];
+    BOOL success = [a parseTikz:*t];
+    if (!success && error != NULL) {
+        *error = [a lastError];
+        if (*error == nil) {
+            *error = [NSError errorWithMessage:@"Unknown error"
+                                          code:TZ_ERR_PARSE];
+        }
+    }
+    return success;
+}
+
+- (BOOL) updateTikz:(NSString*)t error:(NSError**)error {
     if (t == nil) {
         t = [NSString string];
     }
@@ -247,13 +287,19 @@
     TikzGraphAssembler *a = [TikzGraphAssembler assembler];
     BOOL success = [a parseTikz:t];
     if (success) {
-        // setTikz actually generates a graph from the tikz,
+        // updateTikz actually generates a graph from the tikz,
         // and generates the final tikz from that
         [self startUndoGroup];
         [self setGraph:[a graph]];
         [self nameAndEndUndoGroup:@"Update tikz"];
     } else {
-        [self postParseError];
+        if (error != NULL) {
+            *error = [a lastError];
+            if (*error == nil) {
+                *error = [NSError errorWithMessage:@"Unknown error"
+                                              code:TZ_ERR_PARSE];
+            }
+        }
     }
 
     return success;

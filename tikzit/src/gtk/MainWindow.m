@@ -521,7 +521,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         gtk_text_buffer_get_bounds (tikzBuffer, &start, &end);
         gchar *text = gtk_text_buffer_get_text (tikzBuffer, &start, &end, FALSE);
 
-        BOOL success = [document setTikz:[NSString stringWithUTF8String:text]];
+        BOOL success = [document updateTikz:[NSString stringWithUTF8String:text] error:NULL];
         [self _setHasParseError:!success];
 
         g_free (text);
@@ -766,12 +766,18 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
 - (void) _forceLoadDocumentFromFile:(NSString*)path {
     NSError *error = nil;
-    TikzDocument *d = [TikzDocument documentFromFile:path styleManager:styleManager error:&error];
+    TikzDocument *d = [TikzDocument documentFromFile:path
+                                        styleManager:styleManager
+                                               error:&error];
     if (d != nil) {
         [self _setActiveDocument:d];
         [[RecentManager defaultManager] addRecentFile:path];
     } else {
-        [self presentError:error withMessage:@"Could not open file"];
+        if ([error code] == TZ_ERR_PARSE) {
+            [self presentError:error withMessage:@"Invalid file"];
+        } else {
+            [self presentError:error withMessage:@"Could not open file"];
+        }
         [[RecentManager defaultManager] removeRecentFile:path];
     }
 }

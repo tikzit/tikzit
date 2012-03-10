@@ -49,12 +49,12 @@
 
 + (TikzDocument*) documentWithStyleManager:(StyleManager*)manager;
 + (TikzDocument*) documentWithGraph:(Graph*)g styleManager:(StyleManager*)manager;
-+ (TikzDocument*) documentWithTikz:(NSString*)t styleManager:(StyleManager*)manager;
++ (TikzDocument*) documentWithTikz:(NSString*)t styleManager:(StyleManager*)manager error:(NSError**)error;
 + (TikzDocument*) documentFromFile:(NSString*)path styleManager:(StyleManager*)manager error:(NSError**)error;
 
 - (id) initWithStyleManager:(StyleManager*)manager;
 - (id) initWithGraph:(Graph*)g styleManager:(StyleManager*)manager;
-- (id) initWithTikz:(NSString*)t styleManager:(StyleManager*)manager;
+- (id) initWithTikz:(NSString*)t styleManager:(StyleManager*)manager error:(NSError**)error;
 - (id) initFromFile:(NSString*)path styleManager:(StyleManager*)manager error:(NSError**)error;
 
 @property (readonly) Graph *graph;
@@ -70,7 +70,8 @@
 @property (readonly) NSString *undoName;
 @property (readonly) NSString *redoName;
 
-- (BOOL) setTikz:(NSString*)t;
+- (BOOL) validateTikz:(NSString**)tikz error:(NSError**)error;
+- (BOOL) updateTikz:(NSString*)t error:(NSError**)error;
 
 - (Graph*) cutSelection;
 - (Graph*) copySelection;

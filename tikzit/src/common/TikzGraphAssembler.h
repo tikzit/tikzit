@@ -29,13 +29,14 @@
 	Node *currentNode;
 	Edge *currentEdge;
 	NSMutableDictionary *nodeMap;
+	NSError *lastError;
 }
 
 @property (readonly) Graph *graph;
 @property (readonly) GraphElementData *data;
 @property (readonly) Node *currentNode;
 @property (readonly) Edge *currentEdge;
-
+@property (readonly) NSError *lastError;
 
 - (BOOL)parseTikz:(NSString*)tikz;
 - (BOOL)parseTikz:(NSString*)tikz forGraph:(Graph*)gr;
@@ -48,6 +49,7 @@
 - (void)finishEdge;
 
 - (void)invalidate;
+- (void)invalidateWithError:(NSError*)error;
 
 + (void)setup;
 + (TikzGraphAssembler*)currentAssembler;
