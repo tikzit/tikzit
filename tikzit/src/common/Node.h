@@ -50,6 +50,8 @@
  @brief      The shape to use
  @detail     This is a convenience property that resolves the shape name
              from the style, and uses a circle if there is no style.
+
+			 This property is NOT KVO-compliant
  */
 @property (readonly) Shape *shape;
 

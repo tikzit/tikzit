@@ -42,6 +42,19 @@
 	return self;
 }
 
+- (id)copyWithZone:(NSZone*)z {
+	Node *cp = [[Node allocWithZone:z] init];
+	[cp setPropertiesFromNode:self];
+	return cp;
+}
+
+- (void)dealloc {
+	[name release];
+	[style release];
+	[data release];
+	[super dealloc];
+}
+
 - (Shape*) shape {
     if (style) {
         return [Shape shapeForName:[style shapeName]];
@@ -170,19 +183,6 @@
 		[oldStyle release];
 	}
 	[self updateData];
-}
-
-- (void)dealloc {
-	[name release];
-	[style release];
-	[data release];
-	[super dealloc];
-}
-
-- (id)copyWithZone:(NSZone*)z {
-	Node *cp = [[Node allocWithZone:z] init];
-	[cp setPropertiesFromNode:self];
-	return cp;
 }
 
 @end
