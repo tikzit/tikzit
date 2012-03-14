@@ -36,6 +36,8 @@
 @property (assign) float greenFloat;
 @property (assign) float blueFloat;
 
+@property (readonly) NSString *name;
+
 - (RColor)rColor;
 - (RColor)rColorWithAlpha:(CGFloat)alpha;
 
@@ -47,8 +49,6 @@
 - (id)initWithRed:(unsigned short)r green:(unsigned short)g blue:(unsigned short)b;
 - (id)initWithFloatRed:(float)r green:(float)g blue:(float)b;
 - (id)initWithRColor:(RColor)color;
-
-- (NSString*)name;
 
 - (void)setToClosestHashed;
 

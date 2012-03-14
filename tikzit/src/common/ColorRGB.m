@@ -183,19 +183,22 @@ static NSMapTable *colorHash = nil;
 
 @implementation ColorRGB
 
-- (unsigned short)red { return red; }
-- (void)setRed:(unsigned short)r { red = r; }
-- (unsigned short)green { return green; }
-- (void)setGreen:(unsigned short)g { green = g; }
-- (unsigned short)blue { return blue; }
-- (void)setBlue:(unsigned short)b { blue = b; }
++ (void)initialize {
+	[self setKeys:[NSArray arrayWithObject:@"red"] triggerChangeNotificationsForDependentKey:@"redFloat"];
+	[self setKeys:[NSArray arrayWithObject:@"green"] triggerChangeNotificationsForDependentKey:@"greenFloat"];
+	[self setKeys:[NSArray arrayWithObject:@"blue"] triggerChangeNotificationsForDependentKey:@"blueFloat"];
+	[self setKeys:[NSArray arrayWithObjects:@"red", @"green", @"blue", nil]
+          triggerChangeNotificationsForDependentKey:@"name"];
+}
+
+@synthesize red, green, blue;
 
 - (float)redFloat { return ((float)red)/255.0f; }
-- (void)setRedFloat:(float)r { red = round(r*255.0f); }
+- (void)setRedFloat:(float)r { [self setRed:round(r*255.0f)]; }
 - (float)greenFloat { return ((float)green)/255.0f; }
-- (void)setGreenFloat:(float)g { green = round(g*255.0f); }
+- (void)setGreenFloat:(float)g { [self setGreen:round(g*255.0f)]; }
 - (float)blueFloat { return ((float)blue)/255.0f; }
-- (void)setBlueFloat:(float)b { blue = round(b*255.0f); }
+- (void)setBlueFloat:(float)b { [self setBlue:round(b*255.0f)]; }
 
 - (int)hash {
 	return (red<<4) + (green<<2) + blue;
@@ -230,7 +233,8 @@ static NSMapTable *colorHash = nil;
 }
 
 - (NSString*)name {
-	if (colorHash == nil) [ColorRGB makeColorHash];
+	if (colorHash == nil)
+		[ColorRGB makeColorHash];
 	return [colorHash objectForKey:self];
 }
 

@@ -25,6 +25,17 @@
 
 @implementation EdgeStyle
 
++ (void)initialize {
+	[self setKeys:[NSArray arrayWithObjects:
+				@"tailStyle",
+				@"headStyle",
+				@"decorationStyle",
+				@"thickness",
+				@"name",
+				nil]
+          triggerChangeNotificationsForDependentKey:@"tikz"];
+}
+
 - (id)initWithName:(NSString*)nm {
     self = [super initWithNotificationName:@"EdgeStylePropertyChanged"];
 

@@ -26,6 +26,29 @@
 
 @implementation NodeStyle
 
++ (void)initialize {
+	[self setKeys:[NSArray arrayWithObjects:
+				@"fillColorRGB.red",
+				@"fillColorRGB.blue",
+				@"fillColorRGB.green",
+				@"strokeColorRGB.red",
+				@"strokeColorRGB.blue",
+				@"strokeColorRGB.green",
+				@"strokeThickness",
+				@"shapeName",
+				@"name",
+				nil]
+          triggerChangeNotificationsForDependentKey:@"tikz"];
+	[self setKeys:[NSArray arrayWithObjects:
+				@"fillColorRGB.name",
+				nil]
+          triggerChangeNotificationsForDependentKey:@"fillColorIsKnown"];
+	[self setKeys:[NSArray arrayWithObjects:
+				@"strokeColorRGB.name",
+				nil]
+          triggerChangeNotificationsForDependentKey:@"strokeColorIsKnown"];
+}
+
 + (int) defaultStrokeThickness { return 1; }
 
 - (id)initWithName:(NSString*)nm {

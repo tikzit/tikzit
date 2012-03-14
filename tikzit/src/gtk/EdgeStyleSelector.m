@@ -45,9 +45,12 @@ enum {
 - (void) styleAdded:(NSNotification*)notification;
 - (void) styleRemoved:(NSNotification*)notification;
 - (void) activeStyleChanged:(NSNotification*)notification;
-- (void) stylePropertyChanged:(NSNotification*)notification;
 - (void) shapeDictionaryReplaced:(NSNotification*)n;
 - (void) selectionChanged;
+- (void) observeValueForKeyPath:(NSString*)keyPath
+                       ofObject:(id)object
+                         change:(NSDictionary*)change
+                        context:(void*)context;
 @end
 
 @interface EdgeStyleSelector (Private)
@@ -58,6 +61,8 @@ enum {
 - (GdkPixbuf*) pixbufOfEdgeInStyle:(EdgeStyle*)style usingSurface:(cairo_surface_t*)surface;
 - (void) addStyle:(EdgeStyle*)style;
 - (void) postSelectedStyleChanged;
+- (void) observeStyle:(EdgeStyle*)style;
+- (void) stopObservingStyle:(EdgeStyle*)style;
 - (void) reloadStyles;
 @end
 
@@ -108,10 +113,6 @@ enum {
 
         [self setStyleManager:m];
 
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(stylePropertyChanged:)
-                                                     name:@"EdgeStylePropertyChanged"
-                                                   object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(shapeDictionaryReplaced:)
                                                      name:@"ShapeDictionaryReplaced"
@@ -249,6 +250,7 @@ enum {
             gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
             if (style == rowStyle) {
                 gtk_list_store_remove (store, &row);
+                [self stopObservingStyle:rowStyle];
                 [rowStyle release];
                 return;
             }
@@ -265,8 +267,15 @@ enum {
     }
 }
 
-- (void) stylePropertyChanged:(NSNotification*)notification {
-    EdgeStyle *style = [notification object];
+- (void) observeValueForKeyPath:(NSString*)keyPath
+                       ofObject:(id)object
+                         change:(NSDictionary*)change
+                        context:(void*)context
+{
+    if ([object class] != [EdgeStyle class])
+        return;
+
+    EdgeStyle *style = object;
 
     GtkTreeModel *model = GTK_TREE_MODEL (store);
     GtkTreeIter row;
@@ -275,9 +284,9 @@ enum {
             EdgeStyle *rowStyle;
             gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
             if (style == rowStyle) {
-                if ([@"name" isEqual:[[notification userInfo] objectForKey:@"propertyName"]]) {
+                if ([@"name" isEqual:keyPath]) {
                     gtk_list_store_set (store, &row, STYLES_NAME_COL, [[style name] UTF8String], -1);
-                } else if (![@"scale" isEqual:[[notification userInfo] objectForKey:@"propertyName"]]) {
+                } else {
                     GdkPixbuf *pixbuf = [self pixbufOfEdgeInStyle:style];
                     gtk_list_store_set (store, &row, STYLES_ICON_COL, pixbuf, -1);
                     gdk_pixbuf_unref (pixbuf);
@@ -314,6 +323,7 @@ enum {
         do {
             EdgeStyle *rowStyle;
             gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
+            [self stopObservingStyle:rowStyle];
             [rowStyle release];
         } while (gtk_tree_model_iter_next (model, &row));
     }
@@ -402,6 +412,7 @@ enum {
             STYLES_PTR_COL, (gpointer)[style retain],
             -1);
     gdk_pixbuf_unref (pixbuf);
+    [self observeStyle:style];
 }
 
 - (void) addStyle:(EdgeStyle*)style {
@@ -414,11 +425,44 @@ enum {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedStyleChanged" object:self];
 }
 
+- (void) observeStyle:(EdgeStyle*)style {
+    [style addObserver:self
+            forKeyPath:@"name"
+               options:NSKeyValueObservingOptionNew
+               context:NULL];
+    [style addObserver:self
+            forKeyPath:@"thickness"
+               options:0
+               context:NULL];
+    [style addObserver:self
+            forKeyPath:@"headStyle"
+               options:0
+               context:NULL];
+    [style addObserver:self
+            forKeyPath:@"tailStyle"
+               options:0
+               context:NULL];
+    [style addObserver:self
+            forKeyPath:@"decorationStyle"
+               options:0
+               context:NULL];
+}
+
+- (void) stopObservingStyle:(EdgeStyle*)style {
+    [style removeObserver:self forKeyPath:@"name"];
+    [style removeObserver:self forKeyPath:@"thickness"];
+    [style removeObserver:self forKeyPath:@"headStyle"];
+    [style removeObserver:self forKeyPath:@"tailStyle"];
+    [style removeObserver:self forKeyPath:@"decorationStyle"];
+}
+
 - (void) reloadStyles {
     [self clearModel];
+    cairo_surface_t *surface = [self createEdgeIconSurface];
     for (EdgeStyle *style in [styleManager edgeStyles]) {
-        [self addStyle:style];
+        [self addStyle:style usingSurface:surface];
     }
+    cairo_surface_destroy (surface);
 }
 @end
 
