@@ -24,7 +24,7 @@
 #import "NSString+LatexConstants.h"
 
 // can't use sizeof() in non-fragile ABI (eg: clang)
-#define texConstantCount 62
+#define texConstantCount 63
 static NSString *texConstantNames[texConstantCount] = {
 	@"alpha",
 	@"beta",
@@ -88,7 +88,8 @@ static NSString *texConstantNames[texConstantCount] = {
 	@"geq",
 	@"subset",
 	@"supset",
-	@"cdot"
+	@"cdot",
+	@"ldots"
 };
 
 static char * texConstantCodes[texConstantCount] = {
@@ -101,7 +102,8 @@ static char * texConstantCodes[texConstantCount] = {
 	"\u00b1","\u2192","\u21d2","\u21d4","\u2200","\u2202","\u2203",
 	"\u2205","\u2207","\u2208","\u2209","\u220f","\u2211","\u221a",
 	"\u221e","\u2227","\u2228","\u2229","\u222a","\u222b","\u2248",
-	"\u2260","\u2261","\u2264","\u2265","\u2282","\u2283","\u22c5"
+	"\u2260","\u2261","\u2264","\u2265","\u2282","\u2283","\u22c5",
+	"\u2026"
 };
 
 #define texModifierCount 10
