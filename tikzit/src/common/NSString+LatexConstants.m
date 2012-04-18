@@ -157,7 +157,7 @@ static NSSet *texModifiers = nil;
 			case 0:
 				if (c=='\\') {
 					state = 1;
-				} else {
+				} else if (c!='$') {
 					[buf appendFormat:@"%C", c];
 				}
 				break;
