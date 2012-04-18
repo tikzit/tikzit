@@ -30,6 +30,11 @@
         tailStyle = [configFile integerEntry:@"TailStyle" inGroup:groupName withDefault:tailStyle];
         decorationStyle = [configFile integerEntry:@"DecorationStyle" inGroup:groupName withDefault:decorationStyle];
         thickness = [configFile doubleEntry:@"Thickness" inGroup:groupName withDefault:thickness];
+        [self setColorRGB:
+            [ColorRGB colorFromValueList:
+                [configFile integerListEntry:@"Color"
+                                     inGroup:groupName
+                                     withDefault:[colorRGB valueList]]]];
     }
 
     return self;
@@ -42,6 +47,7 @@
     [configFile setIntegerEntry:@"TailStyle" inGroup:groupName value:tailStyle];
     [configFile setIntegerEntry:@"DecorationStyle" inGroup:groupName value:decorationStyle];
     [configFile setDoubleEntry:@"Thickness" inGroup:groupName value:thickness];
+    [configFile setIntegerListEntry:@"Color" inGroup:groupName value:[[self colorRGB] valueList]];
 }
 
 @end

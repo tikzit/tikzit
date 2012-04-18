@@ -31,9 +31,16 @@
 				@"headStyle",
 				@"decorationStyle",
 				@"thickness",
+				@"colorRGB.red",
+				@"colorRGB.blue",
+				@"colorRGB.green",
 				@"name",
 				nil]
           triggerChangeNotificationsForDependentKey:@"tikz"];
+	[self setKeys:[NSArray arrayWithObjects:
+				@"colorRGB.name",
+				nil]
+          triggerChangeNotificationsForDependentKey:@"colorIsKnown"];
 }
 
 - (id)initWithName:(NSString*)nm {
@@ -43,6 +50,7 @@
 		headStyle = AH_None;
 		tailStyle = AH_None;
 		decorationStyle = ED_None;
+		colorRGB = [[ColorRGB alloc] initWithRed:0 green:0 blue:0];
 		name = nm;
 		category = nil;
 		thickness = 1.0f;
@@ -64,12 +72,14 @@
 	[style setTailStyle:[self tailStyle]];
 	[style setDecorationStyle:[self decorationStyle]];
 	[style setThickness:[self thickness]];
+	[style setColorRGB:[self colorRGB]];
 	return style;
 }
 
 - (void)dealloc {
     [name release];
     [category release];
+    [colorRGB release];
     [super dealloc];
 }
 
@@ -127,8 +137,25 @@
 	}
 }
 
+- (ColorRGB*)colorRGB {
+	return colorRGB;
+}
+
+- (void)setColorRGB:(ColorRGB*)c {
+	if (colorRGB != c) {
+		ColorRGB *oldValue = colorRGB;
+		colorRGB = [c copy];
+		[self postPropertyChanged:@"colorRGB" oldValue:oldValue];
+		[oldValue release];
+	}
+}
+
 - (NSString*)tikz {
 	NSMutableString *buf = [NSMutableString stringWithFormat:@"\\tikzstyle{%@}=[", name];
+
+	NSString *colorName = [colorRGB name];
+	if (colorName == nil)
+		colorName = [colorRGB hexName];
 
 	if (tailStyle == AH_Plain)
 		[buf appendString:@"<"];
@@ -141,6 +168,9 @@
 		[buf appendString:@">"];
 	else if (headStyle == AH_Latex)
 		[buf appendString:@"latex"];
+
+	[buf appendString:@",draw="];
+	[buf appendString:colorName];
 
 	if (decorationStyle != ED_None) {
 		[buf appendString:@",postaction={decorate},decoration={markings,mark="];

@@ -23,6 +23,7 @@ tikzit_SOURCES = gtk/CairoRenderContext.m \
                  gtk/ColorRGB+Gtk.m \
                  gtk/Configuration.m \
                  gtk/Edge+Render.m \
+                 gtk/EdgeStyle+Gtk.m \
                  gtk/EdgeStyle+Storage.m \
                  gtk/EdgeStyleEditor.m \
                  gtk/EdgeStyleSelector.m \

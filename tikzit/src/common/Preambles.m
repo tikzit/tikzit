@@ -23,6 +23,7 @@
 
 #import "Preambles.h"
 #import "NodeStyle.h"
+#import "EdgeStyle.h"
 
 static NSString *PREAMBLE_HEAD =
 @"\\documentclass{article}\n"
@@ -112,15 +113,21 @@ static NSString *POSTAMBLE =
 			 [fill hexName], [fill redFloat], [fill greenFloat], [fill blueFloat]];
 		}
 		
-		if ([fill name] == nil && ![colors containsObject:fill]) {
+		if ([stroke name] == nil && ![colors containsObject:stroke]) {
 			[colors addObject:stroke];
 			[colbuf appendFormat:@"\\definecolor{%@}{rgb}{%.3f,%.3f,%.3f}\n",
-			 [fill hexName], [fill redFloat], [fill greenFloat], [fill blueFloat]];
+			 [stroke hexName], [stroke redFloat], [stroke greenFloat], [stroke blueFloat]];
 		}
 	}
 	[buf appendString:@"\n"];
 	for (EdgeStyle *st in [styleManager edgeStyles]) {
 		[buf appendFormat:@"%@\n", [st tikz]];
+		ColorRGB *color = [st colorRGB];
+		if ([color name] == nil && ![colors containsObject:color]) {
+			[colors addObject:color];
+			[colbuf appendFormat:@"\\definecolor{%@}{rgb}{%.3f,%.3f,%.3f}\n",
+				[color hexName], [color redFloat], [color greenFloat], [color blueFloat]];
+		}
 	}
 	
 	NSString *defs = [[NSString alloc] initWithFormat:@"%@\n%@", colbuf, buf];

@@ -18,6 +18,7 @@
 #import "EdgeStyleEditor.h"
 
 #import "EdgeStyle.h"
+#import "EdgeStyle+Gtk.h"
 #import "Shape.h"
 
 #include <gdk-pixbuf/gdk-pixdata.h>
@@ -59,7 +60,7 @@ static struct dec_info ah_tail_entries[] = {
 };
 static guint n_ah_tail_entries = G_N_ELEMENTS (ah_tail_entries);
 
-static const guint row_count = 5;
+static const guint row_count = 6;
 
 // }}}
 // {{{ Internal interfaces
@@ -69,6 +70,8 @@ static void decoration_combo_changed_cb (GtkComboBox *widget, EdgeStyleEditor *e
 static void head_arrow_combo_changed_cb (GtkComboBox *widget, EdgeStyleEditor *editor);
 static void tail_arrow_combo_changed_cb (GtkComboBox *widget, EdgeStyleEditor *editor);
 static void thickness_adjustment_changed_cb (GtkAdjustment *widget, EdgeStyleEditor *editor);
+static void color_changed_cb (GtkColorButton *widget, EdgeStyleEditor *editor);
+static void make_color_safe_button_clicked_cb (GtkButton *widget, EdgeStyleEditor *editor);
 // }}}
 // {{{ Notifications
 
@@ -78,6 +81,8 @@ static void thickness_adjustment_changed_cb (GtkAdjustment *widget, EdgeStyleEdi
 - (void) headArrowChangedTo:(ArrowHeadStyle)value;
 - (void) tailArrowChangedTo:(ArrowHeadStyle)value;
 - (void) thicknessChangedTo:(double)value;
+- (void) makeColorTexSafe;
+- (void) colorChangedTo:(GdkColor)value;
 @end
 
 // }}}
@@ -132,6 +137,16 @@ static void thickness_adjustment_changed_cb (GtkAdjustment *widget, EdgeStyleEdi
     g_object_ref_sink (combo);
 
     return combo;
+}
+
+- (GtkWidget*) _createMakeColorTexSafeButton {
+    GtkWidget *b = gtk_button_new ();
+    GtkWidget *icon = gtk_image_new_from_stock (GTK_STOCK_DIALOG_WARNING, GTK_ICON_SIZE_BUTTON);
+    gtk_widget_show (icon);
+    gtk_container_add (GTK_CONTAINER (b), icon);
+    NSString *ttip = @"The colour is not a predefined TeX colour.\nClick here to choose the nearest TeX-safe colour.";
+    gtk_widget_set_tooltip_text (b, [ttip UTF8String]);
+    return b;
 }
 
 - (id) init {
@@ -199,6 +214,32 @@ static void thickness_adjustment_changed_cb (GtkAdjustment *widget, EdgeStyleEdi
 
 
         /**
+         * Colour
+         */
+        GtkWidget *colorBox = gtk_hbox_new (FALSE, 0);
+        [self _addWidget:colorBox
+               withLabel:"Colour"
+                   atRow:4];
+        colorButton = GTK_COLOR_BUTTON (gtk_color_button_new ());
+        g_object_ref_sink (colorButton);
+        gtk_widget_show (GTK_WIDGET (colorButton));
+        gtk_box_pack_start (GTK_BOX (colorBox), GTK_WIDGET (colorButton),
+                            FALSE, FALSE, 0);
+        makeColorTexSafeButton = [self _createMakeColorTexSafeButton];
+        g_object_ref_sink (makeColorTexSafeButton);
+        gtk_box_pack_start (GTK_BOX (colorBox), makeColorTexSafeButton,
+                            FALSE, FALSE, 0);
+        g_signal_connect (G_OBJECT (colorButton),
+                          "color-set",
+                          G_CALLBACK (color_changed_cb),
+                          self);
+        g_signal_connect (G_OBJECT (makeColorTexSafeButton),
+                          "clicked",
+                          G_CALLBACK (make_color_safe_button_clicked_cb),
+                          self);
+
+
+        /**
          * Thickness
          */
         thicknessAdj = GTK_ADJUSTMENT (gtk_adjustment_new (
@@ -212,7 +253,7 @@ static void thickness_adjustment_changed_cb (GtkAdjustment *widget, EdgeStyleEdi
         GtkWidget *scaleSpin = gtk_spin_button_new (thicknessAdj, 0.0, 2);
         [self _addWidget:scaleSpin
                withLabel:"Thickness"
-                   atRow:4];
+                   atRow:5];
         g_signal_connect (G_OBJECT (thicknessAdj),
                           "value-changed",
                           G_CALLBACK (thickness_adjustment_changed_cb),
@@ -227,6 +268,8 @@ static void thickness_adjustment_changed_cb (GtkAdjustment *widget, EdgeStyleEdi
 
     g_object_unref (nameEdit);
     g_object_unref (decorationCombo);
+    g_object_unref (colorButton);
+    g_object_unref (makeColorTexSafeButton);
     g_object_unref (thicknessAdj);
     g_object_unref (table);
     [style release];
@@ -252,12 +295,17 @@ static void thickness_adjustment_changed_cb (GtkAdjustment *widget, EdgeStyleEdi
         [self setDecCombo:headArrowCombo toValue:[style headStyle]];
         [self setDecCombo:tailArrowCombo toValue:[style tailStyle]];
 
+        GdkColor c = [style color];
+        gtk_color_button_set_color(colorButton, &c);
+        gtk_widget_set_visible (makeColorTexSafeButton, ([[style colorRGB] name] == nil));
+
         gtk_adjustment_set_value(thicknessAdj, [style thickness]);
     } else {
         gtk_entry_set_text(nameEdit, "");
         [self clearDecCombo:decorationCombo];
         [self clearDecCombo:headArrowCombo];
         [self clearDecCombo:tailArrowCombo];
+        gtk_widget_set_visible (makeColorTexSafeButton, FALSE);
         gtk_adjustment_set_value(thicknessAdj, 1.0);
         gtk_widget_set_sensitive (GTK_WIDGET (table), FALSE);
     }
@@ -294,6 +342,21 @@ static void thickness_adjustment_changed_cb (GtkAdjustment *widget, EdgeStyleEdi
 
 - (void) thicknessChangedTo:(double)value {
     [style setThickness:(float)value];
+}
+
+- (void) colorChangedTo:(GdkColor)value {
+    [style setColor:value];
+    gtk_widget_set_visible (makeColorTexSafeButton,
+                            [[style colorRGB] name] == nil);
+}
+
+- (void) makeColorTexSafe {
+    if (style != nil) {
+        [[style colorRGB] setToClosestHashed];
+        GdkColor color = [style color];
+        gtk_color_button_set_color(colorButton, &color);
+        gtk_widget_set_visible (makeColorTexSafeButton, FALSE);
+    }
 }
 @end
 
@@ -401,6 +464,28 @@ static void tail_arrow_combo_changed_cb (GtkComboBox *widget, EdgeStyleEditor *e
 static void thickness_adjustment_changed_cb (GtkAdjustment *adj, EdgeStyleEditor *editor) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [editor thicknessChangedTo:gtk_adjustment_get_value (adj)];
+    [pool drain];
+}
+
+static void color_changed_cb (GtkColorButton *widget, EdgeStyleEditor *editor) {
+    if ([editor signalsBlocked])
+        return;
+
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    GdkColor color;
+    gtk_color_button_get_color (widget, &color);
+    [editor colorChangedTo:color];
+
+    [pool drain];
+}
+
+static void make_color_safe_button_clicked_cb (GtkButton *widget, EdgeStyleEditor *editor) {
+    if ([editor signalsBlocked])
+        return;
+
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [editor makeColorTexSafe];
     [pool drain];
 }
 

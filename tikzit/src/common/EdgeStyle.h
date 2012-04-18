@@ -23,6 +23,7 @@
 
 #import <Foundation/Foundation.h>
 #import "PropertyHolder.h"
+#import "ColorRGB.h"
 
 typedef enum {
 	AH_None = 0,
@@ -40,9 +41,16 @@ typedef enum {
     ArrowHeadStyle headStyle, tailStyle;
     EdgeDectorationStyle decorationStyle;
     float thickness;
+	ColorRGB *colorRGB;
     NSString *name;
     NSString *category;
 }
+
+/*!
+ @property   colorRGB
+ @brief      The color to render the line in
+ */
+@property (copy) ColorRGB *colorRGB;
 
 @property (copy) NSString *name;
 @property (copy) NSString *category;

@@ -59,13 +59,13 @@
 
 /*!
  @property   strokeColorRGB
- @brief      Stroke color.
+ @brief      The stroke color used to render the node
  */
 @property (copy) ColorRGB *strokeColorRGB;
 
 /*!
  @property   fillColorRGB
- @brief      Fill color.
+ @brief      The fill color used to render the node
  */
 @property (copy) ColorRGB *fillColorRGB;
 

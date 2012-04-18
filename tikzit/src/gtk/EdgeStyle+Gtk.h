@@ -1,5 +1,5 @@
 /*
- * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -16,28 +16,14 @@
  */
 
 #import "TZFoundation.h"
+#import "EdgeStyle.h"
 #import <gtk/gtk.h>
 
-@class EdgeStyle;
+@interface EdgeStyle (Gtk)
 
-@interface EdgeStyleEditor: NSObject {
-    EdgeStyle             *style;
-    GtkTable              *table;
-    GtkEntry              *nameEdit;
-    GtkComboBox           *decorationCombo;
-    GtkComboBox           *headArrowCombo;
-    GtkComboBox           *tailArrowCombo;
-    GtkColorButton        *colorButton;
-    GtkWidget             *makeColorTexSafeButton;
-    GtkAdjustment         *thicknessAdj;
-    BOOL                   blockSignals;
-}
-
-@property (retain)   EdgeStyle *style;
-@property (readonly) GtkWidget *widget;
-
-- (id) init;
+- (GdkColor) color;
+- (void) setColor:(GdkColor)color;
 
 @end
 
-// vim:ft=objc:ts=4:et:sts=4:sw=4:foldmethod=marker
+// vim:ft=objc:ts=8:et:sts=4:sw=4

@@ -11,6 +11,7 @@ tikzit 0.8 (2012-01-??):
 	* Edges can now have arrow heads and arrow tails
 	* Nodes and edges have consistent ordering, and this can be
 	  changed with Edge->Arrange
+	* Edges now have colours
 
 tikzit 0.7 (2011-12-06):
 	* Add bounding box support

@@ -195,13 +195,21 @@ static const float cpLineWidth = 1.0;
     }
 }
 
+- (RColor) color {
+    if (style) {
+        return [[style colorRGB] rColor];
+    } else {
+        return WhiteRColor;
+    }
+}
+
 - (void) renderBasicEdgeInContext:(id<RenderContext>)context withTransformer:(Transformer*)t selected:(BOOL)selected {
     [self updateControls];
     [context saveState];
 
     const CGFloat lineWidth = style ? [style thickness] : edgeWidth;
     [context setLineWidth:lineWidth];
-    RColor color = BlackRColor;
+    RColor color = [self color];
     if (selected) {
         color.alpha = 0.5;
     }

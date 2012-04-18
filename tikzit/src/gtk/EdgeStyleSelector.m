@@ -446,6 +446,18 @@ enum {
             forKeyPath:@"decorationStyle"
                options:0
                context:NULL];
+    [style addObserver:self
+            forKeyPath:@"colorRGB.red"
+               options:0
+               context:NULL];
+    [style addObserver:self
+            forKeyPath:@"colorRGB.green"
+               options:0
+               context:NULL];
+    [style addObserver:self
+            forKeyPath:@"colorRGB.blue"
+               options:0
+               context:NULL];
 }
 
 - (void) stopObservingStyle:(EdgeStyle*)style {
@@ -454,6 +466,9 @@ enum {
     [style removeObserver:self forKeyPath:@"headStyle"];
     [style removeObserver:self forKeyPath:@"tailStyle"];
     [style removeObserver:self forKeyPath:@"decorationStyle"];
+    [style removeObserver:self forKeyPath:@"colorRGB.red"];
+    [style removeObserver:self forKeyPath:@"colorRGB.green"];
+    [style removeObserver:self forKeyPath:@"colorRGB.blue"];
 }
 
 - (void) reloadStyles {
