@@ -529,7 +529,7 @@
 	NSMapTable *newNds = [Graph nodeTableForNodes:nds withZone:zone];
 	Graph* newGraph = [[Graph allocWithZone:zone] init];
 
-	for (Node *nd in newNds) {
+	for (Node *nd in [newNds objectEnumerator]) {
 		[newGraph addNode:nd];
 	}
 
@@ -587,57 +587,47 @@
 
 - (void)applyGraphChange:(GraphChange*)ch {
 	[graphLock lock];
-	Node *n;
-	Edge *e;
-	NSEnumerator *en;
 	switch ([ch changeType]) {
 		case GraphAddition:
-			en = [[ch affectedNodes] objectEnumerator];
-			while ((n = [en nextObject])) [nodes addObject:n];
+			for (Node *n in [[ch affectedNodes] objectEnumerator]) {
+				[nodes addObject:n];
+			}
 
-			en = [[ch affectedEdges] objectEnumerator];
-			while ((e = [en nextObject])) [edges addObject:e];
+			for (Edge *e in [[ch affectedEdges] objectEnumerator]) {
+				[edges addObject:e];
+			}
 
 			break;
 		case GraphDeletion:
-			en = [[ch affectedEdges] objectEnumerator];
-			while ((e = [en nextObject])) [edges removeObject:e];
+			for (Edge *e in [[ch affectedEdges] objectEnumerator]) {
+				[edges removeObject:e];
+			}
 
-			en = [[ch affectedNodes] objectEnumerator];
-			while ((n = [en nextObject])) [nodes removeObject:n];
+			for (Node *n in [[ch affectedNodes] objectEnumerator]) {
+				[nodes removeObject:n];
+			}
 
 			break;
 		case NodePropertyChange:
 			[[ch nodeRef] setPropertiesFromNode:[ch nwNode]];
 			break;
 		case NodesPropertyChange:
-			{
-				en = [[ch nwNodeTable] keyEnumerator];
-				Node *key;
-				while ((key = [en nextObject])) {
-					[key setPropertiesFromNode:[[ch nwNodeTable] objectForKey:key]];
-				}
+			for (Node *key in [[ch nwNodeTable] keyEnumerator]) {
+				[key setPropertiesFromNode:[[ch nwNodeTable] objectForKey:key]];
 			}
 			break;
 		case EdgePropertyChange:
 			[[ch edgeRef] setPropertiesFromEdge:[ch nwEdge]];
 			break;
 		case EdgesPropertyChange:
-			{
-				en = [[ch nwEdgeTable] keyEnumerator];
-				Edge *key;
-				while ((key = [en nextObject])) {
-					[key setPropertiesFromEdge:[[ch nwEdgeTable] objectForKey:key]];
-				}
+			for (Edge *key in [[ch nwEdgeTable] keyEnumerator]) {
+				[key setPropertiesFromEdge:[[ch nwEdgeTable] objectForKey:key]];
 			}
 			break;
 		case NodesShift:
-			en = [[ch affectedNodes] objectEnumerator];
-			NSPoint newLoc;
-			while ((n = [en nextObject])) {
-				newLoc = NSMakePoint([n point].x + [ch shiftPoint].x,
-									 [n point].y + [ch shiftPoint].y);
-				[n setPoint:newLoc];
+			for (Node *n in [[ch affectedNodes] objectEnumerator]) {
+				[n setPoint:NSMakePoint([n point].x + [ch shiftPoint].x,
+										[n point].y + [ch shiftPoint].y)];
 			}
 			break;
 		case NodesFlip:
@@ -755,7 +745,7 @@
 		[tab setObject:ncopy forKey:n];
 		[ncopy release]; // tab should still retain ncopy.
 	}
-	return tab;
+	return [tab autorelease];
 }
 
 + (NSMapTable*)edgeTableForEdges:(NSSet*)es {
