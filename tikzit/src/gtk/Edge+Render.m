@@ -199,7 +199,7 @@ static const float cpLineWidth = 1.0;
     if (style) {
         return [[style colorRGB] rColor];
     } else {
-        return WhiteRColor;
+        return BlackRColor;
     }
 }
 
