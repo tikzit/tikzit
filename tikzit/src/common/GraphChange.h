@@ -33,6 +33,7 @@ typedef enum {
 	EdgesPropertyChange,
 	NodesShift,
 	NodesFlip,
+	EdgesReverse,
 	BoundingBoxChange,
 	GraphPropertyChange,
 	NodeOrderChange,
@@ -291,7 +292,6 @@ typedef enum {
  */
 + (GraphChange*)shiftNodes:(NSSet*)ns byPoint:(NSPoint)p;
 
-
 /*!
  @brief      Construct a horizontal or vertical flip of a set of nodes.
  @param      ns the affected nodes.
@@ -299,6 +299,13 @@ typedef enum {
  @result     A flip of a set of nodes.
  */
 + (GraphChange*)flipNodes:(NSSet*)ns horizontal:(BOOL)b;
+
+/*!
+ @brief      Construct a reversal of a set of edges.
+ @param      es the affected edges.
+ @result     A reverse of a set of edges.
+ */
++ (GraphChange*)reverseEdges:(NSSet*)es;
 
 /*!
  @brief      Construct a bounding box change

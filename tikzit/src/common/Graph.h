@@ -278,6 +278,13 @@
 - (GraphChange*)shiftNodes:(id<NSFastEnumeration>)ns byPoint:(NSPoint)p;
 
 /*!
+ @brief      Reverse the given edges
+ @param      es the edges to reverse
+ @result     A <tt>GraphChange</tt> recording this action.
+ */
+- (GraphChange*)reverseEdges:(NSSet *)es;
+
+/*!
  @brief      Insert the given graph into this one. Used for copy
              and paste.
  @param      g a graph.
