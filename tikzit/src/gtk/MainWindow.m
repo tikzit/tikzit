@@ -756,7 +756,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
                 GTK_DIALOG_DESTROY_WITH_PARENT,
                 GTK_MESSAGE_QUESTION,
                 GTK_BUTTONS_YES_NO, 
-                [message UTF8String]); 
+                "%s", [message UTF8String]); 
         gtk_window_set_title(GTK_WINDOW(dialog), "Close current document?"); 
         proceed = gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES;
         gtk_widget_destroy (dialog);    
