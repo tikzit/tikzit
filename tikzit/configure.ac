@@ -67,8 +67,8 @@ AM_CONDITIONAL([HAVE_POPPLER],[test "x$have_poppler" = "xyes"])
 # Test all the pkg-config stuff together, so that
 # dependencies and duplicate flags are correctly handled
 AS_IF([test "x$have_poppler" = "xyes"],
-  [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.16.0 gdk-pixbuf-2.0 >= 2.16.0 pango >= 1.16 cairo >= 1.4 poppler-glib >= 0.10])],
-  [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.16.0 gdk-pixbuf-2.0 >= 2.16.0 pango >= 1.16 cairo >= 1.4])])
+  [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.18.0 gdk-pixbuf-2.0 >= 2.16.0 pango >= 1.16 cairo >= 1.4 poppler-glib >= 0.10])],
+  [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.18.0 gdk-pixbuf-2.0 >= 2.16.0 pango >= 1.16 cairo >= 1.4])])
 
 # Checks for header files.
 AC_FUNC_ALLOCA
