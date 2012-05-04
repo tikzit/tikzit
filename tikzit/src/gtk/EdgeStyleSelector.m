@@ -289,7 +289,7 @@ enum {
                 } else {
                     GdkPixbuf *pixbuf = [self pixbufOfEdgeInStyle:style];
                     gtk_list_store_set (store, &row, STYLES_ICON_COL, pixbuf, -1);
-                    gdk_pixbuf_unref (pixbuf);
+                    g_object_unref (pixbuf);
                 }
             }
         } while (gtk_tree_model_iter_next (model, &row));
@@ -411,7 +411,7 @@ enum {
             STYLES_ICON_COL, pixbuf,
             STYLES_PTR_COL, (gpointer)[style retain],
             -1);
-    gdk_pixbuf_unref (pixbuf);
+    g_object_unref (pixbuf);
     [self observeStyle:style];
 }
 
