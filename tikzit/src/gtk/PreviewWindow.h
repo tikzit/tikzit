@@ -42,6 +42,7 @@
 
 - (void) show;
 - (void) hide;
+- (void) resize;
 - (BOOL) isVisible;
 - (void) setVisible:(BOOL)visible;
 

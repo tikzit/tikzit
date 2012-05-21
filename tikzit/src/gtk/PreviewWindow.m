@@ -29,6 +29,12 @@
 @end
 
 // {{{ API
+// {{{ Signals
+static gboolean window_configure_event_cb (GtkWindow *window,
+                                           GdkEvent  *event,
+                                           PreviewWindow *preview);
+// }}}
+
 @implementation PreviewWindow
 
 - (id) init {
@@ -46,11 +52,15 @@
 
         window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
         gtk_window_set_title (window, "Preview");
-        gtk_window_set_resizable (window, FALSE);
+        //gtk_window_set_resizable (window, FALSE);
         g_signal_connect (G_OBJECT (window),
                           "delete-event",
                           G_CALLBACK (gtk_widget_hide_on_delete),
                           NULL);
+        g_signal_connect (G_OBJECT(window),
+                          "configure-event",
+                          G_CALLBACK (window_configure_event_cb),
+                          self);
 
         GtkWidget *pdfArea = gtk_drawing_area_new ();
         gtk_container_add (GTK_CONTAINER (window), pdfArea);
@@ -105,6 +115,10 @@
     }
 
     return NO;
+}
+
+- (void) resize {
+    NSLog(@"got that resize event!");
 }
 
 - (void) show {
@@ -187,5 +201,16 @@
     return YES;
 }
 @end
+
+// {{{ GTK+ callbacks
+static gboolean window_configure_event_cb (GtkWindow *window,
+                                           GdkEvent  *event,
+                                           PreviewWindow *preview) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [preview resize];
+    [pool drain];
+    return TRUE; // we dealt with this event
+}
+// }}}
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4
