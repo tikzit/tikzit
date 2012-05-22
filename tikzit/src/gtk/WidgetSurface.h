@@ -48,6 +48,9 @@
 - (CGFloat) defaultScale;
 - (void) setDefaultScale:(CGFloat)scale;
 
+/**
+ * Set the minimum size that this widget wants
+ */
 - (void) setSizeRequestWidth:(double)width height:(double)height;
 
 @end
