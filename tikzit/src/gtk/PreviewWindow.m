@@ -91,34 +91,40 @@ static gboolean window_configure_event_cb (GtkWindow *window,
     [previewer setDocument:doc];
 }
 
+// - (void) updateSize {
+//     double width = 150;
+//     double height = 150;
+//     if ([previewer isValid]) {
+//         double pWidth = [previewer width];
+//         double pHeight = [previewer height];
+//         width = (width < pWidth + 4) ? pWidth + 4 : width;
+//         height = (height < pHeight + 4) ? pHeight + 4 : height;
+//         NSPoint offset;
+//         offset.x = (width-pWidth)/2.0;
+//         offset.y = (height-pHeight)/2.0;
+//         [[surface transformer] setOrigin:offset];
+//     }
+//     [surface setSizeRequestWidth:width height:height];
+// }
+
 - (void) updateSize {
-    double width = 150;
-    double height = 150;
-    if ([previewer isValid]) {
-        double pWidth = [previewer width];
-        double pHeight = [previewer height];
-        width = (width < pWidth + 4) ? pWidth + 4 : width;
-        height = (height < pHeight + 4) ? pHeight + 4 : height;
-        NSPoint offset;
-        offset.x = (width-pWidth)/2.0;
-        offset.y = (height-pHeight)/2.0;
-        [[surface transformer] setOrigin:offset];
-    }
-    [surface setSizeRequestWidth:width height:height];
+    gint w, h;
+    gtk_window_get_size(window, &w, &h);
+    double width = (double)w;
+    double height = (double)h;
+    [previewer setWidth:width];
+    [previewer setHeight:height];
+    [surface invalidate];
+    //NSLog(@"got that resize event! --> (%d, %d)", w, h);
 }
 
 - (BOOL) update {
     if ([self updateOrShowError]) {
         [self updateSize];
-        [surface invalidate];
         return YES;
     }
 
     return NO;
-}
-
-- (void) resize {
-    NSLog(@"got that resize event!");
 }
 
 - (void) show {
@@ -207,7 +213,7 @@ static gboolean window_configure_event_cb (GtkWindow *window,
                                            GdkEvent  *event,
                                            PreviewWindow *preview) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [preview resize];
+    [preview updateSize];
     [pool drain];
     return TRUE; // we dealt with this event
 }

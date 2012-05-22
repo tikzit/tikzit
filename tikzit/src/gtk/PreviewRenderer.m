@@ -221,9 +221,11 @@
         double w = 0.0;
         double h = 0.0;
         poppler_page_get_size(pdfPage, &w, &h);
+        if (w==0) w = 1.0;
+        if (h==0) h = 1.0;
 
-        double scale = h / [self height];
-        if (w * scale > [self width]) scale = w / [self width];
+        double scale = [self height] / h;
+        if (w * scale > [self width]) scale = [self width] / w;
         [[surface transformer] setScale:scale];
 
         [context saveState];
