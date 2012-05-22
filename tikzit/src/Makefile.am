@@ -15,6 +15,12 @@ LIBS = @FOUNDATION_LIBS@ \
        @GTK_LIBS@
 AM_YFLAGS = -d
 PARSERFILES = common/tikzlexer.m common/tikzparser.m common/tikzparser.h
+ICONFILES = ../draw-ellipse.png \
+	    ../draw-path.png \
+	    ../select-rectangular.png \
+	    ../transform-crop-and-resize.png \
+	    ../transform-move.png
+EDGEDECFILES = ../AH_*.png ../ED_*.png
 
 bin_PROGRAMS = tikzit
 BUILT_SOURCES = $(PARSERFILES)
@@ -111,7 +117,7 @@ common/tikzparser.m: common/tikzparser.ym
 
 common/tikzparser.h: common/tikzparser.m
 
-gtk/icondata.m: ../draw-ellipse.png ../draw-path.png ../select-rectangular.png ../transform-crop-and-resize.png ../transform-move.png
+gtk/icondata.m: $(ICONFILES)
 	$(AM_V_GEN)gdk-pixbuf-csource --struct --static --raw --build-list \
 		draw_ellipse ../draw-ellipse.png \
 		draw_path ../draw-path.png \
@@ -130,7 +136,7 @@ gtk/logodata.m: ../share/icons/hicolor/*/apps/tikzit.png
 		logo128 ../share/icons/hicolor/128x128/apps/tikzit.png \
 		> $@
 
-gtk/edgedecdata.m: ../AH_*.png ../ED_*.png
+gtk/edgedecdata.m: $(EDGEDECFILES)
 	$(AM_V_GEN)gdk-pixbuf-csource --struct --static --raw --build-list \
 		AH_none_pixdata ../AH_none.png \
 		AH_latex_head_pixdata ../AH_latex_head.png \
@@ -146,5 +152,5 @@ gtk/Menu.m: gtk/icondata.m
 gtk/logo.m: gtk/logodata.m
 gtk/EdgeStyleEditor.m: gtk/edgedecdata.m
 
-EXTRA_DIST = gtk/*.h common/*.h $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym
+EXTRA_DIST = gtk/*.h common/*.h $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym $(ICONFILES) $(EDGEDECFILES)
 MAINTAINERCLEANFILES = $(PARSERFILES) gtk/icondata.m gtk/logodata.m gtk/edgedecdata.m

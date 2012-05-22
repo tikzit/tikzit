@@ -152,6 +152,7 @@
 - (void) insertGraph:(Graph*)g;
 - (void) flipSelectedNodesHorizontally;
 - (void) flipSelectedNodesVertically;
+- (void) reverseSelectedEdges;
 - (void) bringSelectionForward;
 - (void) bringSelectionToFront;
 - (void) sendSelectionBackward;

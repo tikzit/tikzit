@@ -247,9 +247,7 @@
 - (GraphChange*)removeEdges:(NSSet *)es {
 	[graphLock lock];
 	
-	NSEnumerator *en = [es objectEnumerator];
-	Edge *e;
-	while ((e = [en nextObject])) {
+	for (Edge *e in es) {
 		[edges removeObject:e];
 	}
 	dirty = YES;
@@ -270,6 +268,16 @@
         [nodeSet addObject:n];
 	}
 	return [GraphChange shiftNodes:nodeSet byPoint:p];
+}
+
+- (GraphChange*)reverseEdges:(NSSet *)es {
+	[graphLock lock];
+	for (Edge *e in es) {
+		[e reverse];
+	}
+	dirty = YES;
+	[graphLock unlock];
+	return [GraphChange reverseEdges:es];
 }
 
 - (int)indexOfNode:(Node *)node {
@@ -632,6 +640,11 @@
 			break;
 		case NodesFlip:
 			[self flipNodes:[ch affectedNodes] horizontal:[ch horizontal]];
+			break;
+		case EdgesReverse:
+			for (Edge *e in [[ch affectedEdges] objectEnumerator]) {
+				[e reverse];
+			}
 			break;
 		case BoundingBoxChange:
 			[self setBoundingBox:[ch nwBoundingBox]];

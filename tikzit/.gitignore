@@ -23,3 +23,5 @@ Makefile.in
 /src/gtk/icondata.m
 /src/gtk/logodata.m
 /src/gtk/edgedecdata.m
+/tikzit-*.tar.gz
+/tikzit-*.tar.bz2

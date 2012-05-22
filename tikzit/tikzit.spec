@@ -1,5 +1,5 @@
 Name:           tikzit
-Version:        0.7
+Version:        1.0
 Release:        1%{?dist}
 Summary:        Tool for creating and modifying pgf/TikZ diagrams for TeX
 
@@ -19,15 +19,15 @@ URL:            http://tikzit.sourceforge.net
 Source0:        http://switch.dl.sourceforge.net/project/%{name}/%{name}-%{version}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-build
 
-BuildRequires:  gcc-objc
+BuildRequires:  gcc-objc >= 4.6.0
 BuildRequires:  gnustep-base-devel >= 1.18.0
 BuildRequires:  gtk2-devel >= 2.18.0
 BuildRequires:  pango-devel >= 1.16
 BuildRequires:  cairo-devel >= 1.4
 %if 0%{?suse_version}%{?mdkversion}
-BuildRequires:  libpoppler-glib-devel
+BuildRequires:  libpoppler-glib-devel >= 0.10
 %else
-BuildRequires:  poppler-glib-devel
+BuildRequires:  poppler-glib-devel >= 0.10
 %endif
 %if 0%{?suse_version}
 BuildRequires:  update-desktop-files
@@ -71,6 +71,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 06 2011 Alex Merry <dev@randomguy3.me.uk> 1.0-1
+-Bumped version
+-Bumped requirements
+
 * Tue Dec 06 2011 Alex Merry <dev@randomguy3.me.uk> 0.7-1
 -Bumped version
 

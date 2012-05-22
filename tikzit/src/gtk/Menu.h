@@ -39,6 +39,8 @@
     GtkAction      *pasteAction;
     GtkAction     **nodeSelBasedActions;
     guint           nodeSelBasedActionCount;
+    GtkAction     **edgeSelBasedActions;
+    guint           edgeSelBasedActionCount;
     GtkAction     **selBasedActions;
     guint           selBasedActionCount;
 }

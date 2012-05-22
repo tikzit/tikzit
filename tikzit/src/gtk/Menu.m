@@ -224,6 +224,12 @@ static void flip_vert_cb (GtkAction *action, MainWindow *window) {
     [pool drain];
 }
 
+static void reverse_edges_cb (GtkAction *action, MainWindow *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [[window activeDocument] reverseSelectedEdges];
+    [pool drain];
+}
+
 static void bring_forward_cb (GtkAction *action, MainWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [[window activeDocument] bringSelectionForward];
@@ -375,6 +381,7 @@ static const gchar ui_info[] =
 "      <separator/>"
 "      <menuitem action='FlipVert'/>"
 "      <menuitem action='FlipHoriz'/>"
+"      <menuitem action='ReverseEdges'/>"
 "      <separator/>"
 "      <menu action='Arrange'>"
 "        <menuitem action='SendToBack'/>"
@@ -560,6 +567,9 @@ static GtkActionEntry document_entries[] = {
 
     { "FlipVert", NULL, N_("Flip nodes _vertically"), NULL,
       N_("Flip the selected nodes vertically"), G_CALLBACK (flip_vert_cb) },
+
+    { "ReverseEdges", NULL, N_("Rever_se edges"), NULL,
+      N_("Reverse the selected edges"), G_CALLBACK (reverse_edges_cb) },
 
     { "SendToBack", NULL, N_("Send to _back"), NULL,
       N_("Send the selected nodes and edges to the back of the graph"), G_CALLBACK (send_to_back_cb) },
@@ -764,6 +774,9 @@ create_recent_chooser_menu ()
     nodeSelBasedActions[1] = gtk_action_group_get_action (documentActions, "Copy");
     nodeSelBasedActions[2] = gtk_action_group_get_action (documentActions, "FlipHoriz");
     nodeSelBasedActions[3] = gtk_action_group_get_action (documentActions, "FlipVert");
+    edgeSelBasedActionCount = 1;
+    edgeSelBasedActions = g_new (GtkAction*, edgeSelBasedActionCount);
+    edgeSelBasedActions[0] = gtk_action_group_get_action (documentActions, "ReverseEdges");
     selBasedActionCount = 2;
     selBasedActions = g_new (GtkAction*, selBasedActionCount);
     selBasedActions[0] = gtk_action_group_get_action (documentActions, "Delete");
@@ -818,6 +831,11 @@ create_recent_chooser_menu ()
     for (int i = 0; i < nodeSelBasedActionCount; ++i) {
         if (nodeSelBasedActions[i]) {
             gtk_action_set_sensitive (nodeSelBasedActions[i], hasSelectedNodes);
+        }
+    }
+    for (int i = 0; i < edgeSelBasedActionCount; ++i) {
+        if (edgeSelBasedActions[i]) {
+            gtk_action_set_sensitive (edgeSelBasedActions[i], hasSelectedEdges);
         }
     }
     for (int i = 0; i < selBasedActionCount; ++i) {

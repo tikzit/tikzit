@@ -726,7 +726,13 @@
     }
 }
 
-// FIXME: undo
+- (void) reverseSelectedEdges {
+    if ([[pickSupport selectedEdges] count] > 0) {
+        GraphChange *change = [graph reverseEdges:[pickSupport selectedEdges]];
+        [self completedGraphChange:change withName:@"Reverse edges"];
+    }
+}
+
 - (void) bringSelectionForward {
     BOOL hasNodeSelection = [[pickSupport selectedNodes] count] > 0;
     BOOL hasEdgeSelection = [[pickSupport selectedEdges] count] > 0;

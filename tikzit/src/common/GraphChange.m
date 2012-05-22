@@ -90,6 +90,9 @@
 			inverse->affectedNodes = [affectedNodes retain];
 			[inverse setHorizontal:[self horizontal]];
 			break;
+		case EdgesReverse:
+			inverse->affectedEdges = [affectedEdges retain];
+			break;
 		case BoundingBoxChange:
 			inverse->oldBoundingBox = nwBoundingBox;
 			inverse->nwBoundingBox = oldBoundingBox;
@@ -194,6 +197,13 @@
 	[gc setChangeType:NodesFlip];
 	[gc setAffectedNodes:ns];
 	[gc setHorizontal:b];
+	return [gc autorelease];
+}
+
++ (GraphChange*)reverseEdges:(NSSet*)es {
+	GraphChange *gc = [[GraphChange alloc] init];
+	[gc setChangeType:EdgesReverse];
+	[gc setAffectedEdges:es];
 	return [gc autorelease];
 }
 
