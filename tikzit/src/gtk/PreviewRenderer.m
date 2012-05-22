@@ -24,7 +24,8 @@
 
 @implementation PreviewRenderer
 
-@synthesize preambles,document;
+@synthesize preambles, document;
+@synthesize width, height;
 
 - (id) init {
     [self release];
@@ -41,6 +42,8 @@
         preambles = [p retain];
         pdfDocument = NULL;
         pdfPage = NULL;
+        width = 150.0;
+        height = 150.0;
     }
 
     return self;
@@ -197,7 +200,7 @@
     return pdfPage ? YES : NO;
 }
 
-- (double) width {
+/*- (double) width {
     double w = 0.0;
     if (pdfPage)
         poppler_page_get_size(pdfPage, &w, NULL);
@@ -209,11 +212,19 @@
     if (pdfPage)
         poppler_page_get_size(pdfPage, NULL, &h);
     return h;
-}
+}*/
 
 - (void) renderWithContext:(id<RenderContext>)c onSurface:(id<Surface>)surface {
-    if (document != nil) {
+    if (document != nil && pdfPage) {
         CairoRenderContext *context = (CairoRenderContext*)c;
+        
+        double w = 0.0;
+        double h = 0.0;
+        poppler_page_get_size(pdfPage, &w, &h);
+
+        double scale = h / [self height];
+        if (w * scale > [self width]) scale = w / [self width];
+        [[surface transformer] setScale:scale];
 
         [context saveState];
         [context applyTransform:[surface transformer]];
