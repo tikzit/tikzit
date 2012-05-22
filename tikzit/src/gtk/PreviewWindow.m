@@ -26,14 +26,10 @@
 
 @interface PreviewWindow (Private)
 - (BOOL) updateOrShowError;
+- (void) updateDefaultSize;
 @end
 
 // {{{ API
-// {{{ Signals
-static gboolean window_configure_event_cb (GtkWindow *window,
-                                           GdkEvent  *event,
-                                           PreviewWindow *preview);
-// }}}
 
 @implementation PreviewWindow
 
@@ -52,19 +48,15 @@ static gboolean window_configure_event_cb (GtkWindow *window,
 
         window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
         gtk_window_set_title (window, "Preview");
-        //gtk_window_set_resizable (window, FALSE);
+        gtk_window_set_resizable (window, TRUE);
+        gtk_window_set_default_size (window, 150.0, 150.0);
         g_signal_connect (G_OBJECT (window),
                           "delete-event",
                           G_CALLBACK (gtk_widget_hide_on_delete),
                           NULL);
-        g_signal_connect (G_OBJECT(window),
-                          "configure-event",
-                          G_CALLBACK (window_configure_event_cb),
-                          self);
 
         GtkWidget *pdfArea = gtk_drawing_area_new ();
         gtk_container_add (GTK_CONTAINER (window), pdfArea);
-        //gtk_widget_set_size_request (pdfArea, 150.0, 150.0);
         gtk_widget_show (pdfArea);
         surface = [[WidgetSurface alloc] initWithWidget:pdfArea];
         [surface setRenderDelegate:previewer];
@@ -91,38 +83,9 @@ static gboolean window_configure_event_cb (GtkWindow *window,
     [previewer setDocument:doc];
 }
 
-// - (void) updateSize {
-//     double width = 150;
-//     double height = 150;
-//     if ([previewer isValid]) {
-//         double pWidth = [previewer width];
-//         double pHeight = [previewer height];
-//         width = (width < pWidth + 4) ? pWidth + 4 : width;
-//         height = (height < pHeight + 4) ? pHeight + 4 : height;
-//         NSPoint offset;
-//         offset.x = (width-pWidth)/2.0;
-//         offset.y = (height-pHeight)/2.0;
-//         [[surface transformer] setOrigin:offset];
-//     }
-//     [surface setSizeRequestWidth:width height:height];
-// }
-
-- (void) updateSize {
-    gint w, h;
-    gtk_window_get_size(window, &w, &h);
-    double width = (double)w;
-    double height = (double)h;
-    [previewer setWidth:width];
-    [previewer setHeight:height];
-    gdk_window_resize(gtk_widget_get_window([surface widget]), w, h);
-    [surface invalidate];
-
-    //NSLog(@"got that resize event! --> (%d, %d)", [surface width], [surface height]);
-}
-
 - (BOOL) update {
     if ([self updateOrShowError]) {
-        [self updateSize];
+        [self updateDefaultSize];
         return YES;
     }
 
@@ -131,7 +94,7 @@ static gboolean window_configure_event_cb (GtkWindow *window,
 
 - (void) show {
     if ([self updateOrShowError]) {
-        [self updateSize];
+        [self updateDefaultSize];
         gtk_widget_show (GTK_WIDGET (window));
         [surface invalidate];
     }
@@ -208,17 +171,18 @@ static gboolean window_configure_event_cb (GtkWindow *window,
     }
     return YES;
 }
-@end
 
-// {{{ GTK+ callbacks
-static gboolean window_configure_event_cb (GtkWindow *window,
-                                           GdkEvent  *event,
-                                           PreviewWindow *preview) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [preview updateSize];
-    [pool drain];
-    return TRUE; // we dealt with this event
+- (void) updateDefaultSize {
+    double width = 150;
+    double height = 150;
+    if ([previewer isValid]) {
+        double pWidth = [previewer width];
+        double pHeight = [previewer height];
+        width = (width < pWidth + 4) ? pWidth + 4 : width;
+        height = (height < pHeight + 4) ? pHeight + 4 : height;
+    }
+    gtk_window_set_default_size (window, width, height);
 }
-// }}}
+@end
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4

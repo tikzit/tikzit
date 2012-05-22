@@ -30,14 +30,12 @@
     TikzDocument    *document;
     PopplerDocument *pdfDocument;
     PopplerPage     *pdfPage;
-    double          width;
-    double          height;
 }
 
 @property (readonly) Preambles    *preambles;
 @property (retain)   TikzDocument *document;
-@property (assign)   double        height;
-@property (assign)   double        width;
+@property (readonly) double        height;
+@property (readonly) double        width;
 
 - (id) initWithPreambles:(Preambles*)p config:(Configuration*)c;
 

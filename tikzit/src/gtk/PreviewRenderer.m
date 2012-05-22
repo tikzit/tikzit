@@ -25,7 +25,6 @@
 @implementation PreviewRenderer
 
 @synthesize preambles, document;
-@synthesize width, height;
 
 - (id) init {
     [self release];
@@ -42,8 +41,6 @@
         preambles = [p retain];
         pdfDocument = NULL;
         pdfPage = NULL;
-        width = 150.0;
-        height = 150.0;
     }
 
     return self;
@@ -200,7 +197,7 @@
     return pdfPage ? YES : NO;
 }
 
-/*- (double) width {
+- (double) width {
     double w = 0.0;
     if (pdfPage)
         poppler_page_get_size(pdfPage, &w, NULL);
@@ -212,7 +209,7 @@
     if (pdfPage)
         poppler_page_get_size(pdfPage, NULL, &h);
     return h;
-}*/
+}
 
 - (void) renderWithContext:(id<RenderContext>)c onSurface:(id<Surface>)surface {
     if (document != nil && pdfPage) {
@@ -224,15 +221,15 @@
         if (w==0) w = 1.0;
         if (h==0) h = 1.0;
 
-        double scale = ([self height] / h) * 0.95;
-        if (w * scale > [self width]) scale = [self width] / w;
+        double scale = ([surface height] / h) * 0.95;
+        if (w * scale > [surface width]) scale = [surface width] / w;
         [[surface transformer] setScale:scale];
 
         NSPoint origin;
         w *= scale;
         h *= scale;
-        origin.x = ([self width] - w) / 2;
-        origin.y = ([self height] - h) / 2;
+        origin.x = ([surface width] - w) / 2;
+        origin.y = ([surface height] - h) / 2;
 
         [[surface transformer] setOrigin:origin];
 
