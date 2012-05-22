@@ -64,7 +64,7 @@ static gboolean window_configure_event_cb (GtkWindow *window,
 
         GtkWidget *pdfArea = gtk_drawing_area_new ();
         gtk_container_add (GTK_CONTAINER (window), pdfArea);
-        gtk_widget_set_size_request (pdfArea, 150.0, 150.0);
+        //gtk_widget_set_size_request (pdfArea, 150.0, 150.0);
         gtk_widget_show (pdfArea);
         surface = [[WidgetSurface alloc] initWithWidget:pdfArea];
         [surface setRenderDelegate:previewer];
@@ -114,8 +114,10 @@ static gboolean window_configure_event_cb (GtkWindow *window,
     double height = (double)h;
     [previewer setWidth:width];
     [previewer setHeight:height];
+    gdk_window_resize(gtk_widget_get_window([surface widget]), w, h);
     [surface invalidate];
-    //NSLog(@"got that resize event! --> (%d, %d)", w, h);
+
+    //NSLog(@"got that resize event! --> (%d, %d)", [surface width], [surface height]);
 }
 
 - (BOOL) update {

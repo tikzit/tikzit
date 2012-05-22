@@ -224,9 +224,17 @@
         if (w==0) w = 1.0;
         if (h==0) h = 1.0;
 
-        double scale = [self height] / h;
+        double scale = ([self height] / h) * 0.95;
         if (w * scale > [self width]) scale = [self width] / w;
         [[surface transformer] setScale:scale];
+
+        NSPoint origin;
+        w *= scale;
+        h *= scale;
+        origin.x = ([self width] - w) / 2;
+        origin.y = ([self height] - h) / 2;
+
+        [[surface transformer] setOrigin:origin];
 
         [context saveState];
         [context applyTransform:[surface transformer]];
