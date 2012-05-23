@@ -22,6 +22,7 @@
 //  
 
 #import "NodeStyle.h"
+#import "Shape.h"
 #import "ShapeNames.h"
 
 @implementation NodeStyle
@@ -191,9 +192,12 @@
 	if (fillName == nil) fillName = [fillColorRGB hexName];
 	if (strokeName == nil) strokeName = [strokeColorRGB hexName];
 
+	NSString *shapeDesc = [[Shape shapeForName:shapeName] styleTikz];
+	if (shapeDesc == nil) shapeDesc = shapeName;
+
 	return [NSString stringWithFormat:@"\\tikzstyle{%@}=[%@,fill=%@,draw=%@%@]",
 		name,
-		shapeName,
+		shapeDesc,
 		fillName,
 		strokeName,
 		stroke];

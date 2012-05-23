@@ -64,6 +64,7 @@ tikzit_SOURCES = gtk/CairoRenderContext.m \
                  gtk/main.m \
                  common/CircleShape.m \
                  common/ColorRGB.m \
+                 common/DiamondShape.m \
                  common/Edge.m \
                  common/EdgeStyle.m \
                  common/GraphChange.m \

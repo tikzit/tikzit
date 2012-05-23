@@ -1,8 +1,9 @@
 //
-//  Shape.h
+//  RectangleShape.h
 //  TikZiT
 //  
-//  Copyright 2011 Aleks Kissinger. All rights reserved.
+//  Copyright 2012 Alex Merry
+//  All rights reserved.
 //  
 //  
 //  This file is part of TikZiT.
@@ -22,28 +23,12 @@
 //  
 
 #import <Foundation/Foundation.h>
-#import "Transformer.h"
+#import "Shape.h"
 
-@interface Shape : NSObject <NSCopying> {
-	NSSet    *paths;
-	NSRect    boundingRect; // cache
-	NSString *styleTikz;
+@interface DiamondShape : Shape {
 }
-
-@property (retain)   NSSet    *paths;
-@property (readonly) NSRect    boundingRect;
-/**
- * The tikz code to use in style properties for this shape
- *
- * This can return nil, in which case the shape name should be used
- */
-@property (retain)   NSString *styleTikz;
-
-- (id)init;
-+ (void)refreshShapeDictionary;
-+ (NSDictionary*)shapeDictionary;
-+ (Shape*)shapeForName:(NSString*)shapeName;
 
 @end
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4
+

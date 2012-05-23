@@ -45,6 +45,8 @@
 	e3 = [Edge edgeWithSource:n3 andTarget:n0];
 	
 	paths = [[NSSet alloc] initWithObjects:[NSArray arrayWithObjects:e0,e1,e2,e3,nil],nil];
+
+	styleTikz = @"rectangle";
 	
 	return self;
 }

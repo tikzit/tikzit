@@ -30,6 +30,7 @@ static NSString *PREAMBLE_HEAD =
 @"\\usepackage[svgnames]{xcolor}\n"
 @"\\usepackage{tikz}\n"
 @"\\usetikzlibrary{decorations.markings}\n"
+@"\\usetikzlibrary{shapes.geometric}\n"
 @"\\pagestyle{empty}\n"
 @"\n"
 @"\\pgfdeclarelayer{edgelayer}\n"

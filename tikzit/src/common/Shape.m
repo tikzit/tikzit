@@ -21,14 +21,18 @@
 //  along with TikZiT.  If not, see <http://www.gnu.org/licenses/>.
 //  
 
-#import "Edge.h"
 #import "Shape.h"
+
+#import "Edge.h"
 #import "SupportDir.h"
 #import "ShapeNames.h"
+
 #import "CircleShape.h"
+#import "DiamondShape.h"
 #import "RectangleShape.h"
 #import "RegularPolyShape.h"
 #import "TikzShape.h"
+
 #import "util.h"
 
 @implementation Shape
@@ -63,14 +67,18 @@
 
 - (NSRect)boundingRect { return boundingRect; }
 
+@synthesize styleTikz;
+
 - (id)copyWithZone:(NSZone*)zone {
 	Shape *cp = [[[self class] allocWithZone:zone] init];
 	[cp setPaths:paths];
+	[cp setStyleTikz:styleTikz];
 	return cp;
 }
 
 - (void)dealloc {
 	[paths release];
+	[styleTikz release];
 	[super dealloc];
 }
 
@@ -101,7 +109,7 @@ NSDictionary *shapeDictionary = nil;
     Shape *shapes[5] = {
         [[CircleShape alloc] init],
         [[RectangleShape alloc] init],
-        [[RegularPolyShape alloc] initWithSides:4 rotation:(M_PI/2.0f)],
+        [[DiamondShape alloc] init],
         [[RegularPolyShape alloc] initWithSides:3 rotation:(M_PI/2.0f)],
         [[RegularPolyShape alloc] initWithSides:3 rotation:(-M_PI/2.0f)]};
 	NSMutableDictionary *shapeDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:

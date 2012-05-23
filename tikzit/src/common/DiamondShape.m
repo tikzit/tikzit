@@ -1,8 +1,10 @@
 //
-//  CircleShape.m
+//  RectangleShape.m
 //  TikZiT
 //  
-//  Copyright 2011 Aleks Kissinger. All rights reserved.
+//  Copyright 2011 Aleks Kissinger
+//  Copyright 2012 Alex Merry
+//  All rights reserved.
 //  
 //  
 //  This file is part of TikZiT.
@@ -21,36 +23,40 @@
 //  along with TikZiT.  If not, see <http://www.gnu.org/licenses/>.
 //  
 
-#import "CircleShape.h"
+#import "DiamondShape.h"
+
 #import "Node.h"
 #import "Edge.h"
 
-@implementation CircleShape
+@implementation DiamondShape
 
 - (id)init {
-	[super init];
-	
+	self = [super init];
+
+	if (!self)
+		return nil;
+
 	Node *n0,*n1,*n2,*n3;
+	float sz = 0.25f;
 	
-	n0 = [Node nodeWithPoint:NSMakePoint( 0.0f,  0.2f)];
-	n1 = [Node nodeWithPoint:NSMakePoint( 0.2f,  0.0f)];
-	n2 = [Node nodeWithPoint:NSMakePoint( 0.0f, -0.2f)];
-	n3 = [Node nodeWithPoint:NSMakePoint(-0.2f,  0.0f)];
+	n0 = [Node nodeWithPoint:NSMakePoint(0, sz)];
+	n1 = [Node nodeWithPoint:NSMakePoint(sz, 0)];
+	n2 = [Node nodeWithPoint:NSMakePoint(0,-sz)];
+	n3 = [Node nodeWithPoint:NSMakePoint(-sz,0)];
 	
 	Edge *e0,*e1,*e2,*e3;
 	
-	e0 = [Edge edgeWithSource:n0 andTarget:n1]; [e0 setBend:-45];
-	e1 = [Edge edgeWithSource:n1 andTarget:n2]; [e1 setBend:-45];
-	e2 = [Edge edgeWithSource:n2 andTarget:n3]; [e2 setBend:-45];
-	e3 = [Edge edgeWithSource:n3 andTarget:n0]; [e3 setBend:-45];
+	e0 = [Edge edgeWithSource:n0 andTarget:n1];
+	e1 = [Edge edgeWithSource:n1 andTarget:n2];
+	e2 = [Edge edgeWithSource:n2 andTarget:n3];
+	e3 = [Edge edgeWithSource:n3 andTarget:n0];
 	
 	paths = [[NSSet alloc] initWithObjects:[NSArray arrayWithObjects:e0,e1,e2,e3,nil],nil];
 
-	styleTikz = @"circle";
+	styleTikz = @"shape=diamond";
 	
 	return self;
 }
-
 
 @end
 

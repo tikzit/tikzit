@@ -60,8 +60,14 @@
 		[edges addObject:[Edge edgeWithSource:[nodes objectAtIndex:i]
 									andTarget:[nodes objectAtIndex:(i+1)%sides]]];
 	}
-	
+
 	paths = [[NSSet alloc] initWithObjects:edges,nil];
+
+	int degRot = (int)radiansToDegrees(rotation);
+	styleTikz = [[NSString alloc] initWithFormat:
+		@"regular polygon,regular polygon sides=%d,shape border rotate=%d",
+		sides, degRot];
+
 	return self;
 }
 
