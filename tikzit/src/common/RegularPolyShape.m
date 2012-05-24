@@ -34,7 +34,10 @@
 	if (self == nil)
 		return nil;
 
-	float radius = 0.25f;
+	// TikZ draws regular polygons using a radius inscribed
+	// _inside_ the shape (touching middles of edges), not
+	// outside (touching points)
+	const float innerRadius = 0.2f;
 
 	NSMutableArray *nodes = [NSMutableArray arrayWithCapacity:sides];
 	NSMutableArray *edges = [NSMutableArray arrayWithCapacity:sides];
@@ -42,6 +45,9 @@
 	float dtheta = (M_PI * 2.0f) / ((float)sides);
 	float theta = (dtheta/2.0f) - (M_PI / 2.0f);
 	theta += degreesToRadians(rotation);
+	// radius of the outer circle
+	float radius = ABS(innerRadius / cos(dtheta));
+
 	for (int i = 0; i < sides; ++i) {
 		NSPoint p;
 		p.x = radius * cos(theta);
