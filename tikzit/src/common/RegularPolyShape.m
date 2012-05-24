@@ -42,24 +42,16 @@
 	float dtheta = (M_PI * 2.0f) / ((float)sides);
 	float theta = (dtheta/2.0f) - (M_PI / 2.0f);
 	theta += degreesToRadians(rotation);
-	float maxY=0.0f, minY=0.0f;
-	NSPoint p;
 	for (int i = 0; i < sides; ++i) {
+		NSPoint p;
 		p.x = radius * cos(theta);
 		p.y = radius * sin(theta);
-		if (p.y<minY) minY = p.y;
-		if (p.y>maxY) maxY = p.y;
 		
 		[nodes addObject:[Node nodeWithPoint:p]];
 		theta += dtheta;
 	}
 
-	float dy = (minY + maxY) / 2.0f;
-
 	for (int i = 0; i < sides; ++i) {
-		p = [[nodes objectAtIndex:i] point];
-		p.y -= dy;
-		[[nodes objectAtIndex:i] setPoint:p];
 		[edges addObject:[Edge edgeWithSource:[nodes objectAtIndex:i]
 									andTarget:[nodes objectAtIndex:(i+1)%sides]]];
 	}
