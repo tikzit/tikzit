@@ -25,26 +25,6 @@
 #import "TikzGraphAssembler.h"
 #import "Graph.h"
 
-NSString *defaultTikz =
-@"\\begin{tikzpicture}\n"
-@"	\\begin{pgfonlayer}{nodelayer}\n"
-@"		\\node [style=none] (0) at (-0.5, 1) {};\n"
-@"		\\node [style=none] (1) at (0.5, 1) {};\n"
-@"		\\node [style=none] (2) at (-1.5, -1) {};\n"
-@"		\\node [style=none] (3) at (-0.5, -1) {};\n"
-@"		\\node [style=none] (4) at (0.5, -1) {};\n"
-@"		\\node [style=none] (5) at (1.5, -1) {};\n"
-@"	\\end{pgfonlayer}\n"
-@"	\\begin{pgfonlayer}{edgelayer}\n"
-@"		\\draw (3.center) to (2.center);\n"
-@"		\\draw [in=90, out=90, looseness=2.00] (4.center) to (3.center);\n"
-@"		\\draw (5.center) to (4.center);\n"
-@"		\\draw [in=270, out=90, looseness=0.75] (2.center) to (0.center);\n"
-@"		\\draw [in=90, out=-90, looseness=0.75] (1.center) to (5.center);\n"
-@"		\\draw (0.center) to (1.center);\n"
-@"	\\end{pgfonlayer}\n"
-@"\\end{tikzpicture}\n";
-
 @implementation TikzShape
 
 - (id)initWithTikzFile:(NSString*)file {
