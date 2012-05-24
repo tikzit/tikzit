@@ -110,8 +110,8 @@ NSDictionary *shapeDictionary = nil;
         [[CircleShape alloc] init],
         [[RectangleShape alloc] init],
         [[DiamondShape alloc] init],
-        [[RegularPolyShape alloc] initWithSides:3 rotation:(M_PI/2.0f)],
-        [[RegularPolyShape alloc] initWithSides:3 rotation:(-M_PI/2.0f)]};
+        [[RegularPolyShape alloc] initWithSides:3 rotation:0],
+        [[RegularPolyShape alloc] initWithSides:3 rotation:180]};
 	NSMutableDictionary *shapeDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 									  shapes[0], SHAPE_CIRCLE,
 									  shapes[1], SHAPE_RECTANGLE,

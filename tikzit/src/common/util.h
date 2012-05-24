@@ -160,6 +160,11 @@ float roundToNearest(float stepSize, float val);
 float radiansToDegrees(float radians);
 
 /*!
+ @brief      Convert degrees into radians
+ */
+float degreesToRadians(float degrees);
+
+/*!
  @brief      Normalises an angle (in degrees) to fall between -179 and 180
  */
 int normaliseAngleDeg (int degrees);

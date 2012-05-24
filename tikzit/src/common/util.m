@@ -310,6 +310,10 @@ float radiansToDegrees (float radians) {
     return (radians * 180.0f) / M_PI;
 }
 
+float degreesToRadians(float degrees) {
+    return (degrees * M_PI) / 180.0f;
+}
+
 int normaliseAngleDeg (int degrees) {
 	while (degrees > 180) {
 		degrees -= 360;

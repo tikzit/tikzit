@@ -24,10 +24,26 @@
 #import <Foundation/Foundation.h>
 #import "Shape.h"
 
+/**
+ * A regular polygon
+ *
+ * Matches the "regular polygon" shape in the shapes.geometric
+ * PGF/TikZ library.
+ */
 @interface RegularPolyShape : Shape {
 }
 
-- (id)initWithSides:(int)s rotation:(float)r;
+/**
+ * Initialise a regular polygon
+ *
+ * A rotation of 0 will produce a polygon with one
+ * edge flat along the bottom (just like PGF/TikZ
+ * does it).
+ *
+ * @param sides     the number of sides the polygon should have
+ * @param rotation  the rotation of the polygon, in degrees
+ */
+- (id)initWithSides:(int)sides rotation:(int)rotation;
 
 @end
 

@@ -2,8 +2,9 @@
 //  RegularPolyShape.m
 //  TikZiT
 //  
-//  Copyright 2011 Aleks Kissinger. All rights reserved.
-//  
+//  Copyright 2011 Aleks Kissinger
+//  Copyright 2012 Alex Merry
+//  All rights reserved.
 //  
 //  This file is part of TikZiT.
 //  
@@ -28,32 +29,34 @@
 
 @implementation RegularPolyShape
 
-- (id)initWithSides:(int)sides rotation:(float)rotation {
-	[super init];
-	
-	float rad = 0.25f;
-	
+- (id)initWithSides:(int)sides rotation:(int)rotation {
+	self = [super init];
+	if (self == nil)
+		return nil;
+
+	float radius = 0.25f;
+
 	NSMutableArray *nodes = [NSMutableArray arrayWithCapacity:sides];
 	NSMutableArray *edges = [NSMutableArray arrayWithCapacity:sides];
-	
+
 	float dtheta = (M_PI * 2.0f) / ((float)sides);
-	float theta = rotation;
-	int i;
+	float theta = (dtheta/2.0f) - (M_PI / 2.0f);
+	theta += degreesToRadians(rotation);
 	float maxY=0.0f, minY=0.0f;
 	NSPoint p;
-	for (i = 0; i < sides; ++i) {
-		p.x = rad * cos(theta);
-		p.y = rad * sin(theta);
+	for (int i = 0; i < sides; ++i) {
+		p.x = radius * cos(theta);
+		p.y = radius * sin(theta);
 		if (p.y<minY) minY = p.y;
 		if (p.y>maxY) maxY = p.y;
 		
 		[nodes addObject:[Node nodeWithPoint:p]];
 		theta += dtheta;
 	}
-	
+
 	float dy = (minY + maxY) / 2.0f;
-	
-	for (i = 0; i < sides; ++i) {
+
+	for (int i = 0; i < sides; ++i) {
 		p = [[nodes objectAtIndex:i] point];
 		p.y -= dy;
 		[[nodes objectAtIndex:i] setPoint:p];
@@ -63,10 +66,9 @@
 
 	paths = [[NSSet alloc] initWithObjects:edges,nil];
 
-	int degRot = (int)radiansToDegrees(rotation);
 	styleTikz = [[NSString alloc] initWithFormat:
 		@"regular polygon,regular polygon sides=%d,shape border rotate=%d",
-		sides, degRot];
+		sides, rotation];
 
 	return self;
 }
