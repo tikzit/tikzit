@@ -175,4 +175,5 @@ boundingbox:
 		[g setBoundingBox:NSRectAroundPoints($<pt>3, $<pt>5)];
 	};
 
-%%
+/* vi:ft=yacc:noet:ts=4:sts=4:sw=4
+*/

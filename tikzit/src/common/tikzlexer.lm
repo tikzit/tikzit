@@ -98,4 +98,5 @@ at                             return AT;
 	return DELIMITEDSTRING;
 }
 
-%%
+ /* vi:ft=lex:noet:ts=4:sts=4:sw=4:
+ */
