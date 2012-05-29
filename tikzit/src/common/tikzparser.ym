@@ -103,7 +103,7 @@ property:
 		[p release];
 	};
 
-val: propsyms { $$ = $<nsstr>1; } | QUOTEDSTRING { $$ = $<nsstr>1; };
+val: propsyms { $$ = $<nsstr>1; } | QUOTEDSTRING { $$ = $<nsstr>1; } | DELIMITEDSTRING { $$ = $<nsstr>1; };
 propsyms:
 	propsym { $$ = $<nsstr>1; }
 	| propsyms propsym
@@ -132,8 +132,7 @@ nodelabel:
 	DELIMITEDSTRING
 	{
 		Node *n = [[TikzGraphAssembler currentAssembler] currentNode];
-		NSString *label = $<nsstr>1;
-		[n setLabel:[label substringWithRange:NSMakeRange(1, [label length]-2)]];
+		[n setLabel:$<nsstr>1];
 	}
 
 optanchor: | ANCHORCENTER;

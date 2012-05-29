@@ -118,7 +118,15 @@
 	} else if ([self isKeyMatch]) {
 		return [NSString stringWithFormat:@"%@=*", [self key]];
 	} else {
-		return [NSString stringWithFormat:@"%@=%@", [self key], [self value]];
+		static NSCharacterSet *avoid = nil;
+		if (avoid == nil)
+			avoid = [[NSCharacterSet characterSetWithCharactersInString:@",="] retain];
+
+		if ([[self value] rangeOfCharacterFromSet:avoid].length > 0) {
+			return [NSString stringWithFormat:@"%@={%@}", [self key], [self value]];
+		} else {
+			return [NSString stringWithFormat:@"%@=%@", [self key], [self value]];
+		}
 	}
 }
 

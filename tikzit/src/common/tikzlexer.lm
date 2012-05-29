@@ -77,19 +77,19 @@ at                             return AT;
 }
 
 \{ {
-	NSMutableString *buf = [NSMutableString stringWithString:@"{"];
+	NSMutableString *buf = [NSMutableString string];
 	unsigned int brace_depth = 1;
 	while (1) {
 		char c = input();
 		// eof reached before closing brace
 		if (c == '\0' || c == EOF) yyterminate();
-		
-		[buf appendFormat:@"%c", c];
+
 		if (c == '{') brace_depth++;
 		else if (c == '}') {
 			brace_depth--;
 			if (brace_depth == 0) break;
 		}
+		[buf appendFormat:@"%c", c];
 	}
 	
 	NSString *s = [buf copy];
