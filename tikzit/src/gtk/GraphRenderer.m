@@ -20,7 +20,7 @@
 #import "Edge+Render.h"
 #import "Node+Render.h"
 
-static const float size = 5.0;
+static const float size = 8.0;
 
 float sideHandleTop(NSRect bbox) {
     return (NSMinY(bbox) + NSMaxY(bbox) - size)/2.0f;
