@@ -390,11 +390,17 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
         }
     } else if (p.y >= NSMaxY(bbox)) {
         if (p.y <= NSMaxY(bbox) + size) {
-            return SouthHandle;
+            float southHandleLeft = tbHandleLeft(bbox);
+            if (p.x >= southHandleLeft && p.x <= (southHandleLeft + size)) {
+                return SouthHandle;
+            }
         }
     } else if (p.y <= NSMinY(bbox)) {
         if (p.y >= NSMinY(bbox) - size) {
-            return NorthHandle;
+            float northHandleLeft = tbHandleLeft(bbox);
+            if (p.x >= northHandleLeft && p.x <= (northHandleLeft + size)) {
+                return NorthHandle;
+            }
         }
     }
     return NoHandle;
