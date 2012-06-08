@@ -50,7 +50,7 @@ typedef enum {
     NSPoint        oldLeaderPos;
     Edge          *modifyEdge;
     NSMutableSet  *selectionBoxContents;
-    ResizeHandle   grabbedResizeHandle;
+    ResizeHandle   currentResizeHandle;
     NSPoint        oldOrigin;
 }
 

@@ -82,6 +82,14 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     return self;
 }
 
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [transformer release];
+    g_object_unref (G_OBJECT (widget));
+
+    [super dealloc];
+}
+
 - (void) invalidateRect:(NSRect)rect {
     if (!NSIsEmptyRect (rect)) {
         GdkWindow *window = gtk_widget_get_window (widget);
@@ -278,12 +286,40 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     [self zoomTo:defaultScale aboutPoint:p];
 }
 
-- (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [transformer release];
-    g_object_unref (G_OBJECT (widget));
-
-    [super dealloc];
+- (void) setCursor:(Cursor)c {
+    GdkWindow *window = gtk_widget_get_window (widget);
+    GdkCursor *cursor = NULL;
+    switch (c) {
+        case ResizeRightCursor:
+            cursor = gdk_cursor_new (GDK_RIGHT_SIDE);
+            break;
+        case ResizeBottomRightCursor:
+            cursor = gdk_cursor_new (GDK_BOTTOM_RIGHT_CORNER);
+            break;
+        case ResizeBottomCursor:
+            cursor = gdk_cursor_new (GDK_BOTTOM_SIDE);
+            break;
+        case ResizeBottomLeftCursor:
+            cursor = gdk_cursor_new (GDK_BOTTOM_LEFT_CORNER);
+            break;
+        case ResizeLeftCursor:
+            cursor = gdk_cursor_new (GDK_LEFT_SIDE);
+            break;
+        case ResizeTopLeftCursor:
+            cursor = gdk_cursor_new (GDK_TOP_LEFT_CORNER);
+            break;
+        case ResizeTopCursor:
+            cursor = gdk_cursor_new (GDK_TOP_SIDE);
+            break;
+        case ResizeTopRightCursor:
+            cursor = gdk_cursor_new (GDK_TOP_RIGHT_CORNER);
+            break;
+        default: break;
+    }
+    gdk_window_set_cursor (window, cursor);
+    if (cursor != NULL) {
+        gdk_cursor_unref (cursor);
+    }
 }
 
 @end

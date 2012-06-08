@@ -19,6 +19,18 @@
 #import "RenderContext.h"
 #import "Transformer.h"
 
+typedef enum {
+    NormalCursor,
+    ResizeRightCursor,
+    ResizeBottomRightCursor,
+    ResizeBottomCursor,
+    ResizeBottomLeftCursor,
+    ResizeLeftCursor,
+    ResizeTopLeftCursor,
+    ResizeTopCursor,
+    ResizeTopRightCursor
+} Cursor;
+
 @protocol Surface;
 
 @protocol RenderDelegate
@@ -85,6 +97,8 @@
 - (void) zoomInAboutPoint:(NSPoint)p;
 - (void) zoomOutAboutPoint:(NSPoint)p;
 - (void) zoomResetAboutPoint:(NSPoint)p;
+
+- (void) setCursor:(Cursor)c;
 @end
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4

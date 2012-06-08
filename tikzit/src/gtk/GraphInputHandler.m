@@ -34,7 +34,7 @@ static const InputMask unionSelectMask = ShiftMask;
         leaderNode = nil;
         modifyEdge = nil;
         selectionBoxContents = [[NSMutableSet alloc] initWithCapacity:10];
-        grabbedResizeHandle = NoHandle;
+        currentResizeHandle = NoHandle;
     }
 
     return self;
@@ -94,6 +94,7 @@ static const InputMask unionSelectMask = ShiftMask;
     if (mode != m) {
         if (mode == BoundingBoxMode) {
             [renderer setBoundingBoxHandlesShown:NO];
+            [[renderer surface] setCursor:NormalCursor];
         }
         mode = m;
         [self deselectAll];
@@ -143,9 +144,9 @@ static const InputMask unionSelectMask = ShiftMask;
         }
     } else if (mode == BoundingBoxMode) {
         state = BoundingBoxState;
-        grabbedResizeHandle = [renderer boundingBoxResizeHandleAt:pos];
+        currentResizeHandle = [renderer boundingBoxResizeHandleAt:pos];
         [[self doc] startChangeBoundingBox];
-        if (grabbedResizeHandle == NoHandle) {
+        if (currentResizeHandle == NoHandle) {
             [[[self doc] graph] setBoundingBox:NSZeroRect];
             [renderer setBoundingBoxHandlesShown:NO];
         }
@@ -324,7 +325,7 @@ static const InputMask unionSelectMask = ShiftMask;
     } else if (state == BoundingBoxState) {
         Grid *grid = [renderer grid];
         Graph *graph = [[self doc] graph];
-        if (grabbedResizeHandle == NoHandle) {
+        if (currentResizeHandle == NoHandle) {
             NSRect bbox = NSRectAroundPoints(
                 [grid snapScreenPoint:dragOrigin],
                 [grid snapScreenPoint:pos]
@@ -334,9 +335,9 @@ static const InputMask unionSelectMask = ShiftMask;
             NSRect bbox = [transformer rectToScreen:[graph boundingBox]];
             NSPoint p2 = [grid snapScreenPoint:pos];
 
-            if (grabbedResizeHandle == NorthWestHandle ||
-                    grabbedResizeHandle == NorthHandle ||
-                    grabbedResizeHandle == NorthEastHandle) {
+            if (currentResizeHandle == NorthWestHandle ||
+                    currentResizeHandle == NorthHandle ||
+                    currentResizeHandle == NorthEastHandle) {
 
                     float dy = p2.y - NSMinY(bbox);
                     if (dy < bbox.size.height) {
@@ -347,9 +348,9 @@ static const InputMask unionSelectMask = ShiftMask;
                         bbox.size.height = 0;
                     }
 
-            } else if (grabbedResizeHandle == SouthWestHandle ||
-                    grabbedResizeHandle == SouthHandle ||
-                    grabbedResizeHandle == SouthEastHandle) {
+            } else if (currentResizeHandle == SouthWestHandle ||
+                    currentResizeHandle == SouthHandle ||
+                    currentResizeHandle == SouthEastHandle) {
 
                     float dy = p2.y - NSMaxY(bbox);
                     if (-dy < bbox.size.height) {
@@ -359,9 +360,9 @@ static const InputMask unionSelectMask = ShiftMask;
                     }
             }
 
-            if (grabbedResizeHandle == NorthWestHandle ||
-                    grabbedResizeHandle == WestHandle ||
-                    grabbedResizeHandle == SouthWestHandle) {
+            if (currentResizeHandle == NorthWestHandle ||
+                    currentResizeHandle == WestHandle ||
+                    currentResizeHandle == SouthWestHandle) {
 
                     float dx = p2.x - NSMinX(bbox);
                     if (dx < bbox.size.width) {
@@ -372,9 +373,9 @@ static const InputMask unionSelectMask = ShiftMask;
                         bbox.size.width = 0;
                     }
 
-            } else if (grabbedResizeHandle == NorthEastHandle ||
-                    grabbedResizeHandle == EastHandle ||
-                    grabbedResizeHandle == SouthEastHandle) {
+            } else if (currentResizeHandle == NorthEastHandle ||
+                    currentResizeHandle == EastHandle ||
+                    currentResizeHandle == SouthEastHandle) {
 
                     float dx = p2.x - NSMaxX(bbox);
                     if (-dx < bbox.size.width) {
@@ -392,6 +393,43 @@ static const InputMask unionSelectMask = ShiftMask;
         newOrigin.y += pos.y - dragOrigin.y;
         [[renderer transformer] setOrigin:newOrigin];
         [renderer invalidateGraph];
+    }
+    if (mode == BoundingBoxMode && state != BoundingBoxState) {
+        ResizeHandle handle = [renderer boundingBoxResizeHandleAt:pos];
+        if (handle != currentResizeHandle) {
+            currentResizeHandle = handle;
+            Cursor c = NormalCursor;
+            switch (handle) {
+                case EastHandle:
+                    c = ResizeRightCursor;
+                    break;
+                case SouthEastHandle:
+                    c = ResizeBottomRightCursor;
+                    break;
+                case SouthHandle:
+                    c = ResizeBottomCursor;
+                    break;
+                case SouthWestHandle:
+                    c = ResizeBottomLeftCursor;
+                    break;
+                case WestHandle:
+                    c = ResizeLeftCursor;
+                    break;
+                case NorthWestHandle:
+                    c = ResizeTopLeftCursor;
+                    break;
+                case NorthHandle:
+                    c = ResizeTopCursor;
+                    break;
+                case NorthEastHandle:
+                    c = ResizeTopRightCursor;
+                    break;
+                default:
+                    c = NormalCursor;
+                    break;
+            }
+            [[renderer surface] setCursor:c];
+        }
     }
 }
 
