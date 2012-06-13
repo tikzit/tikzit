@@ -1,5 +1,4 @@
 GTK port:
- - support for more than one custom preamble
  - possibly indicate when the graph surface has focus?
  - Use GooCanvas for the graph display
 
