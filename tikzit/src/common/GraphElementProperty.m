@@ -120,7 +120,7 @@
 	} else {
 		static NSCharacterSet *avoid = nil;
 		if (avoid == nil)
-			avoid = [[NSCharacterSet characterSetWithCharactersInString:@",="] retain];
+			avoid = [[[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<>-'0123456789."] invertedSet] retain];
 
 		if ([[self value] rangeOfCharacterFromSet:avoid].length > 0) {
 			return [NSString stringWithFormat:@"%@={%@}", [self key], [self value]];
