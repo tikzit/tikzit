@@ -127,10 +127,12 @@
 }
 
 - (NSSet*)inEdgesForNode:(Node*)nd {
+	[self sync];
 	return [[[inEdges objectForKey:nd] retain] autorelease];
 }
 
 - (NSSet*)outEdgesForNode:(Node*)nd {
+	[self sync];
 	return [[[outEdges objectForKey:nd] retain] autorelease];
 }
 
