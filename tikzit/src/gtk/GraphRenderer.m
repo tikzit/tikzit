@@ -531,6 +531,19 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
     [self invalidateGraph];
 }
 
+- (void) invalidateBentIncidentEdgesForNode:(Node*)nd {
+    for (Edge *e in [[self graph] inEdgesForNode:nd]) {
+        if (![e isStraight]) {
+            [self invalidateEdge:e];
+        }
+    }
+    for (Edge *e in [[self graph] outEdgesForNode:nd]) {
+        if (![e isStraight]) {
+            [self invalidateEdge:e];
+        }
+    }
+}
+
 - (void) graphChanged:(NSNotification*)notification {
     GraphChange *change = [[notification userInfo] objectForKey:@"change"];
     switch ([change changeType]) {
@@ -543,6 +556,14 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
             if (!NSEqualPoints ([[change oldNode] point], [[change nwNode] point])) {
                 // if the node has moved, it may be affecting edges
                 [surface invalidate];
+            } else if ([[change oldNode] style] != [[change nwNode] style]) {
+                NSLog(@"Style change");
+                // change in style means that edges may touch at a different point,
+                // but this only matters for bent edges
+                [self invalidateBentIncidentEdgesForNode:[change nodeRef]];
+                // invalide both old and new (old node may be larger)
+                [self invalidateNode:[change oldNode]];
+                [self invalidateNode:[change nwNode]];
             } else {
                 // invalide both old and new (old node may be larger)
                 [self invalidateNode:[change oldNode]];
@@ -562,12 +583,19 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
                 while ((node = [enumerator nextObject]) != nil) {
                     NSPoint oldPos = [[[change oldNodeTable] objectForKey:node] point];
                     NSPoint newPos = [[[change nwNodeTable] objectForKey:node] point];
-                    if (NSEqualPoints (oldPos, newPos)) {
+                    NodeStyle *oldStyle = [[[change oldNodeTable] objectForKey:node] style];
+                    NodeStyle *newStyle = [[[change nwNodeTable] objectForKey:node] style];
+                    if (!NSEqualPoints (oldPos, newPos)) {
+                        [surface invalidate];
+                        break;
+                    } else if (oldStyle != newStyle) {
+                        NSLog(@"Style change (2)");
+                        [self invalidateBentIncidentEdgesForNode:node];
                         [self invalidateNode:[[change oldNodeTable] objectForKey:node]];
                         [self invalidateNode:[[change nwNodeTable] objectForKey:node]];
                     } else {
-                        [surface invalidate];
-                        break;
+                        [self invalidateNode:[[change oldNodeTable] objectForKey:node]];
+                        [self invalidateNode:[[change nwNodeTable] objectForKey:node]];
                     }
                 }
             }

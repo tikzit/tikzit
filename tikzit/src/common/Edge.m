@@ -308,6 +308,9 @@
 - (Node*)source {return source;}
 - (void)setSource:(Node *)s {
 	if (source != s) {
+		[source removeObserver:self
+		            forKeyPath:@"style"];
+
 		[source release];
 		source = [s retain];
 		
@@ -315,6 +318,11 @@
 			bendMode = EdgeBendModeInOut;
 			weight = 1.0f;
 		}
+
+		[source addObserver:self
+		         forKeyPath:@"style"
+		            options:NSKeyValueObservingOptionNew
+		            context:NULL];
 		
 		dirty = YES;
 	}
@@ -323,6 +331,9 @@
 - (Node*)target {return target;}
 - (void)setTarget:(Node *)t {
 	if (target != t) {
+		[target removeObserver:self
+		            forKeyPath:@"style"];
+
 		[target release];
 		target = [t retain];
 		
@@ -330,9 +341,23 @@
 			bendMode = EdgeBendModeInOut;
 			weight = 1.0f;
 		}
+
+		[target addObserver:self
+		         forKeyPath:@"style"
+		            options:NSKeyValueObservingOptionNew
+		            context:NULL];
 		
 		dirty = YES;
 	}
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+					    change:(NSDictionary *)change
+					   context:(void *)context
+
+{
+	dirty = YES;
 }
 
 
@@ -340,36 +365,28 @@
 
 - (Node*)edgeNode {return edgeNode;}
 - (void)setEdgeNode:(Node *)n {
-#if defined (__APPLE__)
     [self willChangeValueForKey:@"edgeNode"];
     [self willChangeValueForKey:@"hasEdgeNode"];
-#endif
 	if (edgeNode != n) {
         hasEdgeNode = (n != nil);
 		[edgeNode release];
 		edgeNode = [n retain];
 		// don't set dirty bit, because control points don't need update
 	}
-#if defined (__APPLE__)
     [self didChangeValueForKey:@"edgeNode"];
     [self didChangeValueForKey:@"hasEdgeNode"];
-#endif
 }
 
 - (BOOL)hasEdgeNode { return hasEdgeNode; }
 - (void)setHasEdgeNode:(BOOL)b {
-#if defined (__APPLE__)
     [self willChangeValueForKey:@"edgeNode"];
     [self willChangeValueForKey:@"hasEdgeNode"];
-#endif
     hasEdgeNode = b;
     if (hasEdgeNode && edgeNode == nil) {
         edgeNode = [[Node alloc] init];
     }
-#if defined (__APPLE__)
     [self didChangeValueForKey:@"edgeNode"];
     [self didChangeValueForKey:@"hasEdgeNode"];
-#endif
 }
 
 @synthesize data;
