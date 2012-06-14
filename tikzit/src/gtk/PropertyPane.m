@@ -380,12 +380,12 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
         [edgeProps setData:[e data]];
         gtk_widget_set_sensitive (gtk_bin_get_child (GTK_BIN (edgePropsExpander)), TRUE);
         if ([e hasEdgeNode]) {
-            gtk_toggle_button_set_mode (edgeNodeToggle, TRUE);
+            gtk_toggle_button_set_active (edgeNodeToggle, TRUE);
             gtk_entry_set_text (GTK_ENTRY (edgeNodeLabelEntry), [[[e edgeNode] label] UTF8String]);
             [edgeNodeProps setData:[[e edgeNode] data]];
             gtk_widget_set_sensitive (edgeNodePropsWidget, TRUE);
         } else {
-            gtk_toggle_button_set_mode (edgeNodeToggle, FALSE);
+            gtk_toggle_button_set_active (edgeNodeToggle, FALSE);
             gtk_entry_set_text (GTK_ENTRY (edgeNodeLabelEntry), "");
             [edgeNodeProps setData:nil];
             gtk_widget_set_sensitive (edgeNodePropsWidget, FALSE);
@@ -587,7 +587,7 @@ static void edge_node_toggled_cb (GtkToggleButton *toggle, PropertyPane *pane) {
 
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    gboolean newValue = gtk_toggle_button_get_mode (toggle);
+    gboolean newValue = gtk_toggle_button_get_active (toggle);
     [pane edgeNodeToggled:newValue];
 
     [pool drain];
