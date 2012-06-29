@@ -365,6 +365,8 @@ enum {
     Transformer *shapeTrans = [Transformer transformerToFit:[shape boundingRect]
                                              intoScreenRect:NSInsetRect(pixbufBounds, lineWidth, lineWidth)
                                           flippedAboutXAxis:YES];
+    if ([style scale] < 1.0)
+        [shapeTrans setScale:[style scale] * [shapeTrans scale]];
 
     CairoRenderContext *context = [[CairoRenderContext alloc] initForSurface:surface];
     [context clearSurface];
