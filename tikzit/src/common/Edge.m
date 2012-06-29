@@ -443,10 +443,7 @@
 	// loop needs to come after in/out
 	if (source == target) [data setAtom:@"loop"];
 	
-	if (!(
-		  ([self isSelfLoop]) ||
-		  (source!=target && weight == 0.4f)
-	   ))
+	if (![self isSelfLoop] && ![self isStraight])
 	{
 		[data setProperty:[NSString stringWithFormat:@"%.2f",weight*2.5f]
 				   forKey:@"looseness"];
