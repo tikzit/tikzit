@@ -26,6 +26,7 @@
 - (GtkExpander*) _addExpanderWithName:(const gchar*)name contents:(GtkWidget*)contents;
 @end
 
+// {{{ API
 @implementation StylesPane
 
 @synthesize widget=stylesPane;
@@ -105,6 +106,24 @@
     [file setBooleanEntry:@"edge-styles-expanded"
                   inGroup:group
                     value:gtk_expander_get_expanded (edgeStylesExpander)];
+}
+
+- (void) favourNodeStyles {
+    if (!gtk_expander_get_expanded (nodeStylesExpander)) {
+        if (gtk_expander_get_expanded (edgeStylesExpander)) {
+            gtk_expander_set_expanded (edgeStylesExpander, FALSE);
+            gtk_expander_set_expanded (nodeStylesExpander, TRUE);
+        }
+    }
+}
+
+- (void) favourEdgeStyles {
+    if (!gtk_expander_get_expanded (edgeStylesExpander)) {
+        if (gtk_expander_get_expanded (nodeStylesExpander)) {
+            gtk_expander_set_expanded (nodeStylesExpander, FALSE);
+            gtk_expander_set_expanded (edgeStylesExpander, TRUE);
+        }
+    }
 }
 
 @end

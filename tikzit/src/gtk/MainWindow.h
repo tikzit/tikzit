@@ -216,6 +216,10 @@
 - (void) zoomOut;
 - (void) zoomReset;
 
+- (void) favourGraphControls;
+- (void) favourNodeControls;
+- (void) favourEdgeControls;
+
 @end
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4

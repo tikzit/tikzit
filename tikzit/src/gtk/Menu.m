@@ -294,7 +294,8 @@ static void zoom_reset_cb (GtkAction *action, MainWindow *window) {
 
 static void input_mode_change_cb (GtkRadioAction *action, GtkRadioAction *current, MainWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [[window graphInputHandler] setMode:(InputMode)gtk_radio_action_get_current_value (action)];
+    InputMode mode = (InputMode)gtk_radio_action_get_current_value (action);
+    [[window graphInputHandler] setMode:mode];
     [pool drain];
 }
 

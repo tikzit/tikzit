@@ -260,6 +260,47 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
                     value:gtk_expander_get_expanded (edgePropsExpander)];
 }
 
+- (int) expandedPaneCount {
+    int eps = 0;
+    if (gtk_expander_get_expanded (graphPropsExpander))
+        eps++;
+    if (gtk_expander_get_expanded (nodePropsExpander))
+        eps++;
+    if (gtk_expander_get_expanded (edgePropsExpander))
+        eps++;
+    return eps;
+}
+
+- (void) favourGraphProperties {
+    if (!gtk_expander_get_expanded (graphPropsExpander)) {
+        if ([self expandedPaneCount] == 1) {
+            gtk_expander_set_expanded (nodePropsExpander, FALSE);
+            gtk_expander_set_expanded (edgePropsExpander, FALSE);
+            gtk_expander_set_expanded (graphPropsExpander, TRUE);
+        }
+    }
+}
+
+- (void) favourNodeProperties {
+    if (!gtk_expander_get_expanded (nodePropsExpander)) {
+        if ([self expandedPaneCount] == 1) {
+            gtk_expander_set_expanded (graphPropsExpander, FALSE);
+            gtk_expander_set_expanded (edgePropsExpander, FALSE);
+            gtk_expander_set_expanded (nodePropsExpander, TRUE);
+        }
+    }
+}
+
+- (void) favourEdgeProperties {
+    if (!gtk_expander_get_expanded (edgePropsExpander)) {
+        if ([self expandedPaneCount] == 1) {
+            gtk_expander_set_expanded (graphPropsExpander, FALSE);
+            gtk_expander_set_expanded (nodePropsExpander, FALSE);
+            gtk_expander_set_expanded (edgePropsExpander, TRUE);
+        }
+    }
+}
+
 @end
 // }}}
 // {{{ Notifications

@@ -43,6 +43,9 @@
 - (void) restoreUiStateFromConfig:(Configuration*)file group:(NSString*)group;
 - (void) saveUiStateToConfig:(Configuration*)file group:(NSString*)group;
 
+- (void) favourNodeStyles;
+- (void) favourEdgeStyles;
+
 @end
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4:foldmethod=marker

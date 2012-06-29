@@ -495,6 +495,20 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [surface zoomReset];
 }
 
+- (void) favourGraphControls {
+    [propertyPane favourGraphProperties];
+}
+
+- (void) favourNodeControls {
+    [stylesPane favourNodeStyles];
+    [propertyPane favourNodeProperties];
+}
+
+- (void) favourEdgeControls {
+    [stylesPane favourEdgeStyles];
+    [propertyPane favourEdgeProperties];
+}
+
 @end
 
 // }}}
@@ -650,7 +664,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [surface setGrabsFocusOnClick:YES];
     renderer = [[GraphRenderer alloc] initWithSurface:surface document:document];
 
-    inputHandler = [[GraphInputHandler alloc] initWithGraphRenderer:renderer];
+    inputHandler = [[GraphInputHandler alloc] initWithGraphRenderer:renderer window:self];
     [surface setInputDelegate:inputHandler];
 
     tikzBuffer = gtk_text_buffer_new (NULL);

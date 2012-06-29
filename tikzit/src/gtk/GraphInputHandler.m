@@ -18,15 +18,25 @@
 
 #import "GraphInputHandler.h"
 #import <gdk/gdkkeysyms.h>
+#import "MainWindow.h"
 #import "Edge+Render.h"
 
 static const InputMask unionSelectMask = ShiftMask;
 
+@interface GraphInputHandler (Notifications)
+- (void) nodeSelectionChanged:(NSNotification*)n;
+- (void) edgeSelectionChanged:(NSNotification*)n;
+@end
+
 @implementation GraphInputHandler
 - (id) initWithGraphRenderer:(GraphRenderer*)r {
+    return [self initWithGraphRenderer:r window:nil];
+}
+- (id) initWithGraphRenderer:(GraphRenderer*)r window:(MainWindow*)w {
     self = [super init];
 
     if (self) {
+        window = w;
         renderer = r;
         mode = SelectMode;
         state = QuietState;
@@ -35,9 +45,24 @@ static const InputMask unionSelectMask = ShiftMask;
         modifyEdge = nil;
         selectionBoxContents = [[NSMutableSet alloc] initWithCapacity:10];
         currentResizeHandle = NoHandle;
+        // FIXME: listen only to the doc's PickSupport
+        //        (need to track document changes)
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                              selector:@selector(nodeSelectionChanged:)
+                                              name:@"NodeSelectionChanged" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                              selector:@selector(edgeSelectionChanged:)
+                                              name:@"EdgeSelectionChanged" object:nil];
     }
 
     return self;
+}
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [selectionBoxContents release];
+
+    [super dealloc];
 }
 
 - (TikzDocument*) doc {
@@ -98,8 +123,23 @@ static const InputMask unionSelectMask = ShiftMask;
         }
         mode = m;
         [self deselectAll];
-        if (m == BoundingBoxMode) {
+        if (mode == BoundingBoxMode) {
             [renderer setBoundingBoxHandlesShown:YES];
+            [window favourGraphControls];
+        } else if (mode == CreateNodeMode) {
+            [window favourNodeControls];
+        } else if (mode == DrawEdgeMode) {
+            [window favourEdgeControls];
+        } else if (mode == HandMode) {
+            [window favourGraphControls];
+        } else if (mode == SelectMode) {
+            // FIXME: also change on selection change
+            if ([[[[self doc] pickSupport] selectedNodes] count])
+                [window favourNodeControls];
+            else if ([[[[self doc] pickSupport] selectedEdges] count])
+                [window favourEdgeControls];
+            else
+                [window favourGraphControls];
         }
     }
 }
@@ -443,6 +483,30 @@ static const InputMask unionSelectMask = ShiftMask;
     }
 }
 
+@end
+
+@implementation GraphInputHandler (Notifications)
+- (void) nodeSelectionChanged:(NSNotification*)n {
+    if (mode == SelectMode) {
+        if ([[[[self doc] pickSupport] selectedNodes] count])
+            [window favourNodeControls];
+        else if ([[[[self doc] pickSupport] selectedEdges] count])
+            [window favourEdgeControls];
+        else
+            [window favourGraphControls];
+    }
+}
+
+- (void) edgeSelectionChanged:(NSNotification*)n {
+    if (mode == SelectMode) {
+        if ([[[[self doc] pickSupport] selectedNodes] count])
+            [window favourNodeControls];
+        else if ([[[[self doc] pickSupport] selectedEdges] count])
+            [window favourEdgeControls];
+        else
+            [window favourGraphControls];
+    }
+}
 @end
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4
