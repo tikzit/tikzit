@@ -160,7 +160,6 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
         edgeNodePropsWidget = createPropsPaneWithLabelEntry(edgeNodeProps, &edgeNodeLabelEntry);
         g_object_ref (edgeNodePropsWidget);
         g_object_ref (edgeNodeLabelEntry);
-        gtk_widget_show (edgeNodePropsWidget);
         gtk_box_pack_start (edgePropsBox, edgeNodePropsWidget, FALSE, TRUE, 0);
         g_signal_connect (G_OBJECT (edgeNodeLabelEntry),
             "changed",
@@ -422,11 +421,13 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertyPane *pane);
         gtk_widget_set_sensitive (gtk_bin_get_child (GTK_BIN (edgePropsExpander)), TRUE);
         if ([e hasEdgeNode]) {
             gtk_toggle_button_set_active (edgeNodeToggle, TRUE);
+            gtk_widget_show (edgeNodePropsWidget);
             gtk_entry_set_text (GTK_ENTRY (edgeNodeLabelEntry), [[[e edgeNode] label] UTF8String]);
             [edgeNodeProps setData:[[e edgeNode] data]];
             gtk_widget_set_sensitive (edgeNodePropsWidget, TRUE);
         } else {
             gtk_toggle_button_set_active (edgeNodeToggle, FALSE);
+            gtk_widget_hide (edgeNodePropsWidget);
             gtk_entry_set_text (GTK_ENTRY (edgeNodeLabelEntry), "");
             [edgeNodeProps setData:nil];
             gtk_widget_set_sensitive (edgeNodePropsWidget, FALSE);
