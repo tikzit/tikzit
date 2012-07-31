@@ -169,6 +169,9 @@ static const InputMask unionSelectMask = ShiftMask;
 }
 
 - (void) mousePressAt:(NSPoint)pos withButton:(MouseButton)button andMask:(InputMask)mask {
+    if (button != LeftButton)
+        return;
+
     dragOrigin = pos;
 
     // we should already be in a quiet state, but no harm in making sure
@@ -244,6 +247,9 @@ static const InputMask unionSelectMask = ShiftMask;
 }
 
 - (void) mouseReleaseAt:(NSPoint)pos withButton:(MouseButton)button andMask:(InputMask)mask {
+    if (button != LeftButton)
+        return;
+
     if (state == SelectBoxState) {
         BOOL shouldDeselect = !(mask & unionSelectMask);
         if (shouldDeselect) {
@@ -284,6 +290,9 @@ static const InputMask unionSelectMask = ShiftMask;
 }
 
 - (void) mouseDoubleClickAt:(NSPoint)pos withButton:(MouseButton)button andMask:(InputMask)mask {
+    if (button != LeftButton)
+        return;
+
     if (mode != SelectMode) {
         return;
     }
@@ -308,6 +317,9 @@ static const InputMask unionSelectMask = ShiftMask;
 }
 
 - (void) mouseMoveTo:(NSPoint)pos withButtons:(MouseButton)buttons andMask:(InputMask)mask {
+    if (!(buttons & LeftButton))
+        return;
+
     Transformer *transformer = [renderer transformer];
 
     if (state == ToggleSelectState) {
