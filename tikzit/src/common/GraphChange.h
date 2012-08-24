@@ -70,8 +70,8 @@ typedef enum {
 	NSRect oldBoundingBox, nwBoundingBox;
 	GraphElementData *oldGraphData, *nwGraphData;
 
-	NSArray *oldNodeOrder, *newNodeOrder;
-	NSArray *oldEdgeOrder, *newEdgeOrder;
+	NSArray *oldNodeOrder, *nwNodeOrder;
+	NSArray *oldEdgeOrder, *nwEdgeOrder;
 }
 
 /*!
@@ -195,10 +195,10 @@ typedef enum {
 @property (copy) NSArray *oldNodeOrder;
 
 /*!
- @property   newNodeOrder
+ @property   nwNodeOrder
  @brief      The new node list.
  */
-@property (copy) NSArray *newNodeOrder;
+@property (copy) NSArray *nwNodeOrder;
 
 /*!
  @property   oldEdgeOrder
@@ -207,10 +207,10 @@ typedef enum {
 @property (copy) NSArray *oldEdgeOrder;
 
 /*!
- @property   newEdgeOrder
+ @property   nwEdgeOrder
  @brief      The new edge list.
  */
-@property (copy) NSArray *newEdgeOrder;
+@property (copy) NSArray *nwEdgeOrder;
 
 /*!
  @brief      Invert a GraphChange.

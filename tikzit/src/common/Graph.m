@@ -655,10 +655,10 @@
 			[data setArray:[ch nwGraphData]];
 			break;
 		case NodeOrderChange:
-			[nodes setArray:[ch newNodeOrder]];
+			[nodes setArray:[ch nwNodeOrder]];
 			break;
 		case EdgeOrderChange:
-			[edges setArray:[ch newEdgeOrder]];
+			[edges setArray:[ch nwEdgeOrder]];
 			break;
 	}
 

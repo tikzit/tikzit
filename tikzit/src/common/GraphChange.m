@@ -46,8 +46,8 @@
 @synthesize oldEdgeTable, nwEdgeTable;
 @synthesize oldBoundingBox, nwBoundingBox;
 @synthesize oldGraphData, nwGraphData;
-@synthesize oldNodeOrder, newNodeOrder;
-@synthesize oldEdgeOrder, newEdgeOrder;
+@synthesize oldNodeOrder, nwNodeOrder;
+@synthesize oldEdgeOrder, nwEdgeOrder;
 
 - (GraphChange*)invert {
 	GraphChange *inverse = [[GraphChange alloc] init];
@@ -103,13 +103,13 @@
 			break;
 		case NodeOrderChange:
 			inverse->affectedNodes = [affectedNodes retain];
-			inverse->oldNodeOrder = [newNodeOrder retain];
-			inverse->newNodeOrder = [oldNodeOrder retain];
+			inverse->oldNodeOrder = [nwNodeOrder retain];
+			inverse->nwNodeOrder = [oldNodeOrder retain];
 			break;
 		case EdgeOrderChange:
 			inverse->affectedEdges = [affectedEdges retain];
-			inverse->oldEdgeOrder = [newEdgeOrder retain];
-			inverse->newEdgeOrder = [oldEdgeOrder retain];
+			inverse->oldEdgeOrder = [nwEdgeOrder retain];
+			inverse->nwEdgeOrder = [oldEdgeOrder retain];
 			break;
 	}
 
@@ -228,7 +228,7 @@
 	[gc setChangeType:NodeOrderChange];
 	[gc setAffectedNodes:affected];
 	[gc setOldNodeOrder:old];
-	[gc setNewNodeOrder:new];
+	[gc setNwNodeOrder:new];
 	return [gc autorelease];
 }
 
@@ -237,7 +237,7 @@
 	[gc setChangeType:EdgeOrderChange];
 	[gc setAffectedEdges:affected];
 	[gc setOldEdgeOrder:old];
-	[gc setNewEdgeOrder:new];
+	[gc setNwEdgeOrder:new];
 	return [gc autorelease];
 }
 
