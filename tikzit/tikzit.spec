@@ -71,7 +71,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Jun 13 2012 Alex Merry <dev@randomguy3.me.uk> 0.9-1
+* Fri Aug 24 2012 Alex Merry <dev@randomguy3.me.uk> 0.9-1
 -Bumped version
 -Bumped requirements
 

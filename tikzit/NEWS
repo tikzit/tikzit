@@ -1,4 +1,4 @@
-tikzit 0.8 (2012-01-??):
+tikzit 0.9 (2012-08-24):
 	* Compilers without basic Objective C 2 support cannot be
 	  used to compile TikZiT any more
 	* Add support for scale to node styles
@@ -13,6 +13,7 @@ tikzit 0.8 (2012-01-??):
 	  changed with Edge->Arrange
 	* Edges now have colours
 	* Edges can now be reversed easily
+	* Fix various crashes
 
 tikzit 0.7 (2011-12-06):
 	* Add bounding box support
