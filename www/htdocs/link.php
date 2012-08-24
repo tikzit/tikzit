@@ -1,6 +1,6 @@
 <?
 $dmg_ver = "0.8";
-$src_ver = "0.7";
+$src_ver = "0.9";
 $win_ver = "0.7";
 $file_root = "http://sourceforge.net/projects/tikzit/files";
 

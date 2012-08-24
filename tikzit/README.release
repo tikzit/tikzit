@@ -25,7 +25,7 @@ Then run `make dist` to create the source tarball in tar.gz format, and
 Uploading the source
 --------------------
 
-Update docs/sourceforge/README.mkd
+Update /www/sourceforge/README.mkd
 
 Log into sourceforge.net, go to
 https://sourceforge.net/projects/tikzit/files/
@@ -44,7 +44,7 @@ Set the tar.bz2 file as default for everything except windows and mac
 Updating the website
 --------------------
 
-Edit /trunk/www/htdocs/link.php, and update the versions.
+Edit /www/htdocs/link.php, and update the versions.
 
 sftp to
   [sf-username],tikzit@web.sourceforge.net
