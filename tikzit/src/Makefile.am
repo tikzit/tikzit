@@ -153,5 +153,10 @@ gtk/Menu.m: gtk/icondata.m
 gtk/logo.m: gtk/logodata.m
 gtk/EdgeStyleEditor.m: gtk/edgedecdata.m
 
-EXTRA_DIST = gtk/*.h common/*.h $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym $(ICONFILES) $(EDGEDECFILES)
+EXTRA_DIST = gtk/*.h common/*.h \
+	     $(PARSERFILES) common/tikzlexer.lm common/tikzparser.ym \
+	     $(ICONFILES) gtk/icondata.m \
+	     gtk/logodata.m \
+	     $(EDGEDECFILES) gtk/edgedecdata.m \
+	     tikzit.rc ../tikzit.ico
 MAINTAINERCLEANFILES = $(PARSERFILES) gtk/icondata.m gtk/logodata.m gtk/edgedecdata.m
