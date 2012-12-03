@@ -1,5 +1,5 @@
 //
-//  MainWindow.h
+//  NSFileManager+Utils.h
 //  TikZiT
 //
 //  Copyright 2010 Alex Merry

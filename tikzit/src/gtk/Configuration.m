@@ -1,5 +1,5 @@
 //
-//  MainWindow.h
+//  Configuration.h
 //  TikZiT
 //
 //  Copyright 2010 Alex Merry
