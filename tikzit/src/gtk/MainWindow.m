@@ -67,8 +67,6 @@ static void clipboard_paste_contents (GtkClipboard *clipboard,
 // }}}
 // {{{ Signals
 
-static void toolbox_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, MainWindow *window);
-static void stylebox_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, MainWindow *window);
 static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, MainWindow *window);
 static void tikz_buffer_changed_cb (GtkTextBuffer *buffer, MainWindow *window);
 static gboolean main_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, MainWindow *window);
@@ -79,8 +77,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 // }}}
 
 @interface MainWindow (Notifications)
-- (void) toolboxWidthChanged:(int)newWidth;
-- (void) styleboxWidthChanged:(int)newWidth;
 - (void) tikzBufferChanged;
 - (void) windowSizeChangedWidth:(int)width height:(int)height;
 - (void) documentTikzChanged:(NSNotification*)notification;
@@ -158,8 +154,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [menu release];
     [renderer release];
     [inputHandler release];
-    [stylesPane release];
-    [propertyPane release];
     [preambleWindow release];
     [previewWindow release];
     [settingsDialog release];
@@ -170,8 +164,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     g_object_unref (mainWindow);
     g_object_unref (tikzBuffer);
     g_object_unref (statusBar);
-    g_object_unref (propertyPaneSplitter);
-    g_object_unref (stylesPaneSplitter);
     g_object_unref (tikzPaneSplitter);
     g_object_unref (tikzPane);
 
@@ -471,8 +463,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 #endif
 
     [styleManager saveStylesUsingConfigurationName:@"styles"];
-    [propertyPane saveUiStateToConfig:configFile group:@"PropertyPane"];
-    [stylesPane saveUiStateToConfig:configFile group:@"StylesPane"];
 
     if (lastFolder != nil) {
         [configFile setStringEntry:@"lastFolder" inGroup:@"Paths" value:lastFolder];
@@ -496,17 +486,12 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 }
 
 - (void) favourGraphControls {
-    [propertyPane favourGraphProperties];
 }
 
 - (void) favourNodeControls {
-    [stylesPane favourNodeStyles];
-    [propertyPane favourNodeProperties];
 }
 
 - (void) favourEdgeControls {
-    [stylesPane favourEdgeStyles];
-    [propertyPane favourEdgeProperties];
 }
 
 @end
@@ -515,14 +500,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 // {{{ Notifications
 
 @implementation MainWindow (Notifications)
-- (void) toolboxWidthChanged:(int)newWidth {
-    [configFile setIntegerEntry:@"toolboxWidth" inGroup:@"mainWindow" value:newWidth];
-}
-
-- (void) styleboxWidthChanged:(int)newWidth {
-    [configFile setIntegerEntry:@"styleboxWidth" inGroup:@"mainWindow" value:newWidth];
-}
-
 - (void) graphHeightChanged:(int)newHeight {
     [configFile setIntegerEntry:@"graphHeight" inGroup:@"mainWindow" value:newHeight];
 }
@@ -618,40 +595,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_box_reorder_child (mainLayout, menubar, 0);
     gtk_widget_show (menubar);
 
-    GtkWidget *toolbarBox = gtk_handle_box_new ();
-    gtk_box_pack_start (mainLayout, toolbarBox, FALSE, TRUE, 0);
-    gtk_widget_show (toolbarBox);
-    gtk_container_add (GTK_CONTAINER (toolbarBox), [menu toolbar]);
-    gtk_widget_show ([menu toolbar]);
-
-    propertyPaneSplitter = GTK_PANED (gtk_hpaned_new ());
-    g_object_ref_sink (propertyPaneSplitter);
-    gtk_widget_show (GTK_WIDGET (propertyPaneSplitter));
-    gtk_box_pack_start (mainLayout, GTK_WIDGET (propertyPaneSplitter), TRUE, TRUE, 0);
-
-    propertyPane = [[PropertyPane alloc] init];
-    GtkWidget *propFrame = gtk_frame_new (NULL);
-    gtk_container_add (GTK_CONTAINER (propFrame), [propertyPane widget]);
-    gtk_paned_pack1 (propertyPaneSplitter, propFrame, FALSE, TRUE);
-    gtk_widget_show (propFrame);
-    gtk_widget_show ([propertyPane widget]);
-
-    stylesPaneSplitter = GTK_PANED (gtk_hpaned_new ());
-    g_object_ref_sink (stylesPaneSplitter);
-    gtk_widget_show (GTK_WIDGET (stylesPaneSplitter));
-    gtk_paned_pack2 (propertyPaneSplitter, GTK_WIDGET (stylesPaneSplitter), TRUE, TRUE);
-
-    stylesPane = [[StylesPane alloc] initWithManager:styleManager];
-    GtkWidget *stylesFrame = gtk_frame_new (NULL);
-    gtk_container_add (GTK_CONTAINER (stylesFrame), [stylesPane widget]);
-    gtk_paned_pack2 (stylesPaneSplitter, stylesFrame, FALSE, TRUE);
-    gtk_widget_show (stylesFrame);
-    gtk_widget_show ([stylesPane widget]);
-
     tikzPaneSplitter = GTK_PANED (gtk_vpaned_new ());
     g_object_ref_sink (tikzPaneSplitter);
     gtk_widget_show (GTK_WIDGET (tikzPaneSplitter));
-    gtk_paned_pack1 (stylesPaneSplitter, GTK_WIDGET (tikzPaneSplitter), TRUE, TRUE);
+    gtk_box_pack_start (mainLayout, GTK_WIDGET (tikzPaneSplitter), TRUE, TRUE, 0);
 
     surface = [[WidgetSurface alloc] init];
     gtk_widget_show ([surface widget]);
@@ -700,20 +647,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
             gtk_window_set_default_size (mainWindow, width, height);
         }
     }
-    int panePos = [configFile integerEntry:@"toolboxWidth" inGroup:@"mainWindow"];
-    if (panePos > 0) {
-        gtk_paned_set_position (propertyPaneSplitter, panePos);
-    }
-    panePos = [configFile integerEntry:@"styleboxWidth" inGroup:@"mainWindow"];
-    if (panePos > 0) {
-        gtk_paned_set_position (stylesPaneSplitter, panePos);
-    }
-    panePos = [configFile integerEntry:@"graphHeight" inGroup:@"mainWindow"];
+    int panePos = [configFile integerEntry:@"graphHeight" inGroup:@"mainWindow"];
     if (panePos > 0) {
         gtk_paned_set_position (tikzPaneSplitter, panePos);
     }
-    [propertyPane restoreUiStateFromConfig:configFile group:@"PropertyPane"];
-    [stylesPane restoreUiStateFromConfig:configFile group:@"StylesPane"];
 }
 
 - (void) _connectSignals {
@@ -726,14 +663,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         "key-press-event",
         G_CALLBACK (tz_hijack_key_press),
         NULL);
-    g_signal_connect (G_OBJECT (propertyPaneSplitter),
-        "notify::position",
-        G_CALLBACK (toolbox_divider_position_changed_cb),
-        self);
-    g_signal_connect (G_OBJECT (stylesPaneSplitter),
-        "notify::position",
-        G_CALLBACK (stylebox_divider_position_changed_cb),
-        self);
     g_signal_connect (G_OBJECT (tikzPaneSplitter),
         "notify::position",
         G_CALLBACK (graph_divider_position_changed_cb),
@@ -905,8 +834,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     document = newDoc;
 
     [renderer setDocument:document];
-    [stylesPane setDocument:document];
-    [propertyPane setDocument:document];
 #ifdef HAVE_POPPLER
     [previewWindow setDocument:document];
 #endif
@@ -934,22 +861,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
 // }}}
 // {{{ GTK+ callbacks
-
-static void toolbox_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, MainWindow *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    gint position;
-    g_object_get (gobject, "position", &position, NULL);
-    [window toolboxWidthChanged:position];
-    [pool drain];
-}
-
-static void stylebox_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, MainWindow *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    gint position;
-    g_object_get (gobject, "position", &position, NULL);
-    [window styleboxWidthChanged:position];
-    [pool drain];
-}
 
 static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, MainWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];

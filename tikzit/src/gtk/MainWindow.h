@@ -47,8 +47,6 @@
     GtkWindow         *mainWindow;
     GtkTextBuffer     *tikzBuffer;
     GtkStatusbar      *statusBar;
-    GtkPaned          *propertyPaneSplitter;
-    GtkPaned          *stylesPaneSplitter;
     GtkPaned          *tikzPaneSplitter;
     GtkWidget         *tikzPane;
 
@@ -57,8 +55,6 @@
     Menu              *menu;
     GraphRenderer     *renderer;
     GraphInputHandler *inputHandler;
-    StylesPane        *stylesPane;
-    PropertyPane      *propertyPane;
     PreambleEditor    *preambleWindow;
     PreviewWindow     *previewWindow;
     SettingsDialog    *settingsDialog;
