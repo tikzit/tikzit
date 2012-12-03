@@ -21,7 +21,8 @@
 
 #import "Menu.h"
 
-#import "MainWindow.h"
+#import "Application.h"
+#import "Window.h"
 #import "GraphInputHandler.h"
 #import "Configuration.h"
 #import "PickSupport.h"
@@ -51,49 +52,49 @@
 
 // {{{ Callbacks
 
-static void new_cb (GtkAction *action, MainWindow *window) {
+static void new_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window loadEmptyDocument];
+    [app newWindow];
     [pool drain];
 }
 
-static void open_cb (GtkAction *action, MainWindow *window) {
+static void open_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window openFile];
     [pool drain];
 }
 
-static void save_cb (GtkAction *action, MainWindow *window) {
+static void save_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window saveActiveDocument];
     [pool drain];
 }
 
-static void save_as_cb (GtkAction *action, MainWindow *window) {
+static void save_as_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window saveActiveDocumentAs];
     [pool drain];
 }
 
-static void save_as_shape_cb (GtkAction *action, MainWindow *window) {
+static void save_as_shape_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window saveActiveDocumentAsShape];
     [pool drain];
 }
 
-static void refresh_shapes_cb (GtkAction *action, MainWindow *window) {
+static void refresh_shapes_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [Shape refreshShapeDictionary];
     [pool drain];
 }
 
-static void quit_cb (GtkAction *action, MainWindow *window) {
+static void quit_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window quit];
+    [app quit];
     [pool drain];
 }
 
-static void help_cb (GtkAction *action, MainWindow *window) {
+static void help_cb (GtkAction *action, Window *window) {
     GError *gerror = NULL;
     gtk_show_uri (NULL, "http://tikzit.sourceforge.net/manual.html", GDK_CURRENT_TIME, &gerror);
     if (gerror != NULL) {
@@ -103,7 +104,7 @@ static void help_cb (GtkAction *action, MainWindow *window) {
     }
 }
 
-static void about_cb (GtkAction *action, MainWindow *window) {
+static void about_cb (GtkAction *action, Window *window) {
     static const gchar * const authors[] =
         { "Aleks Kissinger <aleks0@gmail.com>",
           "Chris Heunen <chrisheunen@gmail.com>",
@@ -145,10 +146,10 @@ static void about_cb (GtkAction *action, MainWindow *window) {
     g_object_unref (logo);
 }
 
-static void undo_cb (GtkAction *action, MainWindow *window) {
+static void undo_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    TikzDocument *document = [window activeDocument];
+    TikzDocument *document = [window document];
     if ([document canUndo]) {
         [document undo];
     } else {
@@ -159,10 +160,10 @@ static void undo_cb (GtkAction *action, MainWindow *window) {
     [pool drain];
 }
 
-static void redo_cb (GtkAction *action, MainWindow *window) {
+static void redo_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    TikzDocument *document = [window activeDocument];
+    TikzDocument *document = [window document];
     if ([document canRedo]) {
         [document redo];
     } else {
@@ -173,132 +174,133 @@ static void redo_cb (GtkAction *action, MainWindow *window) {
     [pool drain];
 }
 
-static void cut_cb (GtkAction *action, MainWindow *window) {
+static void cut_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window cut];
     [pool drain];
 }
 
-static void copy_cb (GtkAction *action, MainWindow *window) {
+static void copy_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window copy];
     [pool drain];
 }
 
-static void paste_cb (GtkAction *action, MainWindow *window) {
+static void paste_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window paste];
     [pool drain];
 }
 
-static void delete_cb (GtkAction *action, MainWindow *window) {
+static void delete_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [[window activeDocument] removeSelected];
+    [[window document] removeSelected];
     [pool drain];
 }
 
-static void select_all_cb (GtkAction *action, MainWindow *window) {
+static void select_all_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    TikzDocument *document = [window activeDocument];
+    TikzDocument *document = [window document];
     [[document pickSupport] selectAllNodes:[NSSet setWithArray:[[document graph] nodes]]];
     [pool drain];
 }
 
-static void deselect_all_cb (GtkAction *action, MainWindow *window) {
+static void deselect_all_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    TikzDocument *document = [window activeDocument];
+    TikzDocument *document = [window document];
     [[document pickSupport] deselectAllNodes];
     [[document pickSupport] deselectAllEdges];
     [pool drain];
 }
 
-static void flip_horiz_cb (GtkAction *action, MainWindow *window) {
+static void flip_horiz_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [[window activeDocument] flipSelectedNodesHorizontally];
+    [[window document] flipSelectedNodesHorizontally];
     [pool drain];
 }
 
-static void flip_vert_cb (GtkAction *action, MainWindow *window) {
+static void flip_vert_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [[window activeDocument] flipSelectedNodesVertically];
+    [[window document] flipSelectedNodesVertically];
     [pool drain];
 }
 
-static void reverse_edges_cb (GtkAction *action, MainWindow *window) {
+static void reverse_edges_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [[window activeDocument] reverseSelectedEdges];
+    [[window document] reverseSelectedEdges];
     [pool drain];
 }
 
-static void bring_forward_cb (GtkAction *action, MainWindow *window) {
+static void bring_forward_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [[window activeDocument] bringSelectionForward];
+    [[window document] bringSelectionForward];
     [pool drain];
 }
 
-static void send_backward_cb (GtkAction *action, MainWindow *window) {
+static void send_backward_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [[window activeDocument] sendSelectionBackward];
+    [[window document] sendSelectionBackward];
     [pool drain];
 }
 
-static void bring_to_front_cb (GtkAction *action, MainWindow *window) {
+static void bring_to_front_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [[window activeDocument] bringSelectionToFront];
+    [[window document] bringSelectionToFront];
     [pool drain];
 }
 
-static void send_to_back_cb (GtkAction *action, MainWindow *window) {
+static void send_to_back_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [[window activeDocument] sendSelectionToBack];
+    [[window document] sendSelectionToBack];
     [pool drain];
 }
 
 #ifdef HAVE_POPPLER
-static void show_preferences_cb (GtkAction *action, MainWindow *window) {
+static void show_preferences_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window showSettingsDialog];
+    [app showSettingsDialog];
     [pool drain];
 }
 
-static void show_preamble_cb (GtkAction *action, MainWindow *window) {
+static void show_preamble_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window editPreambles];
+    [app showPreamblesEditor];
     [pool drain];
 }
 
-static void show_preview_cb (GtkAction *action, MainWindow *window) {
+static void show_preview_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window showPreview];
+    [app showPreviewForDocument:[window document]];
     [pool drain];
 }
 #endif
 
-static void zoom_in_cb (GtkAction *action, MainWindow *window) {
+static void zoom_in_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window zoomIn];
     [pool drain];
 }
 
-static void zoom_out_cb (GtkAction *action, MainWindow *window) {
+static void zoom_out_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window zoomOut];
     [pool drain];
 }
 
-static void zoom_reset_cb (GtkAction *action, MainWindow *window) {
+static void zoom_reset_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window zoomReset];
     [pool drain];
 }
 
-static void input_mode_change_cb (GtkRadioAction *action, GtkRadioAction *current, MainWindow *window) {
+static void input_mode_change_cb (GtkRadioAction *action, GtkRadioAction *current, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     InputMode mode = (InputMode)gtk_radio_action_get_current_value (action);
     [[window graphInputHandler] setMode:mode];
     [pool drain];
 }
 
+/*
 static void toolbar_style_change_cb (GtkRadioAction *action, GtkRadioAction *current, Menu *menu) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -308,8 +310,9 @@ static void toolbar_style_change_cb (GtkRadioAction *action, GtkRadioAction *cur
 
     [pool drain];
 }
+*/
 
-static void recent_chooser_item_activated_cb (GtkRecentChooser *chooser, MainWindow *window) {
+static void recent_chooser_item_activated_cb (GtkRecentChooser *chooser, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     gchar *uri, *path;
@@ -324,13 +327,7 @@ static void recent_chooser_item_activated_cb (GtkRecentChooser *chooser, MainWin
         return;
     }
 
-    NSString *nspath = [NSString stringWithGlibFilename:path];
-    if (error) {
-        g_warning ("Could not convert filename \"%s\" to an NSString: %s", path, error->message);
-        g_error_free (error);
-        return;
-    }
-    [window loadDocumentFromFile:nspath];
+    [window openFileAtPath:[NSString stringWithGlibFilename:path]];
 
     g_free (uri);
     g_free (path);
@@ -396,12 +393,14 @@ static const gchar ui_info[] =
 #endif
 "    </menu>"
 "    <menu action='ViewMenu'>"
+/*
 "      <menu action='ToolbarStyle'>"
 "        <menuitem action='ToolbarIconsOnly'/>"
 "        <menuitem action='ToolbarTextOnly'/>"
 "        <menuitem action='ToolbarTextIcons'/>"
 "        <menuitem action='ToolbarTextIconsHoriz'/>"
 "      </menu>"
+*/
 /*
 "      <menuitem action='ToolbarVisible'/>"
 "      <menuitem action='StatusbarVisible'/>"
@@ -427,6 +426,7 @@ static const gchar ui_info[] =
 "      <menuitem action='About'/>"
 "    </menu>"
 "  </menubar>"
+/*
 "  <toolbar  name='ToolBar'>"
 "    <toolitem action='New'/>"
 "    <toolitem action='Open'/>"
@@ -442,6 +442,7 @@ static const gchar ui_info[] =
 "    <toolitem action='BoundingBoxMode'/>"
 "    <toolitem action='HandMode'/>"
 "  </toolbar>"
+*/
 "</ui>";
 
 
@@ -493,7 +494,7 @@ static GtkActionEntry static_entries[] = {
 #endif
 
     /* ViewMenu */
-    { "ToolbarStyle", NULL, N_("_Toolbar style") },
+    //{ "ToolbarStyle", NULL, N_("_Toolbar style") },
 
 #ifdef HAVE_POPPLER
     { "ShowPreamble", NULL, N_("_Edit Preambles..."), NULL,
@@ -694,14 +695,19 @@ create_recent_chooser_menu ()
 
 @implementation Menu
 
-- (id) initForMainWindow:(MainWindow*)window
-{
+- (id) init {
+    [self release];
+    self = nil;
+    return nil;
+}
+
+- (id) initForWindow:(Window*)w {
     self = [super init];
     if (!self) {
         return nil;
     }
 
-    mainWindow = window;
+    window = w;
 
     GError *error = NULL;
 
@@ -715,11 +721,13 @@ create_recent_chooser_menu ()
     gtk_action_group_add_radio_actions (staticActions, mode_entries,
                         n_mode_entries, (gint)SelectMode,
                         G_CALLBACK (input_mode_change_cb), window);
+    /*
     GtkToolbarStyle style;
     g_object_get (G_OBJECT (gtk_settings_get_default ()), "gtk-toolbar-style", &style, NULL);
     gtk_action_group_add_radio_actions (staticActions, toolbar_style_entries,
                         n_toolbar_style_entries, style,
                         G_CALLBACK (toolbar_style_change_cb), self);
+                        */
 
     documentActions = gtk_action_group_new (ACTION_GROUP_DOCUMENT);
     //gtk_action_group_set_translation_domain (documentActions, GETTEXT_PACKAGE);
@@ -752,11 +760,13 @@ create_recent_chooser_menu ()
     }
 
     /* Set custom images for tool mode buttons */
+    /*
     set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/SelectMode")), &select_rectangular);
     set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/CreateNodeMode")), &draw_ellipse);
     set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/DrawEdgeMode")), &draw_path);
     set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/BoundingBoxMode")), &transform_crop_and_resize);
     set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/HandMode")), &transform_move);
+    */
 
     /* Save the undo and redo actions so they can be updated */
     undoAction = gtk_action_group_get_action (documentActions, "Undo");
@@ -783,28 +793,37 @@ create_recent_chooser_menu ()
     selBasedActions[0] = gtk_action_group_get_action (documentActions, "Delete");
     selBasedActions[1] = gtk_action_group_get_action (documentActions, "DeselectAll");
 
-    Configuration *configFile = [window mainConfiguration];
+    /*
+    Configuration *configFile = [app mainConfiguration];
     if ([configFile hasKey:@"toolbarStyle" inGroup:@"UI"]) {
         int value = [configFile integerEntry:@"toolbarStyle" inGroup:@"UI"];
         gtk_radio_action_set_current_value (
                 GTK_RADIO_ACTION (gtk_action_group_get_action (staticActions, "ToolbarIconsOnly")),
                 value);
     }
+    */
 
     return self;
+}
+
+- (void) dealloc {
+    g_free (nodeSelBasedActions);
+    g_free (selBasedActions);
+
+    [super dealloc];
 }
 
 - (GtkWidget*) menubar {
     return gtk_ui_manager_get_widget (ui, "/MenuBar");
 }
 
+/*
 - (GtkWidget*) toolbar {
     return gtk_ui_manager_get_widget (ui, "/ToolBar");
 }
+*/
 
-- (MainWindow*) mainWindow {
-    return mainWindow;
-}
+@synthesize window;
 
 - (void) setUndoActionEnabled:(BOOL)enabled {
     gtk_action_set_sensitive (undoAction, enabled);
@@ -844,13 +863,6 @@ create_recent_chooser_menu ()
             gtk_action_set_sensitive (selBasedActions[i], hasSelectedNodes || hasSelectedEdges);
         }
     }
-}
-
-- (void) dealloc {
-    g_free (nodeSelBasedActions);
-    g_free (selBasedActions);
-
-    [super dealloc];
 }
 
 @end

@@ -24,7 +24,8 @@ EDGEDECFILES = ../AH_*.png ../ED_*.png
 
 bin_PROGRAMS = tikzit
 BUILT_SOURCES = $(PARSERFILES)
-tikzit_SOURCES = gtk/CairoRenderContext.m \
+tikzit_SOURCES = gtk/Application.m \
+                 gtk/CairoRenderContext.m \
                  gtk/ColorRGB+IntegerListStorage.m \
                  gtk/ColorRGB+Gtk.m \
                  gtk/Configuration.m \
@@ -37,7 +38,6 @@ tikzit_SOURCES = gtk/CairoRenderContext.m \
                  gtk/FileChooserDialog.m \
                  gtk/GraphInputHandler.m \
                  gtk/GraphRenderer.m \
-                 gtk/MainWindow.m \
                  gtk/Menu.m \
                  gtk/Node+Render.m \
                  gtk/NodeStyle+Gtk.m \
@@ -56,6 +56,7 @@ tikzit_SOURCES = gtk/CairoRenderContext.m \
                  gtk/StylesPane.m \
                  gtk/TikzDocument.m \
                  gtk/WidgetSurface.m \
+                 gtk/Window.m \
                  gtk/cairo_helpers.m \
                  gtk/clipboard.m \
                  gtk/gtkhelpers.m \

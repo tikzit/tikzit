@@ -26,8 +26,14 @@
 #import "clipboard.h"
 #import "logo.h"
 
-#import "MainWindow.h"
+#import "Application.h"
 #import "TikzGraphAssembler.h"
+
+static GOptionEntry entries[] =
+{
+    //{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Be verbose", NULL },
+    { NULL }
+};
 
 void onUncaughtException(NSException* exception)
 {
@@ -39,9 +45,20 @@ int main (int argc, char *argv[]) {
 
     [[NSAutoreleasePool alloc] init];
 
-    gtk_init (&argc, &argv);
-
-    NSAutoreleasePool *initPool = [[NSAutoreleasePool alloc] init];
+    GError *error = NULL;
+    GOptionContext *context;
+    context = g_option_context_new ("[FILES] - PGF/TikZ-based graph editor");
+    g_option_context_add_main_entries (context, entries, NULL);
+    g_option_context_add_group (context, gtk_get_option_group (TRUE));
+    if (!g_option_context_parse (context, &argc, &argv, &error))
+    {
+        if (error->domain == G_OPTION_ERROR) {
+            g_print ("%s\nUse --help to see available options\n", error->message);
+        } else {
+            g_print ("Unexpected error parsing options: %s\n", error->message);
+        }
+        exit (1);
+    }
 
 #ifndef WINDOWS
     GList *icon_list = NULL;
@@ -59,15 +76,29 @@ int main (int argc, char *argv[]) {
     }
 #endif
 
+    NSAutoreleasePool *initPool = [[NSAutoreleasePool alloc] init];
+
     clipboard_init();
     [TikzGraphAssembler setup];
-    MainWindow *window = [[MainWindow alloc] init];
+
+    Application *app = nil;
+    if (argc > 1) {
+        NSMutableArray *files = [NSMutableArray arrayWithCapacity:argc-1];
+        for (int i = 1; i < argc; ++i) {
+            [files insertObject:[NSString stringWithGlibFilename:argv[i]]
+                        atIndex:i-1];
+        }
+        NSLog(@"Files: %@", files);
+        app = [[Application alloc] initWithFiles:files];
+    } else {
+        app = [[Application alloc] init];
+    }
 
     [initPool drain];
 
     gtk_main ();
 
-    [window saveConfiguration];
+    [app saveConfiguration];
 
     return 0;
 }

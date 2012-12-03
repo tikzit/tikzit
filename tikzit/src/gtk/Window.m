@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2011-2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -15,37 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "MainWindow.h"
+#import "Window.h"
 
 #import <gtk/gtk.h>
 #import "gtkhelpers.h"
 #import "clipboard.h"
 
+#import "Application.h"
 #import "Configuration.h"
 #import "FileChooserDialog.h"
 #import "GraphInputHandler.h"
 #import "GraphRenderer.h"
 #import "Menu.h"
-#import "PreambleEditor.h"
-#ifdef HAVE_POPPLER
-#import "Preambles.h"
-#import "Preambles+Storage.h"
-#import "PreviewWindow.h"
-#endif
-#import "PropertyPane.h"
 #import "RecentManager.h"
-#ifdef HAVE_POPPLER
-#import "SettingsDialog.h"
-#endif
 #import "Shape.h"
-#import "StyleManager.h"
-#import "StyleManager+Storage.h"
-#import "StylesPane.h"
 #import "SupportDir.h"
 #import "TikzDocument.h"
 #import "WidgetSurface.h"
-
-#import "stat.h"
 
 
 // {{{ Internal interfaces
@@ -67,16 +53,16 @@ static void clipboard_paste_contents (GtkClipboard *clipboard,
 // }}}
 // {{{ Signals
 
-static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, MainWindow *window);
-static void tikz_buffer_changed_cb (GtkTextBuffer *buffer, MainWindow *window);
-static gboolean main_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, MainWindow *window);
-static void main_window_destroy_cb (GtkWidget *widget, MainWindow *window);
-static gboolean main_window_configure_event_cb (GtkWidget *widget, GdkEventConfigure *event, MainWindow *window);
+static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, Window *window);
+static void tikz_buffer_changed_cb (GtkTextBuffer *buffer, Window *window);
+static gboolean main_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, Window *window);
+static void main_window_destroy_cb (GtkWidget *widget, Window *window);
+static gboolean main_window_configure_event_cb (GtkWidget *widget, GdkEventConfigure *event, Window *window);
 static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAction *action);
 
 // }}}
 
-@interface MainWindow (Notifications)
+@interface Window (Notifications)
 - (void) tikzBufferChanged;
 - (void) windowSizeChangedWidth:(int)width height:(int)height;
 - (void) documentTikzChanged:(NSNotification*)notification;
@@ -84,18 +70,16 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 - (void) undoStackChanged:(NSNotification*)notification;
 @end
 
-@interface MainWindow (InitHelpers)
-- (void) _loadConfig;
-- (void) _loadStyles;
-- (void) _loadPreambles;
+@interface Window (InitHelpers)
 - (void) _loadUi;
 - (void) _restoreUiState;
 - (void) _connectSignals;
 @end
 
-@interface MainWindow (Private)
-- (BOOL) _confirmCloseDocumentTo:(NSString*)action;
-- (void) _forceLoadDocumentFromFile:(NSString*)path;
+@interface Window (Private)
+- (BOOL) _askCanClose;
+/** Open a document, dealing with errors as necessary */
+- (TikzDocument*) _openDocument:(NSString*)path;
 - (void) _placeGraphOnClipboard:(Graph*)graph;
 - (void) _setHasParseError:(BOOL)hasError;
 /** Update the window title. */
@@ -107,109 +91,149 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 /** Update the undo and redo actions to match the active document's
  *  undo stack. */
 - (void) _updateUndoActions;
-/** Set the last-accessed folder */
-- (void) _setLastFolder:(NSString*)path;
-/** Set the active document */
-- (void) _setActiveDocument:(TikzDocument*)newDoc;
 @end
 
 // }}}
 // {{{ API
 
-@implementation MainWindow
+@implementation Window
 
 - (id) init {
+    return [self initWithDocument:[TikzDocument documentWithStyleManager:[app styleManager]]];
+}
++ (id) window {
+    return [[[self alloc] init] autorelease];
+}
+- (id) initWithDocument:(TikzDocument*)doc {
     self = [super init];
 
     if (self) {
-        document = nil;
-        preambles = nil;
-        preambleWindow = nil;
-        previewWindow = nil;
-        settingsDialog = nil;
-        suppressTikzUpdates = NO;
-        hasParseError = NO;
-
-        [self _loadConfig];
-        [self _loadStyles];
-        [self _loadPreambles];
-        lastFolder = [[configFile stringEntry:@"lastFolder" inGroup:@"Paths"] retain];
         [self _loadUi];
         [self _restoreUiState];
         [self _connectSignals];
 
-        [self loadEmptyDocument];
+        [self setDocument:doc];
 
-        gtk_widget_show (GTK_WIDGET (mainWindow));
+        gtk_widget_show (GTK_WIDGET (window));
     }
 
     return self;
 }
++ (id) windowWithDocument:(TikzDocument*)doc {
+    return [[[self alloc] initWithDocument:doc] autorelease];
+}
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [configFile release];
-    [styleManager release];
-    [preambles release];
+
     [menu release];
     [renderer release];
     [inputHandler release];
-    [preambleWindow release];
-    [previewWindow release];
-    [settingsDialog release];
     [surface release];
-    [lastFolder release];
     [document release];
 
-    g_object_unref (mainWindow);
     g_object_unref (tikzBuffer);
-    g_object_unref (statusBar);
-    g_object_unref (tikzPaneSplitter);
     g_object_unref (tikzPane);
+    g_object_unref (tikzPaneSplitter);
+    g_object_unref (statusBar);
+    g_object_unref (window);
 
     [super dealloc];
 }
 
-- (void) openFile {
-    if (![self _confirmCloseDocumentTo:@"open a new document"]) {
-        return;
+- (TikzDocument*) document {
+    return document;
+}
+- (void) setDocument:(TikzDocument*)newDoc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:[document pickSupport]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:document];
+
+    [newDoc retain];
+    [document release];
+    document = newDoc;
+
+    [renderer setDocument:document];
+    [self _updateTikz];
+    [self _updateTitle];
+    [self _updateStatus];
+    [self _updateUndoActions];
+    [menu notifySelectionChanged:[document pickSupport]];
+    [inputHandler resetState];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                          selector:@selector(documentTikzChanged:)
+                                          name:@"TikzChanged" object:document];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                          selector:@selector(undoStackChanged:)
+                                          name:@"UndoStackChanged" object:document];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                          selector:@selector(documentSelectionChanged:)
+                                          name:@"NodeSelectionChanged" object:[document pickSupport]];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                          selector:@selector(documentSelectionChanged:)
+                                          name:@"EdgeSelectionChanged" object:[document pickSupport]];
+
+    if ([document path] != nil) {
+        [[RecentManager defaultManager] addRecentFile:[document path]];
     }
-    FileChooserDialog *dialog = [FileChooserDialog openDialogWithParent:mainWindow];
+}
+
+- (void) openFile {
+    FileChooserDialog *dialog = [FileChooserDialog openDialogWithParent:window];
     [dialog addStandardFilters];
-    if (lastFolder) {
-        [dialog setCurrentFolder:lastFolder];
+    if ([document path]) {
+        [dialog setCurrentFolder:[document path]];
+    } else if ([app lastOpenFolder]) {
+        [dialog setCurrentFolder:[app lastOpenFolder]];
     }
 
     if ([dialog showDialog]) {
-        [self _forceLoadDocumentFromFile:[dialog filePath]];
-        [self _setLastFolder:[dialog currentFolder]];
+        if ([self openFileAtPath:[dialog filePath]]) {
+            [app setLastOpenFolder:[dialog currentFolder]];
+        }
     }
     [dialog destroy];
 }
 
-- (void) saveActiveDocument {
+- (BOOL) openFileAtPath:(NSString*)path {
+    TikzDocument *doc = [self _openDocument:path];
+    if (doc != nil) {
+        if (![document hasUnsavedChanges] && [document path] == nil) {
+            // we just have a fresh, untitled document - replace it
+            [self setDocument:doc];
+        } else {
+            [app newWindowWithDocument:doc];
+        }
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL) saveActiveDocument {
     if ([document path] == nil) {
-        [self saveActiveDocumentAs];
+        return [self saveActiveDocumentAs];
     } else {
         NSError *error = nil;
         if (![document save:&error]) {
             [self presentError:error];
+            return NO;
         } else {
             [self _updateTitle];
+            return YES;
         }
     }
 }
 
-- (void) saveActiveDocumentAs {
-    FileChooserDialog *dialog = [FileChooserDialog saveDialogWithParent:mainWindow];
+- (BOOL) saveActiveDocumentAs {
+    FileChooserDialog *dialog = [FileChooserDialog saveDialogWithParent:window];
     [dialog addStandardFilters];
     if ([document path] != nil) {
         [dialog setCurrentFolder:[[document path] stringByDeletingLastPathComponent]];
-    } else if (lastFolder != nil) {
-        [dialog setCurrentFolder:lastFolder];
+    } else if ([app lastSaveAsFolder] != nil) {
+        [dialog setCurrentFolder:[app lastSaveAsFolder]];
     }
     [dialog setSuggestedName:[document suggestedFileName]];
 
+    BOOL saved = NO;
     if ([dialog showDialog]) {
         NSString *nfile = [dialog filePath];
 
@@ -219,16 +243,18 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         } else {
             [self _updateTitle];
             [[RecentManager defaultManager] addRecentFile:nfile];
-            [self _setLastFolder:[dialog currentFolder]];
+            [app setLastSaveAsFolder:[dialog currentFolder]];
+            saved = YES;
         }
     }
     [dialog destroy];
+    return saved;
 }
 
 - (void) saveActiveDocumentAsShape {
     GtkWidget *dialog = gtk_dialog_new_with_buttons (
             "Save as shape",
-            mainWindow,
+            window,
             GTK_DIALOG_MODAL,
             GTK_STOCK_OK,
             GTK_RESPONSE_ACCEPT,
@@ -253,7 +279,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         NSString *shapeName = [NSString stringWithUTF8String:dialogInput];
         BOOL doSave = NO;
         if ([shapeName isEqual:@""]) {
-            GtkWidget *emptyStrDialog = gtk_message_dialog_new (mainWindow,
+            GtkWidget *emptyStrDialog = gtk_message_dialog_new (window,
                                  GTK_DIALOG_DESTROY_WITH_PARENT,
                                  GTK_MESSAGE_ERROR,
                                  GTK_BUTTONS_CLOSE,
@@ -262,7 +288,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
             gtk_widget_destroy (emptyStrDialog);
             response = gtk_dialog_run (GTK_DIALOG (dialog));
         } else if ([shapeDict objectForKey:shapeName] != nil) {
-            GtkWidget *overwriteDialog = gtk_message_dialog_new (mainWindow,
+            GtkWidget *overwriteDialog = gtk_message_dialog_new (window,
                                  GTK_DIALOG_DESTROY_WITH_PARENT,
                                  GTK_MESSAGE_QUESTION,
                                  GTK_BUTTONS_YES_NO,
@@ -298,27 +324,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_widget_destroy (dialog);
 }
 
-- (void) quit {
-    if ([self askCanQuit]) {
-        gtk_main_quit();
-    }
-}
-
-- (BOOL) askCanQuit {
-    if ([document hasUnsavedChanges]) {
-        GtkWidget *dialog = gtk_message_dialog_new (mainWindow,
-                                         GTK_DIALOG_DESTROY_WITH_PARENT,
-                                         GTK_MESSAGE_QUESTION,
-                                         GTK_BUTTONS_YES_NO,
-                                         "Are you sure you want to quit without saving the current file?");
-        gint result = gtk_dialog_run (GTK_DIALOG (dialog));
-        gtk_widget_destroy (dialog);
-        return (result == GTK_RESPONSE_YES) ? YES : NO;
-    }
-
-    return YES;
-}
-
 - (void) cut {
     if ([[[document pickSupport] selectedNodes] count] > 0) {
         [self _placeGraphOnClipboard:[document cutSelection]];
@@ -338,73 +343,24 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
                                     document);
 }
 
-- (void) editPreambles {
-#ifdef HAVE_POPPLER
-    if (preambleWindow == nil) {
-        preambleWindow = [[PreambleEditor alloc] initWithPreambles:preambles];
-        [preambleWindow setParentWindow:mainWindow];
-    }
-    [preambleWindow show];
-#endif
-}
-
-- (void) showPreview {
-#ifdef HAVE_POPPLER
-    if (previewWindow == nil) {
-        previewWindow = [[PreviewWindow alloc] initWithPreambles:preambles config:configFile];
-        [previewWindow setParentWindow:mainWindow];
-        [previewWindow setDocument:document];
-    }
-    [previewWindow show];
-#endif
-}
-
-- (void) showSettingsDialog {
-#ifdef HAVE_POPPLER
-    if (settingsDialog == nil) {
-        settingsDialog = [[SettingsDialog alloc] initWithConfiguration:configFile];
-        [settingsDialog setParentWindow:mainWindow];
-    }
-    [settingsDialog show];
-#endif
-}
-
 - (GraphInputHandler*) graphInputHandler {
     return inputHandler;
 }
 
 - (GtkWindow*) gtkWindow {
-    return mainWindow;
+    return window;
 }
 
 - (Configuration*) mainConfiguration {
-    return configFile;
+    return [app mainConfiguration];
 }
 
 - (Menu*) menu {
     return menu;
 }
 
-- (TikzDocument*) activeDocument {
-    return document;
-}
-
-- (void) loadEmptyDocument {
-    if (![self _confirmCloseDocumentTo:@"start a new document"]) {
-        return;
-    }
-    [self _setActiveDocument:[TikzDocument documentWithStyleManager:styleManager]];
-}
-
-- (void) loadDocumentFromFile:(NSString*)path {
-    if (![self _confirmCloseDocumentTo:@"open a new document"]) {
-        return;
-    }
-    [self _forceLoadDocumentFromFile:path];
-}
-
 - (void) presentError:(NSError*)error {
-    GtkWidget *dialog = gtk_message_dialog_new (mainWindow,
+    GtkWidget *dialog = gtk_message_dialog_new (window,
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
@@ -415,7 +371,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 }
 
 - (void) presentError:(NSError*)error withMessage:(NSString*)message {
-    GtkWidget *dialog = gtk_message_dialog_new (mainWindow,
+    GtkWidget *dialog = gtk_message_dialog_new (window,
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
@@ -427,7 +383,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 }
 
 - (void) presentGError:(GError*)error {
-    GtkWidget *dialog = gtk_message_dialog_new (mainWindow,
+    GtkWidget *dialog = gtk_message_dialog_new (window,
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
@@ -438,7 +394,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 }
 
 - (void) presentGError:(GError*)error withMessage:(NSString*)message {
-    GtkWidget *dialog = gtk_message_dialog_new (mainWindow,
+    GtkWidget *dialog = gtk_message_dialog_new (window,
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
@@ -447,30 +403,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
                                                 error->message);
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
-}
-
-- (void) saveConfiguration {
-    NSError *error = nil;
-
-#ifdef HAVE_POPPLER
-    if (preambles != nil) {
-        NSString *preamblesDir = [[SupportDir userSupportDir] stringByAppendingPathComponent:@"preambles"];
-        // NSFileManager is slightly dodgy on Windows
-	g_mkdir_with_parents ([preamblesDir UTF8String], S_IRUSR | S_IWUSR | S_IXUSR);
-        [preambles storeToDirectory:preamblesDir];
-        [configFile setStringEntry:@"selectedPreamble" inGroup:@"Preambles" value:[preambles selectedPreambleName]];
-    }
-#endif
-
-    [styleManager saveStylesUsingConfigurationName:@"styles"];
-
-    if (lastFolder != nil) {
-        [configFile setStringEntry:@"lastFolder" inGroup:@"Paths" value:lastFolder];
-    }
-
-    if (![configFile writeToStoreWithError:&error]) {
-        logError (error, @"Could not write config file");
-    }
 }
 
 - (void) zoomIn {
@@ -485,23 +417,16 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [surface zoomReset];
 }
 
-- (void) favourGraphControls {
-}
-
-- (void) favourNodeControls {
-}
-
-- (void) favourEdgeControls {
-}
-
 @end
 
 // }}}
 // {{{ Notifications
 
-@implementation MainWindow (Notifications)
+@implementation Window (Notifications)
 - (void) graphHeightChanged:(int)newHeight {
-    [configFile setIntegerEntry:@"graphHeight" inGroup:@"mainWindow" value:newHeight];
+    [[app mainConfiguration] setIntegerEntry:@"graphHeight"
+                                     inGroup:@"window"
+                                       value:newHeight];
 }
 
 - (void) tikzBufferChanged {
@@ -528,7 +453,9 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         NSMutableArray *size = [NSMutableArray arrayWithCapacity:2];
         [size addObject:w];
         [size addObject:h];
-        [configFile setIntegerListEntry:@"windowSize" inGroup:@"mainWindow" value:size];
+        [[app mainConfiguration] setIntegerListEntry:@"windowSize"
+                                             inGroup:@"window"
+                                               value:size];
     }
 }
 
@@ -550,45 +477,19 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 // }}}
 // {{{ InitHelpers
 
-@implementation MainWindow (InitHelpers)
-
-- (void) _loadConfig {
-    NSError *error = nil;
-    configFile = [[Configuration alloc] initWithName:@"tikzit" loadError:&error];
-    if (error != nil) {
-        logError (error, @"WARNING: Failed to load configuration");
-    }
-}
-
-- (void) _loadStyles {
-    styleManager = [[StyleManager alloc] init];
-    [styleManager loadStylesUsingConfigurationName:@"styles"];
-}
-
-// must happen after _loadStyles
-- (void) _loadPreambles {
-#ifdef HAVE_POPPLER
-    NSString *preamblesDir = [[SupportDir userSupportDir] stringByAppendingPathComponent:@"preambles"];
-    preambles = [[Preambles alloc] initFromDirectory:preamblesDir];
-    [preambles setStyleManager:styleManager];
-    NSString *selectedPreamble = [configFile stringEntry:@"selectedPreamble" inGroup:@"Preambles"];
-    if (selectedPreamble != nil) {
-        [preambles setSelectedPreambleName:selectedPreamble];
-    }
-#endif
-}
+@implementation Window (InitHelpers)
 
 - (void) _loadUi {
-    mainWindow = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
-    g_object_ref_sink (mainWindow);
-    gtk_window_set_title (mainWindow, "TikZiT");
-    gtk_window_set_default_size (mainWindow, 700, 400);
+    window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
+    g_object_ref_sink (window);
+    gtk_window_set_title (window, "TikZiT");
+    gtk_window_set_default_size (window, 700, 400);
 
     GtkBox *mainLayout = GTK_BOX (gtk_vbox_new (FALSE, 0));
     gtk_widget_show (GTK_WIDGET (mainLayout));
-    gtk_container_add (GTK_CONTAINER (mainWindow), GTK_WIDGET (mainLayout));
+    gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (mainLayout));
 
-    menu = [[Menu alloc] initForMainWindow:self];
+    menu = [[Menu alloc] initForWindow:self];
 
     GtkWidget *menubar = [menu menubar];
     gtk_box_pack_start (mainLayout, menubar, FALSE, TRUE, 0);
@@ -611,7 +512,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [surface setGrabsFocusOnClick:YES];
     renderer = [[GraphRenderer alloc] initWithSurface:surface document:document];
 
-    inputHandler = [[GraphInputHandler alloc] initWithGraphRenderer:renderer window:self];
+    inputHandler = [[GraphInputHandler alloc] initWithGraphRenderer:renderer];
     [surface setInputDelegate:inputHandler];
 
     tikzBuffer = gtk_text_buffer_new (NULL);
@@ -631,6 +532,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_paned_pack2 (tikzPaneSplitter, tikzFrame, FALSE, TRUE);
 
     statusBar = GTK_STATUSBAR (gtk_statusbar_new ());
+    g_object_ref_sink (statusBar);
     gtk_widget_show (GTK_WIDGET (statusBar));
     gtk_box_pack_start (mainLayout, GTK_WIDGET (statusBar), FALSE, TRUE, 0);
 
@@ -639,15 +541,18 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 }
 
 - (void) _restoreUiState {
-    NSArray *windowSize = [configFile integerListEntry:@"windowSize" inGroup:@"mainWindow"];
+    Configuration *config = [app mainConfiguration];
+    NSArray *windowSize = [config integerListEntry:@"windowSize"
+                                           inGroup:@"window"];
     if (windowSize && [windowSize count] == 2) {
         gint width = [[windowSize objectAtIndex:0] intValue];
         gint height = [[windowSize objectAtIndex:1] intValue];
         if (width > 0 && height > 0) {
-            gtk_window_set_default_size (mainWindow, width, height);
+            gtk_window_set_default_size (window, width, height);
         }
     }
-    int panePos = [configFile integerEntry:@"graphHeight" inGroup:@"mainWindow"];
+    int panePos = [config integerEntry:@"graphHeight"
+                               inGroup:@"window"];
     if (panePos > 0) {
         gtk_paned_set_position (tikzPaneSplitter, panePos);
     }
@@ -659,7 +564,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         "owner-change",
         G_CALLBACK (update_paste_action),
         [menu pasteAction]);
-    g_signal_connect (G_OBJECT (mainWindow),
+    g_signal_connect (G_OBJECT (window),
         "key-press-event",
         G_CALLBACK (tz_hijack_key_press),
         NULL);
@@ -671,15 +576,15 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         "changed",
         G_CALLBACK (tikz_buffer_changed_cb),
         self);
-    g_signal_connect (G_OBJECT (mainWindow),
+    g_signal_connect (G_OBJECT (window),
         "delete-event",
         G_CALLBACK (main_window_delete_event_cb),
         self);
-    g_signal_connect (G_OBJECT (mainWindow),
+    g_signal_connect (G_OBJECT (window),
         "destroy",
         G_CALLBACK (main_window_destroy_cb),
         self);
-    g_signal_connect (G_OBJECT (mainWindow),
+    g_signal_connect (G_OBJECT (window),
         "configure-event",
         G_CALLBACK (main_window_configure_event_cb),
         self);
@@ -689,32 +594,40 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 // }}}
 // {{{ Private
 
-@implementation MainWindow (Private)
+@implementation Window (Private)
 
-- (BOOL) _confirmCloseDocumentTo:(NSString*)action {
-    BOOL proceed = YES;
+- (BOOL) _askCanClose {
     if ([document hasUnsavedChanges]) {
-        NSString *message = [NSString stringWithFormat:@"You have unsaved changes to the current document, which will be lost if you %@. Are you sure you want to continue?", action];
-        GtkWidget *dialog = gtk_message_dialog_new (NULL,
+        GtkWidget *dialog = gtk_message_dialog_new (window,
                 GTK_DIALOG_DESTROY_WITH_PARENT,
                 GTK_MESSAGE_QUESTION,
-                GTK_BUTTONS_YES_NO, 
-                "%s", [message UTF8String]); 
-        gtk_window_set_title(GTK_WINDOW(dialog), "Close current document?"); 
-        proceed = gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES;
-        gtk_widget_destroy (dialog);    
+                GTK_BUTTONS_NONE,
+                "Save changes to the document \"%s\" before closing?",
+                [[document name] UTF8String]);
+        gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+                "Save", GTK_RESPONSE_YES,
+                "Don't save", GTK_RESPONSE_NO,
+                "Cancel", GTK_RESPONSE_CANCEL,
+                NULL);
+        gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+        gtk_widget_destroy (dialog);
+        if (result == GTK_RESPONSE_YES) {
+            return [self saveActiveDocument];
+        } else {
+            return result == GTK_RESPONSE_NO;
+        }
+    } else {
+        return YES;
     }
-    return proceed;
 }
 
-- (void) _forceLoadDocumentFromFile:(NSString*)path {
+- (TikzDocument*) _openDocument:(NSString*)path {
     NSError *error = nil;
     TikzDocument *d = [TikzDocument documentFromFile:path
-                                        styleManager:styleManager
+                                        styleManager:[app styleManager]
                                                error:&error];
     if (d != nil) {
-        [self _setActiveDocument:d];
-        [[RecentManager defaultManager] addRecentFile:path];
+        return d;
     } else {
         if ([error code] == TZ_ERR_PARSE) {
             [self presentError:error withMessage:@"Invalid file"];
@@ -722,6 +635,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
             [self presentError:error withMessage:@"Could not open file"];
         }
         [[RecentManager defaultManager] removeRecentFile:path];
+        return nil;
     }
 }
 
@@ -763,10 +677,11 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     NSString *title = [NSString stringWithFormat:@"TikZiT - %@%s",
                                               [document name],
                                               ([document hasUnsavedChanges] ? "*" : "")];
-    gtk_window_set_title(mainWindow, [title UTF8String]);
+    gtk_window_set_title(window, [title UTF8String]);
 }
 
 - (void) _updateStatus {
+    // FIXME: show tooltips or something instead
     GString *buffer = g_string_sized_new (30);
     gchar *nextNode = 0;
 
@@ -819,50 +734,12 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     }
 }
 
-- (void) _setLastFolder:(NSString*)path {
-    [path retain];
-    [lastFolder release];
-    lastFolder = path;
-}
-
-- (void) _setActiveDocument:(TikzDocument*)newDoc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:[document pickSupport]];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:document];
-
-    [newDoc retain];
-    [document release];
-    document = newDoc;
-
-    [renderer setDocument:document];
-#ifdef HAVE_POPPLER
-    [previewWindow setDocument:document];
-#endif
-    [self _updateTikz];
-    [self _updateTitle];
-    [self _updateStatus];
-    [self _updateUndoActions];
-    [menu notifySelectionChanged:[document pickSupport]];
-    [inputHandler resetState];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                          selector:@selector(documentTikzChanged:)
-                                          name:@"TikzChanged" object:document];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                          selector:@selector(undoStackChanged:)
-                                          name:@"UndoStackChanged" object:document];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                          selector:@selector(documentSelectionChanged:)
-                                          name:@"NodeSelectionChanged" object:[document pickSupport]];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                          selector:@selector(documentSelectionChanged:)
-                                          name:@"EdgeSelectionChanged" object:[document pickSupport]];
-}
-
 @end
 
 // }}}
 // {{{ GTK+ callbacks
 
-static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, MainWindow *window) {
+static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     gint position;
     g_object_get (gobject, "position", &position, NULL);
@@ -870,23 +747,27 @@ static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *psp
     [pool drain];
 }
 
-static void tikz_buffer_changed_cb (GtkTextBuffer *buffer, MainWindow *window) {
+static void tikz_buffer_changed_cb (GtkTextBuffer *buffer, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window tikzBufferChanged];
     [pool drain];
 }
 
-static gboolean main_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, MainWindow *window) {
+static gboolean main_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    return ![window askCanQuit];
+    BOOL canClose = ![window _askCanClose];
+    [pool drain];
+    return canClose;
+}
+
+static void main_window_destroy_cb (GtkWidget *widget, Window *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WindowClosed"
+                                                        object:window];
     [pool drain];
 }
 
-static void main_window_destroy_cb (GtkWidget *widget, MainWindow *window) {
-    gtk_main_quit();
-}
-
-static gboolean main_window_configure_event_cb (GtkWidget *widget, GdkEventConfigure *event, MainWindow *window) {
+static gboolean main_window_configure_event_cb (GtkWidget *widget, GdkEventConfigure *event, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [window windowSizeChangedWidth:event->width height:event->height];
     [pool drain];

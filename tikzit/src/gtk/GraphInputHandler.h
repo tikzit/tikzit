@@ -20,8 +20,6 @@
 #import "InputDelegate.h"
 #import "StyleManager.h"
 
-@class MainWindow;
-
 typedef enum {
     SelectMode,
     CreateNodeMode,
@@ -43,7 +41,6 @@ typedef enum {
 } MouseState;
 
 @interface GraphInputHandler: NSObject {
-    MainWindow    *window;
     GraphRenderer *renderer;
     InputMode      mode;
     MouseState     state;
@@ -60,7 +57,7 @@ typedef enum {
 @property (assign) float edgeFuzz;
 @property (assign) InputMode mode;
 
-- (id) initWithGraphRenderer:(GraphRenderer*)r window:(MainWindow*)w;
+- (id) initWithGraphRenderer:(GraphRenderer*)r;
 
 - (void) resetState;
 

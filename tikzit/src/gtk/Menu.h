@@ -1,10 +1,6 @@
 /*
  * Copyright 2011  Alex Merry <alex.merry@kdemail.net>
  *
- * Stuff stolen from glade-window.c in Glade:
- *     Copyright (C) 2001 Ximian, Inc.
- *     Copyright (C) 2007 Vincent Geddes.
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -22,14 +18,14 @@
 #import "TZFoundation.h"
 #import <gtk/gtk.h>
 
-@class MainWindow;
+@class Window;
 @class PickSupport;
 
 /**
- * Manages the menu and toolbar for the main window.
+ * Manages the menu
  */
 @interface Menu: NSObject {
-    MainWindow     *mainWindow;
+    Window         *window;
     GtkUIManager   *ui;
     GtkActionGroup *staticActions;
     GtkActionGroup *documentActions;
@@ -46,25 +42,20 @@
 }
 
 /**
- * Constructs the menu and toolbar for @p window
- *
- * @param window  the mainwindow that will be acted upon by the various
- * menu items and toolbar buttons.
+ * The menubar widget, to be inserted into the window
  */
-- (id) initForMainWindow:(MainWindow*)window;
+@property (readonly) GtkWidget *menubar;
+/**
+ * The window object passed to initForWindow
+ */
+@property (readonly) Window *window;
 
 /**
- * The menubar widget, to be inserted into the main window
+ * Constructs the menu for @p window
+ *
+ * @param window  the window that will be acted upon
  */
-- (GtkWidget*) menubar;
-/**
- * The toolbar widget, to be inserted into the main window
- */
-- (GtkWidget*) toolbar;
-/**
- * The main window object passed to initForMainWindow
- */
-- (MainWindow*) mainWindow;
+- (id) initForWindow:(Window*)window;
 
 /**
  * Enables or disables the undo action
