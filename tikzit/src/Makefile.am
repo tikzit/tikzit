@@ -25,10 +25,13 @@ EDGEDECFILES = ../AH_*.png ../ED_*.png
 bin_PROGRAMS = tikzit
 BUILT_SOURCES = $(PARSERFILES)
 tikzit_SOURCES = gtk/Application.m \
+                 gtk/BoundingBoxTool.m \
                  gtk/CairoRenderContext.m \
                  gtk/ColorRGB+IntegerListStorage.m \
                  gtk/ColorRGB+Gtk.m \
                  gtk/Configuration.m \
+                 gtk/CreateEdgeTool.m \
+                 gtk/CreateNodeTool.m \
                  gtk/Edge+Render.m \
                  gtk/EdgeStyle+Gtk.m \
                  gtk/EdgeStyle+Storage.m \
@@ -36,7 +39,8 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/EdgeStyleSelector.m \
                  gtk/EdgeStylesPalette.m \
                  gtk/FileChooserDialog.m \
-                 gtk/GraphInputHandler.m \
+                 gtk/HandTool.m \
+                 gtk/GraphEditorPanel.m \
                  gtk/GraphRenderer.m \
                  gtk/Menu.m \
                  gtk/Node+Render.m \
@@ -51,6 +55,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/PropertyPane.m \
                  gtk/PropertyListEditor.m \
                  gtk/RecentManager.m \
+                 gtk/SelectTool.m \
                  gtk/Shape+Render.m \
                  gtk/StyleManager+Storage.m \
                  gtk/StylesPane.m \
@@ -63,6 +68,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/logo.m \
                  gtk/mkdtemp.m \
                  gtk/main.m \
+                 gtk/tzstockitems.m \
                  common/CircleShape.m \
                  common/ColorRGB.m \
                  common/DiamondShape.m \

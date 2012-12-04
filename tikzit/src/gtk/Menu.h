@@ -25,14 +25,12 @@
  * Manages the menu
  */
 @interface Menu: NSObject {
-    Window         *window;
-    GtkUIManager   *ui;
-    GtkActionGroup *staticActions;
-    GtkActionGroup *documentActions;
-//  GtkActionGroup *documents_list_menu_actions;
-    GtkAction      *undoAction;
-    GtkAction      *redoAction;
-    GtkAction      *pasteAction;
+    GtkWidget      *menubar;
+    GtkActionGroup *appActions;
+    GtkActionGroup *windowActions;
+    GtkAction      *undoAction;  // no ref
+    GtkAction      *redoAction;  // no ref
+    GtkAction      *pasteAction; // no ref
     GtkAction     **nodeSelBasedActions;
     guint           nodeSelBasedActionCount;
     GtkAction     **edgeSelBasedActions;
@@ -45,10 +43,6 @@
  * The menubar widget, to be inserted into the window
  */
 @property (readonly) GtkWidget *menubar;
-/**
- * The window object passed to initForWindow
- */
-@property (readonly) Window *window;
 
 /**
  * Constructs the menu for @p window

@@ -25,6 +25,7 @@
 #import <gtk/gtk.h>
 #import "clipboard.h"
 #import "logo.h"
+#import "tzstockitems.h"
 
 #import "Application.h"
 #import "TikzGraphAssembler.h"
@@ -78,6 +79,7 @@ int main (int argc, char *argv[]) {
 
     NSAutoreleasePool *initPool = [[NSAutoreleasePool alloc] init];
 
+    tz_register_stock_items();
     clipboard_init();
     [TikzGraphAssembler setup];
 

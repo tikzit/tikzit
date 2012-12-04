@@ -27,32 +27,20 @@
 // protocols
 #import "Surface.h"
 
-typedef enum {
-    NoHandle,
-    EastHandle,
-    SouthEastHandle,
-    SouthHandle,
-    SouthWestHandle,
-    WestHandle,
-    NorthWestHandle,
-    NorthHandle,
-    NorthEastHandle
-} ResizeHandle;
-
 @interface GraphRenderer: NSObject <RenderDelegate> {
     TikzDocument       *doc;
     NSObject<Surface>  *surface;
     Grid               *grid;
-    NSRect              selectionBox;
-    Node               *halfEdgeOrigin;
-    NSPoint             halfEdgeOriginPoint;
-    NSPoint             halfEdgeEnd;
-    BOOL                showBoundingBoxHandles;
+    NSMutableSet       *highlightedNodes;
+    id<RenderDelegate>  postRenderer;
 }
+
+@property (retain) id<RenderDelegate> postRenderer;
 
 - (id) initWithSurface:(NSObject <Surface> *)surface;
 - (id) initWithSurface:(NSObject <Surface> *)surface document:(TikzDocument*)document;
 - (void) renderWithContext:(id<RenderContext>)context;
+- (void) invalidateRect:(NSRect)rect;
 - (void) invalidateGraph;
 - (void) invalidateNode:(Node*)node;
 - (void) invalidateEdge:(Edge*)edge;
@@ -87,18 +75,9 @@ typedef enum {
 - (TikzDocument*) document;
 - (void) setDocument:(TikzDocument*)document;
 
-- (NSRect) selectionBox;
-- (void) setSelectionBox:(NSRect)box;
-- (void) clearSelectionBox;
-
-- (void) setHalfEdgeFrom:(Node*)origin to:(NSPoint)end;
-- (void) clearHalfEdge;
-
-- (BOOL) boundingBoxHandlesShown;
-- (void) setBoundingBoxHandlesShown:(BOOL)shown;
-
-- (ResizeHandle) boundingBoxResizeHandleAt:(NSPoint)point;
-- (NSRect) boundingBoxResizeHandleRect:(ResizeHandle)handle;
+- (BOOL) isNodeHighlighted:(Node*)node;
+- (void) setNode:(Node*)node highlighted:(BOOL)h;
+- (void) clearHighlightedNodes;
 
 @end
 

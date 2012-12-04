@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <alex.merry@kdemail.net>
+ * Copyright 2012  Alex Merry <alex.merry@kdemail.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -16,51 +16,39 @@
  */
 
 #import "TZFoundation.h"
-#import "GraphRenderer.h"
-#import "InputDelegate.h"
-#import "StyleManager.h"
+#import "Tool.h"
 
-typedef enum {
-    SelectMode,
-    CreateNodeMode,
-    DrawEdgeMode,
-    BoundingBoxMode,
-    HandMode
-} InputMode;
+@class Edge;
+@class Node;
 
+// FIXME: replace this with delegates
 typedef enum {
     QuietState,
     SelectBoxState,
     ToggleSelectState,
     MoveSelectedNodesState,
     DragEdgeControlPoint1,
-    DragEdgeControlPoint2,
-    EdgeDragState,
-    BoundingBoxState,
-    CanvasDragState
-} MouseState;
+    DragEdgeControlPoint2
+} SelectToolState;
 
-@interface GraphInputHandler: NSObject <InputDelegate> {
-    GraphRenderer *renderer;
-    InputMode      mode;
-    MouseState     state;
-    float          edgeFuzz;
-    NSPoint        dragOrigin;
-    Node          *leaderNode;
-    NSPoint        oldLeaderPos;
-    Edge          *modifyEdge;
-    NSMutableSet  *selectionBoxContents;
-    ResizeHandle   currentResizeHandle;
-    NSPoint        oldOrigin;
+@interface SelectTool : NSObject <Tool> {
+    GraphRenderer      *renderer;
+    SelectToolState     state;
+    float               edgeFuzz;
+    NSPoint             dragOrigin;
+    Node               *leaderNode;
+    NSPoint             oldLeaderPos;
+    Edge               *modifyEdge;
+    NSRect              selectionBox;
+    NSMutableSet       *selectionBoxContents;
+
+    GtkWidget          *configWidget;
 }
 
 @property (assign) float edgeFuzz;
-@property (assign) InputMode mode;
 
-- (id) initWithGraphRenderer:(GraphRenderer*)r;
-
-- (void) resetState;
-
+- (id) init;
++ (id) tool;
 @end
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4

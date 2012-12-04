@@ -23,10 +23,10 @@
 
 #import "Application.h"
 #import "Window.h"
-#import "GraphInputHandler.h"
 #import "Configuration.h"
 #import "PickSupport.h"
 #import "Shape.h"
+#import "Tool.h"
 #import "TikzDocument.h"
 
 #import <glib.h>
@@ -38,63 +38,42 @@
 
 #import "gtkhelpers.h"
 
-#define ACTION_GROUP_STATIC              "TZStatic"
-#define ACTION_GROUP_DOCUMENT            "TZDocument"
-#define ACTION_GROUP_DOCUMENTS_LIST_MENU "TZDocumentsList"
-
 #import "logo.h"
-#include <gdk-pixbuf/gdk-pixdata.h>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpointer-sign"
-#import "icondata.m"
-#pragma GCC diagnostic pop
 
-
-// {{{ Callbacks
-
-static void new_cb (GtkAction *action, Window *window) {
+// {{{ Application actions
+static void new_cb (GtkAction *action, Application *appl) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [app newWindow];
+    [appl newWindow];
     [pool drain];
 }
 
-static void open_cb (GtkAction *action, Window *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window openFile];
-    [pool drain];
-}
-
-static void save_cb (GtkAction *action, Window *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window saveActiveDocument];
-    [pool drain];
-}
-
-static void save_as_cb (GtkAction *action, Window *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window saveActiveDocumentAs];
-    [pool drain];
-}
-
-static void save_as_shape_cb (GtkAction *action, Window *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window saveActiveDocumentAsShape];
-    [pool drain];
-}
-
-static void refresh_shapes_cb (GtkAction *action, Window *window) {
+static void refresh_shapes_cb (GtkAction *action, Application *appl) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [Shape refreshShapeDictionary];
     [pool drain];
 }
 
-static void quit_cb (GtkAction *action, Window *window) {
+#ifdef HAVE_POPPLER
+static void show_preferences_cb (GtkAction *action, Application *appl) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [app quit];
+    [appl showSettingsDialog];
     [pool drain];
 }
 
-static void help_cb (GtkAction *action, Window *window) {
+static void show_preamble_cb (GtkAction *action, Application *appl) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [appl showPreamblesEditor];
+    [pool drain];
+}
+#endif
+
+static void quit_cb (GtkAction *action, Application *appl) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [appl quit];
+    [pool drain];
+}
+
+static void help_cb (GtkAction *action, Application *appl) {
     GError *gerror = NULL;
     gtk_show_uri (NULL, "http://tikzit.sourceforge.net/manual.html", GDK_CURRENT_TIME, &gerror);
     if (gerror != NULL) {
@@ -104,7 +83,7 @@ static void help_cb (GtkAction *action, Window *window) {
     }
 }
 
-static void about_cb (GtkAction *action, Window *window) {
+static void about_cb (GtkAction *action, Application *appl) {
     static const gchar * const authors[] =
         { "Aleks Kissinger <aleks0@gmail.com>",
           "Chris Heunen <chrisheunen@gmail.com>",
@@ -131,7 +110,7 @@ static void about_cb (GtkAction *action, Window *window) {
         "Copyright \xc2\xa9 2010-2011 Aleks Kissinger, Chris Heunen and Alex Merry.";
 
     GdkPixbuf *logo = get_logo (LOGO_SIZE_128);
-    gtk_show_about_dialog (GTK_WINDOW ([window gtkWindow]),
+    gtk_show_about_dialog (NULL,
                    "program-name", PACKAGE_NAME,
                    "logo", logo,
                    "authors", authors,
@@ -144,6 +123,76 @@ static void about_cb (GtkAction *action, Window *window) {
                    "website", "http://tikzit.sourceforge.net",
                    NULL);
     g_object_unref (logo);
+}
+
+static GtkActionEntry app_action_entries[] = {
+    /*
+        Fields:
+          * action name
+          * stock id or name of icon for action
+          * label for action (mark for translation with N_)
+          * accelerator (as understood by gtk_accelerator_parse())
+          * tooltip (mark for translation with N_)
+          * callback
+    */
+    { "New", GTK_STOCK_NEW, NULL, "<control>N",
+      N_("Create a new graph"), G_CALLBACK (new_cb) },
+
+    { "RefreshShapes", NULL, N_("_Refresh shapes"), NULL,
+      N_(""), G_CALLBACK (refresh_shapes_cb) },
+
+    { "Quit", GTK_STOCK_QUIT, NULL, "<control>Q",
+      N_("Quit the program"), G_CALLBACK (quit_cb) },
+
+    { "Tool", NULL, N_("_Tool") },
+
+#ifdef HAVE_POPPLER
+    { "ShowPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
+      N_("Edit the TikZiT preferences"), G_CALLBACK (show_preferences_cb) },
+
+    { "ShowPreamble", NULL, N_("_Edit Preambles..."), NULL,
+      N_("Edit the preambles used to generate the preview"), G_CALLBACK (show_preamble_cb) },
+#endif
+
+    /* HelpMenu */
+    { "HelpManual", GTK_STOCK_HELP, N_("_Online manual"), "F1",
+      N_("TikZiT manual (online)"), G_CALLBACK (help_cb) },
+
+    { "About", GTK_STOCK_ABOUT, NULL, NULL,
+      N_("About this application"), G_CALLBACK (about_cb) },
+};
+static guint n_app_action_entries = G_N_ELEMENTS (app_action_entries);
+// }}}
+// {{{ Window actions
+
+static void open_cb (GtkAction *action, Window *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [window openFile];
+    [pool drain];
+}
+
+static void close_cb (GtkAction *action, Window *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [window close];
+    [pool drain];
+}
+
+static void save_cb (GtkAction *action, Window *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [window saveActiveDocument];
+    [pool drain];
+}
+
+static void save_as_cb (GtkAction *action, Window *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [window saveActiveDocumentAs];
+    [pool drain];
+}
+
+static void save_as_shape_cb (GtkAction *action, Window *window) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [window saveActiveDocumentAsShape];
+    [pool drain];
 }
 
 static void undo_cb (GtkAction *action, Window *window) {
@@ -256,18 +305,6 @@ static void send_to_back_cb (GtkAction *action, Window *window) {
 }
 
 #ifdef HAVE_POPPLER
-static void show_preferences_cb (GtkAction *action, Window *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [app showSettingsDialog];
-    [pool drain];
-}
-
-static void show_preamble_cb (GtkAction *action, Window *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [app showPreamblesEditor];
-    [pool drain];
-}
-
 static void show_preview_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [app showPreviewForDocument:[window document]];
@@ -293,25 +330,6 @@ static void zoom_reset_cb (GtkAction *action, Window *window) {
     [pool drain];
 }
 
-static void input_mode_change_cb (GtkRadioAction *action, GtkRadioAction *current, Window *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    InputMode mode = (InputMode)gtk_radio_action_get_current_value (action);
-    [[window graphInputHandler] setMode:mode];
-    [pool drain];
-}
-
-/*
-static void toolbar_style_change_cb (GtkRadioAction *action, GtkRadioAction *current, Menu *menu) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-    gint value = gtk_radio_action_get_current_value (action);
-    gtk_toolbar_set_style (GTK_TOOLBAR ([menu toolbar]), (GtkToolbarStyle)value);
-    [[[menu mainWindow] mainConfiguration] setIntegerEntry:@"toolbarStyle" inGroup:@"UI" value:value];
-
-    [pool drain];
-}
-*/
-
 static void recent_chooser_item_activated_cb (GtkRecentChooser *chooser, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -336,121 +354,7 @@ static void recent_chooser_item_activated_cb (GtkRecentChooser *chooser, Window 
 }
 
 
-
-// }}}
-// {{{ UI XML
-
-static const gchar ui_info[] =
-"<ui>"
-"  <menubar name='MenuBar'>"
-"    <menu action='FileMenu'>"
-"      <menuitem action='New'/>"
-"      <menuitem action='Open'/>"
-"      <menuitem action='OpenRecent'/>"
-"      <separator/>"
-"      <menuitem action='Save'/>"
-"      <menuitem action='SaveAs'/>"
-"      <separator/>"
-"      <menuitem action='SaveAsShape'/>"
-"      <menuitem action='RefreshShapes'/>"
-"      <separator/>"
-//"      <menuitem action='Close'/>"
-"      <menuitem action='Quit'/>"
-"    </menu>"
-"    <menu action='EditMenu'>"
-"      <menu action='Tool'>"
-"        <menuitem action='SelectMode'/>"
-"        <menuitem action='CreateNodeMode'/>"
-"        <menuitem action='DrawEdgeMode'/>"
-"        <menuitem action='BoundingBoxMode'/>"
-"        <menuitem action='HandMode'/>"
-"      </menu>"
-"      <separator/>"
-"      <menuitem action='Undo'/>"
-"      <menuitem action='Redo'/>"
-"      <separator/>"
-"      <menuitem action='Cut'/>"
-"      <menuitem action='Copy'/>"
-"      <menuitem action='Paste'/>"
-"      <menuitem action='Delete'/>"
-"      <separator/>"
-"      <menuitem action='SelectAll'/>"
-"      <menuitem action='DeselectAll'/>"
-"      <separator/>"
-"      <menuitem action='FlipVert'/>"
-"      <menuitem action='FlipHoriz'/>"
-"      <menuitem action='ReverseEdges'/>"
-"      <separator/>"
-"      <menu action='Arrange'>"
-"        <menuitem action='SendToBack'/>"
-"        <menuitem action='SendBackward'/>"
-"        <menuitem action='BringForward'/>"
-"        <menuitem action='BringToFront'/>"
-"      </menu>"
-#ifdef HAVE_POPPLER
-"      <separator/>"
-"      <menuitem action='ShowPreferences'/>"
-#endif
-"    </menu>"
-"    <menu action='ViewMenu'>"
-/*
-"      <menu action='ToolbarStyle'>"
-"        <menuitem action='ToolbarIconsOnly'/>"
-"        <menuitem action='ToolbarTextOnly'/>"
-"        <menuitem action='ToolbarTextIcons'/>"
-"        <menuitem action='ToolbarTextIconsHoriz'/>"
-"      </menu>"
-*/
-/*
-"      <menuitem action='ToolbarVisible'/>"
-"      <menuitem action='StatusbarVisible'/>"
-*/
-#ifdef HAVE_POPPLER
-"      <menuitem action='ShowPreamble'/>"
-"      <menuitem action='ShowPreview'/>"
-#endif
-"      <menu action='Zoom'>"
-"        <menuitem action='ZoomIn'/>"
-"        <menuitem action='ZoomOut'/>"
-"        <menuitem action='ZoomReset'/>"
-"      </menu>"
-"    </menu>"
-/*
-"    <menu action='Window'>"
-"      <placeholder name='DocumentsListPlaceholder'/>"
-"    </menu>"
-*/
-"    <menu action='HelpMenu'>"
-"      <menuitem action='HelpManual'/>"
-"      <separator/>"
-"      <menuitem action='About'/>"
-"    </menu>"
-"  </menubar>"
-/*
-"  <toolbar  name='ToolBar'>"
-"    <toolitem action='New'/>"
-"    <toolitem action='Open'/>"
-"    <toolitem action='Save'/>"
-"    <separator/>"
-"    <toolitem action='Cut'/>"
-"    <toolitem action='Copy'/>"
-"    <toolitem action='Paste'/>"
-"    <separator/>"
-"    <toolitem action='SelectMode'/>"
-"    <toolitem action='CreateNodeMode'/>"
-"    <toolitem action='DrawEdgeMode'/>"
-"    <toolitem action='BoundingBoxMode'/>"
-"    <toolitem action='HandMode'/>"
-"  </toolbar>"
-*/
-"</ui>";
-
-
-
-// }}}
-// {{{ Actions
-
-static GtkActionEntry static_entries[] = {
+static GtkActionEntry window_action_entries[] = {
     /*
         Fields:
           * action name
@@ -463,45 +367,16 @@ static GtkActionEntry static_entries[] = {
     { "FileMenu", NULL, N_("_File") },
     { "EditMenu", NULL, N_("_Edit") },
     { "ViewMenu", NULL, N_("_View") },
-    //{ "ProjectMenu", NULL, N_("_Projects") },
     { "HelpMenu", NULL, N_("_Help") },
-    //{ "UndoMenu", NULL, NULL },
-    //{ "RedoMenu", NULL, NULL },
 
-    /* FileMenu */
-    { "New", GTK_STOCK_NEW, NULL, "<control>N",
-      N_("Create a new graph"), G_CALLBACK (new_cb) },
+    { "Arrange", NULL, N_("_Arrange") },
+    { "Zoom", NULL, N_("_Zoom") },
 
     { "Open", GTK_STOCK_OPEN, N_("_Open\342\200\246") ,"<control>O",
       N_("Open a graph"), G_CALLBACK (open_cb) },
 
-    { "OpenRecent", NULL, N_("Open _Recent") },
-
-    { "RefreshShapes", NULL, N_("_Refresh shapes"), NULL,
-      N_(""), G_CALLBACK (refresh_shapes_cb) },
-
-    { "Quit", GTK_STOCK_QUIT, NULL, "<control>Q",
-      N_("Quit the program"), G_CALLBACK (quit_cb) },
-
-    /* EditMenu */
-    { "Tool", NULL, N_("_Tool") },
-
-    { "Arrange", NULL, N_("_Arrange") },
-
-#ifdef HAVE_POPPLER
-    { "ShowPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
-      N_("Edit the TikZiT preferences"), G_CALLBACK (show_preferences_cb) },
-#endif
-
-    /* ViewMenu */
-    //{ "ToolbarStyle", NULL, N_("_Toolbar style") },
-
-#ifdef HAVE_POPPLER
-    { "ShowPreamble", NULL, N_("_Edit Preambles..."), NULL,
-      N_("Edit the preambles used to generate the preview"), G_CALLBACK (show_preamble_cb) },
-#endif
-
-    { "Zoom", NULL, N_("_Zoom") },
+    { "Close", GTK_STOCK_CLOSE, NULL, "<control>W",
+      N_("Close the current graph"), G_CALLBACK (close_cb) },
 
     { "ZoomIn", GTK_STOCK_ZOOM_IN, NULL, "<control>plus",
       NULL, G_CALLBACK (zoom_in_cb) },
@@ -512,19 +387,6 @@ static GtkActionEntry static_entries[] = {
     { "ZoomReset", GTK_STOCK_ZOOM_100, N_("_Reset zoom"), "<control>0",
       NULL, G_CALLBACK (zoom_reset_cb) },
 
-    /* HelpMenu */
-    { "HelpManual", GTK_STOCK_HELP, N_("_Online manual"), "F1",
-      N_("TikZiT manual (online)"), G_CALLBACK (help_cb) },
-
-    { "About", GTK_STOCK_ABOUT, NULL, NULL,
-      N_("About this application"), G_CALLBACK (about_cb) },
-};
-
-static guint n_static_entries = G_N_ELEMENTS (static_entries);
-
-static GtkActionEntry document_entries[] = {
-
-    /* FileMenu */
     { "Save", GTK_STOCK_SAVE, NULL, "<control>S",
       N_("Save the current graph"), G_CALLBACK (save_cb) },
 
@@ -534,12 +396,6 @@ static GtkActionEntry document_entries[] = {
     { "SaveAsShape", NULL, N_("Save As S_hape\342\200\246"), NULL,
       N_("Save the current graph as a shape for use in styles"), G_CALLBACK (save_as_shape_cb) },
 
-/*
-    { "Close", GTK_STOCK_CLOSE, NULL, "<control>W",
-      N_("Close the current graph"), G_CALLBACK (close_cb) },
-*/
-
-    /* EditMenu */
     { "Undo", GTK_STOCK_UNDO, NULL, "<control>Z",
       N_("Undo the last action"),   G_CALLBACK (undo_cb) },
 
@@ -591,101 +447,114 @@ static GtkActionEntry document_entries[] = {
       N_("See the graph as it will look when rendered in LaTeX"), G_CALLBACK (show_preview_cb) },
 #endif
 };
-static guint n_document_entries = G_N_ELEMENTS (document_entries);
+static guint n_window_action_entries = G_N_ELEMENTS (window_action_entries);
 
-static GtkRadioActionEntry mode_entries[] = {
-    /*
-        Fields:
-          * action name
-          * stock id or name of icon for action
-          * label for action (mark for translation with N_)
-          * accelerator (as understood by gtk_accelerator_parse())
-          * tooltip (mark for translation with N_)
-          * value (see gtk_radio_action_get_current_value())
-    */
+// }}}
+// {{{ UI XML
 
-    { "SelectMode", NULL, N_("_Select"), "<control><shift>s",
-      N_("Select, move and edit nodes and edges"), (gint)SelectMode },
+static const gchar ui_info[] =
+"<ui>"
+"  <menubar name='MenuBar'>"
+"    <menu action='FileMenu'>"
+"      <menuitem action='New'/>"
+"      <menuitem action='Open'/>"
+"      <menuitem action='OpenRecent'/>"
+"      <separator/>"
+"      <menuitem action='Save'/>"
+"      <menuitem action='SaveAs'/>"
+"      <separator/>"
+"      <menuitem action='SaveAsShape'/>"
+"      <menuitem action='RefreshShapes'/>"
+"      <separator/>"
+"      <menuitem action='Close'/>"
+"      <menuitem action='Quit'/>"
+"    </menu>"
+"    <menu action='EditMenu'>"
+"      <menu action='Tool'>"
+"      </menu>"
+"      <separator/>"
+"      <menuitem action='Undo'/>"
+"      <menuitem action='Redo'/>"
+"      <separator/>"
+"      <menuitem action='Cut'/>"
+"      <menuitem action='Copy'/>"
+"      <menuitem action='Paste'/>"
+"      <menuitem action='Delete'/>"
+"      <separator/>"
+"      <menuitem action='SelectAll'/>"
+"      <menuitem action='DeselectAll'/>"
+"      <separator/>"
+"      <menuitem action='FlipVert'/>"
+"      <menuitem action='FlipHoriz'/>"
+"      <menuitem action='ReverseEdges'/>"
+"      <separator/>"
+"      <menu action='Arrange'>"
+"        <menuitem action='SendToBack'/>"
+"        <menuitem action='SendBackward'/>"
+"        <menuitem action='BringForward'/>"
+"        <menuitem action='BringToFront'/>"
+"      </menu>"
+#ifdef HAVE_POPPLER
+"      <separator/>"
+"      <menuitem action='ShowPreferences'/>"
+#endif
+"    </menu>"
+"    <menu action='ViewMenu'>"
+#ifdef HAVE_POPPLER
+"      <menuitem action='ShowPreamble'/>"
+"      <menuitem action='ShowPreview'/>"
+#endif
+"      <menu action='Zoom'>"
+"        <menuitem action='ZoomIn'/>"
+"        <menuitem action='ZoomOut'/>"
+"        <menuitem action='ZoomReset'/>"
+"      </menu>"
+"    </menu>"
+"    <menu action='HelpMenu'>"
+"      <menuitem action='HelpManual'/>"
+"      <separator/>"
+"      <menuitem action='About'/>"
+"    </menu>"
+"  </menubar>"
+/*
+"  <toolbar  name='ToolBar'>"
+"    <toolitem action='New'/>"
+"    <toolitem action='Open'/>"
+"    <toolitem action='Save'/>"
+"    <separator/>"
+"    <toolitem action='Cut'/>"
+"    <toolitem action='Copy'/>"
+"    <toolitem action='Paste'/>"
+"    <separator/>"
+"    <toolitem action='SelectMode'/>"
+"    <toolitem action='CreateNodeMode'/>"
+"    <toolitem action='DrawEdgeMode'/>"
+"    <toolitem action='BoundingBoxMode'/>"
+"    <toolitem action='HandMode'/>"
+"  </toolbar>"
+*/
+"</ui>";
 
-    { "CreateNodeMode", NULL, N_("_Create nodes"), "<control><shift>c",
-      N_("Create new nodes"), (gint)CreateNodeMode },
 
-    { "DrawEdgeMode", NULL, N_("_Draw edges"), "<control><shift>e",
-      N_("Draw new edges"), (gint)DrawEdgeMode },
-
-    { "BoundingBoxMode", NULL, N_("_Bounding box"), "<control><shift>x",
-      N_("Set the bounding box"), (gint)BoundingBoxMode },
-
-    { "HandMode", NULL, N_("_Pan"), "<control><shift>f",
-      N_("Move the diagram to view different parts"), (gint)HandMode },
-};
-static guint n_mode_entries = G_N_ELEMENTS (mode_entries);
-
-static GtkRadioActionEntry toolbar_style_entries[] = {
-    /*
-        Fields:
-          * action name
-          * stock id or name of icon for action
-          * label for action (mark for translation with N_)
-          * accelerator (as understood by gtk_accelerator_parse())
-          * tooltip (mark for translation with N_)
-          * value (see gtk_radio_action_get_current_value())
-    */
-
-    { "ToolbarIconsOnly", NULL, N_("_Icons only"), NULL,
-      N_("Show only icons on the toolbar"), (gint)GTK_TOOLBAR_ICONS },
-
-    { "ToolbarTextOnly", NULL, N_("_Text only"), NULL,
-      N_("Show only text on the toolbar"), (gint)GTK_TOOLBAR_TEXT },
-
-    { "ToolbarTextIcons", NULL, N_("Text _below icons"), NULL,
-      N_("Show icons on the toolbar with text below"), (gint)GTK_TOOLBAR_BOTH },
-
-    { "ToolbarTextIconsHoriz", NULL, N_("Text be_side icons"), NULL,
-      N_("Show icons on the toolbar with text beside"), (gint)GTK_TOOLBAR_BOTH_HORIZ },
-};
-static guint n_toolbar_style_entries = G_N_ELEMENTS (toolbar_style_entries);
 
 // }}}
 // {{{ Helper methods
 
-
-static void
-set_tool_button_image (GtkToolButton *button, const GdkPixdata *image_data)
+static void configure_recent_chooser (GtkRecentChooser *chooser)
 {
-    GtkWidget *image = NULL;
+    gtk_recent_chooser_set_local_only (chooser, TRUE);
+    gtk_recent_chooser_set_show_icons (chooser, FALSE);
+    gtk_recent_chooser_set_sort_type (chooser, GTK_RECENT_SORT_MRU);
 
-    if (image_data) {
-        GdkPixbuf *buf = gdk_pixbuf_from_pixdata (image_data, FALSE, NULL);
-        image = gtk_image_new_from_pixbuf (buf);
-        g_object_unref (buf);
-    }
-
-    gtk_tool_button_set_icon_widget (button, image);
-
-    if (image) {
-        gtk_widget_show (image);
-    }
+    GtkRecentFilter *filter = gtk_recent_filter_new ();
+    gtk_recent_filter_add_application (filter, g_get_application_name());
+    gtk_recent_chooser_set_filter (chooser, filter);
 }
 
-GtkWidget *
-create_recent_chooser_menu ()
-{
-    GtkWidget *recent_menu;
-    GtkRecentFilter *filter;
-
-    recent_menu = gtk_recent_chooser_menu_new_for_manager (gtk_recent_manager_get_default ());
-
-    gtk_recent_chooser_set_local_only (GTK_RECENT_CHOOSER (recent_menu), TRUE);
-    gtk_recent_chooser_set_show_icons (GTK_RECENT_CHOOSER (recent_menu), FALSE);
-    gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (recent_menu), GTK_RECENT_SORT_MRU);
-    gtk_recent_chooser_menu_set_show_numbers (GTK_RECENT_CHOOSER_MENU (recent_menu), TRUE);
-
-    filter = gtk_recent_filter_new ();
-    gtk_recent_filter_add_application (filter, g_get_application_name());
-    gtk_recent_chooser_set_filter (GTK_RECENT_CHOOSER (recent_menu), filter);
-
-    return recent_menu;
+static void tool_cb (GtkAction *action, id<Tool> tool) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [app setActiveTool:tool];
+    [pool drain];
 }
 
 
@@ -701,107 +570,102 @@ create_recent_chooser_menu ()
     return nil;
 }
 
-- (id) initForWindow:(Window*)w {
+- (id) initForWindow:(Window*)window {
     self = [super init];
     if (!self) {
         return nil;
     }
 
-    window = w;
-
     GError *error = NULL;
 
-    staticActions = gtk_action_group_new (ACTION_GROUP_STATIC);
-    //gtk_action_group_set_translation_domain (staticActions, GETTEXT_PACKAGE);
+    appActions = gtk_action_group_new ("TZApp");
+    //gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
+    gtk_action_group_add_actions (appActions,
+                      app_action_entries,
+                      n_app_action_entries,
+                      app);
+    for (id<Tool> tool in [app tools]) {
+        NSString *tooltip = [NSString stringWithFormat:
+            @"%@: %@ (%@)", [tool name], [tool helpText], [tool shortcut]];
+        GtkAction *action = gtk_action_new (
+                [[tool name] UTF8String],
+                [[tool name] UTF8String],
+                [tooltip UTF8String],
+                [tool stockIcon]);
+        gtk_action_group_add_action_with_accel (
+                appActions,
+                action,
+                [[tool shortcut] UTF8String]);
+        g_signal_connect (
+                G_OBJECT (action),
+                "activate",
+                G_CALLBACK (tool_cb),
+                tool);
+        g_object_unref (action);
+    }
 
-    gtk_action_group_add_actions (staticActions,
-                      static_entries,
-                      n_static_entries,
+    windowActions = gtk_action_group_new ("TZWindow");
+    //gtk_action_group_set_translation_domain (windowActions, GETTEXT_PACKAGE);
+
+    gtk_action_group_add_actions (windowActions,
+                      window_action_entries,
+                      n_window_action_entries,
                       window);
-    gtk_action_group_add_radio_actions (staticActions, mode_entries,
-                        n_mode_entries, (gint)SelectMode,
-                        G_CALLBACK (input_mode_change_cb), window);
-    /*
-    GtkToolbarStyle style;
-    g_object_get (G_OBJECT (gtk_settings_get_default ()), "gtk-toolbar-style", &style, NULL);
-    gtk_action_group_add_radio_actions (staticActions, toolbar_style_entries,
-                        n_toolbar_style_entries, style,
-                        G_CALLBACK (toolbar_style_change_cb), self);
-                        */
 
-    documentActions = gtk_action_group_new (ACTION_GROUP_DOCUMENT);
-    //gtk_action_group_set_translation_domain (documentActions, GETTEXT_PACKAGE);
+    GtkAction *action = gtk_recent_action_new ("OpenRecent", N_("Open _Recent"), NULL, NULL);
+    g_signal_connect (G_OBJECT (action),
+            "item-activated",
+            G_CALLBACK (recent_chooser_item_activated_cb),
+            window);
+    configure_recent_chooser (GTK_RECENT_CHOOSER (action));
+    gtk_action_group_add_action_with_accel (windowActions, action, NULL);
+    g_object_unref (action);
 
-    gtk_action_group_add_actions (documentActions,
-                      document_entries,
-                      n_document_entries,
-                      window);
+    /* Save refs to actions that will need to be updated */
+    undoAction = gtk_action_group_get_action (windowActions, "Undo");
+    redoAction = gtk_action_group_get_action (windowActions, "Redo");
+    pasteAction = gtk_action_group_get_action (windowActions, "Paste");
 
-    /*
-    documents_list_menu_actions =
-        gtk_action_group_new (ACTION_GROUP_DOCUMENTS_LIST_MENU);
-    gtk_action_group_set_translation_domain (documents_list_menu_actions,
-                         GETTEXT_PACKAGE);
-    */
+    nodeSelBasedActionCount = 4;
+    nodeSelBasedActions = g_new (GtkAction*, nodeSelBasedActionCount);
+    nodeSelBasedActions[0] = gtk_action_group_get_action (windowActions, "Cut");
+    nodeSelBasedActions[1] = gtk_action_group_get_action (windowActions, "Copy");
+    nodeSelBasedActions[2] = gtk_action_group_get_action (windowActions, "FlipHoriz");
+    nodeSelBasedActions[3] = gtk_action_group_get_action (windowActions, "FlipVert");
+    edgeSelBasedActionCount = 1;
+    edgeSelBasedActions = g_new (GtkAction*, edgeSelBasedActionCount);
+    edgeSelBasedActions[0] = gtk_action_group_get_action (windowActions, "ReverseEdges");
+    selBasedActionCount = 2;
+    selBasedActions = g_new (GtkAction*, selBasedActionCount);
+    selBasedActions[0] = gtk_action_group_get_action (windowActions, "Delete");
+    selBasedActions[1] = gtk_action_group_get_action (windowActions, "DeselectAll");
 
-    ui = gtk_ui_manager_new ();
 
-    gtk_ui_manager_insert_action_group (ui, staticActions, 0);
-    gtk_ui_manager_insert_action_group (ui, documentActions, 1);
-    //gtk_ui_manager_insert_action_group (ui, documents_list_menu_actions, 3);
-
+    GtkUIManager *ui = gtk_ui_manager_new ();
+    gtk_ui_manager_insert_action_group (ui, windowActions, 0);
+    gtk_ui_manager_insert_action_group (ui, appActions, 1);
     gtk_window_add_accel_group ([window gtkWindow], gtk_ui_manager_get_accel_group (ui));
-
     if (!gtk_ui_manager_add_ui_from_string (ui, ui_info, -1, &error))
     {
         g_message ("Building menus failed: %s", error->message);
         g_error_free (error);
-        return NULL;
+        g_object_unref (ui);
+        [self release];
+        return nil;
     }
-
-    /* Set custom images for tool mode buttons */
-    /*
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/SelectMode")), &select_rectangular);
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/CreateNodeMode")), &draw_ellipse);
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/DrawEdgeMode")), &draw_path);
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/BoundingBoxMode")), &transform_crop_and_resize);
-    set_tool_button_image (GTK_TOOL_BUTTON (gtk_ui_manager_get_widget (ui, "/ToolBar/HandMode")), &transform_move);
-    */
-
-    /* Save the undo and redo actions so they can be updated */
-    undoAction = gtk_action_group_get_action (documentActions, "Undo");
-    redoAction = gtk_action_group_get_action (documentActions, "Redo");
-    pasteAction = gtk_action_group_get_action (documentActions, "Paste");
-
-    /* Recent items */
-    GtkWidget *recentMenu = create_recent_chooser_menu();
-    GtkMenuItem *recentMenuItem = GTK_MENU_ITEM (gtk_ui_manager_get_widget (ui, "/MenuBar/FileMenu/OpenRecent"));
-    gtk_menu_item_set_submenu (recentMenuItem, recentMenu);
-    g_signal_connect (recentMenu, "item-activated", G_CALLBACK (recent_chooser_item_activated_cb), window);
-
-    nodeSelBasedActionCount = 4;
-    nodeSelBasedActions = g_new (GtkAction*, nodeSelBasedActionCount);
-    nodeSelBasedActions[0] = gtk_action_group_get_action (documentActions, "Cut");
-    nodeSelBasedActions[1] = gtk_action_group_get_action (documentActions, "Copy");
-    nodeSelBasedActions[2] = gtk_action_group_get_action (documentActions, "FlipHoriz");
-    nodeSelBasedActions[3] = gtk_action_group_get_action (documentActions, "FlipVert");
-    edgeSelBasedActionCount = 1;
-    edgeSelBasedActions = g_new (GtkAction*, edgeSelBasedActionCount);
-    edgeSelBasedActions[0] = gtk_action_group_get_action (documentActions, "ReverseEdges");
-    selBasedActionCount = 2;
-    selBasedActions = g_new (GtkAction*, selBasedActionCount);
-    selBasedActions[0] = gtk_action_group_get_action (documentActions, "Delete");
-    selBasedActions[1] = gtk_action_group_get_action (documentActions, "DeselectAll");
-
-    /*
-    Configuration *configFile = [app mainConfiguration];
-    if ([configFile hasKey:@"toolbarStyle" inGroup:@"UI"]) {
-        int value = [configFile integerEntry:@"toolbarStyle" inGroup:@"UI"];
-        gtk_radio_action_set_current_value (
-                GTK_RADIO_ACTION (gtk_action_group_get_action (staticActions, "ToolbarIconsOnly")),
-                value);
+    guint tool_merge_id = gtk_ui_manager_new_merge_id (ui);
+    for (id<Tool> tool in [app tools]) {
+        gtk_ui_manager_add_ui (ui,
+                tool_merge_id,
+                "/ui/MenuBar/EditMenu/Tool",
+                [[tool name] UTF8String],
+                [[tool name] UTF8String],
+                GTK_UI_MANAGER_AUTO,
+                FALSE);
     }
-    */
+    menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
+    g_object_ref_sink (menubar);
+    g_object_unref (ui);
 
     return self;
 }
@@ -809,21 +673,13 @@ create_recent_chooser_menu ()
 - (void) dealloc {
     g_free (nodeSelBasedActions);
     g_free (selBasedActions);
+    g_object_unref (menubar);
+    g_object_unref (windowActions);
 
     [super dealloc];
 }
 
-- (GtkWidget*) menubar {
-    return gtk_ui_manager_get_widget (ui, "/MenuBar");
-}
-
-/*
-- (GtkWidget*) toolbar {
-    return gtk_ui_manager_get_widget (ui, "/ToolBar");
-}
-*/
-
-@synthesize window;
+@synthesize menubar;
 
 - (void) setUndoActionEnabled:(BOOL)enabled {
     gtk_action_set_sensitive (undoAction, enabled);

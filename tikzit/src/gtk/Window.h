@@ -17,10 +17,8 @@
 
 #import "TZFoundation.h"
 #import <gtk/gtk.h>
-#import "WidgetSurface.h"
 
-@class GraphRenderer;
-@class GraphInputHandler;
+@class GraphEditorPanel;
 @class Menu;
 @class PropertyPane;
 @class Preambles;
@@ -30,6 +28,7 @@
 @class StyleManager;
 @class StylesPane;
 @class TikzDocument;
+@protocol Tool;
 
 /**
  * Manages a document window
@@ -44,10 +43,7 @@
 
     // Classes that manage parts of the window
     Menu              *menu;
-    GraphRenderer     *renderer;
-    GraphInputHandler *inputHandler;
-
-    WidgetSurface     *surface;
+    GraphEditorPanel  *graphPanel;
 
     // state variables
     BOOL               suppressTikzUpdates;
@@ -97,6 +93,15 @@
 - (void) saveActiveDocumentAsShape;
 
 /**
+ * Close the window.
+ *
+ * May terminate the application if this is the last window.
+ *
+ * Will ask for user confirmation if the document is not saved.
+ */
+- (void) close;
+
+/**
  * Cut the current selection to the clipboard.
  */
 - (void) cut;
@@ -109,10 +114,6 @@
  */
 - (void) paste;
 
-/**
- * The graph input handler
- */
-- (GraphInputHandler*) graphInputHandler;
 /**
  * The GTK+ window that this class manages.
  */
@@ -148,6 +149,8 @@
  * @param message  a message to display with the error
  */
 - (void) presentGError:(GError*)error withMessage:(NSString*)message;
+
+- (void) setActiveTool:(id<Tool>)tool;
 
 - (void) zoomIn;
 - (void) zoomOut;

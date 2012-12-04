@@ -669,13 +669,6 @@
     [self completedGraphChange:change withName:@"Add node"];
 }
 
-- (Node*) addNodeAt:(NSPoint)pos {
-    Node *node = [Node nodeWithPoint:pos];
-    [node setStyle:[styleManager activeNodeStyle]];
-    [self addNode:node];
-    return node;
-}
-
 - (void) removeNode:(Node*)node {
     [pickSupport deselectNode:node];
     GraphChange *change = [graph removeNode:node];
@@ -691,13 +684,6 @@
     [pickSupport deselectEdge:edge];
     GraphChange *change = [graph removeEdge:edge];
     [self completedGraphChange:change withName:@"Remove edge"];
-}
-
-- (Edge*) addEdgeFrom:(Node*)source to:(Node*)target {
-    Edge *edge = [Edge edgeWithSource:source andTarget:target];
-    [edge setStyle:[styleManager activeEdgeStyle]];
-    [self addEdge:edge];
-    return edge;
 }
 
 - (void) shiftSelectedNodesByPoint:(NSPoint)offset {

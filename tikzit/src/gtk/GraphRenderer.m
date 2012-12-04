@@ -20,24 +20,11 @@
 #import "Edge+Render.h"
 #import "Node+Render.h"
 
-static const float size = 8.0;
-
-float sideHandleTop(NSRect bbox) {
-    return (NSMinY(bbox) + NSMaxY(bbox) - size)/2.0f;
-}
-
-float tbHandleLeft(NSRect bbox) {
-    return (NSMinX(bbox) + NSMaxX(bbox) - size)/2.0f;
-}
 void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
 
 @interface GraphRenderer (Private)
-- (BOOL) selectionBoxContainsNode:(Node*)node;
-- (BOOL) halfEdgeIncludesNode:(Node*)node;
 - (enum NodeState) nodeState:(Node*)node;
 - (void) renderBoundingBoxWithContext:(id<RenderContext>)context;
-- (void) renderSelectionBoxWithContext:(id<RenderContext>)context;
-- (void) renderImpendingEdgeWithContext:(id<RenderContext>)context;
 - (void) nodeNeedsRefreshing:(NSNotification*)notification;
 - (void) edgeNeedsRefreshing:(NSNotification*)notification;
 - (void) graphNeedsRefreshing:(NSNotification*)notification;
@@ -53,9 +40,8 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
 
     if (self) {
         surface = [s retain];
-        doc = nil;
         grid = [[Grid alloc] initWithSpacing:1.0f subdivisions:4 transformer:[s transformer]];
-        halfEdgeOrigin = nil;
+        highlightedNodes = [[NSMutableSet alloc] initWithCapacity:10];
         [surface setRenderDelegate:self];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -85,9 +71,24 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [doc release];
     [grid release];
+    [highlightedNodes release];
     [surface release];
 
     [super dealloc];
+}
+
+- (id<RenderDelegate>) postRenderer {
+    return postRenderer;
+}
+- (void) setPostRenderer:(id<RenderDelegate>)r {
+    if (r == postRenderer)
+        return;
+
+    [r retain];
+    [postRenderer release];
+    postRenderer = r;
+
+    [self invalidateGraph];
 }
 
 - (void) renderWithContext:(id<RenderContext>)context onSurface:(id<Surface>)surface {
@@ -116,12 +117,15 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
     }
 
     [self renderBoundingBoxWithContext:context];
-    [self renderSelectionBoxWithContext:context];
-    [self renderImpendingEdgeWithContext:context];
+    [postRenderer renderWithContext:context onSurface:surface];
 }
 
 - (void) invalidateGraph {
     [surface invalidate];
+}
+
+- (void) invalidateRect:(NSRect)rect {
+    [surface invalidateRect:rect];
 }
 
 - (void) invalidateNodes:(NSSet*)nodes {
@@ -285,171 +289,34 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
     [surface invalidate];
 }
 
-- (NSRect) selectionBox {
-    return selectionBox;
+- (BOOL) isNodeHighlighted:(Node*)node {
+    return [highlightedNodes containsObject:node];
 }
-
-- (void) setSelectionBox:(NSRect)box {
-    NSRect invRect = NSUnionRect (selectionBox, box);
-    selectionBox = box;
-    [surface invalidateRect:NSInsetRect (invRect, -2, -2)];
-}
-
-- (void) clearSelectionBox {
-    NSRect oldRect = selectionBox;
-
-    NSRect emptyRect;
-    selectionBox = emptyRect;
-
-    [surface invalidateRect:NSInsetRect (oldRect, -2, -2)];
-}
-
-- (void) invalidateHalfEdge {
-    if (halfEdgeOrigin != nil) {
-        NSRect invRect = NSRectAroundPoints(halfEdgeEnd, halfEdgeOriginPoint);
-        invRect = NSUnionRect(invRect, [halfEdgeOrigin renderBoundsWithLabelForSurface:surface]);
-
-        NSEnumerator *enumerator = [doc nodeEnumerator];
-        Node *node;
-        while ((node = [enumerator nextObject]) != nil) {
-            if ([self point:halfEdgeEnd fuzzyHitsNode:node]) {
-                invRect = NSUnionRect(invRect, [node renderBoundsWithLabelForSurface:surface]);
-            }
+- (void) setNode:(Node*)node highlighted:(BOOL)h {
+    if (h) {
+        if (![highlightedNodes containsObject:node]) {
+            [highlightedNodes addObject:node];
+            [self invalidateNode:node];
         }
-        [surface invalidateRect:NSInsetRect (invRect, -2.0f, -2.0f)];
-    }
-}
-
-- (void) setHalfEdgeFrom:(Node*)origin to:(NSPoint)end {
-    [self invalidateHalfEdge];
-
-    if (halfEdgeOrigin != origin) {
-        [self invalidateNode:halfEdgeOrigin];
-        halfEdgeOrigin = origin;
-        halfEdgeOriginPoint = [[surface transformer] toScreen:[origin point]];
-        [self invalidateNode:origin];
-    }
-
-    if (origin != nil) {
-        halfEdgeEnd = end;
-        [self invalidateHalfEdge];
-    }
-}
-
-- (void) clearHalfEdge {
-    [self invalidateHalfEdge];
-    halfEdgeOrigin = nil;
-}
-
-- (BOOL) boundingBoxHandlesShown {
-    return showBoundingBoxHandles;
-}
-
-- (void) setBoundingBoxHandlesShown:(BOOL)shown {
-    if (showBoundingBoxHandles != shown) {
-        showBoundingBoxHandles = shown;
-        [self invalidateGraph];
-    }
-}
-
-- (ResizeHandle) boundingBoxResizeHandleAt:(NSPoint)p {
-    NSRect bbox = [[surface transformer] rectToScreen:[[self graph] boundingBox]];
-    if (p.x >= NSMaxX(bbox)) {
-        if (p.x <= NSMaxX(bbox) + size) {
-            if (p.y >= NSMaxY(bbox)) {
-                if (p.y <= NSMaxY(bbox) + size) {
-                    return SouthEastHandle;
-                }
-            } else if (p.y <= NSMinY(bbox)) {
-                if (p.y >= NSMinY(bbox) - size) {
-                    return NorthEastHandle;
-                }
-            } else {
-                float eastHandleTop = sideHandleTop(bbox);
-                if (p.y >= eastHandleTop && p.y <= (eastHandleTop + size)) {
-                    return EastHandle;
-                }
-            }
-        }
-    } else if (p.x <= NSMinX(bbox)) {
-        if (p.x >= NSMinX(bbox) - size) {
-            if (p.y >= NSMaxY(bbox)) {
-                if (p.y <= NSMaxY(bbox) + size) {
-                    return SouthWestHandle;
-                }
-            } else if (p.y <= NSMinY(bbox)) {
-                if (p.y >= NSMinY(bbox) - size) {
-                    return NorthWestHandle;
-                }
-            } else {
-                float westHandleTop = sideHandleTop(bbox);
-                if (p.y >= westHandleTop && p.y <= (westHandleTop + size)) {
-                    return WestHandle;
-                }
-            }
-        }
-    } else if (p.y >= NSMaxY(bbox)) {
-        if (p.y <= NSMaxY(bbox) + size) {
-            float southHandleLeft = tbHandleLeft(bbox);
-            if (p.x >= southHandleLeft && p.x <= (southHandleLeft + size)) {
-                return SouthHandle;
-            }
-        }
-    } else if (p.y <= NSMinY(bbox)) {
-        if (p.y >= NSMinY(bbox) - size) {
-            float northHandleLeft = tbHandleLeft(bbox);
-            if (p.x >= northHandleLeft && p.x <= (northHandleLeft + size)) {
-                return NorthHandle;
-            }
+    } else {
+        if ([highlightedNodes containsObject:node]) {
+            [highlightedNodes removeObject:node];
+            [self invalidateNode:node];
         }
     }
-    return NoHandle;
 }
-
-- (NSRect) boundingBoxResizeHandleRect:(ResizeHandle)handle {
-    if (![[self graph] hasBoundingBox]) {
-        return NSZeroRect;
-    }
-    NSRect bbox = [[surface transformer] rectToScreen:[[self graph] boundingBox]];
-    switch (handle) {
-        case EastHandle:
-            return NSMakeRect(NSMaxX(bbox), sideHandleTop(bbox), size, size);
-        case SouthEastHandle:
-            return NSMakeRect(NSMaxX(bbox), NSMaxY(bbox), size, size);
-        case SouthHandle:
-            return NSMakeRect(tbHandleLeft(bbox), NSMaxY(bbox), size, size);
-        case SouthWestHandle:
-            return NSMakeRect(NSMaxX(bbox), NSMinY(bbox) - size, size, size);
-        case WestHandle:
-            return NSMakeRect(NSMinX(bbox) - size, sideHandleTop(bbox), size, size);
-        case NorthWestHandle:
-            return NSMakeRect(NSMinX(bbox) - size, NSMinY(bbox) - size, size, size);
-        case NorthHandle:
-            return NSMakeRect(tbHandleLeft(bbox), NSMinY(bbox) - size, size, size);
-        case NorthEastHandle:
-            return NSMakeRect(NSMinX(bbox) - size, NSMaxY(bbox), size, size);
-        default:
-            return NSZeroRect;
-    }
+- (void) clearHighlightedNodes {
+    [self invalidateNodes:highlightedNodes];
+    [highlightedNodes removeAllObjects];
 }
 
 @end
 
 @implementation GraphRenderer (Private)
-- (BOOL) selectionBoxContainsNode:(Node*)node {
-    return !NSIsEmptyRect (selectionBox)
-           && NSPointInRect([[surface transformer] toScreen:[node point]], selectionBox);
-}
-- (BOOL) halfEdgeIncludesNode:(Node*)node {
-    if (halfEdgeOrigin == nil) {
-        return FALSE;
-    }
-    return halfEdgeOrigin == node || [self point:halfEdgeEnd hitsNode:node];
-}
 - (enum NodeState) nodeState:(Node*)node {
     if ([doc isNodeSelected:node]) {
         return NodeSelected;
-    } else if ([self selectionBoxContainsNode:node] || [self halfEdgeIncludesNode:node]) {
+    } else if ([self isNodeHighlighted:node]) {
         return NodeHighlighted;
     } else {
         return NodeNormal;
@@ -468,52 +335,8 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
         [context rect:bbox];
         [context strokePathWithColor:MakeSolidRColor (1.0, 0.7, 0.5)];
 
-        if ([self boundingBoxHandlesShown]) {
-            [context startPath];
-            [context rect:[self boundingBoxResizeHandleRect:EastHandle]];
-            [context rect:[self boundingBoxResizeHandleRect:SouthEastHandle]];
-            [context rect:[self boundingBoxResizeHandleRect:SouthHandle]];
-            [context rect:[self boundingBoxResizeHandleRect:SouthWestHandle]];
-            [context rect:[self boundingBoxResizeHandleRect:WestHandle]];
-            [context rect:[self boundingBoxResizeHandleRect:NorthWestHandle]];
-            [context rect:[self boundingBoxResizeHandleRect:NorthHandle]];
-            [context rect:[self boundingBoxResizeHandleRect:NorthEastHandle]];
-            [context strokePathWithColor:MakeSolidRColor (0.5, 0.5, 0.5)];
-        }
-
         [context restoreState];
     }
-}
-
-- (void) renderSelectionBoxWithContext:(id<RenderContext>)context {
-    if (!NSIsEmptyRect (selectionBox)) {
-        [context saveState];
-
-        [context setAntialiasMode:AntialiasDisabled];
-        [context setLineWidth:1.0];
-        [context startPath];
-        [context rect:selectionBox];
-        RColor fColor = MakeRColor (0.8, 0.8, 0.8, 0.2);
-        RColor sColor = MakeSolidRColor (0.6, 0.6, 0.6);
-        [context strokePathWithColor:sColor andFillWithColor:fColor];
-
-        [context restoreState];
-    }
-}
-
-- (void) renderImpendingEdgeWithContext:(id<RenderContext>)context {
-    if (halfEdgeOrigin == nil) {
-        return;
-    }
-    [context saveState];
-
-    [context setLineWidth:1.0];
-    [context startPath];
-    [context moveTo:halfEdgeOriginPoint];
-    [context lineTo:halfEdgeEnd];
-    [context strokePathWithColor:MakeRColor (0, 0, 0, 0.5)];
-
-    [context restoreState];
 }
 
 - (void) nodeNeedsRefreshing:(NSNotification*)notification {

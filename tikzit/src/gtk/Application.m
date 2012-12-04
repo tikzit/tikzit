@@ -27,11 +27,18 @@
 #ifdef HAVE_POPPLER
 #import "SettingsDialog.h"
 #endif
+#import "Shape.h"
 #import "StyleManager.h"
 #import "StyleManager+Storage.h"
 #import "SupportDir.h"
 #import "TikzDocument.h"
 #import "Window.h"
+
+#import "BoundingBoxTool.h"
+#import "CreateNodeTool.h"
+#import "CreateEdgeTool.h"
+#import "HandTool.h"
+#import "SelectTool.h"
 
 // used for args to g_mkdir_with_parents
 #import "stat.h"
@@ -47,7 +54,7 @@ Application* app = nil;
 @synthesize mainConfiguration=configFile;
 @synthesize styleManager, preambles;
 @synthesize lastOpenFolder, lastSaveAsFolder;
-@synthesize activeDocument;
+@synthesize tools;
 
 + (Application*) app {
     if (app == nil) {
@@ -92,6 +99,15 @@ Application* app = nil;
             lastSaveAsFolder = [[configFile stringEntry:@"lastFolder" inGroup:@"Paths"] retain];
 
         openWindows = [[NSMutableArray alloc] init];
+
+        tools = [[NSArray alloc] initWithObjects:
+            [SelectTool tool],
+            [CreateNodeTool tool],
+            [CreateEdgeTool tool],
+            [BoundingBoxTool tool],
+            [HandTool tool],
+            nil];
+        activeTool = [[tools objectAtIndex:0] retain];
 
         // FIXME: toolboxes
 
@@ -142,29 +158,39 @@ Application* app = nil;
     [preambles release];
     [lastOpenFolder release];
     [lastSaveAsFolder release];
-    [activeDocument release];
     [preambleWindow release];
     [previewWindow release];
     [settingsDialog release];
     [openWindows release];
+    [tools release];
+    [activeTool release];
 
     [super dealloc];
 }
 
-- (void) newWindow {
-    [self newWindowWithDocument:nil];
+- (id<Tool>) activeTool { return activeTool; }
+- (void) setActiveTool:(id<Tool>)tool {
+    for (Window* window in openWindows) {
+        [window setActiveTool:tool];
+    }
 }
 
-- (void) newWindowWithDocument:(TikzDocument*)doc {
-    Window *window = (doc == nil)
-                     ? [Window window]
-                     : [Window windowWithDocument:doc];
+- (void) _addWindow:(Window*)window {
+    [window setActiveTool:activeTool];
     [openWindows addObject:window];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(windowClosed:)
                                                  name:@"WindowClosed"
                                                object:window];
     // FIXME: focus?
+}
+
+- (void) newWindow {
+    [self _addWindow:[Window window]];
+}
+
+- (void) newWindowWithDocument:(TikzDocument*)doc {
+    [self _addWindow:[Window windowWithDocument:doc]];
 }
 
 - (void) quit {
@@ -217,10 +243,6 @@ Application* app = nil;
     return configFile;
 }
 
-- (TikzDocument*) activeDocument {
-    return activeDocument;
-}
-
 - (void) saveConfiguration {
     NSError *error = nil;
 
@@ -259,8 +281,6 @@ Application* app = nil;
                                                   object:window];
     if ([openWindows count] == 0) {
         gtk_main_quit();
-    } else if ([[window document] isEqual:activeDocument]) {
-        [self setActiveDocument:[[openWindows objectAtIndex:0] document]];
     }
 }
 @end

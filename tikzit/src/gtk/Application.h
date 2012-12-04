@@ -26,6 +26,7 @@
 @class StyleManager;
 @class TikzDocument;
 @class Window;
+@protocol Tool;
 
 extern Application* app;
 
@@ -43,15 +44,16 @@ extern Application* app;
     NSString          *lastOpenFolder;
     NSString          *lastSaveAsFolder;
 
-    // the open (active) document
-    TikzDocument      *activeDocument;
-
     PreambleEditor    *preambleWindow;
     PreviewWindow     *previewWindow;
     SettingsDialog    *settingsDialog;
 
     // the open windows (array of Window*)
     NSMutableArray    *openWindows;
+
+    // tools
+    id<Tool>           activeTool;
+    NSArray           *tools;
 }
 
 /**
@@ -70,9 +72,14 @@ extern Application* app;
 @property (readonly) Preambles *preambles;
 
 /**
- * The document the user is currently editing
+ * The tools
  */
-@property (retain) TikzDocument *activeDocument;
+@property (readonly) NSArray  *tools;
+
+/**
+ * The currently-selected tool
+ */
+@property (retain)   id<Tool>  activeTool;
 
 /**
  * The folder last actively chosen by a user for opening a file

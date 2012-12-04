@@ -24,14 +24,12 @@
 #import "Application.h"
 #import "Configuration.h"
 #import "FileChooserDialog.h"
-#import "GraphInputHandler.h"
-#import "GraphRenderer.h"
+#import "GraphEditorPanel.h"
 #import "Menu.h"
 #import "RecentManager.h"
 #import "Shape.h"
 #import "SupportDir.h"
 #import "TikzDocument.h"
-#import "WidgetSurface.h"
 
 
 // {{{ Internal interfaces
@@ -53,6 +51,7 @@ static void clipboard_paste_contents (GtkClipboard *clipboard,
 // }}}
 // {{{ Signals
 
+static void window_toplevel_focus_changed_cb (GObject *gobject, GParamSpec *pspec, GraphEditorPanel *panel);
 static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, Window *window);
 static void tikz_buffer_changed_cb (GtkTextBuffer *buffer, Window *window);
 static gboolean main_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, Window *window);
@@ -127,9 +126,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [menu release];
-    [renderer release];
-    [inputHandler release];
-    [surface release];
+    [graphPanel release];
     [document release];
 
     g_object_unref (tikzBuffer);
@@ -152,13 +149,12 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [document release];
     document = newDoc;
 
-    [renderer setDocument:document];
+    [graphPanel setDocument:document];
     [self _updateTikz];
     [self _updateTitle];
     [self _updateStatus];
     [self _updateUndoActions];
     [menu notifySelectionChanged:[document pickSupport]];
-    [inputHandler resetState];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                           selector:@selector(documentTikzChanged:)
                                           name:@"TikzChanged" object:document];
@@ -324,6 +320,12 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_widget_destroy (dialog);
 }
 
+- (void) close {
+    if ([self _askCanClose]) {
+        gtk_widget_destroy (GTK_WIDGET (window));
+    }
+}
+
 - (void) cut {
     if ([[[document pickSupport] selectedNodes] count] > 0) {
         [self _placeGraphOnClipboard:[document cutSelection]];
@@ -341,10 +343,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
                                     tikzit_picture_atom,
                                     clipboard_paste_contents,
                                     document);
-}
-
-- (GraphInputHandler*) graphInputHandler {
-    return inputHandler;
 }
 
 - (GtkWindow*) gtkWindow {
@@ -405,16 +403,25 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_widget_destroy (dialog);
 }
 
+- (void) setActiveTool:(id<Tool>)tool {
+    [graphPanel setActiveTool:tool];
+    gboolean hasfocus;
+    g_object_get (G_OBJECT (window), "has-toplevel-focus", &hasfocus, NULL);
+    if (hasfocus) {
+        [graphPanel grabTool];
+    }
+}
+
 - (void) zoomIn {
-    [surface zoomIn];
+    [graphPanel zoomIn];
 }
 
 - (void) zoomOut {
-    [surface zoomOut];
+    [graphPanel zoomOut];
 }
 
 - (void) zoomReset {
-    [surface zoomReset];
+    [graphPanel zoomReset];
 }
 
 @end
@@ -501,19 +508,13 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_widget_show (GTK_WIDGET (tikzPaneSplitter));
     gtk_box_pack_start (mainLayout, GTK_WIDGET (tikzPaneSplitter), TRUE, TRUE, 0);
 
-    surface = [[WidgetSurface alloc] init];
-    gtk_widget_show ([surface widget]);
+    graphPanel = [[GraphEditorPanel alloc] initWithDocument:document];
+    GtkWidget *graphEditorWidget = [graphPanel widget];
+    gtk_widget_show (graphEditorWidget);
     GtkWidget *graphFrame = gtk_frame_new (NULL);
-    gtk_container_add (GTK_CONTAINER (graphFrame), [surface widget]);
+    gtk_container_add (GTK_CONTAINER (graphFrame), graphEditorWidget);
     gtk_widget_show (graphFrame);
     gtk_paned_pack1 (tikzPaneSplitter, graphFrame, TRUE, TRUE);
-    [surface setDefaultScale:50.0f];
-    [surface setKeepCentered:YES];
-    [surface setGrabsFocusOnClick:YES];
-    renderer = [[GraphRenderer alloc] initWithSurface:surface document:document];
-
-    inputHandler = [[GraphInputHandler alloc] initWithGraphRenderer:renderer];
-    [surface setInputDelegate:inputHandler];
 
     tikzBuffer = gtk_text_buffer_new (NULL);
     g_object_ref_sink (tikzBuffer);
@@ -568,6 +569,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         "key-press-event",
         G_CALLBACK (tz_hijack_key_press),
         NULL);
+    g_signal_connect (G_OBJECT (window),
+        "notify::has-toplevel-focus",
+        G_CALLBACK (window_toplevel_focus_changed_cb),
+        graphPanel);
     g_signal_connect (G_OBJECT (tikzPaneSplitter),
         "notify::position",
         G_CALLBACK (graph_divider_position_changed_cb),
@@ -739,6 +744,16 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 // }}}
 // {{{ GTK+ callbacks
 
+static void window_toplevel_focus_changed_cb (GObject *gobject, GParamSpec *pspec, GraphEditorPanel *panel) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    gboolean hasfocus;
+    g_object_get (gobject, "has-toplevel-focus", &hasfocus, NULL);
+    if (hasfocus) {
+        [panel grabTool];
+    }
+    [pool drain];
+}
+
 static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     gint position;
@@ -755,9 +770,9 @@ static void tikz_buffer_changed_cb (GtkTextBuffer *buffer, Window *window) {
 
 static gboolean main_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    BOOL canClose = ![window _askCanClose];
+    [window close];
     [pool drain];
-    return canClose;
+    return TRUE;
 }
 
 static void main_window_destroy_cb (GtkWidget *widget, Window *window) {
