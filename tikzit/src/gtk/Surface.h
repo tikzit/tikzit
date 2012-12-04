@@ -33,7 +33,7 @@ typedef enum {
 
 @protocol Surface;
 
-@protocol RenderDelegate
+@protocol RenderDelegate <NSObject>
 - (void) renderWithContext:(id<RenderContext>)context onSurface:(id<Surface>)surface;
 @end
 
@@ -47,7 +47,7 @@ typedef enum {
  * The surface should send a "SurfaceSizeChanged" notification
  * when the width or height changes.
  */
-@protocol Surface
+@protocol Surface <NSObject>
 
 /**
  * The width of the surface, in surface units

@@ -38,7 +38,8 @@ typedef enum {
     ScrollRight = 4,
 } ScrollDirection;
 
-@interface NSObject (InputDelegate)
+@protocol InputDelegate <NSObject>
+@optional
 /**
  * A mouse button was pressed.
  */

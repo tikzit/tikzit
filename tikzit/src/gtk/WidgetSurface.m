@@ -170,11 +170,11 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     }
 }
 
-- (id) inputDelegate {
+- (id<InputDelegate>) inputDelegate {
     return inputDelegate;
 }
 
-- (void) setInputDelegate:(id)delegate {
+- (void) setInputDelegate:(id<InputDelegate>)delegate {
     if (delegate == inputDelegate) {
         return;
     }
@@ -471,7 +471,7 @@ static gboolean button_press_event_cb(GtkWidget *widget, GdkEventButton *event, 
         }
     }
 
-    id delegate = [surface inputDelegate];
+    id<InputDelegate> delegate = [surface inputDelegate];
     if (delegate != nil) {
         NSPoint pos = NSMakePoint (event->x, event->y);
         MouseButton button = (MouseButton)event->button;
@@ -491,7 +491,7 @@ static gboolean button_press_event_cb(GtkWidget *widget, GdkEventButton *event, 
 static gboolean button_release_event_cb(GtkWidget *widget, GdkEventButton *event, WidgetSurface *surface) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    id delegate = [surface inputDelegate];
+    id<InputDelegate> delegate = [surface inputDelegate];
     if (delegate != nil) {
         if ([delegate respondsToSelector:@selector(mouseReleaseAt:withButton:andMask:)]) {
             NSPoint pos = NSMakePoint (event->x, event->y);
@@ -508,7 +508,7 @@ static gboolean button_release_event_cb(GtkWidget *widget, GdkEventButton *event
 static gboolean motion_notify_event_cb(GtkWidget *widget, GdkEventMotion *event, WidgetSurface *surface) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    id delegate = [surface inputDelegate];
+    id<InputDelegate> delegate = [surface inputDelegate];
     if (delegate != nil) {
         if ([delegate respondsToSelector:@selector(mouseMoveTo:withButtons:andMask:)]) {
             NSPoint pos = NSMakePoint (event->x, event->y);
@@ -525,7 +525,7 @@ static gboolean motion_notify_event_cb(GtkWidget *widget, GdkEventMotion *event,
 static gboolean key_press_event_cb(GtkWidget *widget, GdkEventKey *event, WidgetSurface *surface) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    id delegate = [surface inputDelegate];
+    id<InputDelegate> delegate = [surface inputDelegate];
     if (delegate != nil) {
         if ([delegate respondsToSelector:@selector(keyPressed:withMask:)]) {
             InputMask mask = mask_from_gdk_modifier_state (event->state);
@@ -540,7 +540,7 @@ static gboolean key_press_event_cb(GtkWidget *widget, GdkEventKey *event, Widget
 static gboolean key_release_event_cb(GtkWidget *widget, GdkEventKey *event, WidgetSurface *surface) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    id delegate = [surface inputDelegate];
+    id<InputDelegate> delegate = [surface inputDelegate];
     if (delegate != nil) {
         if ([delegate respondsToSelector:@selector(keyReleased:withMask:)]) {
             InputMask mask = mask_from_gdk_modifier_state (event->state);
@@ -555,7 +555,7 @@ static gboolean key_release_event_cb(GtkWidget *widget, GdkEventKey *event, Widg
 static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, WidgetSurface *surface) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    id delegate = [surface inputDelegate];
+    id<InputDelegate> delegate = [surface inputDelegate];
     if (delegate != nil) {
         if ([delegate respondsToSelector:@selector(mouseScrolledAt:inDirection:withMask:)]) {
             NSPoint pos = NSMakePoint (event->x, event->y);

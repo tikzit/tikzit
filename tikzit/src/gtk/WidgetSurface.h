@@ -17,6 +17,7 @@
 
 #import "TZFoundation.h"
 #import <gtk/gtk.h>
+#import <InputDelegate.h>
 #import <Surface.h>
 
 /**
@@ -26,7 +27,7 @@
     GtkWidget           *widget;
     Transformer         *transformer;
     id <RenderDelegate>  renderDelegate;
-    id                   inputDelegate;
+    id <InputDelegate>   inputDelegate;
     BOOL                 keepCentered;
     BOOL                 grabsFocusOnClick;
     CGFloat              defaultScale;
@@ -36,8 +37,8 @@
 - (id) initWithWidget:(GtkWidget*)widget;
 - (GtkWidget*) widget;
 
-- (id) inputDelegate;
-- (void) setInputDelegate:(id)delegate;
+- (id<InputDelegate>) inputDelegate;
+- (void) setInputDelegate:(id<InputDelegate>)delegate;
 
 - (BOOL) keepCentered;
 - (void) setKeepCentered:(BOOL)centered;

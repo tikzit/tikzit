@@ -40,7 +40,7 @@ typedef enum {
     CanvasDragState
 } MouseState;
 
-@interface GraphInputHandler: NSObject {
+@interface GraphInputHandler: NSObject <InputDelegate> {
     GraphRenderer *renderer;
     InputMode      mode;
     MouseState     state;
