@@ -25,7 +25,7 @@
 
 @implementation CreateEdgeTool
 - (NSString*) name { return @"Create Edge Tool"; }
-- (const gchar*) stockIcon { return TIKZIT_STOCK_CREATE_EDGE; }
+- (const gchar*) stockId { return TIKZIT_STOCK_CREATE_EDGE; }
 - (NSString*) helpText { return @"Create new edges"; }
 - (NSString*) shortcut { return @"e"; }
 @synthesize activeRenderer=renderer;

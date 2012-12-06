@@ -25,7 +25,7 @@
 
 @implementation CreateNodeTool
 - (NSString*) name { return @"Create Node Tool"; }
-- (const gchar*) stockIcon { return TIKZIT_STOCK_CREATE_NODE; }
+- (const gchar*) stockId { return TIKZIT_STOCK_CREATE_NODE; }
 - (NSString*) helpText { return @"Create new nodes"; }
 - (NSString*) shortcut { return @"n"; }
 @synthesize activeRenderer=renderer;

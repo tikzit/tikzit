@@ -591,11 +591,11 @@ static void tool_cb (GtkAction *action, id<Tool> tool) {
                 [[tool name] UTF8String],
                 [[tool name] UTF8String],
                 [tooltip UTF8String],
-                [tool stockIcon]);
+                [tool stockId]);
         gtk_action_group_add_action_with_accel (
                 appActions,
                 action,
-                [[tool shortcut] UTF8String]);
+                NULL);
         g_signal_connect (
                 G_OBJECT (action),
                 "activate",

@@ -25,6 +25,7 @@
 @class SettingsDialog;
 @class StyleManager;
 @class TikzDocument;
+@class ToolBox;
 @class Window;
 @protocol Tool;
 
@@ -44,6 +45,7 @@ extern Application* app;
     NSString          *lastOpenFolder;
     NSString          *lastSaveAsFolder;
 
+    ToolBox           *toolBox;
     PreambleEditor    *preambleWindow;
     PreviewWindow     *previewWindow;
     SettingsDialog    *settingsDialog;
@@ -79,7 +81,7 @@ extern Application* app;
 /**
  * The currently-selected tool
  */
-@property (retain)   id<Tool>  activeTool;
+@property (assign)   id<Tool>  activeTool;
 
 /**
  * The folder last actively chosen by a user for opening a file

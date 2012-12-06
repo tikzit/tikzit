@@ -39,7 +39,7 @@ static const InputMask unionSelectMask = ShiftMask;
 
 @implementation SelectTool
 - (NSString*) name { return @"Select Tool"; }
-- (const gchar*) stockIcon { return TIKZIT_STOCK_SELECT; }
+- (const gchar*) stockId { return TIKZIT_STOCK_SELECT; }
 - (NSString*) helpText { return @"Select, move and edit nodes and edges"; }
 - (NSString*) shortcut { return @"s"; }
 @synthesize configurationWidget=configWidget;

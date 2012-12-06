@@ -23,7 +23,7 @@
 
 @implementation HandTool
 - (NSString*) name { return @"Drag Tool"; }
-- (const gchar*) stockIcon { return TIKZIT_STOCK_DRAG; }
+- (const gchar*) stockId { return TIKZIT_STOCK_DRAG; }
 - (NSString*) helpText { return @"Move the diagram to view different parts"; }
 - (NSString*) shortcut { return @"m"; }
 @synthesize activeRenderer=renderer;

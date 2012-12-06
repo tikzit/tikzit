@@ -1,5 +1,5 @@
 /*
- * Copyright 2012  Alex Merry <alex.merry@kdemail.net>
+ * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -16,27 +16,22 @@
  */
 
 #import "TZFoundation.h"
-#import "InputDelegate.h"
-#import "Surface.h"
-
 #import <gtk/gtk.h>
-#import <gdk-pixbuf/gdk-pixdata.h>
 
 @class Configuration;
-@class GraphRenderer;
-@protocol InputDelegate;
-@protocol RenderDelegate;
+@protocol Tool;
 
-@protocol Tool <RenderDelegate,InputDelegate>
-@property (readonly) NSString           *name;
-@property (readonly) const gchar        *stockId;
-@property (readonly) NSString           *helpText;
-@property (readonly) NSString           *shortcut;
-@property (retain)   GraphRenderer      *activeRenderer;
-@property (readonly) GtkWidget          *configurationWidget;
+@interface ToolBox : NSObject {
+    GtkWidget        *window;
+    GtkToolItemGroup *toolGroup;
+}
+
+@property (assign) id<Tool> selectedTool;
+
+- (id) initWithTools:(NSArray*)tools;
+
 - (void) loadConfiguration:(Configuration*)config;
 - (void) saveConfiguration:(Configuration*)config;
-+ (id) tool;
 @end
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4

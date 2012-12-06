@@ -60,6 +60,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/StyleManager+Storage.m \
                  gtk/StylesPane.m \
                  gtk/TikzDocument.m \
+                 gtk/ToolBox.m \
                  gtk/WidgetSurface.m \
                  gtk/Window.m \
                  gtk/cairo_helpers.m \

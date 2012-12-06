@@ -32,6 +32,7 @@
 #import "StyleManager+Storage.h"
 #import "SupportDir.h"
 #import "TikzDocument.h"
+#import "ToolBox.h"
 #import "Window.h"
 
 #import "BoundingBoxTool.h"
@@ -47,6 +48,7 @@ Application* app = nil;
 
 @interface Application (Notifications)
 - (void) windowClosed:(NSNotification*)notification;
+- (void) selectedToolChanged:(NSNotification*)notification;
 @end
 
 @implementation Application
@@ -107,9 +109,18 @@ Application* app = nil;
             [BoundingBoxTool tool],
             [HandTool tool],
             nil];
+        for (id<Tool> tool in tools) {
+            [tool loadConfiguration:configFile];
+        }
         activeTool = [[tools objectAtIndex:0] retain];
 
-        // FIXME: toolboxes
+        toolBox = [[ToolBox alloc] initWithTools:tools];
+        [toolBox loadConfiguration:configFile];
+        [[NSNotificationCenter defaultCenter]
+            addObserver:self
+               selector:@selector(selectedToolChanged:)
+                   name:@"ToolSelectionChanged"
+                 object:toolBox];
 
         app = [self retain];
     }
@@ -164,12 +175,18 @@ Application* app = nil;
     [openWindows release];
     [tools release];
     [activeTool release];
+    [toolBox release];
 
     [super dealloc];
 }
 
 - (id<Tool>) activeTool { return activeTool; }
 - (void) setActiveTool:(id<Tool>)tool {
+    if (activeTool == tool)
+        return;
+
+    activeTool = tool;
+    [toolBox setSelectedTool:tool];
     for (Window* window in openWindows) {
         [window setActiveTool:tool];
     }
@@ -258,6 +275,11 @@ Application* app = nil;
 
     [styleManager saveStylesUsingConfigurationName:@"styles"];
 
+    for (id<Tool> tool in tools) {
+        [tool saveConfiguration:configFile];
+    }
+    [toolBox saveConfiguration:configFile];
+
     if (lastOpenFolder != nil) {
         [configFile setStringEntry:@"lastOpenFolder" inGroup:@"Paths" value:lastOpenFolder];
     }
@@ -282,6 +304,13 @@ Application* app = nil;
     if ([openWindows count] == 0) {
         gtk_main_quit();
     }
+}
+- (void) selectedToolChanged:(NSNotification*)n {
+    id<Tool> tool = [[n userInfo] objectForKey:@"tool"];
+    if (tool != nil)
+        [self setActiveTool:tool];
+    else
+        NSLog(@"nil tool!");
 }
 @end
 
