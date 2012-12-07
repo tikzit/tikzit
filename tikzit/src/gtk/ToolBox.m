@@ -47,13 +47,17 @@ static void unretain (gpointer data);
         gtk_window_set_default_size (GTK_WINDOW (window), 200, 500);
         gtk_window_set_deletable (GTK_WINDOW (window), FALSE);
 
-        GtkBox *mainLayout = GTK_BOX (gtk_vbox_new (FALSE, 0));
-        gtk_widget_show (GTK_WIDGET (mainLayout));
-        gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (mainLayout));
+        GtkWidget *mainLayout = gtk_vbox_new (FALSE, 5);
+        gtk_widget_show (mainLayout);
+        gtk_container_add (GTK_CONTAINER (window), mainLayout);
 
         GtkWidget *toolPalette = gtk_tool_palette_new ();
         gtk_widget_show (toolPalette);
-        gtk_container_add (GTK_CONTAINER (mainLayout), toolPalette);
+        gtk_box_pack_start (GTK_BOX (mainLayout),
+                            toolPalette,
+                            FALSE,
+                            FALSE,
+                            0);
 
         toolGroup = GTK_TOOL_ITEM_GROUP (gtk_tool_item_group_new ("Tools"));
         g_object_ref_sink (G_OBJECT (toolGroup));
@@ -90,6 +94,15 @@ static void unretain (gpointer data);
                               self);
         }
 
+        configWidgetContainer = gtk_frame_new ("");
+        g_object_ref_sink (configWidgetContainer);
+        gtk_widget_show (configWidgetContainer);
+        gtk_box_pack_start (GTK_BOX (mainLayout),
+                            configWidgetContainer,
+                            TRUE,
+                            TRUE,
+                            0);
+
         gtk_widget_show (window);
     }
 
@@ -99,6 +112,9 @@ static void unretain (gpointer data);
 - (void) dealloc {
     if (window) {
         g_object_unref (G_OBJECT (toolGroup));
+        g_object_unref (G_OBJECT (configWidgetContainer));
+        if (configWidget)
+            g_object_unref (G_OBJECT (configWidget));
         gtk_widget_destroy (window);
         g_object_unref (G_OBJECT (window));
     }
@@ -117,6 +133,21 @@ static void unretain (gpointer data);
     return nil;
 }
 
+- (void) _setToolWidget:(GtkWidget*)widget {
+    if (configWidget) {
+        gtk_container_remove (GTK_CONTAINER (configWidgetContainer),
+                              configWidget);
+        g_object_unref (configWidget);
+    }
+    configWidget = widget;
+    if (configWidget) {
+        g_object_ref (configWidget);
+        gtk_container_add (GTK_CONTAINER (configWidgetContainer),
+                           configWidget);
+        gtk_widget_show (configWidget);
+    }
+}
+
 - (void) setSelectedTool:(id<Tool>)tool {
     guint count = gtk_tool_item_group_get_n_items (toolGroup);
     for (guint i = 0; i < count; ++i) {
@@ -126,9 +157,12 @@ static void unretain (gpointer data);
             gtk_toggle_tool_button_set_active (
                     GTK_TOGGLE_TOOL_BUTTON (item),
                     TRUE);
-            return;
+            break;
         }
     }
+    gtk_frame_set_label (GTK_FRAME (configWidgetContainer),
+                         [[tool name] UTF8String]);
+    [self _setToolWidget:[tool configurationWidget]];
 }
 
 - (void) loadConfiguration:(Configuration*)config {

@@ -24,6 +24,8 @@
 @interface ToolBox : NSObject {
     GtkWidget        *window;
     GtkToolItemGroup *toolGroup;
+    GtkWidget        *configWidgetContainer;
+    GtkWidget        *configWidget;
 }
 
 @property (assign) id<Tool> selectedTool;
