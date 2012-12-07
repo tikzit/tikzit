@@ -215,6 +215,10 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
         [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:[document pickSupport]];
     }
 
+    [doc retain];
+    [document release];
+    document = doc;
+
     [graphPropDelegate setDocument:doc];
     [nodePropDelegate setDocument:doc];
     [edgePropDelegate setDocument:doc];
@@ -232,10 +236,6 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
     }
 
     [self _updatePane];
-
-    [doc retain];
-    [document release];
-    document = doc;
 }
 
 - (BOOL) visible {
