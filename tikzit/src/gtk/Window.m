@@ -173,6 +173,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     }
 }
 
+- (void) present {
+    gtk_window_present (GTK_WINDOW (window));
+}
+
 - (void) openFile {
     FileChooserDialog *dialog = [FileChooserDialog openDialogWithParent:window];
     [dialog addStandardFilters];

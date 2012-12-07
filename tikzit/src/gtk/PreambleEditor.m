@@ -116,6 +116,12 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
     }
 }
 
+- (void) present {
+	[self loadUi];
+	gtk_window_present (GTK_WINDOW (window));
+	[self revert];
+}
+
 - (void) show {
 	[self loadUi];
 	gtk_widget_show (GTK_WIDGET (window));

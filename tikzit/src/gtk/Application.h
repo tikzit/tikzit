@@ -130,6 +130,10 @@ extern Application* app;
  */
 - (void) showPreamblesEditor;
 /**
+ * Show the property editor pane
+ */
+- (void) showPropertyEditor;
+/**
  * Show or update the preview window.
  */
 - (void) showPreviewForDocument:(TikzDocument*)doc;

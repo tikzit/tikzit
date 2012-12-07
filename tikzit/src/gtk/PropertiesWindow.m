@@ -16,8 +16,11 @@
  */
 
 #import "PropertiesWindow.h"
+
+#import "Configuration.h"
 #import "PropertyListEditor.h"
 #import "GraphElementProperty.h"
+
 #import "gtkhelpers.h"
 
 // {{{ Internal interfaces
@@ -243,10 +246,20 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
     gtk_widget_set_visible (window, visible);
 }
 
-- (void) restoreUiStateFromConfig:(Configuration*)file group:(NSString*)group {
+- (void) present {
+    gtk_window_present (GTK_WINDOW (window));
 }
 
-- (void) saveUiStateToConfig:(Configuration*)file group:(NSString*)group {
+- (void) loadConfiguration:(Configuration*)config {
+    [self setVisible:[config booleanEntry:@"visible"
+                                  inGroup:@"PropertiesWindow"
+                              withDefault:YES]];
+}
+
+- (void) saveConfiguration:(Configuration*)config {
+    [config setBooleanEntry:@"visible"
+                    inGroup:@"PropertiesWindow"
+                      value:[self visible]];
 }
 
 @end
@@ -518,7 +531,7 @@ static GtkWidget *createPropsPaneWithLabelEntry (PropertyListEditor *props, GtkE
 
 static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, PropertiesWindow *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    //[window setVisible:NO];
+    [window setVisible:NO];
     [pool drain];
     return TRUE;
 }

@@ -174,6 +174,10 @@ static void unretain (gpointer data);
     [self _setToolWidget:[tool configurationWidget]];
 }
 
+- (void) present {
+    gtk_window_present (GTK_WINDOW (window));
+}
+
 - (void) loadConfiguration:(Configuration*)config {
 }
 

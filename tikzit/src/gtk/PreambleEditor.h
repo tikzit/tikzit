@@ -40,6 +40,7 @@
 
 - (Preambles*) preambles;
 
+- (void) present;
 - (void) show;
 - (void) hide;
 - (BOOL) isVisible;

@@ -83,6 +83,14 @@
     [previewer setDocument:doc];
 }
 
+- (void) present {
+    if ([self updateOrShowError]) {
+        [self updateDefaultSize];
+        gtk_window_present (GTK_WINDOW (window));
+        [surface invalidate];
+    }
+}
+
 - (BOOL) update {
     if ([self updateOrShowError]) {
         [self updateDefaultSize];

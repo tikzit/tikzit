@@ -71,6 +71,11 @@
 + (id) windowWithDocument:(TikzDocument*)doc;
 
 /**
+ * Present the window to the user
+ */
+- (void) present;
+
+/**
  * Open a file, asking the user which file to open
  */
 - (void) openFile;

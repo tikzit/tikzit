@@ -125,7 +125,7 @@ Application* app = nil;
                  object:toolBox];
 
         propertiesWindow = [[PropertiesWindow alloc] init];
-        [propertiesWindow setVisible:YES];
+        [propertiesWindow loadConfiguration:configFile];
 
         app = [self retain];
     }
@@ -241,8 +241,12 @@ Application* app = nil;
         preambleWindow = [[PreambleEditor alloc] initWithPreambles:preambles];
         //[preambleWindow setParentWindow:mainWindow];
     }
-    [preambleWindow show];
+    [preambleWindow present];
 #endif
+}
+
+- (void) showPropertyEditor {
+    [propertiesWindow present];
 }
 
 - (void) showPreviewForDocument:(TikzDocument*)doc {
@@ -252,7 +256,7 @@ Application* app = nil;
         //[previewWindow setParentWindow:mainWindow];
         [previewWindow setDocument:doc];
     }
-    [previewWindow show];
+    [previewWindow present];
 #endif
 }
 
@@ -262,7 +266,7 @@ Application* app = nil;
         settingsDialog = [[SettingsDialog alloc] initWithConfiguration:configFile];
         //[settingsDialog setParentWindow:mainWindow];
     }
-    [settingsDialog show];
+    [settingsDialog present];
 #endif
 }
 
@@ -289,6 +293,8 @@ Application* app = nil;
         [tool saveConfiguration:configFile];
     }
     [toolBox saveConfiguration:configFile];
+
+    [propertiesWindow saveConfiguration:configFile];
 
     if (lastOpenFolder != nil) {
         [configFile setStringEntry:@"lastOpenFolder" inGroup:@"Paths" value:lastOpenFolder];

@@ -36,6 +36,7 @@
 
 - (void) setParentWindow:(GtkWindow*)parent;
 
+- (void) present;
 - (void) show;
 - (void) hide;
 - (BOOL) isVisible;

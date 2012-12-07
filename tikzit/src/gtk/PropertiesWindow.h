@@ -58,8 +58,10 @@
 
 - (id) init;
 
-- (void) restoreUiStateFromConfig:(Configuration*)file group:(NSString*)group;
-- (void) saveUiStateToConfig:(Configuration*)file group:(NSString*)group;
+- (void) present;
+
+- (void) loadConfiguration:(Configuration*)config;
+- (void) saveConfiguration:(Configuration*)config;
 
 @end
 

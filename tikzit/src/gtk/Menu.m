@@ -67,6 +67,12 @@ static void show_preamble_cb (GtkAction *action, Application *appl) {
 }
 #endif
 
+static void show_properties_cb (GtkAction *action, Application *appl) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [appl showPropertyEditor];
+    [pool drain];
+}
+
 static void quit_cb (GtkAction *action, Application *appl) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [appl quit];
@@ -153,6 +159,9 @@ static GtkActionEntry app_action_entries[] = {
     { "ShowPreamble", NULL, N_("_Edit Preambles..."), NULL,
       N_("Edit the preambles used to generate the preview"), G_CALLBACK (show_preamble_cb) },
 #endif
+
+    { "ShowProperties", NULL, N_("_Properties Window"), NULL,
+      N_("Show the property editor window"), G_CALLBACK (show_properties_cb) },
 
     /* HelpMenu */
     { "HelpManual", GTK_STOCK_HELP, N_("_Online manual"), "F1",
@@ -500,6 +509,7 @@ static const gchar ui_info[] =
 #endif
 "    </menu>"
 "    <menu action='ViewMenu'>"
+"      <menuitem action='ShowProperties'/>"
 #ifdef HAVE_POPPLER
 "      <menuitem action='ShowPreamble'/>"
 "      <menuitem action='ShowPreview'/>"

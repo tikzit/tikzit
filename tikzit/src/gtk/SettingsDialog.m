@@ -82,6 +82,12 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     }
 }
 
+- (void) present {
+    [self loadUi];
+    [self revert];
+    gtk_window_present (GTK_WINDOW (window));
+}
+
 - (void) show {
     [self loadUi];
     [self revert];
