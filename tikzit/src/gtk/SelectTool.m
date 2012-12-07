@@ -17,12 +17,17 @@
 
 #import "SelectTool.h"
 
+#import "Configuration.h"
 #import "Edge+Render.h"
 #import "GraphRenderer.h"
 #import "TikzDocument.h"
 #import "tzstockitems.h"
 
+#define DRAG_SELECT_MODE_KEY "tikzit-drag-select-mode"
+
 static const InputMask unionSelectMask = ShiftMask;
+
+static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
 
 @interface SelectTool (Private)
 - (TikzDocument*) doc;
@@ -55,7 +60,67 @@ static const InputMask unionSelectMask = ShiftMask;
     if (self) {
         state = QuietState;
         edgeFuzz = 3.0f;
-        selectionBoxContents = [[NSMutableSet alloc] initWithCapacity:10];
+        dragSelectMode = DragSelectsNodes;
+
+        configWidget = gtk_vbox_new (FALSE, 0);
+        g_object_ref_sink (configWidget);
+
+        GtkWidget *label = gtk_label_new ("Drag selects:");
+        gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+        gtk_box_pack_start (GTK_BOX (configWidget),
+                            label,
+                            FALSE,
+                            FALSE,
+                            0);
+
+        GtkWidget *nodeOpt = gtk_radio_button_new_with_label (NULL, "nodes");
+        g_object_set_data (G_OBJECT (nodeOpt),
+                           DRAG_SELECT_MODE_KEY,
+                           (gpointer)DragSelectsNodes);
+        gtk_box_pack_start (GTK_BOX (configWidget),
+                            nodeOpt,
+                            FALSE,
+                            FALSE,
+                            0);
+        g_signal_connect (G_OBJECT (nodeOpt),
+                          "toggled",
+                          G_CALLBACK (drag_select_mode_cb),
+                          self);
+
+        GtkWidget *edgeOpt = gtk_radio_button_new_with_label (
+                gtk_radio_button_get_group (GTK_RADIO_BUTTON (nodeOpt)),
+                "edges");
+        g_object_set_data (G_OBJECT (edgeOpt),
+                           DRAG_SELECT_MODE_KEY,
+                           (gpointer)DragSelectsEdges);
+        gtk_box_pack_start (GTK_BOX (configWidget),
+                            edgeOpt,
+                            FALSE,
+                            FALSE,
+                            0);
+        g_signal_connect (G_OBJECT (edgeOpt),
+                          "toggled",
+                          G_CALLBACK (drag_select_mode_cb),
+                          self);
+
+        GtkWidget *bothOpt = gtk_radio_button_new_with_label (
+                gtk_radio_button_get_group (GTK_RADIO_BUTTON (edgeOpt)),
+                "both");
+        g_object_set_data (G_OBJECT (bothOpt),
+                           DRAG_SELECT_MODE_KEY,
+                           (gpointer)DragSelectsBoth);
+        gtk_box_pack_start (GTK_BOX (configWidget),
+                            bothOpt,
+                            FALSE,
+                            FALSE,
+                            0);
+        g_signal_connect (G_OBJECT (bothOpt),
+                          "toggled",
+                          G_CALLBACK (drag_select_mode_cb),
+                          self);
+        dragSelectModeButtons = gtk_radio_button_get_group (GTK_RADIO_BUTTON (bothOpt));
+
+        gtk_widget_show_all (configWidget);
     }
 
     return self;
@@ -67,11 +132,36 @@ static const InputMask unionSelectMask = ShiftMask;
     [renderer release];
     [leaderNode release];
     [modifyEdge release];
-    [selectionBoxContents release];
 
     g_object_unref (G_OBJECT (configWidget));
 
     [super dealloc];
+}
+
+- (DragSelectMode) dragSelectMode {
+    return dragSelectMode;
+}
+
+- (void) setDragSelectMode:(DragSelectMode)mode {
+    if (dragSelectMode == mode)
+        return;
+
+    dragSelectMode = mode;
+
+    GSList *entry = dragSelectModeButtons;
+    while (entry) {
+        GtkToggleButton *button = GTK_TOGGLE_BUTTON (entry->data);
+        DragSelectMode buttonMode =
+            (DragSelectMode) g_object_get_data (
+                    G_OBJECT (button),
+                    DRAG_SELECT_MODE_KEY);
+        if (buttonMode == dragSelectMode) {
+            gtk_toggle_button_set_active (button, TRUE);
+            break;
+        }
+
+        entry = g_slist_next (entry);
+    }
 }
 
 - (GraphRenderer*) activeRenderer { return renderer; }
@@ -138,7 +228,6 @@ static const InputMask unionSelectMask = ShiftMask;
                 if (!unionSelect) {
                     [self deselectAll];
                 }
-                [selectionBoxContents removeAllObjects];
                 [renderer clearHighlightedNodes];
                 state = SelectBoxState;
             }
@@ -166,15 +255,9 @@ static const InputMask unionSelectMask = ShiftMask;
         while ((node = [enumerator nextObject]) != nil) {
             NSPoint nodePos = [transformer toScreen:[node point]];
             if (NSPointInRect(nodePos, selectionBox)) {
-                if (![selectionBoxContents member:node]) {
-                    [selectionBoxContents addObject:node];
-                    [renderer setNode:node highlighted:YES];
-                }
+                [renderer setNode:node highlighted:YES];
             } else {
-                if ([selectionBoxContents member:node]) {
-                    [selectionBoxContents removeObject:node];
-                    [renderer setNode:node highlighted:NO];
-                }
+                [renderer setNode:node highlighted:NO];
             }
         }
     } else if (state == MoveSelectedNodesState) {
@@ -209,12 +292,32 @@ static const InputMask unionSelectMask = ShiftMask;
         return;
 
     if (state == SelectBoxState) {
-        BOOL shouldDeselect = !(mask & unionSelectMask);
-        if (shouldDeselect) {
-            [self deselectAllEdges];
+        PickSupport *ps = [[self doc] pickSupport];
+        Transformer *transformer = [renderer transformer];
+
+        if (!(mask & unionSelectMask)) {
+            [ps deselectAllNodes];
+            [ps deselectAllEdges];
         }
-        [[[self doc] pickSupport] selectAllNodes:selectionBoxContents
-                                  replacingSelection:shouldDeselect];
+
+        Graph *graph = [[self doc] graph];
+        if (dragSelectMode & DragSelectsNodes) {
+            for (Node *node in [graph nodes]) {
+                NSPoint nodePos = [transformer toScreen:[node point]];
+                if (NSPointInRect(nodePos, selectionBox)) {
+                    [ps selectNode:node];
+                }
+            }
+        }
+        if (dragSelectMode & DragSelectsEdges) {
+            for (Edge *edge in [graph edges]) {
+                NSPoint edgePos = [transformer toScreen:[edge mid]];
+                if (NSPointInRect(edgePos, selectionBox)) {
+                    [ps selectEdge:edge];
+                }
+            }
+        }
+
         [self clearSelectionBox];
     } else if (state == ToggleSelectState) {
         [[[self doc] pickSupport] deselectNode:leaderNode];
@@ -272,8 +375,37 @@ static const InputMask unionSelectMask = ShiftMask;
     }
 }
 
-- (void) loadConfiguration:(Configuration*)config {}
-- (void) saveConfiguration:(Configuration*)config {}
+- (void) loadConfiguration:(Configuration*)config {
+    NSString *mode = [config stringEntry:@"Drag select mode"
+                                 inGroup:@"SelectTool"];
+    if ([mode isEqualToString:@"nodes"]) {
+        [self setDragSelectMode:DragSelectsNodes];
+    } else if ([mode isEqualToString:@"edges"]) {
+        [self setDragSelectMode:DragSelectsEdges];
+    } else if ([mode isEqualToString:@"both"]) {
+        [self setDragSelectMode:DragSelectsBoth];
+    }
+}
+
+- (void) saveConfiguration:(Configuration*)config {
+    switch (dragSelectMode) {
+        case DragSelectsNodes:
+            [config setStringEntry:@"Drag select mode"
+                           inGroup:@"SelectTool"
+                             value:@"nodes"];
+            break;
+        case DragSelectsEdges:
+            [config setStringEntry:@"Drag select mode"
+                           inGroup:@"SelectTool"
+                             value:@"edges"];
+            break;
+        case DragSelectsBoth:
+            [config setStringEntry:@"Drag select mode"
+                           inGroup:@"SelectTool"
+                             value:@"both"];
+            break;
+    }
+}
 
 @end
 
@@ -349,7 +481,6 @@ static const InputMask unionSelectMask = ShiftMask;
     selectionBox = emptyRect;
 
     [renderer invalidateRect:NSInsetRect (oldRect, -2, -2)];
-    [selectionBoxContents removeAllObjects];
     [renderer clearHighlightedNodes];
 }
 
@@ -362,5 +493,17 @@ static const InputMask unionSelectMask = ShiftMask;
     return NSPointInRect(screenPt, selectionBox);
 }
 @end
+
+static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool) {
+    if (gtk_toggle_button_get_active (button)) {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        DragSelectMode buttonMode =
+            (DragSelectMode) g_object_get_data (
+                    G_OBJECT (button),
+                    DRAG_SELECT_MODE_KEY);
+        [tool setDragSelectMode:buttonMode];
+        [pool drain];
+    }
+}
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4

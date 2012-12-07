@@ -31,10 +31,17 @@ typedef enum {
     DragEdgeControlPoint2
 } SelectToolState;
 
+typedef enum {
+    DragSelectsNodes = 1,
+    DragSelectsEdges = 2,
+    DragSelectsBoth = DragSelectsNodes | DragSelectsEdges
+} DragSelectMode;
+
 @interface SelectTool : NSObject <Tool> {
     GraphRenderer      *renderer;
     SelectToolState     state;
     float               edgeFuzz;
+    DragSelectMode      dragSelectMode;
     NSPoint             dragOrigin;
     Node               *leaderNode;
     NSPoint             oldLeaderPos;
@@ -43,9 +50,11 @@ typedef enum {
     NSMutableSet       *selectionBoxContents;
 
     GtkWidget          *configWidget;
+    GSList             *dragSelectModeButtons;
 }
 
 @property (assign) float edgeFuzz;
+@property (assign) DragSelectMode dragSelectMode;
 
 - (id) init;
 + (id) tool;
