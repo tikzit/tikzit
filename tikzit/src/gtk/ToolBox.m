@@ -21,6 +21,8 @@
 #import "Configuration.h"
 #import "Tool.h"
 
+#import "tztoolpalette.h"
+
 static void tool_button_toggled_cb (GtkWidget *widget, ToolBox *toolBox);
 static void unretain (gpointer data);
 
@@ -51,7 +53,7 @@ static void unretain (gpointer data);
         gtk_widget_show (mainLayout);
         gtk_container_add (GTK_CONTAINER (window), mainLayout);
 
-        GtkWidget *toolPalette = gtk_tool_palette_new ();
+        GtkWidget *toolPalette = tz_tool_palette_new ();
         gtk_widget_show (toolPalette);
         gtk_box_pack_start (GTK_BOX (mainLayout),
                             toolPalette,

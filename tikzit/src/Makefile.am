@@ -70,6 +70,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/mkdtemp.m \
                  gtk/main.m \
                  gtk/tzstockitems.m \
+                 gtk/tztoolpalette.m \
                  common/CircleShape.m \
                  common/ColorRGB.m \
                  common/DiamondShape.m \
