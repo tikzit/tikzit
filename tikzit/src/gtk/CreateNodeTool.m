@@ -30,6 +30,7 @@
 - (NSString*) shortcut { return @"n"; }
 @synthesize activeRenderer=renderer;
 @synthesize styleManager;
+@synthesize configurationWidget=configWidget;
 
 + (id) tool {
     return [[[self alloc] init] autorelease];
@@ -49,6 +50,29 @@
     if (self) {
         styleManager = [sm retain];
         stylePicker = [[NodeStyleSelector alloc] initWithStyleManager:sm];
+
+        configWidget = gtk_vbox_new (FALSE, 0);
+        g_object_ref_sink (configWidget);
+
+        GtkWidget *label = gtk_label_new ("Node style:");
+        gtk_widget_show (label);
+        gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+        gtk_box_pack_start (GTK_BOX (configWidget),
+                            label,
+                            FALSE,
+                            FALSE,
+                            0);
+
+        GtkWidget *selectorFrame = gtk_frame_new (NULL);
+        gtk_widget_show (selectorFrame);
+        gtk_box_pack_start (GTK_BOX (configWidget),
+                            selectorFrame,
+                            TRUE,
+                            TRUE,
+                            0);
+        gtk_container_add (GTK_CONTAINER (selectorFrame),
+                           [stylePicker widget]);
+        gtk_widget_show ([stylePicker widget]);
     }
 
     return self;
@@ -61,11 +85,9 @@
     [styleManager release];
     [stylePicker release];
 
-    [super dealloc];
-}
+    g_object_unref (G_OBJECT (configWidget));
 
-- (GtkWidget*) configurationWidget {
-    return [stylePicker widget];
+    [super dealloc];
 }
 
 - (NodeStyle*) activeStyle {

@@ -27,6 +27,7 @@
     GraphRenderer     *renderer;
     StyleManager      *styleManager;
     EdgeStyleSelector *stylePicker;
+    GtkWidget         *configWidget;
     Node              *sourceNode;
     NSPoint            sourceNodeScreenPoint;
     NSPoint            halfEdgeEnd;

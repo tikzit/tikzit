@@ -16,6 +16,7 @@
  */
 
 #import "TZFoundation.h"
+#import <gtk/gtk.h>
 #import "Tool.h"
 
 @class NodeStyle;
@@ -26,6 +27,7 @@
     GraphRenderer     *renderer;
     StyleManager      *styleManager;
     NodeStyleSelector *stylePicker;
+    GtkWidget         *configWidget;
 }
 
 @property (retain) StyleManager *styleManager;
