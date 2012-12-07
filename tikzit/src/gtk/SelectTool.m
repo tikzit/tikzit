@@ -79,8 +79,6 @@ static const InputMask unionSelectMask = ShiftMask;
     if (r == renderer)
         return;
 
-    [self deselectAll];
-
     [r retain];
     [renderer release];
     renderer = r;
@@ -110,8 +108,7 @@ static const InputMask unionSelectMask = ShiftMask;
         if (leaderNode != nil) {
             BOOL alreadySelected = [[self doc] isNodeSelected:leaderNode];
             if (!unionSelect && !alreadySelected) {
-                [self deselectAllEdges];
-                [self deselectAllNodes];
+                [self deselectAll];
             }
             if (unionSelect && alreadySelected) {
                 state = ToggleSelectState;
@@ -142,9 +139,68 @@ static const InputMask unionSelectMask = ShiftMask;
                     [self deselectAll];
                 }
                 [selectionBoxContents removeAllObjects];
+                [renderer clearHighlightedNodes];
                 state = SelectBoxState;
             }
         }
+    }
+}
+
+- (void) mouseMoveTo:(NSPoint)pos withButtons:(MouseButton)buttons andMask:(InputMask)mask {
+    if (!(buttons & LeftButton))
+        return;
+
+    Transformer *transformer = [renderer transformer];
+
+    if (state == ToggleSelectState) {
+        state = MoveSelectedNodesState;
+        oldLeaderPos = [leaderNode point];
+        [[self doc] startShiftNodes:[[[self doc] pickSupport] selectedNodes]];
+    }
+
+    if (state == SelectBoxState) {
+        [self setSelectionBox:NSRectAroundPoints(dragOrigin, pos)];
+
+        NSEnumerator *enumerator = [[self doc] nodeEnumerator];
+        Node *node;
+        while ((node = [enumerator nextObject]) != nil) {
+            NSPoint nodePos = [transformer toScreen:[node point]];
+            if (NSPointInRect(nodePos, selectionBox)) {
+                if (![selectionBoxContents member:node]) {
+                    [selectionBoxContents addObject:node];
+                    [renderer setNode:node highlighted:YES];
+                }
+            } else {
+                if ([selectionBoxContents member:node]) {
+                    [selectionBoxContents removeObject:node];
+                    [renderer setNode:node highlighted:NO];
+                }
+            }
+        }
+    } else if (state == MoveSelectedNodesState) {
+        if (leaderNode != nil) {
+            [self shiftNodesByMovingLeader:leaderNode to:pos];
+            NSPoint shiftSoFar;
+            shiftSoFar.x = [leaderNode point].x - oldLeaderPos.x;
+            shiftSoFar.y = [leaderNode point].y - oldLeaderPos.y;
+            [[self doc] shiftNodesUpdate:shiftSoFar];
+        }
+    } else if (state == DragEdgeControlPoint1 || state == DragEdgeControlPoint2) {
+        // invalidate once before we start changing it: we may be shrinking
+        // the control circles
+        [[self doc] modifyEdgeCheckPoint];
+        if (state == DragEdgeControlPoint1) {
+            [modifyEdge moveCp1To:[transformer fromScreen:pos]
+                        withWeightCourseness:0.1f
+                        andBendCourseness:15
+                        forceLinkControlPoints:(mask & ControlMask)];
+        } else {
+            [modifyEdge moveCp2To:[transformer fromScreen:pos]
+                        withWeightCourseness:0.1f
+                        andBendCourseness:15
+                        forceLinkControlPoints:(mask & ControlMask)];
+        }
+        [[self doc] modifyEdgeCheckPoint];
     }
 }
 
@@ -197,64 +253,6 @@ static const InputMask unionSelectMask = ShiftMask;
 
         [self deselectAllEdges];
         [[[self doc] pickSupport] selectEdge:edge];
-    }
-}
-
-- (void) mouseMoveTo:(NSPoint)pos withButtons:(MouseButton)buttons andMask:(InputMask)mask {
-    if (!(buttons & LeftButton))
-        return;
-
-    Transformer *transformer = [renderer transformer];
-
-    if (state == ToggleSelectState) {
-        state = MoveSelectedNodesState;
-        oldLeaderPos = [leaderNode point];
-        [[self doc] startShiftNodes:[[[self doc] pickSupport] selectedNodes]];
-    }
-
-    if (state == SelectBoxState) {
-        [self setSelectionBox:NSRectAroundPoints(dragOrigin, pos)];
-
-        NSEnumerator *enumerator = [[self doc] nodeEnumerator];
-        Node *node;
-        while ((node = [enumerator nextObject]) != nil) {
-            NSPoint nodePos = [transformer toScreen:[node point]];
-            if (NSPointInRect(nodePos, selectionBox)) {
-                if (![selectionBoxContents member:node]) {
-                    [selectionBoxContents addObject:node];
-                    [renderer invalidateNode:node];
-                }
-            } else {
-                if ([selectionBoxContents member:node]) {
-                    [selectionBoxContents removeObject:node];
-                    [renderer invalidateNode:node];
-                }
-            }
-        }
-    } else if (state == MoveSelectedNodesState) {
-        if (leaderNode != nil) {
-            [self shiftNodesByMovingLeader:leaderNode to:pos];
-            NSPoint shiftSoFar;
-            shiftSoFar.x = [leaderNode point].x - oldLeaderPos.x;
-            shiftSoFar.y = [leaderNode point].y - oldLeaderPos.y;
-            [[self doc] shiftNodesUpdate:shiftSoFar];
-        }
-    } else if (state == DragEdgeControlPoint1 || state == DragEdgeControlPoint2) {
-        // invalidate once before we start changing it: we may be shrinking
-        // the control circles
-        [[self doc] modifyEdgeCheckPoint];
-        if (state == DragEdgeControlPoint1) {
-            [modifyEdge moveCp1To:[transformer fromScreen:pos]
-                        withWeightCourseness:0.1f
-                        andBendCourseness:15
-                        forceLinkControlPoints:(mask & ControlMask)];
-        } else {
-            [modifyEdge moveCp2To:[transformer fromScreen:pos]
-                        withWeightCourseness:0.1f
-                        andBendCourseness:15
-                        forceLinkControlPoints:(mask & ControlMask)];
-        }
-        [[self doc] modifyEdgeCheckPoint];
     }
 }
 
@@ -351,6 +349,8 @@ static const InputMask unionSelectMask = ShiftMask;
     selectionBox = emptyRect;
 
     [renderer invalidateRect:NSInsetRect (oldRect, -2, -2)];
+    [selectionBoxContents removeAllObjects];
+    [renderer clearHighlightedNodes];
 }
 
 - (BOOL) selectionBoxContainsNode:(Node*)node {

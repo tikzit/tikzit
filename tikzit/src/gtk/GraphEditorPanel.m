@@ -78,6 +78,9 @@
     if (t == tool)
         return;
 
+    [[[renderer document] pickSupport] deselectAllNodes];
+    [[[renderer document] pickSupport] deselectAllEdges];
+
     BOOL hadOldTool = ([tool activeRenderer] == renderer);
 
     id oldTool = tool;
