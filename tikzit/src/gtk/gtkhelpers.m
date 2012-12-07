@@ -213,8 +213,6 @@ void gtk_action_set_detailed_label (GtkAction *action, const gchar *baseLabel, c
  * it simply allows the window contents to treat key events /before/
  * accelerator keys come into play (this way widgets dont get deleted
  * when cutting text in an entry etc.).
- * Creates a liststore suitable for comboboxes and such to
- * chose from a variety of types.
  *
  * Returns: whether the event was handled
  */

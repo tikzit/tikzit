@@ -43,10 +43,9 @@ static void unretain (gpointer data);
         g_object_ref_sink (window);
         gtk_window_set_title (GTK_WINDOW (window), "Toolbox");
         gtk_window_set_role (GTK_WINDOW (window), "toolbox");
-        gtk_window_set_type_hint (
-                GTK_WINDOW (window),
-                GDK_WINDOW_TYPE_HINT_UTILITY);
-        gtk_window_set_default_size (GTK_WINDOW (window), 200, 500);
+        gtk_window_set_type_hint (GTK_WINDOW (window),
+                                  GDK_WINDOW_TYPE_HINT_UTILITY);
+        gtk_window_set_default_size (GTK_WINDOW (window), 150, 500);
         gtk_window_set_deletable (GTK_WINDOW (window), FALSE);
 
         GtkWidget *mainLayout = gtk_vbox_new (FALSE, 5);

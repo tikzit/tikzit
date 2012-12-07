@@ -51,7 +51,7 @@ static void clipboard_paste_contents (GtkClipboard *clipboard,
 // }}}
 // {{{ Signals
 
-static void window_toplevel_focus_changed_cb (GObject *gobject, GParamSpec *pspec, GraphEditorPanel *panel);
+static void window_toplevel_focus_changed_cb (GObject *gobject, GParamSpec *pspec, Window *window);
 static void graph_divider_position_changed_cb (GObject *gobject, GParamSpec *pspec, Window *window);
 static void tikz_buffer_changed_cb (GtkTextBuffer *buffer, Window *window);
 static gboolean main_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, Window *window);
@@ -572,7 +572,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     g_signal_connect (G_OBJECT (window),
         "notify::has-toplevel-focus",
         G_CALLBACK (window_toplevel_focus_changed_cb),
-        graphPanel);
+        self);
     g_signal_connect (G_OBJECT (tikzPaneSplitter),
         "notify::position",
         G_CALLBACK (graph_divider_position_changed_cb),
@@ -739,17 +739,28 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     }
 }
 
+- (GraphEditorPanel*) _graphPanel {
+    return graphPanel;
+}
+
 @end
 
 // }}}
 // {{{ GTK+ callbacks
 
-static void window_toplevel_focus_changed_cb (GObject *gobject, GParamSpec *pspec, GraphEditorPanel *panel) {
+static void window_toplevel_focus_changed_cb (GObject *gobject, GParamSpec *pspec, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     gboolean hasfocus;
     g_object_get (gobject, "has-toplevel-focus", &hasfocus, NULL);
     if (hasfocus) {
-        [panel grabTool];
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"WindowGainedFocus"
+                          object:window];
+        [[window _graphPanel] grabTool];
+    } else {
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"WindowLostFocus"
+                          object:window];
     }
     [pool drain];
 }

@@ -26,7 +26,7 @@
 @class EdgePropertyDelegate;
 @class EdgeNodePropertyDelegate;
 
-@interface PropertyPane: NSObject {
+@interface PropertiesWindow: NSObject {
     TikzDocument       *document;
     BOOL                blockUpdates;
 
@@ -35,16 +35,17 @@
     PropertyListEditor *edgeProps;
     PropertyListEditor *edgeNodeProps;
 
-    GraphPropertyDelegate *graphPropDelegate;
-    NodePropertyDelegate *nodePropDelegate;
-    EdgePropertyDelegate *edgePropDelegate;
+    GraphPropertyDelegate    *graphPropDelegate;
+    NodePropertyDelegate     *nodePropDelegate;
+    EdgePropertyDelegate     *edgePropDelegate;
     EdgeNodePropertyDelegate *edgeNodePropDelegate;
 
+    GtkWidget       *window;
     GtkWidget       *propertiesPane;
 
-    GtkExpander     *graphPropsExpander;
-    GtkExpander     *nodePropsExpander;
-    GtkExpander     *edgePropsExpander;
+    GtkWidget       *graphPropsBin;
+    GtkWidget       *nodePropsBin;
+    GtkWidget       *edgePropsBin;
 
     GtkEntry        *nodeLabelEntry;
     GtkToggleButton *edgeNodeToggle;
@@ -52,17 +53,13 @@
     GtkEntry        *edgeNodeLabelEntry;
 }
 
-@property (readonly) GtkWidget    *widget;
 @property (retain)   TikzDocument *document;
+@property (assign)   BOOL          visible;
 
 - (id) init;
 
 - (void) restoreUiStateFromConfig:(Configuration*)file group:(NSString*)group;
 - (void) saveUiStateToConfig:(Configuration*)file group:(NSString*)group;
-
-- (void) favourGraphProperties;
-- (void) favourNodeProperties;
-- (void) favourEdgeProperties;
 
 @end
 

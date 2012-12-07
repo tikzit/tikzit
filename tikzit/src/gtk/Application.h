@@ -22,6 +22,7 @@
 @class Preambles;
 @class PreambleEditor;
 @class PreviewWindow;
+@class PropertiesWindow;
 @class SettingsDialog;
 @class StyleManager;
 @class TikzDocument;
@@ -48,6 +49,7 @@ extern Application* app;
     ToolBox           *toolBox;
     PreambleEditor    *preambleWindow;
     PreviewWindow     *previewWindow;
+    PropertiesWindow  *propertiesWindow;
     SettingsDialog    *settingsDialog;
 
     // the open windows (array of Window*)

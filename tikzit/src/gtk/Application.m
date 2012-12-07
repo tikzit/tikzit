@@ -19,14 +19,7 @@
 
 #import "Configuration.h"
 #import "PreambleEditor.h"
-#ifdef HAVE_POPPLER
-#import "Preambles.h"
-#import "Preambles+Storage.h"
-#import "PreviewWindow.h"
-#endif
-#ifdef HAVE_POPPLER
-#import "SettingsDialog.h"
-#endif
+#import "PropertiesWindow.h"
 #import "Shape.h"
 #import "StyleManager.h"
 #import "StyleManager+Storage.h"
@@ -34,6 +27,13 @@
 #import "TikzDocument.h"
 #import "ToolBox.h"
 #import "Window.h"
+
+#ifdef HAVE_POPPLER
+#import "Preambles.h"
+#import "Preambles+Storage.h"
+#import "PreviewWindow.h"
+#import "SettingsDialog.h"
+#endif
 
 #import "BoundingBoxTool.h"
 #import "CreateNodeTool.h"
@@ -48,6 +48,7 @@ Application* app = nil;
 
 @interface Application (Notifications)
 - (void) windowClosed:(NSNotification*)notification;
+- (void) windowGainedFocus:(NSNotification*)notification;
 - (void) selectedToolChanged:(NSNotification*)notification;
 @end
 
@@ -123,6 +124,9 @@ Application* app = nil;
                    name:@"ToolSelectionChanged"
                  object:toolBox];
 
+        propertiesWindow = [[PropertiesWindow alloc] init];
+        [propertiesWindow setVisible:YES];
+
         app = [self retain];
     }
 
@@ -177,6 +181,7 @@ Application* app = nil;
     [tools release];
     [activeTool release];
     [toolBox release];
+    [propertiesWindow release];
 
     [super dealloc];
 }
@@ -199,6 +204,10 @@ Application* app = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(windowClosed:)
                                                  name:@"WindowClosed"
+                                               object:window];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(windowGainedFocus:)
+                                                 name:@"WindowGainedFocus"
                                                object:window];
     // FIXME: focus?
 }
@@ -305,6 +314,11 @@ Application* app = nil;
     if ([openWindows count] == 0) {
         gtk_main_quit();
     }
+}
+- (void) windowGainedFocus:(NSNotification*)notification {
+    Window *window = [notification object];
+    TikzDocument *doc = [window document];
+    [propertiesWindow setDocument:doc];
 }
 - (void) selectedToolChanged:(NSNotification*)n {
     id<Tool> tool = [[n userInfo] objectForKey:@"tool"];

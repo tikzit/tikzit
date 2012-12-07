@@ -52,13 +52,12 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/NSError+Glib.m \
                  gtk/NSFileManager+Glib.m \
                  gtk/NSString+Glib.m \
-                 gtk/PropertyPane.m \
+                 gtk/PropertiesWindow.m \
                  gtk/PropertyListEditor.m \
                  gtk/RecentManager.m \
                  gtk/SelectTool.m \
                  gtk/Shape+Render.m \
                  gtk/StyleManager+Storage.m \
-                 gtk/StylesPane.m \
                  gtk/TikzDocument.m \
                  gtk/ToolBox.m \
                  gtk/WidgetSurface.m \
