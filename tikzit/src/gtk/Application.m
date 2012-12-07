@@ -109,13 +109,14 @@ Application* app = nil;
             [BoundingBoxTool tool],
             [HandTool tool],
             nil];
+        activeTool = [tools objectAtIndex:0];
         for (id<Tool> tool in tools) {
             [tool loadConfiguration:configFile];
         }
-        activeTool = [[tools objectAtIndex:0] retain];
 
         toolBox = [[ToolBox alloc] initWithTools:tools];
         [toolBox loadConfiguration:configFile];
+        [toolBox setSelectedTool:activeTool];
         [[NSNotificationCenter defaultCenter]
             addObserver:self
                selector:@selector(selectedToolChanged:)

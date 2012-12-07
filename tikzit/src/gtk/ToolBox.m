@@ -38,6 +38,7 @@ static void unretain (gpointer data);
 
     if (self) {
         window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+        g_object_ref_sink (window);
         gtk_window_set_title (GTK_WINDOW (window), "Toolbox");
         gtk_window_set_role (GTK_WINDOW (window), "toolbox");
         gtk_window_set_type_hint (
@@ -62,8 +63,6 @@ static void unretain (gpointer data);
         gtk_container_add (GTK_CONTAINER (toolPalette), GTK_WIDGET (toolGroup));
         gtk_widget_show (GTK_WIDGET (toolGroup));
 
-        id<Tool> activeTool = [app activeTool];
-
         GSList *item_group = NULL;
         for (id<Tool> tool in tools) {
             NSString *tooltip = [NSString stringWithFormat:
@@ -85,12 +84,6 @@ static void unretain (gpointer data);
                     TOOL_DATA_KEY,
                     [tool retain],
                     unretain);
-
-            if (tool == activeTool) {
-                gtk_toggle_tool_button_set_active (
-                        GTK_TOGGLE_TOOL_BUTTON (item),
-                        TRUE);
-            }
 
             g_signal_connect (item, "toggled",
                               G_CALLBACK (tool_button_toggled_cb),
