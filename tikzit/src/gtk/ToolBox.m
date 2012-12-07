@@ -96,14 +96,22 @@ static void unretain (gpointer data);
                               self);
         }
 
-        configWidgetContainer = gtk_frame_new ("");
-        g_object_ref_sink (configWidgetContainer);
-        gtk_widget_show (configWidgetContainer);
+        frame = gtk_frame_new ("");
+        g_object_ref_sink (frame);
+        gtk_widget_show (frame);
         gtk_box_pack_start (GTK_BOX (mainLayout),
-                            configWidgetContainer,
+                            frame,
                             TRUE,
                             TRUE,
                             0);
+
+        configWidgetContainer = gtk_alignment_new (0.5, 0.5, 1.0, 1.0);
+        g_object_ref_sink (configWidgetContainer);
+        gtk_widget_show (configWidgetContainer);
+        gtk_container_add (GTK_CONTAINER (frame),
+                           configWidgetContainer);
+        gtk_alignment_set_padding (GTK_ALIGNMENT (configWidgetContainer),
+                                   5, 5, 5, 5);
 
         gtk_widget_show (window);
     }
@@ -162,7 +170,7 @@ static void unretain (gpointer data);
             break;
         }
     }
-    gtk_frame_set_label (GTK_FRAME (configWidgetContainer),
+    gtk_frame_set_label (GTK_FRAME (frame),
                          [[tool name] UTF8String]);
     [self _setToolWidget:[tool configurationWidget]];
 }

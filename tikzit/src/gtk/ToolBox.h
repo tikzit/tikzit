@@ -24,6 +24,7 @@
 @interface ToolBox : NSObject {
     GtkWidget        *window;
     GtkToolItemGroup *toolGroup;
+    GtkWidget        *frame;
     GtkWidget        *configWidgetContainer;
     GtkWidget        *configWidget;
 }
