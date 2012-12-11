@@ -114,7 +114,6 @@ static void remove_clicked_cb (GtkButton *button,
 
         widget = gtk_vbox_new (FALSE, 0);
 	gtk_box_set_spacing (GTK_BOX (widget), 6);
-        gtk_container_set_border_width (GTK_CONTAINER (widget), 6);
         g_object_ref_sink (G_OBJECT (widget));
 
         GtkWidget *listFrame = gtk_frame_new (NULL);
