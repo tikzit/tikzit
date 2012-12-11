@@ -255,7 +255,6 @@ static void add_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) 
 
     EdgeStyle *newStyle = [EdgeStyle defaultEdgeStyleWithName:@"newstyle"];
     [[palette styleManager] addEdgeStyle:newStyle];
-    [[palette styleManager] setActiveEdgeStyle:newStyle];
 
     [pool drain];
 }

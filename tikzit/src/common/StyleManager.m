@@ -99,9 +99,7 @@
     if (self) {
         // we lazily load the default styles, since they may not be needed
         nodeStyles = nil;
-        activeNodeStyle = nil;
         edgeStyles = nil;
-        activeEdgeStyle = nil;
     }
 
     return self;
@@ -198,14 +196,6 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"EdgeStylesReplaced" object:self];
 }
 
-- (void) postActiveNodeStyleChanged {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ActiveNodeStyleChanged" object:self];
-}
-
-- (void) postActiveEdgeStyleChanged {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ActiveEdgeStyleChanged" object:self];
-}
-
 - (NSArray*) nodeStyles {
     if (nodeStyles == nil) {
         [self loadDefaultNodeStyles];
@@ -225,15 +215,10 @@
     [nodeStyles release];
     [styles retain];
     nodeStyles = styles;
-    NodeStyle *oldActiveStyle = activeNodeStyle;
-    activeNodeStyle = nil;
 	for (NodeStyle *style in styles) {
 		[self listenToNodeStyle:style];
 	}
     [self postNodeStylesReplaced];
-    if (oldActiveStyle != activeNodeStyle) {
-        [self postActiveNodeStyleChanged];
-    }
 }
 
 - (void) _setEdgeStyles:(NSMutableArray*)styles {
@@ -241,49 +226,10 @@
     [edgeStyles release];
     [styles retain];
     edgeStyles = styles;
-    EdgeStyle *oldActiveStyle = activeEdgeStyle;
-    activeEdgeStyle = nil;
 	for (EdgeStyle *style in styles) {
 		[self listenToEdgeStyle:style];
 	}
     [self postEdgeStylesReplaced];
-    if (oldActiveStyle != activeEdgeStyle) {
-        [self postActiveEdgeStyleChanged];
-    }
-}
-
-- (NodeStyle*) activeNodeStyle {
-    if (nodeStyles == nil) {
-        [self loadDefaultNodeStyles];
-    }
-    return activeNodeStyle;
-}
-
-- (void) setActiveNodeStyle:(NodeStyle*)style {
-    if (style == activeNodeStyle) {
-        return;
-    }
-    if (style == nil || [nodeStyles containsObject:style]) {
-        activeNodeStyle = style;
-        [self postActiveNodeStyleChanged];
-    }
-}
-
-- (EdgeStyle*) activeEdgeStyle {
-    if (edgeStyles == nil) {
-        [self loadDefaultEdgeStyles];
-    }
-    return activeEdgeStyle;
-}
-
-- (void) setActiveEdgeStyle:(EdgeStyle*)style {
-    if (style == activeEdgeStyle) {
-        return;
-    }
-    if (style == nil || [edgeStyles containsObject:style]) {
-        activeEdgeStyle = style;
-        [self postActiveEdgeStyleChanged];
-    }
 }
 
 - (NodeStyle*) nodeStyleForName:(NSString*)name {
@@ -308,9 +254,6 @@
 - (void) removeNodeStyle:(NodeStyle*)style {
     if (nodeStyles == nil) {
         [self loadDefaultNodeStyles];
-    }
-    if (activeNodeStyle == style) {
-        [self setActiveNodeStyle:nil];
     }
 
 	[self ignoreNodeStyle:style];
@@ -342,9 +285,6 @@
 - (void) removeEdgeStyle:(EdgeStyle*)style {
     if (edgeStyles == nil) {
         [self loadDefaultEdgeStyles];
-    }
-    if (activeEdgeStyle == style) {
-        [self setActiveEdgeStyle:nil];
     }
 
 	[self ignoreEdgeStyle:style];

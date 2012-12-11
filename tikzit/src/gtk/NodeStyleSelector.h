@@ -23,8 +23,6 @@
     GtkListStore        *store;
     GtkIconView         *view;
     StyleManager        *styleManager;
-    BOOL                 linkedToActiveStyle;
-    BOOL                 suppressSetActiveStyle;
 }
 
 /*!
@@ -40,16 +38,8 @@
 @property (retain)   StyleManager  *styleManager;
 
 /*!
- @property   linkedToActiveStyles
- @brief      Whether the current selection should be the same as the
-             style manager's active style
- */
-@property (getter=isLinkedToActiveStyle) BOOL linkedToActiveStyle;
-
-/*!
  @property   selectedStyle
- @brief      The selected style.  If linkedToActiveStyle is YES, this
-             will be the same as [manager activeStyle].
+ @brief      The selected style.
 
              When this changes, a SelectedStyleChanged notification will be posted
  */

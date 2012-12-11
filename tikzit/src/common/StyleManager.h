@@ -21,18 +21,14 @@
 
 @interface StyleManager: NSObject {
     NSMutableArray *nodeStyles;
-    NodeStyle *activeNodeStyle;
     NSMutableArray *edgeStyles;
-    EdgeStyle *activeEdgeStyle;
 }
 
 + (StyleManager*) manager;
 - (id) init;
 
 @property (readonly) NSArray   *nodeStyles;
-@property (retain)   NodeStyle *activeNodeStyle;
 @property (readonly) NSArray   *edgeStyles;
-@property (retain)   EdgeStyle *activeEdgeStyle;
 
 // only for use by loading code
 - (void) _setNodeStyles:(NSMutableArray*)styles;

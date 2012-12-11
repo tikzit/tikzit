@@ -41,7 +41,6 @@ enum {
 - (void) stylesReplaced:(NSNotification*)notification;
 - (void) styleAdded:(NSNotification*)notification;
 - (void) styleRemoved:(NSNotification*)notification;
-- (void) activeStyleChanged:(NSNotification*)notification;
 - (void) shapeDictionaryReplaced:(NSNotification*)n;
 - (void) selectionChanged;
 - (void) observeValueForKeyPath:(NSString*)keyPath
@@ -56,7 +55,6 @@ enum {
 - (GdkPixbuf*) pixbufFromSurface:(cairo_surface_t*)surface;
 - (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style usingSurface:(cairo_surface_t*)surface;
 - (void) addStyle:(NodeStyle*)style;
-- (void) postSelectedStyleChanged;
 - (void) observeStyle:(NodeStyle*)style;
 - (void) stopObservingStyle:(NodeStyle*)style;
 - (void) clearModel;
@@ -78,7 +76,6 @@ enum {
 
     if (self) {
         styleManager = nil;
-        linkedToActiveStyle = YES;
 
         store = gtk_list_store_new (STYLES_N_COLS,
                                     G_TYPE_STRING,
@@ -143,10 +140,6 @@ enum {
                                              selector:@selector(styleRemoved:)
                                                  name:@"NodeStyleRemoved"
                                                object:m];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(activeStyleChanged:)
-                                                 name:@"ActiveNodeStyleChanged"
-                                               object:m];
 
     [styleManager release];
     styleManager = m;
@@ -156,20 +149,6 @@ enum {
 
 - (GtkWidget*) widget {
     return GTK_WIDGET (view);
-}
-
-- (BOOL) isLinkedToActiveStyle {
-    return linkedToActiveStyle;
-}
-
-- (void) setLinkedToActiveStyle:(BOOL)linked {
-    linkedToActiveStyle = linked;
-    if (linkedToActiveStyle) {
-        NodeStyle *style = [self selectedStyle];
-        if ([styleManager activeNodeStyle] != style) {
-            [self setSelectedStyle:[styleManager activeNodeStyle]];
-        }
-    }
 }
 
 - (NodeStyle*) selectedStyle {
@@ -251,15 +230,6 @@ enum {
     }
 }
 
-- (void) activeStyleChanged:(NSNotification*)notification {
-    if (linkedToActiveStyle) {
-        NodeStyle *style = [self selectedStyle];
-        if ([styleManager activeNodeStyle] != style) {
-            [self setSelectedStyle:[styleManager activeNodeStyle]];
-        }
-    }
-}
-
 - (void) observeValueForKeyPath:(NSString*)keyPath
                        ofObject:(id)object
                          change:(NSDictionary*)change
@@ -294,13 +264,9 @@ enum {
 }
 
 - (void) selectionChanged {
-    if (linkedToActiveStyle) {
-        NodeStyle *style = [self selectedStyle];
-        if ([styleManager activeNodeStyle] != style) {
-            [styleManager setActiveNodeStyle:style];
-        }
-    }
-    [self postSelectedStyleChanged];
+    [[NSNotificationCenter defaultCenter]
+        postNotificationName:@"SelectedStyleChanged"
+                      object:self];
 }
 @end
 
@@ -397,10 +363,6 @@ enum {
     cairo_surface_t *surface = [self createNodeIconSurface];
     [self addStyle:style usingSurface:surface];
     cairo_surface_destroy (surface);
-}
-
-- (void) postSelectedStyleChanged {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SelectedStyleChanged" object:self];
 }
 
 - (void) observeStyle:(NodeStyle*)style {

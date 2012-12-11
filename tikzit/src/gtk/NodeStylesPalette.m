@@ -251,7 +251,6 @@ static void add_style_button_cb (GtkButton *widget, NodeStylesPalette *palette) 
 
     NodeStyle *newStyle = [NodeStyle defaultNodeStyleWithName:@"newstyle"];
     [[palette styleManager] addNodeStyle:newStyle];
-    [[palette styleManager] setActiveNodeStyle:newStyle];
 
     [pool drain];
 }
