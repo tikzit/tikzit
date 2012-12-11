@@ -37,7 +37,7 @@ float tbHandleLeft(NSRect bbox) {
 @end
 
 @implementation BoundingBoxTool
-- (NSString*) name { return @"Bounding Box Tool"; }
+- (NSString*) name { return @"Bounding Box"; }
 - (const gchar*) stockId { return TIKZIT_STOCK_BOUNDING_BOX; }
 - (NSString*) helpText { return @"Set the bounding box"; }
 - (NSString*) shortcut { return @"b"; }

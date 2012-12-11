@@ -22,7 +22,7 @@
 #import "tzstockitems.h"
 
 @implementation HandTool
-- (NSString*) name { return @"Drag Tool"; }
+- (NSString*) name { return @"Drag"; }
 - (const gchar*) stockId { return TIKZIT_STOCK_DRAG; }
 - (NSString*) helpText { return @"Move the diagram to view different parts"; }
 - (NSString*) shortcut { return @"m"; }

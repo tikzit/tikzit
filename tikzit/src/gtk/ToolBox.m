@@ -95,20 +95,38 @@ static void unretain (gpointer data);
                               self);
         }
 
-        frame = gtk_frame_new ("");
-        g_object_ref_sink (frame);
-        gtk_widget_show (frame);
+        GtkWidget *sep = gtk_hseparator_new ();
+        gtk_widget_show (sep);
         gtk_box_pack_start (GTK_BOX (mainLayout),
-                            frame,
-                            TRUE,
-                            TRUE,
+                            sep,
+                            FALSE,
+                            FALSE,
+                            0);
+
+        titleLabel = gtk_label_new ("");
+        g_object_ref_sink (titleLabel);
+        gtk_widget_show (titleLabel);
+
+        PangoAttrList *attrs = pango_attr_list_new ();
+        pango_attr_list_insert (attrs,
+                pango_attr_weight_new (PANGO_WEIGHT_SEMIBOLD));
+        gtk_label_set_attributes (GTK_LABEL (titleLabel), attrs);
+        pango_attr_list_unref (attrs);
+
+        gtk_box_pack_start (GTK_BOX (mainLayout),
+                            titleLabel,
+                            FALSE,
+                            FALSE,
                             0);
 
         configWidgetContainer = gtk_alignment_new (0.5, 0.5, 1.0, 1.0);
         g_object_ref_sink (configWidgetContainer);
         gtk_widget_show (configWidgetContainer);
-        gtk_container_add (GTK_CONTAINER (frame),
-                           configWidgetContainer);
+        gtk_box_pack_start (GTK_BOX (mainLayout),
+                            configWidgetContainer,
+                            TRUE,
+                            TRUE,
+                            0);
         gtk_alignment_set_padding (GTK_ALIGNMENT (configWidgetContainer),
                                    5, 5, 5, 5);
 
@@ -121,6 +139,7 @@ static void unretain (gpointer data);
 - (void) dealloc {
     if (window) {
         g_object_unref (G_OBJECT (toolGroup));
+        g_object_unref (G_OBJECT (titleLabel));
         g_object_unref (G_OBJECT (configWidgetContainer));
         if (configWidget)
             g_object_unref (G_OBJECT (configWidget));
@@ -169,7 +188,7 @@ static void unretain (gpointer data);
             break;
         }
     }
-    gtk_frame_set_label (GTK_FRAME (frame),
+    gtk_label_set_label (GTK_LABEL (titleLabel),
                          [[tool name] UTF8String]);
     [self _setToolWidget:[tool configurationWidget]];
 }

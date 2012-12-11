@@ -27,6 +27,7 @@
 // {{{ GTK+ helpers
 static GtkWidget *createLabelledEntry (const gchar *labelText, GtkEntry **entry);
 static GtkWidget *createPropsPaneWithLabelEntry (PropertyListEditor *props, GtkEntry **labelEntry);
+static GtkWidget *createBoldLabel (const gchar *text);
 // }}}
 // {{{ GTK+ callbacks
 static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, PropertiesWindow *window);
@@ -117,63 +118,87 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
         /*
          * Graph properties
          */
-        gtk_widget_show ([graphProps widget]);
-
-        GtkWidget *graphPropsWidget = gtk_alignment_new (0.5, 0.5, 1.0, 1.0);
-        gtk_alignment_set_padding (GTK_ALIGNMENT (graphPropsWidget), 6, 6, 6, 6);
-        gtk_container_add (GTK_CONTAINER (graphPropsWidget), [graphProps widget]);
+        graphPropsWidget = gtk_vbox_new (FALSE, 6);
+        g_object_ref_sink (graphPropsWidget);
+        gtk_container_set_border_width (GTK_CONTAINER (graphPropsWidget), 6);
         gtk_widget_show (graphPropsWidget);
 
-        graphPropsBin = gtk_frame_new ("Graph properties");
-        g_object_ref_sink (graphPropsBin);
-        gtk_container_add (GTK_CONTAINER (graphPropsBin), graphPropsWidget);
-        gtk_widget_show (graphPropsBin);
+        GtkWidget *label = createBoldLabel ("Graph properties");
+        gtk_widget_show (label);
+        gtk_box_pack_start (GTK_BOX (graphPropsWidget),
+                            label,
+                            FALSE, FALSE, 0);
 
-        gtk_container_add (GTK_CONTAINER (window), graphPropsBin);
+        gtk_widget_show ([graphProps widget]);
+        gtk_box_pack_start (GTK_BOX (graphPropsWidget),
+                            [graphProps widget],
+                            TRUE, TRUE, 0);
+        gtk_widget_show (graphPropsWidget);
+
+        gtk_container_add (GTK_CONTAINER (window), graphPropsWidget);
 
 
         /*
          * Node properties
          */
-        GtkWidget *nodePropsWidget = createPropsPaneWithLabelEntry(nodeProps, &nodeLabelEntry);
+        nodePropsWidget = gtk_vbox_new (FALSE, 6);
+        g_object_ref_sink (nodePropsWidget);
         gtk_container_set_border_width (GTK_CONTAINER (nodePropsWidget), 6);
-        g_object_ref_sink (nodeLabelEntry);
         gtk_widget_show (nodePropsWidget);
 
-        nodePropsBin = gtk_frame_new ("Node properties");
-        g_object_ref_sink (nodePropsBin);
-        gtk_container_add (GTK_CONTAINER (nodePropsBin), nodePropsWidget);
-        gtk_widget_show (nodePropsBin);
+        label = createBoldLabel ("Node properties");
+        gtk_widget_show (label);
+        gtk_box_pack_start (GTK_BOX (nodePropsWidget),
+                            label,
+                            FALSE, FALSE, 0);
+
+        GtkWidget *labelWidget = createLabelledEntry ("Label", &nodeLabelEntry);
+        gtk_widget_show (labelWidget);
+        gtk_box_pack_start (GTK_BOX (nodePropsWidget),
+                            labelWidget,
+                            FALSE, FALSE, 0);
+
+        gtk_widget_show ([nodeProps widget]);
+        gtk_box_pack_start (GTK_BOX (nodePropsWidget),
+                            [nodeProps widget],
+                            TRUE, TRUE, 0);
 
         g_signal_connect (G_OBJECT (nodeLabelEntry),
             "changed",
             G_CALLBACK (node_label_changed_cb),
             self);
 
-
         /*
          * Edge properties
          */
+        edgePropsWidget = gtk_vbox_new (FALSE, 6);
+        g_object_ref_sink (edgePropsWidget);
+        gtk_container_set_border_width (GTK_CONTAINER (edgePropsWidget), 6);
+        gtk_widget_show (edgePropsWidget);
+
+        label = createBoldLabel ("Edge properties");
+        gtk_widget_show (label);
+        gtk_box_pack_start (GTK_BOX (edgePropsWidget),
+                            label,
+                            FALSE, FALSE, 0);
+
         gtk_widget_show ([edgeProps widget]);
-
-        GtkBox *edgePropsBox = GTK_BOX (gtk_vbox_new (FALSE, 6));
-        gtk_container_set_border_width (GTK_CONTAINER (edgePropsBox), 6);
-        gtk_widget_show (GTK_WIDGET (edgePropsBox));
-        gtk_box_pack_start (edgePropsBox, [edgeProps widget], TRUE, TRUE, 0);
-
-        edgePropsBin = gtk_frame_new ("Edge properties");
-        g_object_ref_sink (edgePropsBin);
-        gtk_container_add (GTK_CONTAINER (edgePropsBin), GTK_WIDGET (edgePropsBox));
-        gtk_widget_show (edgePropsBin);
+        gtk_box_pack_start (GTK_BOX (edgePropsWidget),
+                            [edgeProps widget],
+                            TRUE, TRUE, 0);
 
         GtkWidget *split = gtk_hseparator_new ();
-        gtk_box_pack_start (edgePropsBox, split, FALSE, FALSE, 0);
         gtk_widget_show (split);
+        gtk_box_pack_start (GTK_BOX (edgePropsWidget),
+                            split,
+                            FALSE, FALSE, 0);
 
         edgeNodeToggle = GTK_TOGGLE_BUTTON (gtk_check_button_new_with_label ("Child node"));
         g_object_ref_sink (edgeNodeToggle);
         gtk_widget_show (GTK_WIDGET (edgeNodeToggle));
-        gtk_box_pack_start (edgePropsBox, GTK_WIDGET (edgeNodeToggle), FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (edgePropsWidget),
+                            GTK_WIDGET (edgeNodeToggle),
+                            FALSE, FALSE, 0);
         g_signal_connect (G_OBJECT (GTK_WIDGET (edgeNodeToggle)),
             "toggled",
             G_CALLBACK (edge_node_toggled_cb),
@@ -182,7 +207,9 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
         edgeNodePropsWidget = createPropsPaneWithLabelEntry(edgeNodeProps, &edgeNodeLabelEntry);
         g_object_ref_sink (edgeNodePropsWidget);
         g_object_ref_sink (edgeNodeLabelEntry);
-        gtk_box_pack_start (edgePropsBox, edgeNodePropsWidget, TRUE, TRUE, 0);
+        gtk_box_pack_start (GTK_BOX (edgePropsWidget),
+                            edgeNodePropsWidget,
+                            TRUE, TRUE, 0);
         g_signal_connect (G_OBJECT (edgeNodeLabelEntry),
             "changed",
             G_CALLBACK (edge_node_label_changed_cb),
@@ -197,9 +224,9 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [document release];
 
-    g_object_unref (graphPropsBin);
-    g_object_unref (nodePropsBin);
-    g_object_unref (edgePropsBin);
+    g_object_unref (graphPropsWidget);
+    g_object_unref (nodePropsWidget);
+    g_object_unref (edgePropsWidget);
     g_object_unref (nodeLabelEntry);
     g_object_unref (edgeNodeToggle);
     g_object_unref (edgeNodePropsWidget);
@@ -372,7 +399,7 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
         [nodePropDelegate setNode:n];
         [nodeProps setData:[n data]];
         gtk_entry_set_text (nodeLabelEntry, [[n label] UTF8String]);
-        [self _setDisplayedWidget:nodePropsBin];
+        [self _setDisplayedWidget:nodePropsWidget];
         editGraphProps = NO;
     } else {
         [nodePropDelegate setNode:nil];
@@ -397,7 +424,7 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
                 [edgeNodeProps setData:nil];
                 gtk_widget_set_sensitive (edgeNodePropsWidget, FALSE);
             }
-            [self _setDisplayedWidget:edgePropsBin];
+            [self _setDisplayedWidget:edgePropsWidget];
             editGraphProps = NO;
         } else {
             [edgePropDelegate setEdge:nil];
@@ -408,7 +435,7 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
     }
 
     if (editGraphProps) {
-        [self _setDisplayedWidget:graphPropsBin];
+        [self _setDisplayedWidget:graphPropsWidget];
     }
 
     blockUpdates = NO;
@@ -535,6 +562,16 @@ static GtkWidget *createPropsPaneWithLabelEntry (PropertyListEditor *props, GtkE
         gtk_box_pack_start (box,  [props widget], TRUE,  TRUE,  0);
         gtk_widget_show ([props widget]);
         return GTK_WIDGET (box);
+}
+
+static GtkWidget *createBoldLabel (const gchar *text) {
+    GtkWidget *label = gtk_label_new (text);
+    PangoAttrList *attrs = pango_attr_list_new ();
+    pango_attr_list_insert (attrs,
+            pango_attr_weight_new (PANGO_WEIGHT_SEMIBOLD));
+    gtk_label_set_attributes (GTK_LABEL (label), attrs);
+    pango_attr_list_unref (attrs);
+    return label;
 }
 
 // }}}

@@ -30,11 +30,11 @@ static GtkStockItem stock_items[] = {
     // GdkModifierType modifier;
     // guint keyval;
     // gchar *translation_domain;
-    { TIKZIT_STOCK_SELECT, "Select Tool", 0, 0, NULL },
-    { TIKZIT_STOCK_CREATE_NODE, "Create Node Tool", 0, 0, NULL },
-    { TIKZIT_STOCK_CREATE_EDGE, "Create Edge Tool", 0, 0, NULL },
-    { TIKZIT_STOCK_BOUNDING_BOX, "Bounding Box Tool", 0, 0, NULL },
-    { TIKZIT_STOCK_DRAG, "Drag Tool", 0, 0, NULL },
+    { TIKZIT_STOCK_SELECT, "Select", 0, 0, NULL },
+    { TIKZIT_STOCK_CREATE_NODE, "Create Node", 0, 0, NULL },
+    { TIKZIT_STOCK_CREATE_EDGE, "Create Edge", 0, 0, NULL },
+    { TIKZIT_STOCK_BOUNDING_BOX, "Bounding Box", 0, 0, NULL },
+    { TIKZIT_STOCK_DRAG, "Drag", 0, 0, NULL },
 };
 static guint n_stock_items = G_N_ELEMENTS (stock_items);
 

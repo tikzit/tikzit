@@ -24,7 +24,7 @@
 #import "tzstockitems.h"
 
 @implementation CreateEdgeTool
-- (NSString*) name { return @"Create Edge Tool"; }
+- (NSString*) name { return @"Create Edge"; }
 - (const gchar*) stockId { return TIKZIT_STOCK_CREATE_EDGE; }
 - (NSString*) helpText { return @"Create new edges"; }
 - (NSString*) shortcut { return @"e"; }

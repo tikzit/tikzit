@@ -43,7 +43,7 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
 @end
 
 @implementation SelectTool
-- (NSString*) name { return @"Select Tool"; }
+- (NSString*) name { return @"Select"; }
 - (const gchar*) stockId { return TIKZIT_STOCK_SELECT; }
 - (NSString*) helpText { return @"Select, move and edit nodes and edges"; }
 - (NSString*) shortcut { return @"s"; }

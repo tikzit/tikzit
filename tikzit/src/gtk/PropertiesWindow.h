@@ -43,9 +43,9 @@
     GtkWidget       *window;
     GtkWidget       *propertiesPane;
 
-    GtkWidget       *graphPropsBin;
-    GtkWidget       *nodePropsBin;
-    GtkWidget       *edgePropsBin;
+    GtkWidget       *graphPropsWidget;
+    GtkWidget       *nodePropsWidget;
+    GtkWidget       *edgePropsWidget;
 
     GtkEntry        *nodeLabelEntry;
     GtkToggleButton *edgeNodeToggle;

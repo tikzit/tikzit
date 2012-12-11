@@ -24,7 +24,7 @@
 #import "tzstockitems.h"
 
 @implementation CreateNodeTool
-- (NSString*) name { return @"Create Node Tool"; }
+- (NSString*) name { return @"Create Node"; }
 - (const gchar*) stockId { return TIKZIT_STOCK_CREATE_NODE; }
 - (NSString*) helpText { return @"Create new nodes"; }
 - (NSString*) shortcut { return @"n"; }
