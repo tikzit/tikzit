@@ -16,6 +16,7 @@
  */
 
 #import "TZFoundation.h"
+#import "InputDelegate.h"
 
 @class Application;
 @class Configuration;
@@ -148,6 +149,8 @@ extern Application* app;
  * Should be called just before the application exits
  */
 - (void) saveConfiguration;
+
+- (void) activateToolForKey:(unsigned int)keyVal withMask:(InputMask)mask;
 
 @end
 

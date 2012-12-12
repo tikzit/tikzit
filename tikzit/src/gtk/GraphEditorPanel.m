@@ -17,6 +17,7 @@
 
 #import "GraphEditorPanel.h"
 
+#import "Application.h"
 #import "GraphRenderer.h"
 #import "HandTool.h"
 #import "InputDelegate.h"
@@ -167,6 +168,13 @@
     } else if ([tool respondsToSelector:@selector(mouseScrolledAt:inDirection:withMask:)]) {
         [tool mouseScrolledAt:pos inDirection:dir withMask:mask];
     }
+}
+
+- (void) keyPressed:(unsigned int)keyVal withMask:(InputMask)mask {
+    [app activateToolForKey:keyVal withMask:mask];
+}
+
+- (void) keyReleased:(unsigned int)keyVal withMask:(InputMask)mask {
 }
 @end
 
