@@ -40,6 +40,8 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
 - (void) updateLastKnownSize;
 - (void) zoomTo:(CGFloat)scale aboutPoint:(NSPoint)p;
 - (void) zoomTo:(CGFloat)scale;
+- (void) addToEventMask:(GdkEventMask)values;
+- (void) removeFromEventMask:(GdkEventMask)values;
 @end
 // }}}
 // {{{ API
@@ -55,10 +57,6 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     if (self) {
         widget = w;
         g_object_ref_sink (G_OBJECT (widget));
-        renderDelegate = nil;
-        inputDelegate = nil;
-        keepCentered = NO;
-        grabsFocusOnClick = NO;
         defaultScale = 1.0f;
         transformer = [[Transformer alloc] init];
         [transformer setFlippedAboutXAxis:YES];
@@ -77,6 +75,11 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
                                                  selector:@selector(widgetSizeChanged:)
                                                      name:@"SurfaceSizeChanged"
                                                    object:self];
+        if ([self canFocus]) {
+            [self addToEventMask:GDK_BUTTON_PRESS_MASK];
+        } else {
+            [self removeFromEventMask:GDK_BUTTON_PRESS_MASK];
+        }
     }
 
     return self;
@@ -143,23 +146,6 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     return widget;
 }
 
-- (void) addToEventMask:(GdkEventMask)value {
-    GdkEventMask mask;
-    g_object_get (G_OBJECT (widget), "events", &mask, NULL);
-    mask |= value;
-    g_object_set (G_OBJECT (widget), "events", mask, NULL);
-}
-
-- (void) removeFromEventMask:(GdkEventMask)value {
-    GdkEventMask mask;
-    g_object_get (G_OBJECT (widget), "events", &mask, NULL);
-    mask ^= value;
-    if (grabsFocusOnClick) {
-        mask |= GDK_BUTTON_PRESS_MASK;
-    }
-    g_object_set (G_OBJECT (widget), "events", mask, NULL);
-}
-
 - (void) setRenderDelegate:(id <RenderDelegate>)delegate {
     // NB: no retention!
     renderDelegate = delegate;
@@ -178,6 +164,7 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     if (delegate == inputDelegate) {
         return;
     }
+    buttonPressesRequired = NO;
     if (inputDelegate != nil) {
         [self removeFromEventMask:GDK_POINTER_MOTION_MASK
                                   | GDK_BUTTON_PRESS_MASK
@@ -189,12 +176,14 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     if (delegate != nil) {
         GdkEventMask mask = 0;
         if ([delegate respondsToSelector:@selector(mousePressAt:withButton:andMask:)]) {
+            buttonPressesRequired = YES;
             mask |= GDK_BUTTON_PRESS_MASK;
         }
         if ([delegate respondsToSelector:@selector(mouseReleaseAt:withButton:andMask:)]) {
             mask |= GDK_BUTTON_RELEASE_MASK;
         }
         if ([delegate respondsToSelector:@selector(mouseDoubleClickAt:withButton:andMask:)]) {
+            buttonPressesRequired = YES;
             mask |= GDK_BUTTON_PRESS_MASK;
         }
         if ([delegate respondsToSelector:@selector(mouseMoveTo:withButtons:andMask:)]) {
@@ -223,18 +212,16 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     return keepCentered;
 }
 
-- (BOOL) grabsFocusOnClick {
-    return grabsFocusOnClick;
+- (BOOL) canFocus {
+    return gtk_widget_get_can_focus (widget);
 }
 
-- (void) setGrabsFocusOnClick:(BOOL)focus {
-    if (grabsFocusOnClick != focus) {
-        grabsFocusOnClick = focus;
-        if (grabsFocusOnClick) {
-            [self addToEventMask:GDK_BUTTON_PRESS_MASK];
-        } else {
-            [self removeFromEventMask:GDK_BUTTON_PRESS_MASK];
-        }
+- (void) setCanFocus:(BOOL)focus {
+    gtk_widget_set_can_focus (widget, focus);
+    if (focus) {
+        [self addToEventMask:GDK_BUTTON_PRESS_MASK];
+    } else if (!buttonPressesRequired) {
+        [self removeFromEventMask:GDK_BUTTON_PRESS_MASK];
     }
 }
 
@@ -395,6 +382,23 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     [self zoomTo:scale aboutPoint:centre];
 }
 
+- (void) addToEventMask:(GdkEventMask)values {
+    GdkEventMask mask;
+    g_object_get (G_OBJECT (widget), "events", &mask, NULL);
+    mask |= values;
+    g_object_set (G_OBJECT (widget), "events", mask, NULL);
+}
+
+- (void) removeFromEventMask:(GdkEventMask)values {
+    GdkEventMask mask;
+    g_object_get (G_OBJECT (widget), "events", &mask, NULL);
+    mask ^= values;
+    if (buttonPressesRequired || [self canFocus]) {
+        mask |= GDK_BUTTON_PRESS_MASK;
+    }
+    g_object_set (G_OBJECT (widget), "events", mask, NULL);
+}
+
 @end
 // }}}
 // {{{ GTK+ callbacks
@@ -465,8 +469,8 @@ MouseButton buttons_from_gdk_modifier_state (GdkModifierType state) {
 static gboolean button_press_event_cb(GtkWidget *widget, GdkEventButton *event, WidgetSurface *surface) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    if ([surface grabsFocusOnClick]) {
-        if (!GTK_WIDGET_HAS_FOCUS (widget)) {
+    if ([surface canFocus]) {
+        if (!gtk_widget_has_focus (widget)) {
              gtk_widget_grab_focus (widget);
         }
     }

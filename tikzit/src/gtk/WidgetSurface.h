@@ -29,25 +29,20 @@
     id <RenderDelegate>  renderDelegate;
     id <InputDelegate>   inputDelegate;
     BOOL                 keepCentered;
-    BOOL                 grabsFocusOnClick;
+    BOOL                 buttonPressesRequired;
     CGFloat              defaultScale;
     NSSize               lastKnownSize;
 }
+
+@property (assign) BOOL canFocus;
+@property (assign) BOOL keepCentered;
+@property (assign) CGFloat defaultScale;
 
 - (id) initWithWidget:(GtkWidget*)widget;
 - (GtkWidget*) widget;
 
 - (id<InputDelegate>) inputDelegate;
 - (void) setInputDelegate:(id<InputDelegate>)delegate;
-
-- (BOOL) keepCentered;
-- (void) setKeepCentered:(BOOL)centered;
-
-- (BOOL) grabsFocusOnClick;
-- (void) setGrabsFocusOnClick:(BOOL)focusOnClick;
-
-- (CGFloat) defaultScale;
-- (void) setDefaultScale:(CGFloat)scale;
 
 /**
  * Set the minimum size that this widget wants

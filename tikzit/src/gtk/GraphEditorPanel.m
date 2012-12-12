@@ -45,7 +45,7 @@
         surface = [[WidgetSurface alloc] init];
         [surface setDefaultScale:50.0f];
         [surface setKeepCentered:YES];
-        [surface setGrabsFocusOnClick:YES];
+        [surface setCanFocus:YES];
         renderer = [[GraphRenderer alloc] initWithSurface:surface document:document];
 
         inputHandler = [[GraphInputHandler alloc] initForPanel:self];
