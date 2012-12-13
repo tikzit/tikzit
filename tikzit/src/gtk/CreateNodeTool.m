@@ -32,16 +32,13 @@
 @synthesize styleManager;
 @synthesize configurationWidget=configWidget;
 
-+ (id) tool {
-    return [[[self alloc] init] autorelease];
-}
-
 + (id) toolWithStyleManager:(StyleManager*)sm {
     return [[[self alloc] initWithStyleManager:sm] autorelease];
 }
 
 - (id) init {
-    return [self initWithStyleManager:[StyleManager manager]];
+    [self release];
+    return nil;
 }
 
 - (id) initWithStyleManager:(StyleManager*)sm {

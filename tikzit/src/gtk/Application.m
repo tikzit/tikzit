@@ -105,8 +105,8 @@ Application* app = nil;
 
         tools = [[NSArray alloc] initWithObjects:
             [SelectTool tool],
-            [CreateNodeTool tool],
-            [CreateEdgeTool tool],
+            [CreateNodeTool toolWithStyleManager:styleManager],
+            [CreateEdgeTool toolWithStyleManager:styleManager],
             [BoundingBoxTool tool],
             [HandTool tool],
             nil];

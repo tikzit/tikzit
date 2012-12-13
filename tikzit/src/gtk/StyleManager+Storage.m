@@ -27,6 +27,7 @@ static NSString *edgeStyleGroupPrefix = @"EdgeStyle ";
 
 - (void) loadStylesUsingConfigurationName:(NSString*)name {
     if (![Configuration configurationExistsWithName:name]) {
+        NSLog(@"No styles config found");
         return;
     }
     NSError *error = nil;

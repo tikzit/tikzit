@@ -36,7 +36,6 @@
 @property (readonly) GtkWidget          *configurationWidget;
 - (void) loadConfiguration:(Configuration*)config;
 - (void) saveConfiguration:(Configuration*)config;
-+ (id) tool;
 @end
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4
