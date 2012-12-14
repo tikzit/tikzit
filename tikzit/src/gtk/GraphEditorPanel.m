@@ -93,6 +93,10 @@
     }
 }
 
+- (BOOL) hasTool {
+    return [tool activeRenderer] == renderer;
+}
+
 - (void) grabTool {
     if ([tool activeRenderer] != renderer) {
         [[tool activeRenderer] setPostRenderer:nil];
@@ -141,7 +145,8 @@
 }
 
 - (void) mouseReleaseAt:(NSPoint)pos withButton:(MouseButton)button andMask:(InputMask)mask {
-    [panel grabTool];
+    if (![panel hasTool])
+        return;
     id<Tool> tool = [panel activeTool];
     if ([tool respondsToSelector:@selector(mouseReleaseAt:withButton:andMask:)]) {
         [tool mouseReleaseAt:pos withButton:button andMask:mask];
@@ -149,7 +154,8 @@
 }
 
 - (void) mouseMoveTo:(NSPoint)pos withButtons:(MouseButton)buttons andMask:(InputMask)mask {
-    [panel grabTool];
+    if (![panel hasTool])
+        return;
     id<Tool> tool = [panel activeTool];
     if ([tool respondsToSelector:@selector(mouseMoveTo:withButtons:andMask:)]) {
         [tool mouseMoveTo:pos withButtons:buttons andMask:mask];
@@ -157,7 +163,6 @@
 }
 
 - (void) mouseScrolledAt:(NSPoint)pos inDirection:(ScrollDirection)dir withMask:(InputMask)mask {
-    [panel grabTool];
     id<Tool> tool = [panel activeTool];
     if (mask == ControlMask) {
         if (dir == ScrollUp) {
@@ -165,7 +170,7 @@
         } else if (dir == ScrollDown) {
             [panel zoomOutAboutPoint:pos];
         }
-    } else if ([tool respondsToSelector:@selector(mouseScrolledAt:inDirection:withMask:)]) {
+    } else if ([panel hasTool] && [tool respondsToSelector:@selector(mouseScrolledAt:inDirection:withMask:)]) {
         [tool mouseScrolledAt:pos inDirection:dir withMask:mask];
     }
 }
