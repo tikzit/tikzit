@@ -60,6 +60,15 @@
                             FALSE,
                             0);
 
+        GtkWidget *selWindow = gtk_scrolled_window_new (NULL, NULL);
+        gtk_widget_show (selWindow);
+        gtk_container_add (GTK_CONTAINER (selWindow),
+                           [stylePicker widget]);
+        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (selWindow),
+                                        GTK_POLICY_NEVER,
+                                        GTK_POLICY_AUTOMATIC);
+        gtk_widget_show ([stylePicker widget]);
+
         GtkWidget *selectorFrame = gtk_frame_new (NULL);
         gtk_widget_show (selectorFrame);
         gtk_box_pack_start (GTK_BOX (configWidget),
@@ -68,8 +77,7 @@
                             TRUE,
                             0);
         gtk_container_add (GTK_CONTAINER (selectorFrame),
-                           [stylePicker widget]);
-        gtk_widget_show ([stylePicker widget]);
+                           selWindow);
     }
 
     return self;

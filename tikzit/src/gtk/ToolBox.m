@@ -163,6 +163,7 @@ static void unretain (gpointer data);
 
 - (void) _setToolWidget:(GtkWidget*)widget {
     if (configWidget) {
+        gtk_widget_hide (configWidget);
         gtk_container_remove (GTK_CONTAINER (configWidgetContainer),
                               configWidget);
         g_object_unref (configWidget);
