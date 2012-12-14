@@ -142,11 +142,11 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 }
 
 - (StyleManager*) styleManager {
-    return [selector styleManager];
+    return [[selector model] styleManager];
 }
 
 - (void) setStyleManager:(StyleManager*)m {
-    [selector setStyleManager:m];
+    [[selector model] setStyleManager:m];
 }
 
 - (TikzDocument*) document {
@@ -217,7 +217,7 @@ static void clear_style_button_cb (GtkButton *widget, NodeStylesPalette *palette
 - (void) removeSelectedStyle {
     NodeStyle *style = [selector selectedStyle];
     if (style)
-        [[selector styleManager] removeNodeStyle:style];
+        [[[selector model] styleManager] removeNodeStyle:style];
 }
 
 - (void) applySelectedStyle {

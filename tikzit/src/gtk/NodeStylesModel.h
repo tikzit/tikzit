@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2011-2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,42 +19,41 @@
 #import <gtk/gtk.h>
 
 @class NodeStyle;
-@class NodeStylesModel;
 @class StyleManager;
 
-@interface NodeStyleSelector: NSObject {
-    NodeStylesModel     *model;
-    GtkIconView         *view;
+enum {
+    NODE_STYLES_NAME_COL = 0,
+    NODE_STYLES_ICON_COL,
+    NODE_STYLES_PTR_COL,
+    NODE_STYLES_N_COLS
+};
+
+@interface NodeStylesModel: NSObject {
+    GtkListStore        *store;
+    StyleManager        *styleManager;
 }
 
 /*!
- @property   widget
- @brief      The GTK widget
- */
-@property (readonly) GtkWidget     *widget;
-
-/*!
  @property   model
- @brief      The model to use.
+ @brief      The GTK+ tree model
  */
-@property (retain)   NodeStylesModel  *model;
+@property (readonly) GtkTreeModel *model;
 
 /*!
- @property   selectedStyle
- @brief      The selected style.
-
-             When this changes, a SelectedStyleChanged notification will be posted
+ @property   manager
+ @brief      The StyleManager to use.
  */
-@property (assign) NodeStyle *selectedStyle;
+@property (retain)   StyleManager *styleManager;
 
 /*!
- * Initialise with a new model for the given style manager
+ * Initialise with the given style manager
  */
-- (id) initWithStyleManager:(StyleManager*)manager;
-/*!
- * Initialise with the given model
- */
-- (id) initWithModel:(NodeStylesModel*)model;
+- (id) initWithStyleManager:(StyleManager*)m;
+
++ (id) modelWithStyleManager:(StyleManager*)m;
+
+- (NodeStyle*) styleFromPath:(GtkTreePath*)path;
+- (GtkTreePath*) pathFromStyle:(NodeStyle*)style;
 
 @end
 

@@ -47,6 +47,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/NodeStyle+Gtk.m \
                  gtk/NodeStyle+Storage.m \
                  gtk/NodeStyleEditor.m \
+                 gtk/NodeStylesModel.m \
                  gtk/NodeStyleSelector.m \
                  gtk/NodeStylesPalette.m \
                  gtk/NSError+Glib.m \

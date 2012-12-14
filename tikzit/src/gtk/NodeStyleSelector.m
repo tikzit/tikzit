@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2011-2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,92 +17,41 @@
 
 #import "NodeStyleSelector.h"
 
-#import "CairoRenderContext.h"
-#import "Shape.h"
-#import "Shape+Render.h"
-#import "ShapeNames.h"
-#import "StyleManager.h"
-
-#import "gtkhelpers.h"
-
-#import <gdk-pixbuf/gdk-pixbuf.h>
+#import "NodeStylesModel.h"
 
 // {{{ Internal interfaces
-// {{{ Signals
 static void selection_changed_cb (GtkIconView *widget, NodeStyleSelector *mgr);
-// }}}
-
-enum {
-    STYLES_NAME_COL = 0,
-    STYLES_ICON_COL,
-    STYLES_PTR_COL,
-    STYLES_N_COLS
-};
-
-@interface NodeStyleSelector (Notifications)
-- (void) stylesReplaced:(NSNotification*)notification;
-- (void) styleAdded:(NSNotification*)notification;
-- (void) styleRemoved:(NSNotification*)notification;
-- (void) shapeDictionaryReplaced:(NSNotification*)n;
-- (void) selectionChanged;
-- (void) observeValueForKeyPath:(NSString*)keyPath
-                       ofObject:(id)object
-                         change:(NSDictionary*)change
-                        context:(void*)context;
-@end
-
-@interface NodeStyleSelector (Private)
-- (cairo_surface_t*) createNodeIconSurface;
-- (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style;
-- (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style usingSurface:(cairo_surface_t*)surface;
-- (void) addStyle:(NodeStyle*)style;
-- (void) observeStyle:(NodeStyle*)style;
-- (void) stopObservingStyle:(NodeStyle*)style;
-- (void) clearModel;
-- (void) reloadStyles;
-@end
-
 // }}}
 // {{{ API
 
 @implementation NodeStyleSelector
 
 - (id) init {
-    self = [self initWithStyleManager:[StyleManager manager]];
-    return self;
+    [self release];
+    return nil;
 }
 
 - (id) initWithStyleManager:(StyleManager*)m {
+    return [self initWithModel:[NodeStylesModel modelWithStyleManager:m]];
+}
+- (id) initWithModel:(NodeStylesModel*)m {
     self = [super init];
 
     if (self) {
-        styleManager = nil;
-
-        store = gtk_list_store_new (STYLES_N_COLS,
-                                    G_TYPE_STRING,
-                                    GDK_TYPE_PIXBUF,
-                                    G_TYPE_POINTER);
-        g_object_ref (store);
+        model = [m retain];
 
         view = GTK_ICON_VIEW (gtk_icon_view_new ());
-        g_object_ref (view);
+        g_object_ref_sink (view);
 
-        gtk_icon_view_set_model (view, GTK_TREE_MODEL (store));
-        gtk_icon_view_set_pixbuf_column (view, STYLES_ICON_COL);
-        gtk_icon_view_set_tooltip_column (view, STYLES_NAME_COL);
+        gtk_icon_view_set_model (view, [model model]);
+        gtk_icon_view_set_pixbuf_column (view, NODE_STYLES_ICON_COL);
+        gtk_icon_view_set_tooltip_column (view, NODE_STYLES_NAME_COL);
         gtk_icon_view_set_selection_mode (view, GTK_SELECTION_SINGLE);
 
         g_signal_connect (G_OBJECT (view),
                           "selection-changed",
                           G_CALLBACK (selection_changed_cb),
                           self);
-
-        [self setStyleManager:m];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(shapeDictionaryReplaced:)
-                                                     name:@"ShapeDictionaryReplaced"
-                                                   object:[Shape class]];
     }
 
     return self;
@@ -110,42 +59,25 @@ enum {
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     g_object_unref (view);
-    [self clearModel];
-    g_object_unref (store);
-    [styleManager release];
+    [model release];
 
     [super dealloc];
 }
 
-- (StyleManager*) styleManager {
-    return styleManager;
+- (NodeStylesModel*) model {
+    return model;
 }
 
-- (void) setStyleManager:(StyleManager*)m {
-    if (m == nil) {
-        [NSException raise:NSInvalidArgumentException format:@"Style manager cannot be nil"];
-    }
-    [m retain];
+- (void) setModel:(NodeStylesModel*)m {
+    if (m == model)
+        return;
 
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:styleManager];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(stylesReplaced:)
-                                                 name:@"NodeStylesReplaced"
-                                               object:m];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(styleAdded:)
-                                                 name:@"NodeStyleAdded"
-                                               object:m];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(styleRemoved:)
-                                                 name:@"NodeStyleRemoved"
-                                               object:m];
-
-    [styleManager release];
-    styleManager = m;
-
-    [self reloadStyles];
+    NodeStylesModel *oldModel = model;
+    model = [m retain];
+    gtk_icon_view_set_model (view, [model model]);
+    [oldModel release];
 }
 
 - (GtkWidget*) widget {
@@ -162,10 +94,7 @@ enum {
     }
 
     GtkTreePath *path = (GtkTreePath*) list->data;
-    GtkTreeIter iter;
-    gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
-    NodeStyle *style = nil;
-    gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, STYLES_PTR_COL, &style, -1);
+    NodeStyle *style = [model styleFromPath:path];
 
     g_list_foreach (list, (GFunc)gtk_tree_path_free, NULL);
     g_list_free (list);
@@ -179,231 +108,14 @@ enum {
         return;
     }
 
-    GtkTreeModel *m = GTK_TREE_MODEL (store);
-    GtkTreeIter row;
-    if (gtk_tree_model_get_iter_first (m, &row)) {
-        do {
-            NodeStyle *rowStyle;
-            gtk_tree_model_get (m, &row, STYLES_PTR_COL, &rowStyle, -1);
-            if (style == rowStyle) {
-                gtk_icon_view_unselect_all (view);
-                GtkTreePath *path = gtk_tree_model_get_path (m, &row);
-                gtk_icon_view_select_path (view, path);
-                gtk_tree_path_free (path);
-                // styleManager.activeStyle will be updated by the GTK+ callback
-                return;
-            }
-        } while (gtk_tree_model_iter_next (m, &row));
+    GtkTreePath *path = [model pathFromStyle:style];
+    if (path) {
+        gtk_icon_view_unselect_all (view);
+        gtk_icon_view_select_path (view, path);
+        gtk_tree_path_free (path);
     }
 }
 
-@end
-
-// }}}
-// {{{ Notifications
-
-@implementation NodeStyleSelector (Notifications)
-
-- (void) stylesReplaced:(NSNotification*)notification {
-    [self reloadStyles];
-}
-
-- (void) styleAdded:(NSNotification*)notification {
-    [self addStyle:[[notification userInfo] objectForKey:@"style"]];
-}
-
-- (void) styleRemoved:(NSNotification*)notification {
-    NodeStyle *style = [[notification userInfo] objectForKey:@"style"];
-
-    GtkTreeModel *model = GTK_TREE_MODEL (store);
-    GtkTreeIter row;
-    if (gtk_tree_model_get_iter_first (model, &row)) {
-        do {
-            NodeStyle *rowStyle;
-            gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
-            if (style == rowStyle) {
-                gtk_list_store_remove (store, &row);
-                [self stopObservingStyle:rowStyle];
-                [rowStyle release];
-                return;
-            }
-        } while (gtk_tree_model_iter_next (model, &row));
-    }
-}
-
-- (void) observeValueForKeyPath:(NSString*)keyPath
-                       ofObject:(id)object
-                         change:(NSDictionary*)change
-                        context:(void*)context
-{
-    if ([object class] != [NodeStyle class])
-        return;
-
-    NodeStyle *style = object;
-
-    GtkTreeModel *model = GTK_TREE_MODEL (store);
-    GtkTreeIter row;
-    if (gtk_tree_model_get_iter_first (model, &row)) {
-        do {
-            NodeStyle *rowStyle;
-            gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
-            if (style == rowStyle) {
-                if ([@"name" isEqual:keyPath]) {
-                    gtk_list_store_set (store, &row, STYLES_NAME_COL, [[style name] UTF8String], -1);
-                } else {
-                    GdkPixbuf *pixbuf = [self pixbufOfNodeInStyle:style];
-                    gtk_list_store_set (store, &row, STYLES_ICON_COL, pixbuf, -1);
-                    g_object_unref (pixbuf);
-                }
-            }
-        } while (gtk_tree_model_iter_next (model, &row));
-    }
-}
-
-- (void) shapeDictionaryReplaced:(NSNotification*)n {
-    [self reloadStyles];
-}
-
-- (void) selectionChanged {
-    [[NSNotificationCenter defaultCenter]
-        postNotificationName:@"SelectedStyleChanged"
-                      object:self];
-}
-@end
-
-// }}}
-// {{{ Private
-
-@implementation NodeStyleSelector (Private)
-- (cairo_surface_t*) createNodeIconSurface {
-    return cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 24, 24);
-}
-
-- (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style {
-    cairo_surface_t *surface = [self createNodeIconSurface];
-    GdkPixbuf *pixbuf = [self pixbufOfNodeInStyle:style usingSurface:surface];
-    cairo_surface_destroy (surface);
-    return pixbuf;
-}
-
-- (GdkPixbuf*) pixbufOfNodeInStyle:(NodeStyle*)style usingSurface:(cairo_surface_t*)surface {
-    Shape *shape = [Shape shapeForName:[style shapeName]];
-
-    int width = cairo_image_surface_get_width (surface);
-    int height = cairo_image_surface_get_height (surface);
-    NSRect pixbufBounds = NSMakeRect(0.0, 0.0, width, height);
-    const CGFloat lineWidth = [style strokeThickness];
-    Transformer *shapeTrans = [Transformer transformerToFit:[shape boundingRect]
-                                             intoScreenRect:NSInsetRect(pixbufBounds, lineWidth, lineWidth)
-                                          flippedAboutXAxis:YES];
-    if ([style scale] < 1.0)
-        [shapeTrans setScale:[style scale] * [shapeTrans scale]];
-
-    CairoRenderContext *context = [[CairoRenderContext alloc] initForSurface:surface];
-    [context clearSurface];
-    [shape drawPathWithTransform:shapeTrans andContext:context];
-    [context setLineWidth:lineWidth];
-    [context strokePathWithColor:[[style strokeColorRGB] rColor]
-                andFillWithColor:[[style fillColorRGB] rColor]];
-    [context release];
-
-    return pixbuf_get_from_surface (surface);
-}
-
-- (void) addStyle:(NodeStyle*)style usingSurface:(cairo_surface_t*)surface {
-    GtkTreeIter iter;
-    gtk_list_store_append (store, &iter);
-
-    GdkPixbuf *pixbuf = [self pixbufOfNodeInStyle:style usingSurface:surface];
-    gtk_list_store_set (store, &iter,
-            STYLES_NAME_COL, [[style name] UTF8String],
-            STYLES_ICON_COL, pixbuf,
-            STYLES_PTR_COL, (gpointer)[style retain],
-            -1);
-    g_object_unref (pixbuf);
-    [self observeStyle:style];
-}
-
-- (void) addStyle:(NodeStyle*)style {
-    cairo_surface_t *surface = [self createNodeIconSurface];
-    [self addStyle:style usingSurface:surface];
-    cairo_surface_destroy (surface);
-}
-
-- (void) observeStyle:(NodeStyle*)style {
-    [style addObserver:self
-            forKeyPath:@"name"
-               options:NSKeyValueObservingOptionNew
-               context:NULL];
-    [style addObserver:self
-            forKeyPath:@"strokeThickness"
-               options:0
-               context:NULL];
-    [style addObserver:self
-            forKeyPath:@"strokeColorRGB.red"
-               options:0
-               context:NULL];
-    [style addObserver:self
-            forKeyPath:@"strokeColorRGB.green"
-               options:0
-               context:NULL];
-    [style addObserver:self
-            forKeyPath:@"strokeColorRGB.blue"
-               options:0
-               context:NULL];
-    [style addObserver:self
-            forKeyPath:@"fillColorRGB.red"
-               options:0
-               context:NULL];
-    [style addObserver:self
-            forKeyPath:@"fillColorRGB.green"
-               options:0
-               context:NULL];
-    [style addObserver:self
-            forKeyPath:@"fillColorRGB.blue"
-               options:0
-               context:NULL];
-    [style addObserver:self
-            forKeyPath:@"shapeName"
-               options:0
-               context:NULL];
-}
-
-- (void) stopObservingStyle:(NodeStyle*)style {
-    [style removeObserver:self forKeyPath:@"name"];
-    [style removeObserver:self forKeyPath:@"strokeThickness"];
-    [style removeObserver:self forKeyPath:@"strokeColorRGB.red"];
-    [style removeObserver:self forKeyPath:@"strokeColorRGB.green"];
-    [style removeObserver:self forKeyPath:@"strokeColorRGB.blue"];
-    [style removeObserver:self forKeyPath:@"fillColorRGB.red"];
-    [style removeObserver:self forKeyPath:@"fillColorRGB.green"];
-    [style removeObserver:self forKeyPath:@"fillColorRGB.blue"];
-    [style removeObserver:self forKeyPath:@"shapeName"];
-}
-
-- (void) clearModel {
-    [self setSelectedStyle:nil];
-    GtkTreeModel *model = GTK_TREE_MODEL (store);
-    GtkTreeIter row;
-    if (gtk_tree_model_get_iter_first (model, &row)) {
-        do {
-            NodeStyle *rowStyle;
-            gtk_tree_model_get (model, &row, STYLES_PTR_COL, &rowStyle, -1);
-            [self stopObservingStyle:rowStyle];
-            [rowStyle release];
-        } while (gtk_tree_model_iter_next (model, &row));
-    }
-    gtk_list_store_clear (store);
-}
-
-- (void) reloadStyles {
-    [self clearModel];
-    cairo_surface_t *surface = [self createNodeIconSurface];
-    for (NodeStyle *style in [styleManager nodeStyles]) {
-        [self addStyle:style usingSurface:surface];
-    }
-    cairo_surface_destroy (surface);
-}
 @end
 
 // }}}
@@ -411,7 +123,11 @@ enum {
 
 static void selection_changed_cb (GtkIconView *view, NodeStyleSelector *mgr) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [mgr selectionChanged];
+
+    [[NSNotificationCenter defaultCenter]
+        postNotificationName:@"SelectedStyleChanged"
+                      object:mgr];
+
     [pool drain];
 }
 // }}}
