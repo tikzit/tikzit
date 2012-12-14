@@ -24,19 +24,7 @@
 #include <gtk/gtk.h>
 #import <gdk-pixbuf/gdk-pixbuf.h>
 
-void gtk_table_adjust_attach (GtkTable *table,
-                              GtkWidget *widget,
-                              gint left_adjust,
-                              gint right_adjust,
-                              gint top_adjust,
-                              gint bottom_adjust);
-void gtk_table_delete_row (GtkTable *table, guint row);
-void gtk_table_delete_rows (GtkTable *table, guint firstRow, guint count);
-
 NSString * gtk_editable_get_string (GtkEditable *editable, gint start, gint end);
-
-void gtk_entry_set_string (GtkEntry *entry, NSString *string);
-NSString * gtk_entry_get_string (GtkEntry *entry);
 
 GdkRectangle gdk_rectangle_from_ns_rect (NSRect rect);
 NSRect gdk_rectangle_to_ns_rect (GdkRectangle rect);
