@@ -22,6 +22,7 @@
 //
 #import "TZFoundation.h"
 #include <gtk/gtk.h>
+#import <gdk-pixbuf/gdk-pixbuf.h>
 
 void gtk_table_adjust_attach (GtkTable *table,
                               GtkWidget *widget,
@@ -45,5 +46,8 @@ void gtk_action_set_detailed_label (GtkAction *action, const gchar *baseLabel, c
 gint tz_hijack_key_press (GtkWindow *win,
                           GdkEventKey *event,
                           gpointer user_data);
+
+// Equivalent of GTK+3's gdk_pixbuf_get_from_surface()
+GdkPixbuf * pixbuf_get_from_surface(cairo_surface_t *surface);
 
 // vim:ft=objc:sts=2:sw=2:et

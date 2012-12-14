@@ -26,6 +26,8 @@
 #import "ShapeNames.h"
 #import "StyleManager.h"
 
+#import "gtkhelpers.h"
+
 #import <gdk-pixbuf/gdk-pixbuf.h>
 
 // {{{ Internal interfaces
@@ -56,7 +58,6 @@ enum {
 - (void) clearModel;
 - (cairo_surface_t*) createEdgeIconSurface;
 - (GdkPixbuf*) pixbufOfEdgeInStyle:(EdgeStyle*)style;
-- (GdkPixbuf*) pixbufFromSurface:(cairo_surface_t*)surface;
 - (GdkPixbuf*) pixbufOfEdgeInStyle:(EdgeStyle*)style usingSurface:(cairo_surface_t*)surface;
 - (void) addStyle:(EdgeStyle*)style;
 - (void) observeStyle:(EdgeStyle*)style;
@@ -307,42 +308,6 @@ enum {
     return pixbuf;
 }
 
-// Bring on GTK+3 and gdk_pixbuf_get_from_surface()
-- (GdkPixbuf*) pixbufFromSurface:(cairo_surface_t*)surface {
-    cairo_surface_flush (surface);
-
-    int width = cairo_image_surface_get_width (surface);
-    int height = cairo_image_surface_get_height (surface);
-    int stride = cairo_image_surface_get_stride (surface);
-    unsigned char *data = cairo_image_surface_get_data (surface);
-
-    GdkPixbuf *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
-                                        TRUE,
-                                        8,
-                                        width,
-                                        height);
-    unsigned char *pbdata = gdk_pixbuf_get_pixels (pixbuf);
-    int pbstride = gdk_pixbuf_get_rowstride (pixbuf);
-
-    for (int y = 0; y < height; ++y) {
-        uint32_t *line = (uint32_t*)(data + y*stride);
-        unsigned char *pbline = pbdata + (y*pbstride);
-        for (int x = 0; x < width; ++x) {
-            uint32_t pixel = *(line + x);
-            unsigned char *pbpixel = pbline + (x*4);
-            // NB: We should un-pre-mult the alpha here.
-            //     However, in our world, alpha is always
-            //     on or off, so it doesn't really matter
-            pbpixel[3] = ((pixel & 0xff000000) >> 24);
-            pbpixel[0] = ((pixel & 0x00ff0000) >> 16);
-            pbpixel[1] = ((pixel & 0x0000ff00) >> 8);
-            pbpixel[2] =  (pixel & 0x000000ff);
-        }
-    }
-
-    return pixbuf;
-}
-
 - (GdkPixbuf*) pixbufOfEdgeInStyle:(EdgeStyle*)style usingSurface:(cairo_surface_t*)surface {
     Transformer *transformer = [Transformer defaultTransformer];
     [transformer setFlippedAboutXAxis:YES];
@@ -364,7 +329,7 @@ enum {
     [e renderBasicEdgeInContext:context withTransformer:transformer selected:NO];
     [context release];
 
-    return [self pixbufFromSurface:surface];
+    return pixbuf_get_from_surface (surface);
 }
 
 - (void) addStyle:(EdgeStyle*)style usingSurface:(cairo_surface_t*)surface {

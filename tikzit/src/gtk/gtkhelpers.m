@@ -239,4 +239,39 @@ tz_hijack_key_press (GtkWindow    *win,
     return FALSE;
 }
 
+GdkPixbuf * pixbuf_get_from_surface(cairo_surface_t *surface) {
+    cairo_surface_flush (surface);
+
+    int width = cairo_image_surface_get_width (surface);
+    int height = cairo_image_surface_get_height (surface);
+    int stride = cairo_image_surface_get_stride (surface);
+    unsigned char *data = cairo_image_surface_get_data (surface);
+
+    GdkPixbuf *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
+                                        TRUE,
+                                        8,
+                                        width,
+                                        height);
+    unsigned char *pbdata = gdk_pixbuf_get_pixels (pixbuf);
+    int pbstride = gdk_pixbuf_get_rowstride (pixbuf);
+
+    for (int y = 0; y < height; ++y) {
+        uint32_t *line = (uint32_t*)(data + y*stride);
+        unsigned char *pbline = pbdata + (y*pbstride);
+        for (int x = 0; x < width; ++x) {
+            uint32_t pixel = *(line + x);
+            unsigned char *pbpixel = pbline + (x*4);
+            // NB: We should un-pre-mult the alpha here.
+            //     However, in our world, alpha is always
+            //     on or off, so it doesn't really matter
+            pbpixel[3] = ((pixel & 0xff000000) >> 24);
+            pbpixel[0] = ((pixel & 0x00ff0000) >> 16);
+            pbpixel[1] = ((pixel & 0x0000ff00) >> 8);
+            pbpixel[2] =  (pixel & 0x000000ff);
+        }
+    }
+
+    return pixbuf;
+}
+
 // vim:ft=objc:ts=8:et:sts=4:sw=4
