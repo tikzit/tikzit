@@ -37,6 +37,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/EdgeStyle+Storage.m \
                  gtk/EdgeStyleEditor.m \
                  gtk/EdgeStyleSelector.m \
+                 gtk/EdgeStylesModel.m \
                  gtk/EdgeStylesPalette.m \
                  gtk/FileChooserDialog.m \
                  gtk/HandTool.m \

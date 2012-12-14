@@ -1,5 +1,5 @@
 /*
- * Copyright 2012  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2011-2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,43 +19,42 @@
 #import <gtk/gtk.h>
 
 @class EdgeStyle;
-@class EdgeStylesModel;
 @class StyleManager;
 
-@interface EdgeStyleSelector: NSObject {
-    EdgeStylesModel     *model;
-    GtkTreeView         *view;
+enum {
+    EDGE_STYLES_NAME_COL = 0,
+    EDGE_STYLES_ICON_COL,
+    EDGE_STYLES_PTR_COL,
+    EDGE_STYLES_N_COLS
+};
+
+@interface EdgeStylesModel: NSObject {
+    GtkListStore        *store;
+    StyleManager        *styleManager;
 }
 
 /*!
- @property   widget
- @brief      The GTK widget
- */
-@property (readonly) GtkWidget       *widget;
-
-/*!
  @property   model
- @brief      The model to use.
+ @brief      The GTK+ tree model
  */
-@property (retain)   EdgeStylesModel *model;
+@property (readonly) GtkTreeModel *model;
 
 /*!
- @property   selectedStyle
- @brief      The selected style.
-
-             When this changes, a SelectedStyleChanged notification will be posted
+ @property   manager
+ @brief      The StyleManager to use.
  */
-@property (assign)   EdgeStyle       *selectedStyle;
+@property (retain)   StyleManager *styleManager;
 
 /*!
- * Initialise with a new model for the given style manager
+ * Initialise with the given style manager
  */
 - (id) initWithStyleManager:(StyleManager*)m;
-/*!
- * Initialise with the given model
- */
-- (id) initWithModel:(EdgeStylesModel*)model;
+
++ (id) modelWithStyleManager:(StyleManager*)m;
+
+- (EdgeStyle*) styleFromPath:(GtkTreePath*)path;
+- (GtkTreePath*) pathFromStyle:(EdgeStyle*)style;
 
 @end
 
-// vim:ft=objc:ts=8:et:sts=4:sw=4:foldmethod=marker
+// vim:ft=objc:ts=8:et:sts=4:sw=4

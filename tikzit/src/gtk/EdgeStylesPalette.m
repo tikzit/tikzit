@@ -144,11 +144,11 @@ static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette
 }
 
 - (StyleManager*) styleManager {
-    return [selector styleManager];
+    return [[selector model] styleManager];
 }
 
 - (void) setStyleManager:(StyleManager*)m {
-    [selector setStyleManager:m];
+    [[selector model] setStyleManager:m];
 }
 
 - (TikzDocument*) document {
@@ -221,7 +221,7 @@ static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette
 - (void) removeSelectedStyle {
     EdgeStyle *style = [selector selectedStyle];
     if (style)
-        [[selector styleManager] removeEdgeStyle:style];
+        [[[selector model] styleManager] removeEdgeStyle:style];
 }
 
 - (void) applySelectedStyle {
