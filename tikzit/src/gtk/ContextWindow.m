@@ -21,6 +21,7 @@
 #import "EdgeStylesModel.h"
 #import "NodeStylesModel.h"
 #import "PropertiesPane.h"
+#import "SelectionPane.h"
 #import "StyleManager.h"
 
 #import "gtkhelpers.h"
@@ -68,6 +69,16 @@ static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event
         gtk_box_pack_start (GTK_BOX (layout), [propsPane gtkWidget],
                             TRUE, TRUE, 0);
 
+        GtkWidget *sep = gtk_hseparator_new ();
+        gtk_widget_show (sep);
+        gtk_box_pack_start (GTK_BOX (layout), sep,
+                            FALSE, FALSE, 0);
+
+        selPane = [[SelectionPane alloc] initWithNodeStylesModel:nsm
+                                              andEdgeStylesModel:esm];
+        gtk_box_pack_start (GTK_BOX (layout), [selPane gtkWidget],
+                            FALSE, FALSE, 0);
+
         // hack to position the context window somewhere sensible
         // (upper right)
         gtk_window_parse_geometry (GTK_WINDOW (window), "-0+0");
@@ -93,6 +104,7 @@ static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event
 
 - (void) setDocument:(TikzDocument*)doc {
     [propsPane setDocument:doc];
+    [selPane setDocument:doc];
 }
 
 - (BOOL) visible {
@@ -109,6 +121,7 @@ static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event
 
 - (void) loadConfiguration:(Configuration*)config {
     [propsPane loadConfiguration:config];
+    [selPane loadConfiguration:config];
 
     if ([config hasGroup:@"ContextWindow"]) {
         tz_restore_window (GTK_WINDOW (window),
@@ -137,6 +150,7 @@ static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event
                       value:[self visible]];
 
     [propsPane saveConfiguration:config];
+    [selPane saveConfiguration:config];
 }
 
 @end

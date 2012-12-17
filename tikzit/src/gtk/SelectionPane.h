@@ -21,27 +21,32 @@
 @class Configuration;
 @class EdgeStylesModel;
 @class NodeStylesModel;
-@class PropertiesPane;
-@class SelectionPane;
 @class StyleManager;
 @class TikzDocument;
 
-@interface ContextWindow: NSObject {
-    PropertiesPane  *propsPane;
-    SelectionPane   *selPane;
+@interface SelectionPane: NSObject {
+    TikzDocument    *document;
 
-    GtkWidget       *window;
+    NodeStylesModel *nodeStylesModel;
+    EdgeStylesModel *edgeStylesModel;
+
     GtkWidget       *layout;
+
+    GtkWidget       *nodeStyleCombo;
+    GtkWidget       *applyNodeStyleButton;
+    GtkWidget       *clearNodeStyleButton;
+    GtkWidget       *edgeStyleCombo;
+    GtkWidget       *applyEdgeStyleButton;
+    GtkWidget       *clearEdgeStyleButton;
 }
 
 @property (retain)   TikzDocument *document;
 @property (assign)   BOOL          visible;
+@property (readonly) GtkWidget    *gtkWidget;
 
 - (id) initWithStyleManager:(StyleManager*)mgr;
 - (id) initWithNodeStylesModel:(NodeStylesModel*)nsm
             andEdgeStylesModel:(EdgeStylesModel*)esm;
-
-- (void) present;
 
 - (void) loadConfiguration:(Configuration*)config;
 - (void) saveConfiguration:(Configuration*)config;

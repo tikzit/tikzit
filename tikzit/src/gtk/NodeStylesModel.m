@@ -154,6 +154,27 @@
     }
     return NULL;
 }
+
+- (NodeStyle*) styleFromIter:(GtkTreeIter*)iter {
+    NodeStyle *style = nil;
+    gtk_tree_model_get (GTK_TREE_MODEL (store), iter, NODE_STYLES_PTR_COL, &style, -1);
+    return style;
+}
+
+- (GtkTreeIter*) iterFromStyle:(NodeStyle*)style {
+    GtkTreeModel *m = GTK_TREE_MODEL (store);
+    GtkTreeIter row;
+    if (gtk_tree_model_get_iter_first (m, &row)) {
+        do {
+            NodeStyle *rowStyle;
+            gtk_tree_model_get (m, &row, NODE_STYLES_PTR_COL, &rowStyle, -1);
+            if (style == rowStyle) {
+                return gtk_tree_iter_copy (&row);
+            }
+        } while (gtk_tree_model_iter_next (m, &row));
+    }
+    return NULL;
+}
 @end
 
 // }}}

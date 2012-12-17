@@ -54,6 +54,8 @@ enum {
 
 - (NodeStyle*) styleFromPath:(GtkTreePath*)path;
 - (GtkTreePath*) pathFromStyle:(NodeStyle*)style;
+- (NodeStyle*) styleFromIter:(GtkTreeIter*)iter;
+- (GtkTreeIter*) iterFromStyle:(NodeStyle*)style;
 
 @end
 

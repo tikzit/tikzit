@@ -54,6 +54,8 @@ enum {
 
 - (EdgeStyle*) styleFromPath:(GtkTreePath*)path;
 - (GtkTreePath*) pathFromStyle:(EdgeStyle*)style;
+- (EdgeStyle*) styleFromIter:(GtkTreeIter*)iter;
+- (GtkTreeIter*) iterFromStyle:(EdgeStyle*)style;
 
 @end
 

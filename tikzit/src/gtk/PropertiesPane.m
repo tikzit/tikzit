@@ -17,12 +17,8 @@
 
 #import "PropertiesPane.h"
 
-#import "Configuration.h"
-#import "EdgeStylesModel.h"
 #import "GraphElementProperty.h"
-#import "NodeStylesModel.h"
 #import "PropertyListEditor.h"
-#import "StyleManager.h"
 #import "TikzDocument.h"
 
 #import "gtkhelpers.h"
@@ -84,18 +80,18 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
 
 @implementation PropertiesPane
 
-- (id) init {
-    [self release];
-    return nil;
-}
-
+// we don't currently use the styles models
 - (id) initWithStyleManager:(StyleManager*)sm {
-    return [self initWithNodeStylesModel:[NodeStylesModel modelWithStyleManager:sm]
-                      andEdgeStylesModel:[EdgeStylesModel modelWithStyleManager:sm]];
+    return [self init];
 }
 
+// we don't currently use the styles models
 - (id) initWithNodeStylesModel:(NodeStylesModel*)nsm
             andEdgeStylesModel:(EdgeStylesModel*)esm {
+    return [self init];
+}
+
+- (id) init {
     self = [super init];
 
     if (self) {
@@ -580,11 +576,7 @@ static GtkWidget *createPropsPaneWithLabelEntry (PropertyListEditor *props, GtkE
 
 static GtkWidget *createBoldLabel (const gchar *text) {
     GtkWidget *label = gtk_label_new (text);
-    PangoAttrList *attrs = pango_attr_list_new ();
-    pango_attr_list_insert (attrs,
-            pango_attr_weight_new (PANGO_WEIGHT_SEMIBOLD));
-    gtk_label_set_attributes (GTK_LABEL (label), attrs);
-    pango_attr_list_unref (attrs);
+    label_set_bold (GTK_LABEL (label));
     return label;
 }
 

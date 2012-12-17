@@ -59,6 +59,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/PropertyListEditor.m \
                  gtk/RecentManager.m \
                  gtk/SelectTool.m \
+                 gtk/SelectionPane.m \
                  gtk/Shape+Render.m \
                  gtk/StyleManager+Storage.m \
                  gtk/TikzDocument.m \

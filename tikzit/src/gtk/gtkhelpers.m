@@ -226,4 +226,12 @@ void tz_restore_window (GtkWindow *window, gint x, gint y, gint w, gint h)
     }
 }
 
+void label_set_bold (GtkLabel *label) {
+    PangoAttrList *attrs = pango_attr_list_new ();
+    pango_attr_list_insert (attrs,
+            pango_attr_weight_new (PANGO_WEIGHT_SEMIBOLD));
+    gtk_label_set_attributes (label, attrs);
+    pango_attr_list_unref (attrs);
+}
+
 // vim:ft=objc:ts=8:et:sts=4:sw=4
