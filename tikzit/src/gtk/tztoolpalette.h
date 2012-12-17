@@ -48,5 +48,9 @@ GType       tz_tool_palette_get_type        (void) G_GNUC_CONST;
 
 GtkWidget * tz_tool_palette_new             (void);
 
+gboolean    tz_tool_palette_get_button_size (TzToolPalette *widget,
+                                             gint          *width,
+                                             gint          *height);
+
 
 #endif /* __TZ_TOOL_PALETTE_H__ */

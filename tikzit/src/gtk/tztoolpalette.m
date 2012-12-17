@@ -68,20 +68,57 @@ tz_tool_palette_init (TzToolPalette *palette)
 {
 }
 
+static GtkToolItemGroup *
+tz_tool_palette_tool_group (TzToolPalette *palette)
+{
+  GList                *children;
+  GtkToolItemGroup     *group;
+
+  children = gtk_container_get_children (GTK_CONTAINER (palette));
+  g_return_val_if_fail (children, NULL);
+  group = GTK_TOOL_ITEM_GROUP (children->data);
+  g_list_free (children);
+
+  return group;
+}
+
+gboolean
+tz_tool_palette_get_button_size (TzToolPalette *palette,
+                                 gint          *width,
+                                 gint          *height)
+{
+  g_return_val_if_fail (width || height, FALSE);
+
+  GtkToolItemGroup     *group = tz_tool_palette_tool_group (palette);
+  g_return_val_if_fail (group, FALSE);
+
+  guint tool_count = gtk_tool_item_group_get_n_items (group);
+  if (tool_count > 0)
+    {
+      GtkWidget      *tool_button;
+      GtkRequisition  button_requisition;
+
+      tool_button = GTK_WIDGET (gtk_tool_item_group_get_nth_item (group, 0));
+      gtk_widget_size_request (tool_button, &button_requisition);
+      if (width)
+        *width = button_requisition.width;
+      if (height)
+        *height = button_requisition.height;
+      return TRUE;
+    }
+  return FALSE;
+}
+
 static void
 tz_tool_palette_size_allocate (GtkWidget     *widget,
                                GtkAllocation *allocation)
 {
   TzToolPalettePrivate *private = GET_PRIVATE (widget);
-  GList                *children;
-  GtkToolItemGroup     *group;
+  GtkToolItemGroup     *group = tz_tool_palette_tool_group (TZ_TOOL_PALETTE (widget));
+
+  g_return_if_fail (group);
 
   GTK_WIDGET_CLASS (parent_class)->size_allocate (widget, allocation);
-
-  children = gtk_container_get_children (GTK_CONTAINER (widget));
-  g_return_if_fail (children);
-  group = GTK_TOOL_ITEM_GROUP (children->data);
-  g_list_free (children);
 
   guint tool_count = gtk_tool_item_group_get_n_items (group);
   if (tool_count > 0)

@@ -46,7 +46,6 @@ static void unretain (gpointer data);
         gtk_window_set_role (GTK_WINDOW (window), "toolbox");
         gtk_window_set_type_hint (GTK_WINDOW (window),
                                   GDK_WINDOW_TYPE_HINT_UTILITY);
-        gtk_window_set_default_size (GTK_WINDOW (window), 170, 500);
         gtk_window_set_deletable (GTK_WINDOW (window), FALSE);
 
         GtkWidget *mainLayout = gtk_vbox_new (FALSE, 5);
@@ -130,6 +129,31 @@ static void unretain (gpointer data);
                             0);
         gtk_alignment_set_padding (GTK_ALIGNMENT (configWidgetContainer),
                                    5, 5, 5, 5);
+
+        gint button_width;
+        gint button_height;
+
+        if (tz_tool_palette_get_button_size (TZ_TOOL_PALETTE (toolPalette),
+                                             &button_width, &button_height))
+        {
+            GdkGeometry geometry;
+
+            geometry.min_width   = 2 * button_width;
+            geometry.min_height  = -1;
+            geometry.base_width  = button_width;
+            geometry.base_height = 0;
+            geometry.width_inc   = button_width;
+            geometry.height_inc  = 1;
+
+            gtk_window_set_geometry_hints (GTK_WINDOW (window),
+                                           NULL,
+                                           &geometry,
+                                           GDK_HINT_MIN_SIZE   |
+                                           GDK_HINT_BASE_SIZE  |
+                                           GDK_HINT_RESIZE_INC |
+                                           GDK_HINT_USER_POS);
+        }
+        gtk_window_set_default_size (GTK_WINDOW (window), button_width * 5, 500);
 
         // hack to position the toolbox window somewhere sensible
         // (upper left)
