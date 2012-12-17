@@ -41,6 +41,8 @@
     GtkPaned          *tikzPaneSplitter;
     GtkWidget         *tikzPane;
 
+    gulong             clipboard_handler_id;
+
     // Classes that manage parts of the window
     Menu              *menu;
     GraphEditorPanel  *graphPanel;

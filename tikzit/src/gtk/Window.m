@@ -124,6 +124,9 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    g_signal_handler_disconnect (
+            gtk_clipboard_get (GDK_SELECTION_CLIPBOARD),
+            clipboard_handler_id);
 
     [menu release];
     [graphPanel release];
@@ -565,10 +568,11 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
 - (void) _connectSignals {
     GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
-    g_signal_connect (G_OBJECT (clipboard),
-        "owner-change",
-        G_CALLBACK (update_paste_action),
-        [menu pasteAction]);
+    clipboard_handler_id =
+        g_signal_connect (G_OBJECT (clipboard),
+            "owner-change",
+            G_CALLBACK (update_paste_action),
+            [menu pasteAction]);
     g_signal_connect (G_OBJECT (window),
         "key-press-event",
         G_CALLBACK (tz_hijack_key_press),
