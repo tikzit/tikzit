@@ -18,6 +18,8 @@
 #import "Application.h"
 
 #import "Configuration.h"
+#import "EdgeStylesModel.h"
+#import "NodeStylesModel.h"
 #import "PreambleEditor.h"
 #import "PropertiesWindow.h"
 #import "Shape.h"
@@ -83,6 +85,8 @@ Application* app = nil;
 
         styleManager = [[StyleManager alloc] init];
         [styleManager loadStylesUsingConfigurationName:@"styles"]; // FIXME: error message?
+        NodeStylesModel *nsm = [NodeStylesModel modelWithStyleManager:styleManager];
+        EdgeStylesModel *esm = [EdgeStylesModel modelWithStyleManager:styleManager];
 
 #ifdef HAVE_POPPLER
         NSString *preamblesDir = [[SupportDir userSupportDir] stringByAppendingPathComponent:@"preambles"];
@@ -105,8 +109,8 @@ Application* app = nil;
 
         tools = [[NSArray alloc] initWithObjects:
             [SelectTool tool],
-            [CreateNodeTool toolWithStyleManager:styleManager],
-            [CreateEdgeTool toolWithStyleManager:styleManager],
+            [CreateNodeTool toolWithNodeStylesModel:nsm],
+            [CreateEdgeTool toolWithEdgeStylesModel:esm],
             [BoundingBoxTool tool],
             [HandTool tool],
             nil];

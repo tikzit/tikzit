@@ -20,6 +20,7 @@
 #import "Configuration.h"
 #import "GraphRenderer.h"
 #import "NodeStyleSelector.h"
+#import "NodeStylesModel.h"
 #import "TikzDocument.h"
 #import "tzstockitems.h"
 
@@ -29,11 +30,14 @@
 - (NSString*) helpText { return @"Create new nodes"; }
 - (NSString*) shortcut { return @"n"; }
 @synthesize activeRenderer=renderer;
-@synthesize styleManager;
 @synthesize configurationWidget=configWidget;
 
 + (id) toolWithStyleManager:(StyleManager*)sm {
     return [[[self alloc] initWithStyleManager:sm] autorelease];
+}
+
++ (id) toolWithNodeStylesModel:(NodeStylesModel*)nsm {
+    return [[[self alloc] initWithNodeStylesModel:nsm] autorelease];
 }
 
 - (id) init {
@@ -42,11 +46,14 @@
 }
 
 - (id) initWithStyleManager:(StyleManager*)sm {
+    return [self initWithNodeStylesModel:[NodeStylesModel modelWithStyleManager:sm]];
+}
+
+- (id) initWithNodeStylesModel:(NodeStylesModel*)nsm {
     self = [super init];
 
     if (self) {
-        styleManager = [sm retain];
-        stylePicker = [[NodeStyleSelector alloc] initWithStyleManager:sm];
+        stylePicker = [[NodeStyleSelector alloc] initWithModel:nsm];
 
         configWidget = gtk_vbox_new (FALSE, 0);
         g_object_ref_sink (configWidget);
@@ -87,7 +94,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [renderer release];
-    [styleManager release];
     [stylePicker release];
 
     g_object_unref (G_OBJECT (configWidget));
@@ -119,11 +125,15 @@
 
 - (void) renderWithContext:(id<RenderContext>)context onSurface:(id<Surface>)surface {}
 
+- (StyleManager*) styleManager {
+    return [[stylePicker model] styleManager];
+}
+
 - (void) loadConfiguration:(Configuration*)config {
     NSString *styleName = [config stringEntry:@"ActiveStyle"
                                       inGroup:@"CreateNodeTool"
                                   withDefault:nil];
-    [self setActiveStyle:[styleManager nodeStyleForName:styleName]];
+    [self setActiveStyle:[[self styleManager] nodeStyleForName:styleName]];
 }
 
 - (void) saveConfiguration:(Configuration*)config {

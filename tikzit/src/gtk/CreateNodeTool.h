@@ -21,20 +21,21 @@
 
 @class NodeStyle;
 @class NodeStyleSelector;
+@class NodeStylesModel;
 @class StyleManager;
 
 @interface CreateNodeTool : NSObject <Tool> {
     GraphRenderer     *renderer;
-    StyleManager      *styleManager;
     NodeStyleSelector *stylePicker;
     GtkWidget         *configWidget;
 }
 
-@property (retain) StyleManager *styleManager;
 @property (retain) NodeStyle    *activeStyle;
 
 + (id) toolWithStyleManager:(StyleManager*)sm;
 - (id) initWithStyleManager:(StyleManager*)sm;
++ (id) toolWithNodeStylesModel:(NodeStylesModel*)nsm;
+- (id) initWithNodeStylesModel:(NodeStylesModel*)nsm;
 @end
 
 

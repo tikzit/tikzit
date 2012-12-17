@@ -19,6 +19,7 @@
 
 #import "Configuration.h"
 #import "EdgeStyleSelector.h"
+#import "EdgeStylesModel.h"
 #import "GraphRenderer.h"
 #import "TikzDocument.h"
 #import "tzstockitems.h"
@@ -29,11 +30,14 @@
 - (NSString*) helpText { return @"Create new edges"; }
 - (NSString*) shortcut { return @"e"; }
 @synthesize activeRenderer=renderer;
-@synthesize styleManager;
 @synthesize configurationWidget=configWidget;
 
 + (id) toolWithStyleManager:(StyleManager*)sm {
     return [[[self alloc] initWithStyleManager:sm] autorelease];
+}
+
++ (id) toolWithEdgeStylesModel:(EdgeStylesModel*)esm {
+    return [[[self alloc] initWithEdgeStylesModel:esm] autorelease];
 }
 
 - (id) init {
@@ -42,11 +46,14 @@
 }
 
 - (id) initWithStyleManager:(StyleManager*)sm {
+    return [self initWithEdgeStylesModel:[EdgeStylesModel modelWithStyleManager:sm]];
+}
+
+- (id) initWithEdgeStylesModel:(EdgeStylesModel*)esm {
     self = [super init];
 
     if (self) {
-        styleManager = [sm retain];
-        stylePicker = [[EdgeStyleSelector alloc] initWithStyleManager:sm];
+        stylePicker = [[EdgeStyleSelector alloc] initWithModel:esm];
 
         configWidget = gtk_vbox_new (FALSE, 0);
         g_object_ref_sink (configWidget);
@@ -87,7 +94,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [renderer release];
-    [styleManager release];
     [stylePicker release];
     [sourceNode release];
 
@@ -176,11 +182,15 @@
     [context restoreState];
 }
 
+- (StyleManager*) styleManager {
+    return [[stylePicker model] styleManager];
+}
+
 - (void) loadConfiguration:(Configuration*)config {
     NSString *styleName = [config stringEntry:@"ActiveStyle"
                                       inGroup:@"CreateEdgeTool"
                                   withDefault:nil];
-    [self setActiveStyle:[styleManager edgeStyleForName:styleName]];
+    [self setActiveStyle:[[self styleManager] edgeStyleForName:styleName]];
 }
 
 - (void) saveConfiguration:(Configuration*)config {

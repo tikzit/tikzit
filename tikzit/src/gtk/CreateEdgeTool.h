@@ -19,13 +19,13 @@
 #import "Tool.h"
 
 @class EdgeStyle;
+@class EdgeStylesModel;
 @class EdgeStyleSelector;
 @class Node;
 @class StyleManager;
 
 @interface CreateEdgeTool : NSObject <Tool> {
     GraphRenderer     *renderer;
-    StyleManager      *styleManager;
     EdgeStyleSelector *stylePicker;
     GtkWidget         *configWidget;
     Node              *sourceNode;
@@ -33,11 +33,12 @@
     NSPoint            halfEdgeEnd;
 }
 
-@property (retain) StyleManager *styleManager;
 @property (retain) EdgeStyle    *activeStyle;
 
 + (id) toolWithStyleManager:(StyleManager*)sm;
 - (id) initWithStyleManager:(StyleManager*)sm;
++ (id) toolWithEdgeStylesModel:(EdgeStylesModel*)esm;
+- (id) initWithEdgeStylesModel:(EdgeStylesModel*)esm;
 @end
 
 
