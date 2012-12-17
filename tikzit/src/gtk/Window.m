@@ -181,7 +181,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     FileChooserDialog *dialog = [FileChooserDialog openDialogWithParent:window];
     [dialog addStandardFilters];
     if ([document path]) {
-        [dialog setCurrentFolder:[document path]];
+        [dialog setCurrentFolder:[[document path] stringByDeletingLastPathComponent]];
     } else if ([app lastOpenFolder]) {
         [dialog setCurrentFolder:[app lastOpenFolder]];
     }
