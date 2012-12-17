@@ -24,6 +24,14 @@
 #include <gtk/gtk.h>
 #import <gdk-pixbuf/gdk-pixbuf.h>
 
+/**
+ * Releases the Objective-C object pointed to by data
+ *
+ * Intended for use as a cleanup function in Glib/GObject-based
+ * code.
+ */
+void release_obj (gpointer data);
+
 NSString * gtk_editable_get_string (GtkEditable *editable, gint start, gint end);
 
 GdkRectangle gdk_rectangle_from_ns_rect (NSRect rect);

@@ -25,7 +25,6 @@
 #import "tztoolpalette.h"
 
 static void tool_button_toggled_cb (GtkWidget *widget, ToolBox *toolBox);
-static void unretain (gpointer data);
 
 #define TOOL_DATA_KEY  "tikzit-tool"
 
@@ -88,7 +87,7 @@ static void unretain (gpointer data);
                     G_OBJECT(item),
                     TOOL_DATA_KEY,
                     [tool retain],
-                    unretain);
+                    release_obj);
 
             g_signal_connect (item, "toggled",
                               G_CALLBACK (tool_button_toggled_cb),
@@ -269,11 +268,6 @@ static void tool_button_toggled_cb (GtkWidget *widget, ToolBox *toolBox) {
 
         [pool drain];
     }
-}
-
-static void unretain (gpointer data) {
-    id obj = (id)data;
-    [obj release];
 }
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4

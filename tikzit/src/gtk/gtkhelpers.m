@@ -25,6 +25,11 @@
 #import "gtkhelpers.h"
 #import <gdk/gdkkeysyms.h>
 
+void release_obj (gpointer data) {
+    id obj = (id)data;
+    [obj release];
+}
+
 NSString * gtk_editable_get_string (GtkEditable *editable, gint start, gint end)
 {
     gchar *text = gtk_editable_get_chars (editable, start, end);
