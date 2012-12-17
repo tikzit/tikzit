@@ -20,10 +20,10 @@
 
 @class Application;
 @class Configuration;
+@class ContextWindow;
 @class Preambles;
 @class PreambleEditor;
 @class PreviewWindow;
-@class PropertiesWindow;
 @class SettingsDialog;
 @class StyleManager;
 @class TikzDocument;
@@ -50,7 +50,7 @@ extern Application* app;
     ToolBox           *toolBox;
     PreambleEditor    *preambleWindow;
     PreviewWindow     *previewWindow;
-    PropertiesWindow  *propertiesWindow;
+    ContextWindow     *contextWindow;
     SettingsDialog    *settingsDialog;
 
     // the open windows (array of Window*)
@@ -131,9 +131,9 @@ extern Application* app;
  */
 - (void) showPreamblesEditor;
 /**
- * Show the property editor pane
+ * Show the context-aware window
  */
-- (void) showPropertyEditor;
+- (void) showContextWindow;
 /**
  * Show or update the preview window.
  */

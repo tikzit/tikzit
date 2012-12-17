@@ -30,6 +30,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/ColorRGB+IntegerListStorage.m \
                  gtk/ColorRGB+Gtk.m \
                  gtk/Configuration.m \
+                 gtk/ContextWindow.m \
                  gtk/CreateEdgeTool.m \
                  gtk/CreateNodeTool.m \
                  gtk/Edge+Render.m \
@@ -54,7 +55,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/NSError+Glib.m \
                  gtk/NSFileManager+Glib.m \
                  gtk/NSString+Glib.m \
-                 gtk/PropertiesWindow.m \
+                 gtk/PropertiesPane.m \
                  gtk/PropertyListEditor.m \
                  gtk/RecentManager.m \
                  gtk/SelectTool.m \

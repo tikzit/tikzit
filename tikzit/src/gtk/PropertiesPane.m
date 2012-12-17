@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2011-2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -15,11 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "PropertiesWindow.h"
+#import "PropertiesPane.h"
 
 #import "Configuration.h"
-#import "PropertyListEditor.h"
+#import "EdgeStylesModel.h"
 #import "GraphElementProperty.h"
+#import "NodeStylesModel.h"
+#import "PropertyListEditor.h"
+#import "StyleManager.h"
+#import "TikzDocument.h"
 
 #import "gtkhelpers.h"
 
@@ -30,13 +34,12 @@ static GtkWidget *createPropsPaneWithLabelEntry (PropertyListEditor *props, GtkE
 static GtkWidget *createBoldLabel (const gchar *text);
 // }}}
 // {{{ GTK+ callbacks
-static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, PropertiesWindow *window);
-static void node_label_changed_cb (GtkEditable *widget, PropertiesWindow *pane);
-static void edge_node_label_changed_cb (GtkEditable *widget, PropertiesWindow *pane);
-static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pane);
+static void node_label_changed_cb (GtkEditable *widget, PropertiesPane *pane);
+static void edge_node_label_changed_cb (GtkEditable *widget, PropertiesPane *pane);
+static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane);
 // }}}
 
-@interface PropertiesWindow (Notifications)
+@interface PropertiesPane (Notifications)
 - (void) nodeSelectionChanged:(NSNotification*)n;
 - (void) edgeSelectionChanged:(NSNotification*)n;
 - (void) graphChanged:(NSNotification*)n;
@@ -45,7 +48,7 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
 - (void) edgeNodeToggled:(BOOL)newValue;
 @end
 
-@interface PropertiesWindow (Private)
+@interface PropertiesPane (Private)
 - (void) _updatePane;
 - (void) _setDisplayedWidget:(GtkWidget*)widget;
 @end
@@ -79,9 +82,20 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
 // }}}
 // {{{ API
 
-@implementation PropertiesWindow
+@implementation PropertiesPane
 
 - (id) init {
+    [self release];
+    return nil;
+}
+
+- (id) initWithStyleManager:(StyleManager*)sm {
+    return [self initWithNodeStylesModel:[NodeStylesModel modelWithStyleManager:sm]
+                      andEdgeStylesModel:[EdgeStylesModel modelWithStyleManager:sm]];
+}
+
+- (id) initWithNodeStylesModel:(NodeStylesModel*)nsm
+            andEdgeStylesModel:(EdgeStylesModel*)esm {
     self = [super init];
 
     if (self) {
@@ -103,24 +117,15 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
         edgeNodeProps = [[PropertyListEditor alloc] init];
         [edgeNodeProps setDelegate:edgePropDelegate];
 
-        window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-        g_object_ref_sink (window);
-        gtk_window_set_title (GTK_WINDOW (window), "Properties");
-        gtk_window_set_role (GTK_WINDOW (window), "properties");
-        gtk_window_set_type_hint (GTK_WINDOW (window),
-                                  GDK_WINDOW_TYPE_HINT_UTILITY);
-        gtk_window_set_default_size (GTK_WINDOW (window), 200, 500);
-        g_signal_connect (G_OBJECT (window),
-            "delete-event",
-            G_CALLBACK (props_window_delete_event_cb),
-            self);
+        layout = gtk_vbox_new (FALSE, 0);
+        g_object_ref_sink (layout);
+        gtk_widget_show (layout);
 
         /*
          * Graph properties
          */
         graphPropsWidget = gtk_vbox_new (FALSE, 6);
         g_object_ref_sink (graphPropsWidget);
-        gtk_container_set_border_width (GTK_CONTAINER (graphPropsWidget), 6);
         gtk_widget_show (graphPropsWidget);
 
         GtkWidget *label = createBoldLabel ("Graph properties");
@@ -133,9 +138,10 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
         gtk_box_pack_start (GTK_BOX (graphPropsWidget),
                             [graphProps widget],
                             TRUE, TRUE, 0);
-        gtk_widget_show (graphPropsWidget);
 
-        gtk_container_add (GTK_CONTAINER (window), graphPropsWidget);
+        gtk_box_pack_start (GTK_BOX (layout),
+                            graphPropsWidget,
+                            TRUE, TRUE, 0);
 
 
         /*
@@ -143,8 +149,9 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
          */
         nodePropsWidget = gtk_vbox_new (FALSE, 6);
         g_object_ref_sink (nodePropsWidget);
-        gtk_container_set_border_width (GTK_CONTAINER (nodePropsWidget), 6);
-        gtk_widget_show (nodePropsWidget);
+        gtk_box_pack_start (GTK_BOX (layout),
+                            nodePropsWidget,
+                            TRUE, TRUE, 0);
 
         label = createBoldLabel ("Node properties");
         gtk_widget_show (label);
@@ -173,8 +180,9 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
          */
         edgePropsWidget = gtk_vbox_new (FALSE, 6);
         g_object_ref_sink (edgePropsWidget);
-        gtk_container_set_border_width (GTK_CONTAINER (edgePropsWidget), 6);
-        gtk_widget_show (edgePropsWidget);
+        gtk_box_pack_start (GTK_BOX (layout),
+                            edgePropsWidget,
+                            TRUE, TRUE, 0);
 
         label = createBoldLabel ("Edge properties");
         gtk_widget_show (label);
@@ -215,9 +223,11 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
             G_CALLBACK (edge_node_label_changed_cb),
             self);
 
-        // hack to position the props window somewhere sensible
-        // (upper right)
-        gtk_window_parse_geometry (GTK_WINDOW (window), "-0+0");
+        /*
+         * Misc setup
+         */
+
+        [self _setDisplayedWidget:graphPropsWidget];
     }
 
     return self;
@@ -225,23 +235,29 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [document release];
 
     g_object_unref (graphPropsWidget);
     g_object_unref (nodePropsWidget);
     g_object_unref (edgePropsWidget);
+
     g_object_unref (nodeLabelEntry);
     g_object_unref (edgeNodeToggle);
     g_object_unref (edgeNodePropsWidget);
     g_object_unref (edgeNodeLabelEntry);
 
+    g_object_unref (layout);
+
     [graphProps release];
     [nodeProps release];
     [edgeProps release];
     [edgeNodeProps release];
+
     [graphPropDelegate release];
     [nodePropDelegate release];
     [edgePropDelegate release];
+    [edgeNodePropDelegate release];
+
+    [document release];
 
     [super dealloc];
 }
@@ -280,50 +296,28 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
 }
 
 - (BOOL) visible {
-    return gtk_widget_get_visible (window);
+    return gtk_widget_get_visible (layout);
 }
 
 - (void) setVisible:(BOOL)visible {
-    gtk_widget_set_visible (window, visible);
+    gtk_widget_set_visible (layout, visible);
 }
 
-- (void) present {
-    gtk_window_present (GTK_WINDOW (window));
+- (GtkWidget*) gtkWidget {
+    return layout;
 }
 
 - (void) loadConfiguration:(Configuration*)config {
-    if ([config hasGroup:@"PropertiesWindow"]) {
-        tz_restore_window (GTK_WINDOW (window),
-                [config integerEntry:@"x" inGroup:@"PropertiesWindow"],
-                [config integerEntry:@"y" inGroup:@"PropertiesWindow"],
-                [config integerEntry:@"w" inGroup:@"PropertiesWindow"],
-                [config integerEntry:@"h" inGroup:@"PropertiesWindow"]);
-    }
-    [self setVisible:[config booleanEntry:@"visible"
-                                  inGroup:@"PropertiesWindow"
-                              withDefault:YES]];
 }
 
 - (void) saveConfiguration:(Configuration*)config {
-    gint x, y, w, h;
-
-    gtk_window_get_position (GTK_WINDOW (window), &x, &y);
-    gtk_window_get_size (GTK_WINDOW (window), &w, &h);
-
-    [config setIntegerEntry:@"x" inGroup:@"PropertiesWindow" value:x];
-    [config setIntegerEntry:@"y" inGroup:@"PropertiesWindow" value:y];
-    [config setIntegerEntry:@"w" inGroup:@"PropertiesWindow" value:w];
-    [config setIntegerEntry:@"h" inGroup:@"PropertiesWindow" value:h];
-    [config setBooleanEntry:@"visible"
-                    inGroup:@"PropertiesWindow"
-                      value:[self visible]];
 }
 
 @end
 // }}}
 // {{{ Notifications
 
-@implementation PropertiesWindow (Notifications)
+@implementation PropertiesPane (Notifications)
 
 - (void) nodeSelectionChanged:(NSNotification*)n {
     [self _updatePane];
@@ -395,13 +389,15 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
 // }}}
 // {{{ Private
 
-@implementation PropertiesWindow (Private)
+@implementation PropertiesPane (Private)
 
 - (void) _setDisplayedWidget:(GtkWidget*)widget {
-    GtkWidget *current = gtk_bin_get_child (GTK_BIN (window));
-    if (current != widget) {
-        gtk_container_remove (GTK_CONTAINER (window), current);
-        gtk_container_add (GTK_CONTAINER (window), widget);
+    if (currentPropsWidget != widget) {
+        if (currentPropsWidget)
+            gtk_widget_hide (currentPropsWidget);
+        currentPropsWidget = widget;
+        if (widget)
+            gtk_widget_show (widget);
     }
 }
 
@@ -571,8 +567,7 @@ static GtkWidget *createLabelledEntry (const gchar *labelText, GtkEntry **entry)
 }
 
 static GtkWidget *createPropsPaneWithLabelEntry (PropertyListEditor *props, GtkEntry **labelEntry) {
-        GtkBox *box = GTK_BOX (gtk_vbox_new (FALSE, 0));
-	gtk_box_set_spacing (box, 6);
+        GtkBox *box = GTK_BOX (gtk_vbox_new (FALSE, 6));
 
         GtkWidget *labelWidget = createLabelledEntry ("Label", labelEntry);
         gtk_widget_show (labelWidget);
@@ -596,14 +591,7 @@ static GtkWidget *createBoldLabel (const gchar *text) {
 // }}}
 // {{{ GTK+ callbacks
 
-static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event, PropertiesWindow *window) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window setVisible:NO];
-    [pool drain];
-    return TRUE;
-}
-
-static void node_label_changed_cb (GtkEditable *editable, PropertiesWindow *pane) {
+static void node_label_changed_cb (GtkEditable *editable, PropertiesPane *pane) {
     if (!gtk_widget_is_sensitive (GTK_WIDGET (editable))) {
         // clearly wasn't the user editing
         return;
@@ -617,7 +605,7 @@ static void node_label_changed_cb (GtkEditable *editable, PropertiesWindow *pane
     [pool drain];
 }
 
-static void edge_node_label_changed_cb (GtkEditable *editable, PropertiesWindow *pane) {
+static void edge_node_label_changed_cb (GtkEditable *editable, PropertiesPane *pane) {
     if (!gtk_widget_is_sensitive (GTK_WIDGET (editable))) {
         // clearly wasn't the user editing
         return;
@@ -631,7 +619,7 @@ static void edge_node_label_changed_cb (GtkEditable *editable, PropertiesWindow 
     [pool drain];
 }
 
-static void edge_node_toggled_cb (GtkToggleButton *toggle, PropertiesWindow *pane) {
+static void edge_node_toggled_cb (GtkToggleButton *toggle, PropertiesPane *pane) {
     if (!gtk_widget_is_sensitive (GTK_WIDGET (toggle))) {
         // clearly wasn't the user editing
         return;

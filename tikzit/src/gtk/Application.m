@@ -21,7 +21,7 @@
 #import "EdgeStylesModel.h"
 #import "NodeStylesModel.h"
 #import "PreambleEditor.h"
-#import "PropertiesWindow.h"
+#import "ContextWindow.h"
 #import "Shape.h"
 #import "StyleManager.h"
 #import "StyleManager+Storage.h"
@@ -134,8 +134,9 @@ Application* app = nil;
                  object:toolBox];
         [toolBox show];
 
-        propertiesWindow = [[PropertiesWindow alloc] init];
-        [propertiesWindow loadConfiguration:configFile];
+        contextWindow = [[ContextWindow alloc] initWithNodeStylesModel:nsm
+                                                    andEdgeStylesModel:esm];
+        [contextWindow loadConfiguration:configFile];
 
         app = [self retain];
     }
@@ -191,7 +192,7 @@ Application* app = nil;
     [tools release];
     [activeTool release];
     [toolBox release];
-    [propertiesWindow release];
+    [contextWindow release];
 
     [super dealloc];
 }
@@ -270,8 +271,8 @@ Application* app = nil;
 #endif
 }
 
-- (void) showPropertyEditor {
-    [propertiesWindow present];
+- (void) showContextWindow {
+    [contextWindow present];
 }
 
 - (void) showPreviewForDocument:(TikzDocument*)doc {
@@ -319,7 +320,7 @@ Application* app = nil;
     }
     [toolBox saveConfiguration:configFile];
 
-    [propertiesWindow saveConfiguration:configFile];
+    [contextWindow saveConfiguration:configFile];
 
     if (lastOpenFolder != nil) {
         [configFile setStringEntry:@"lastOpenFolder" inGroup:@"Paths" value:lastOpenFolder];
@@ -361,7 +362,7 @@ Application* app = nil;
 }
 
 - (void) windowDocumentChanged:(NSNotification*)n {
-    [propertiesWindow setDocument:[[n userInfo] objectForKey:@"document"]];
+    [contextWindow setDocument:[[n userInfo] objectForKey:@"document"]];
 }
 @end
 
@@ -371,7 +372,7 @@ Application* app = nil;
                                                     name:@"DocumentChanged"
                                                   object:nil];
 
-    [propertiesWindow setDocument:[window document]];
+    [contextWindow setDocument:[window document]];
 
     [[NSNotificationCenter defaultCenter]
         addObserver:self

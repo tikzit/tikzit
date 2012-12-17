@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <dev@randomguy3.me.uk>
+ * Copyright 2011-2012  Alex Merry <dev@randomguy3.me.uk>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,16 +17,19 @@
 
 #import "TZFoundation.h"
 #import <gtk/gtk.h>
-#import "Configuration.h"
-#import "TikzDocument.h"
 
-@class PropertyListEditor;
+@class Configuration;
+@class EdgeNodePropertyDelegate;
+@class EdgePropertyDelegate;
+@class EdgeStylesModel;
 @class GraphPropertyDelegate;
 @class NodePropertyDelegate;
-@class EdgePropertyDelegate;
-@class EdgeNodePropertyDelegate;
+@class NodeStylesModel;
+@class PropertyListEditor;
+@class StyleManager;
+@class TikzDocument;
 
-@interface PropertiesWindow: NSObject {
+@interface PropertiesPane: NSObject {
     TikzDocument       *document;
     BOOL                blockUpdates;
 
@@ -40,8 +43,9 @@
     EdgePropertyDelegate     *edgePropDelegate;
     EdgeNodePropertyDelegate *edgeNodePropDelegate;
 
-    GtkWidget       *window;
-    GtkWidget       *propertiesPane;
+    GtkWidget       *layout;
+
+    GtkWidget       *currentPropsWidget; // no ref!
 
     GtkWidget       *graphPropsWidget;
     GtkWidget       *nodePropsWidget;
@@ -55,10 +59,11 @@
 
 @property (retain)   TikzDocument *document;
 @property (assign)   BOOL          visible;
+@property (readonly) GtkWidget    *gtkWidget;
 
-- (id) init;
-
-- (void) present;
+- (id) initWithStyleManager:(StyleManager*)mgr;
+- (id) initWithNodeStylesModel:(NodeStylesModel*)nsm
+            andEdgeStylesModel:(EdgeStylesModel*)esm;
 
 - (void) loadConfiguration:(Configuration*)config;
 - (void) saveConfiguration:(Configuration*)config;
