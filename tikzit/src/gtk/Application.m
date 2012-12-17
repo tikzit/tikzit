@@ -52,6 +52,11 @@ Application* app = nil;
 - (void) windowClosed:(NSNotification*)notification;
 - (void) windowGainedFocus:(NSNotification*)notification;
 - (void) selectedToolChanged:(NSNotification*)notification;
+- (void) windowDocumentChanged:(NSNotification*)n;
+@end
+
+@interface Application (Private)
+- (void) setActiveWindow:(Window*)window;
 @end
 
 @implementation Application
@@ -227,7 +232,9 @@ Application* app = nil;
                                              selector:@selector(windowGainedFocus:)
                                                  name:@"WindowGainedFocus"
                                                object:window];
-    // FIXME: focus?
+    if ([window hasFocus]) {
+        [self setActiveWindow:window];
+    }
 }
 
 - (void) newWindow {
@@ -339,17 +346,38 @@ Application* app = nil;
         gtk_main_quit();
     }
 }
+
 - (void) windowGainedFocus:(NSNotification*)notification {
     Window *window = [notification object];
-    TikzDocument *doc = [window document];
-    [propertiesWindow setDocument:doc];
+    [self setActiveWindow:window];
 }
+
 - (void) selectedToolChanged:(NSNotification*)n {
     id<Tool> tool = [[n userInfo] objectForKey:@"tool"];
     if (tool != nil)
         [self setActiveTool:tool];
     else
         NSLog(@"nil tool!");
+}
+
+- (void) windowDocumentChanged:(NSNotification*)n {
+    [propertiesWindow setDocument:[[n userInfo] objectForKey:@"document"]];
+}
+@end
+
+@implementation Application (Private)
+- (void) setActiveWindow:(Window*)window {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"DocumentChanged"
+                                                  object:nil];
+
+    [propertiesWindow setDocument:[window document]];
+
+    [[NSNotificationCenter defaultCenter]
+        addObserver:self
+           selector:@selector(windowDocumentChanged:)
+               name:@"DocumentChanged"
+             object:window];
 }
 @end
 

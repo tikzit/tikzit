@@ -148,9 +148,8 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:[document pickSupport]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:document];
 
-    [newDoc retain];
-    [document release];
-    document = newDoc;
+    TikzDocument *oldDoc = document;
+    document = [newDoc retain];
 
     [graphPanel setDocument:document];
     [self _updateTikz];
@@ -174,6 +173,21 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     if ([document path] != nil) {
         [[RecentManager defaultManager] addRecentFile:[document path]];
     }
+
+    NSDictionary *userInfo;
+    userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                document, @"document",
+                oldDoc, @"oldDocument",
+                nil];
+    [[NSNotificationCenter defaultCenter]
+        postNotificationName:@"DocumentChanged"
+                      object:self
+                    userInfo:userInfo];
+    [oldDoc release];
+}
+
+- (BOOL) hasFocus {
+    return gtk_window_has_toplevel_focus (GTK_WINDOW (window));
 }
 
 - (void) present {

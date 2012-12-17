@@ -58,7 +58,9 @@
 /**
  * The document displayed by the window
  */
-@property (retain) TikzDocument *document;
+@property (retain)   TikzDocument *document;
+
+@property (readonly) BOOL          hasFocus;
 
 /**
  * Create a window with an empty document
