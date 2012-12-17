@@ -33,6 +33,7 @@
 
 - (id) initWithTools:(NSArray*)tools;
 
+- (void) show;
 - (void) present;
 
 - (void) loadConfiguration:(Configuration*)config;

@@ -21,6 +21,7 @@
 #import "Configuration.h"
 #import "Tool.h"
 
+#import "gtkhelpers.h"
 #import "tztoolpalette.h"
 
 static void tool_button_toggled_cb (GtkWidget *widget, ToolBox *toolBox);
@@ -130,7 +131,9 @@ static void unretain (gpointer data);
         gtk_alignment_set_padding (GTK_ALIGNMENT (configWidgetContainer),
                                    5, 5, 5, 5);
 
-        gtk_widget_show (window);
+        // hack to position the toolbox window somewhere sensible
+        // (upper left)
+        gtk_window_parse_geometry (GTK_WINDOW (window), "+0+0");
     }
 
     return self;
@@ -194,14 +197,34 @@ static void unretain (gpointer data);
     [self _setToolWidget:[tool configurationWidget]];
 }
 
+- (void) show {
+    gtk_widget_show (window);
+}
+
 - (void) present {
     gtk_window_present (GTK_WINDOW (window));
 }
 
 - (void) loadConfiguration:(Configuration*)config {
+    if ([config hasGroup:@"ToolBox"]) {
+        tz_restore_window (GTK_WINDOW (window),
+                [config integerEntry:@"x" inGroup:@"ToolBox"],
+                [config integerEntry:@"y" inGroup:@"ToolBox"],
+                [config integerEntry:@"w" inGroup:@"ToolBox"],
+                [config integerEntry:@"h" inGroup:@"ToolBox"]);
+    }
 }
 
 - (void) saveConfiguration:(Configuration*)config {
+    gint x, y, w, h;
+
+    gtk_window_get_position (GTK_WINDOW (window), &x, &y);
+    gtk_window_get_size (GTK_WINDOW (window), &w, &h);
+
+    [config setIntegerEntry:@"x" inGroup:@"ToolBox" value:x];
+    [config setIntegerEntry:@"y" inGroup:@"ToolBox" value:y];
+    [config setIntegerEntry:@"w" inGroup:@"ToolBox" value:w];
+    [config setIntegerEntry:@"h" inGroup:@"ToolBox" value:h];
 }
 
 @end

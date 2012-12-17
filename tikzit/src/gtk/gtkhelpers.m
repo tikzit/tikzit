@@ -133,4 +133,92 @@ GdkPixbuf * pixbuf_get_from_surface(cairo_surface_t *surface) {
     return pixbuf;
 }
 
+/* This function mostly lifted from
+ * gtk+/gdk/gdkscreen.c:gdk_screen_get_monitor_at_window()
+ */
+static gint
+get_appropriate_monitor (GdkScreen *screen,
+                         gint       x,
+                         gint       y,
+                         gint       w,
+                         gint       h)
+{
+  GdkRectangle rect;
+  gint         area    = 0;
+  gint         monitor = -1;
+  gint         num_monitors;
+  gint         i;
+
+  rect.x      = x;
+  rect.y      = y;
+  rect.width  = w;
+  rect.height = h;
+
+  num_monitors = gdk_screen_get_n_monitors (screen);
+
+  for (i = 0; i < num_monitors; i++)
+    {
+      GdkRectangle geometry;
+
+      gdk_screen_get_monitor_geometry (screen, i, &geometry);
+
+      if (gdk_rectangle_intersect (&rect, &geometry, &geometry) &&
+          geometry.width * geometry.height > area)
+        {
+          area = geometry.width * geometry.height;
+          monitor = i;
+        }
+    }
+
+  if (monitor >= 0)
+    return monitor;
+  else
+    return gdk_screen_get_monitor_at_point (screen,
+                                            rect.x + rect.width / 2,
+                                            rect.y + rect.height / 2);
+}
+
+/* This function mostly lifted from gimp_session_info_apply_geometry
+ * in gimp-2.6/app/widgets/gimpsessioninfo.c
+ */
+void tz_restore_window (GtkWindow *window, gint x, gint y, gint w, gint h)
+{
+    gint forced_w = w;
+    gint forced_h = h;
+    if (w <= 0 || h <= 0) {
+        gtk_window_get_default_size (window, &w, &h);
+    }
+    if (w <= 0 || h <= 0) {
+        gtk_window_get_size (window, &w, &h);
+    }
+
+    GdkScreen *screen = gtk_widget_get_screen (GTK_WIDGET (window));
+
+    gint monitor = 0;
+    if (w > 0 && h > 0) {
+        monitor = get_appropriate_monitor (screen, x, y, w, h);
+    } else {
+        monitor = gdk_screen_get_monitor_at_point (screen, x, y);
+    }
+
+    GdkRectangle rect;
+    gdk_screen_get_monitor_geometry (screen, monitor, &rect);
+
+    x = CLAMP (x,
+               rect.x,
+               rect.x + rect.width - (w > 0 ?  w : 128));
+    y = CLAMP (y,
+               rect.y,
+               rect.y + rect.height - (h > 0 ? h : 128));
+
+    gchar geom[32];
+    g_snprintf (geom, sizeof (geom), "%+d%+d", x, y);
+
+    gtk_window_parse_geometry (window, geom);
+
+    if (forced_w > 0 && forced_h > 0) {
+        gtk_window_set_default_size (window, forced_w, forced_h);
+    }
+}
+
 // vim:ft=objc:ts=8:et:sts=4:sw=4

@@ -38,4 +38,6 @@ gint tz_hijack_key_press (GtkWindow *win,
 // Equivalent of GTK+3's gdk_pixbuf_get_from_surface()
 GdkPixbuf * pixbuf_get_from_surface(cairo_surface_t *surface);
 
+void tz_restore_window (GtkWindow *window, gint x, gint y, gint w, gint h);
+
 // vim:ft=objc:sts=2:sw=2:et

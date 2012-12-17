@@ -123,6 +123,7 @@ Application* app = nil;
                selector:@selector(selectedToolChanged:)
                    name:@"ToolSelectionChanged"
                  object:toolBox];
+        [toolBox show];
 
         propertiesWindow = [[PropertiesWindow alloc] init];
         [propertiesWindow loadConfiguration:configFile];

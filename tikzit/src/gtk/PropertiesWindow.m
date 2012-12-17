@@ -215,6 +215,9 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
             G_CALLBACK (edge_node_label_changed_cb),
             self);
 
+        // hack to position the props window somewhere sensible
+        // (upper right)
+        gtk_window_parse_geometry (GTK_WINDOW (window), "-0+0");
     }
 
     return self;
@@ -289,12 +292,28 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesWindow *pan
 }
 
 - (void) loadConfiguration:(Configuration*)config {
+    if ([config hasGroup:@"PropertiesWindow"]) {
+        tz_restore_window (GTK_WINDOW (window),
+                [config integerEntry:@"x" inGroup:@"PropertiesWindow"],
+                [config integerEntry:@"y" inGroup:@"PropertiesWindow"],
+                [config integerEntry:@"w" inGroup:@"PropertiesWindow"],
+                [config integerEntry:@"h" inGroup:@"PropertiesWindow"]);
+    }
     [self setVisible:[config booleanEntry:@"visible"
                                   inGroup:@"PropertiesWindow"
                               withDefault:YES]];
 }
 
 - (void) saveConfiguration:(Configuration*)config {
+    gint x, y, w, h;
+
+    gtk_window_get_position (GTK_WINDOW (window), &x, &y);
+    gtk_window_get_size (GTK_WINDOW (window), &w, &h);
+
+    [config setIntegerEntry:@"x" inGroup:@"PropertiesWindow" value:x];
+    [config setIntegerEntry:@"y" inGroup:@"PropertiesWindow" value:y];
+    [config setIntegerEntry:@"w" inGroup:@"PropertiesWindow" value:w];
+    [config setIntegerEntry:@"h" inGroup:@"PropertiesWindow" value:h];
     [config setBooleanEntry:@"visible"
                     inGroup:@"PropertiesWindow"
                       value:[self visible]];
