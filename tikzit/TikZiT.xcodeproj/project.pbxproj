@@ -34,6 +34,7 @@
 		55397C911449AC7C006942FB /* AH_plain_head.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C8F1449AC7C006942FB /* AH_plain_head.png */; };
 		553A4C5A144ED3D500AA6FAC /* NilToEmptyStringTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */; };
 		55432E061444BF2D00401BB3 /* GraphElementProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 55432E051444BF2D00401BB3 /* GraphElementProperty.m */; };
+		55598E351635372E0023450A /* DiamondShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55598E341635372E0023450A /* DiamondShape.m */; };
 		555B30F911D8BE3300CAECF5 /* emblem-important.png in Resources */ = {isa = PBXBuildFile; fileRef = 555B30F811D8BE3300CAECF5 /* emblem-important.png */; };
 		555B313511D8C6DA00CAECF5 /* color.m in Sources */ = {isa = PBXBuildFile; fileRef = 555B313411D8C6DA00CAECF5 /* color.m */; };
 		555ECE9B1378A3AA0052DB71 /* CALayer+DrawLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 555ECE9A1378A3AA0052DB71 /* CALayer+DrawLabel.m */; };
@@ -200,6 +201,8 @@
 		553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NilToEmptyStringTransformer.m; path = src/osx/NilToEmptyStringTransformer.m; sourceTree = "<group>"; };
 		55432E041444BF2D00401BB3 /* GraphElementProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphElementProperty.h; path = src/common/GraphElementProperty.h; sourceTree = "<group>"; };
 		55432E051444BF2D00401BB3 /* GraphElementProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphElementProperty.m; path = src/common/GraphElementProperty.m; sourceTree = "<group>"; };
+		55598E331635372E0023450A /* DiamondShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiamondShape.h; path = src/common/DiamondShape.h; sourceTree = "<group>"; };
+		55598E341635372E0023450A /* DiamondShape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DiamondShape.m; path = src/common/DiamondShape.m; sourceTree = "<group>"; };
 		555B30F811D8BE3300CAECF5 /* emblem-important.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emblem-important.png"; sourceTree = "<group>"; };
 		555B313411D8C6DA00CAECF5 /* color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = color.m; path = src/common/test/color.m; sourceTree = "<group>"; };
 		555ECE991378A3AA0052DB71 /* CALayer+DrawLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+DrawLabel.h"; path = "src/osx/CALayer+DrawLabel.h"; sourceTree = "<group>"; };
@@ -521,6 +524,8 @@
 		55900AFC13605498002DD28E /* Shapes */ = {
 			isa = PBXGroup;
 			children = (
+				55598E331635372E0023450A /* DiamondShape.h */,
+				55598E341635372E0023450A /* DiamondShape.m */,
 				55652E3F13E1FB0A0023F4C6 /* Shape.h */,
 				55652E4013E1FB0A0023F4C6 /* Shape.m */,
 				55652E3313E1FAED0023F4C6 /* CircleShape.h */,
@@ -831,6 +836,7 @@
 				55397C7C144990EA006942FB /* EdgeStyle+Coder.m in Sources */,
 				55397C7F144999C4006942FB /* PropertyHolder.m in Sources */,
 				553A4C5A144ED3D500AA6FAC /* NilToEmptyStringTransformer.m in Sources */,
+				55598E351635372E0023450A /* DiamondShape.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
