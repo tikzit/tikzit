@@ -51,7 +51,9 @@
 	preambleController =
 	[[PreambleController alloc] initWithWindowNibName:@"Preamble"
 												plist:preamblePlist
-											   styles:[stylePaletteController nodeStyles]];
+											   styles:[stylePaletteController nodeStyles]
+											    edges:[stylePaletteController edgeStyles]];
+    
 	
 	char template[] = "/tmp/tikzit_tmp_XXXXXXX";
 	char *dir = mkdtemp(template);

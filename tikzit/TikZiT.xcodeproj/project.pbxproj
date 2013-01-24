@@ -129,6 +129,7 @@
 		7F6E2C8916B0091300BFE20D /* maths.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F6E2C8716B0091300BFE20D /* maths.m */; };
 		7F6E2C8A16B0096000BFE20D /* SupportDir.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652DF813E1F2030023F4C6 /* SupportDir.m */; };
 		7F6E2C8C16B00ABA00BFE20D /* SFBInspectors.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
+		7FEED45716B1A7C500B056CB /* StyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FEED45616B1A7C500B056CB /* StyleManager.m */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
@@ -338,6 +339,8 @@
 		55F9E04411FF54F000F5659E /* NSString+LatexConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+LatexConstants.m"; path = "src/common/NSString+LatexConstants.m"; sourceTree = "<group>"; };
 		55FF4E64116A401B000C22B4 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		7F6E2C8716B0091300BFE20D /* maths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = maths.m; path = src/common/test/maths.m; sourceTree = "<group>"; };
+		7FEED45516B1A7C400B056CB /* StyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StyleManager.h; path = src/common/StyleManager.h; sourceTree = "<group>"; };
+		7FEED45616B1A7C500B056CB /* StyleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StyleManager.m; path = src/common/StyleManager.m; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* TikZiT-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "TikZiT-Info.plist"; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* TikZiT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TikZiT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -593,6 +596,8 @@
 				558F18BD117B031C009863B2 /* GraphChange.h */,
 				558F18BE117B031C009863B2 /* GraphChange.m */,
 				558F18BF117B031C009863B2 /* GraphElementData.h */,
+				7FEED45516B1A7C400B056CB /* StyleManager.h */,
+				7FEED45616B1A7C500B056CB /* StyleManager.m */,
 				558F18C0117B031C009863B2 /* GraphElementData.m */,
 				558F18C1117B031C009863B2 /* Node.h */,
 				558F18C2117B031C009863B2 /* Node.m */,
@@ -875,6 +880,7 @@
 				55397C7F144999C4006942FB /* PropertyHolder.m in Sources */,
 				553A4C5A144ED3D500AA6FAC /* NilToEmptyStringTransformer.m in Sources */,
 				55598E351635372E0023450A /* DiamondShape.m in Sources */,
+				7FEED45716B1A7C500B056CB /* StyleManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -169,9 +169,11 @@
 	else if (headStyle == AH_Latex)
 		[buf appendString:@"latex"];
 
-	[buf appendString:@",draw="];
-	[buf appendString:colorName];
-
+    if(colorName != nil){
+        [buf appendString:@",draw="];
+        [buf appendString:colorName];
+    }
+        
 	if (decorationStyle != ED_None) {
 		[buf appendString:@",postaction={decorate},decoration={markings,mark="];
 		if (decorationStyle == ED_Arrow)

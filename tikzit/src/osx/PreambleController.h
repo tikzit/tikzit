@@ -44,7 +44,7 @@
 @property (retain) NSAttributedString *preambleText;
 @property (retain) NSIndexSet *selectionIndexes;
 
-- (id)initWithWindowNibName:(NSString *)windowNibName plist:(NSString*)plist styles:(NSArray*)sty;
+- (id)initWithWindowNibName:(NSString *)windowNibName plist:(NSString*)plist styles:(NSArray*)sty edges:(NSArray*)edg;
 - (void)savePreambles:(NSString*)plist;
 - (NSString*)currentPreamble;
 - (NSString*)currentPostamble;
