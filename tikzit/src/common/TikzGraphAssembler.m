@@ -37,9 +37,9 @@ static id currentAssembler = nil;
 void yyerror(const char *str) {
 	NSLog(@"Parse error: %s", str);
 	if (currentAssembler != nil) {
-		NSError *error = [NSError
-			errorWithMessage:[NSString stringWithCString:str]
-						code:TZ_ERR_PARSE];
+        NSError *error = [NSError errorWithDomain:@"net.sourceforge.tikzit"
+                                     code:TZ_ERR_PARSE
+                                         userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithCString:str] forKey: NSLocalizedDescriptionKey]];
 		[currentAssembler invalidateWithError:error];
 	}
 }
@@ -137,14 +137,19 @@ int yywrap() {
 	currentEdge = nil;
 }
 
-- (void)setEdgeSource:(NSString*)src target:(NSString*)targ {
-	if (![targ isEqualToString:@""]) {
-		[currentEdge setSource:[nodeMap objectForKey:src]];
-		[currentEdge setTarget:[nodeMap objectForKey:targ]];
+- (void)setEdgeSource:(NSString*)edge anchor:(NSString*)anch {
+    Node *s = [nodeMap objectForKey:edge];
+    [currentEdge setSource:s];
+    [currentEdge setSourceAnchor:anch];
+}
+
+- (void)setEdgeTarget:(NSString*)edge anchor:(NSString*)anch {
+	if (![edge isEqualToString:@""]) {
+		[currentEdge setTarget:[nodeMap objectForKey:edge]];
+        [currentEdge setTargetAnchor:anch];
 	} else {
-		Node *s = [nodeMap objectForKey:src];
-		[currentEdge setSource:s];
-		[currentEdge setTarget:s];
+        [currentEdge setTargetAnchor:anch];
+        [currentEdge setTarget:[currentEdge source]];
 	}
 }
 

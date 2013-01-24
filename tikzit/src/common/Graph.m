@@ -726,10 +726,10 @@
 		[code appendFormat:@"\t\t\\draw%@ (%@%@) to %@(%@%@);\n",
 			([edata isEqual:@""]) ? @"" : [NSString stringWithFormat:@" %@", edata],
 			[[e source] name],
-			([[e source] style] == nil) ? @".center" : @"",
+         ([[e source] style] == nil) ? @".center" : ([e sourceAnchor] == @"") ? @"" : [NSString stringWithFormat:@".%@", [e sourceAnchor]],
 			nodeStr,
 			([e source] == [e target]) ? @"" : [[e target] name],
-			([e source] != [e target] && [[e target] style] == nil) ? @".center" : @""
+			([e source] != [e target] && [[e target] style] == nil) ? @".center" : ([e targetAnchor] == @"") ? @"" : [NSString stringWithFormat:@".%@", [e targetAnchor]]
 		];
 	}
 	

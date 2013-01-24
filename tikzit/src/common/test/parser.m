@@ -34,7 +34,7 @@ void testParser() {
 	
 	[TikzGraphAssembler setup];
 	
-	NodeStyle *rn = [NodeStyle defaultStyleWithName:@"rn"];
+	NodeStyle *rn = [NodeStyle defaultNodeStyleWithName:@"rn"];
 	NSArray *styles = [NSArray arrayWithObject:rn];
 	
 	NSString *tikz =
@@ -74,9 +74,12 @@ void testParser() {
 	
 	TEST(@"Edge has edge node", [e1 edgeNode]!=nil);
 	TEST(@"Edge node labeled correctly", [[[e1 edgeNode] label] isEqualToString:@"-"]);
-	NSString *sty = [[[[[e1 edgeNode] data] atoms] objectEnumerator] nextObject];
-	TEST(@"Edge node styled correctly", sty!=nil && [sty isEqualToString:@"tick"]);
-	
+//	NSString *sty = [[[[[e1 edgeNode] data] atoms] objectEnumerator] nextObject];
+//	TEST(@"Edge node styled correctly", sty!=nil && [sty isEqualToString:@"tick"]);
+    
+    PUTS(@"Source anchor: %@",[e1 sourceAnchor]);
+    PUTS(@"Target anchor: %@",[e1 targetAnchor]);
+    
 	endTestBlock(@"parser");
 	
 	[pool drain];

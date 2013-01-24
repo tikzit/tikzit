@@ -39,6 +39,8 @@
 	source = nil;
 	target = nil;
 	edgeNode = nil;
+    sourceAnchor = [[NSString alloc] initWithString:@""];
+    targetAnchor = [[NSString alloc] initWithString:@""];
 	
 	return self;
 }
@@ -389,6 +391,25 @@
     [self didChangeValueForKey:@"hasEdgeNode"];
 }
 
+@synthesize sourceAnchor;
+@synthesize targetAnchor;
+
+- (void)setSourceAnchor:(NSString *)_sourceAnchor{
+    if(_sourceAnchor != nil){
+        sourceAnchor = _sourceAnchor;
+    }else{
+        sourceAnchor = @"";
+    }
+}
+
+- (void)setTargetAnchor:(NSString *)_targetAnchor{
+    if(_targetAnchor != nil){
+        targetAnchor = _targetAnchor;
+    }else{
+        targetAnchor = @"";
+    }
+}
+
 @synthesize data;
 - (void) insertObject:(GraphElementProperty*)gep
 		inDataAtIndex:(NSUInteger)index {
@@ -587,6 +608,8 @@
 	[source release];
 	[target release];
 	[data release];
+    [sourceAnchor release];
+    [targetAnchor release];
 	[super dealloc];
 }
 

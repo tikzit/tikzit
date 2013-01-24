@@ -160,7 +160,7 @@ void runTests();
 int main() {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	setColorEnabled (YES);
+	setColorEnabled (NO);
 	startTests();
 
 	runTests();

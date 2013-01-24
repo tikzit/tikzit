@@ -39,13 +39,13 @@
 \\end                          return LATEXEND;
 \{tikzpicture\}                return TIKZPICTURE;
 \{pgfonlayer\}                 return PGFONLAYER;
-\.center                       return ANCHORCENTER;
 \(                             return LEFTPARENTHESIS;
 \)                             return RIGHTPARENTHESIS;		       
 \[                             return LEFTBRACKET;
 \]                             return RIGHTBRACKET;
 ;                              return SEMICOLON;
 ,                              return COMMA;
+\.                             return FULLSTOP;
 =                              return EQUALS;
 \\draw                         return DRAW;
 to                             return TO;
@@ -65,7 +65,7 @@ at                             return AT;
 	return REALNUMBER;
 }
 
-\\?[a-zA-Z<>\-\']+ { //'
+\\?[a-zA-Z<>\-\'][a-zA-Z<>\-\'0-9]* { //'
 	yylval.nsstr=[NSString stringWithUTF8String:yytext];
 	return LWORD;
 }
