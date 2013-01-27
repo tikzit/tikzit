@@ -29,6 +29,9 @@
 #import "TikzGraphAssembler.h"
 #import "GraphElementProperty.h"
 	
+extern char* yystr;
+extern int yylineno;
+extern int tokenpos;
 extern int yylex(void);
 extern void yyerror(const char *str);
 

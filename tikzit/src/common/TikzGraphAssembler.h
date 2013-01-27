@@ -41,6 +41,8 @@
 - (BOOL)parseTikz:(NSString*)tikz;
 - (BOOL)parseTikz:(NSString*)tikz forGraph:(Graph*)gr;
 
+- (BOOL)testTikz:(NSString*)tikz;
+
 - (void)prepareNode;
 - (void)finishNode;
 

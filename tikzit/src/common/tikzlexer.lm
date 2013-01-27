@@ -1,4 +1,6 @@
 %option nounput
+%option yylineno
+
 %{
 //
 //  tikzparser.l
@@ -30,48 +32,62 @@
 #include "tikzparser.h"
 #endif
 
+extern char linebuff[500];
+extern int lineno;
+extern yy_size_t yyleng;
+extern int tokenpos;
 
 %}
 %%
-\n                             /* ignore end of line */;
-[ \t]+                         /* ignore whitespace */;
-\\begin                        return LATEXBEGIN;
-\\end                          return LATEXEND;
-\{tikzpicture\}                return TIKZPICTURE;
-\{pgfonlayer\}                 return PGFONLAYER;
-\(                             return LEFTPARENTHESIS;
-\)                             return RIGHTPARENTHESIS;		       
-\[                             return LEFTBRACKET;
-\]                             return RIGHTBRACKET;
-;                              return SEMICOLON;
-,                              return COMMA;
-\.                             return FULLSTOP;
-=                              return EQUALS;
-\\draw                         return DRAW;
-to                             return TO;
-\\node                         return NODE;
-\\path                         return PATH;
-node                           return ALTNODE;
-rectangle                      return RECTANGLE;
-at                             return AT;
+%\n                             /* ignore end of line */;
+\n.*    {   strcpy(linebuff, yytext+1);
+            lineno++;
+            tokenpos = 0;
+            yyless(1);
+        }
+[ ]+                           { tokenpos += yyleng; } /* ignore whitespace */;
+[\t]+                          { tokenpos += 4*yyleng; } /* ignore whitespace */;
+\\begin                        { tokenpos += yyleng; return LATEXBEGIN; }
+\\end                          { tokenpos += yyleng; return LATEXEND; }
+\{tikzpicture\}                { tokenpos += yyleng; return TIKZPICTURE; }
+\{pgfonlayer\}                 { tokenpos += yyleng; return PGFONLAYER; }
+\(                             { tokenpos += yyleng; return LEFTPARENTHESIS; }
+\)                             { tokenpos += yyleng; return RIGHTPARENTHESIS; }	       
+\[                             { tokenpos += yyleng; return LEFTBRACKET; }
+\]                             { tokenpos += yyleng; return RIGHTBRACKET; }
+;                              { tokenpos += yyleng; return SEMICOLON; }
+,                              { tokenpos += yyleng; return COMMA; }
+\.                             { tokenpos += yyleng; return FULLSTOP; }
+=                              { tokenpos += yyleng; return EQUALS; }
+\\draw                         { tokenpos += yyleng; return DRAW; }
+to                             { tokenpos += yyleng; return TO; }
+\\node                         { tokenpos += yyleng; return NODE; }
+\\path                         { tokenpos += yyleng; return PATH; }
+node                           { tokenpos += yyleng; return ALTNODE; }
+rectangle                      { tokenpos += yyleng; return RECTANGLE; }
+at                             { tokenpos += yyleng; return AT; }
 
 [0-9]+ {
+    tokenpos += yyleng;
 	yylval.nsstr=[NSString stringWithUTF8String:yytext];
 	return NATURALNUMBER;
 }
 
 (\-?[0-9]*\.[0-9]+)|(\-?[0-9]+) {
+    tokenpos += yyleng;
 	yylval.nsstr=[NSString stringWithUTF8String:yytext];
 	return REALNUMBER;
 }
 
 \\?[a-zA-Z<>\-\'][a-zA-Z<>\-\'0-9]* { //'
+    tokenpos += yyleng;
 	yylval.nsstr=[NSString stringWithUTF8String:yytext];
 	return LWORD;
 }
 
 
 \"[^\"]*\" /* " */ {
+    tokenpos += yyleng;
 	yylval.nsstr=[NSString stringWithUTF8String:yytext];
 	return QUOTEDSTRING;
 }
@@ -93,8 +109,10 @@ at                             return AT;
 	}
 	
 	NSString *s = [buf copy];
+    yyleng += 1 + [buf length];
 	[s autorelease];
 	yylval.nsstr = s;
+    tokenpos += yyleng;
 	return DELIMITEDSTRING;
 }
 
