@@ -97,6 +97,8 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
 @implementation Window
 
+@synthesize gtkWindow=window;
+
 - (id) init {
     return [self initWithDocument:[TikzDocument documentWithStyleManager:[app styleManager]]];
 }

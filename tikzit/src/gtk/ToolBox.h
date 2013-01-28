@@ -19,6 +19,7 @@
 #import <gtk/gtk.h>
 
 @class Configuration;
+@class Window;
 @protocol Tool;
 
 @interface ToolBox : NSObject {
@@ -29,12 +30,13 @@
     GtkWidget        *configWidget;
 }
 
-@property (assign) id<Tool> selectedTool;
+@property (assign) id<Tool>   selectedTool;
 
 - (id) initWithTools:(NSArray*)tools;
 
 - (void) show;
 - (void) present;
+- (void) setTransientFor:(Window*)w;
 
 - (void) loadConfiguration:(Configuration*)config;
 - (void) saveConfiguration:(Configuration*)config;

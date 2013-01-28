@@ -20,6 +20,7 @@
 #import "Application.h"
 #import "Configuration.h"
 #import "Tool.h"
+#import "Window.h"
 
 #import "gtkhelpers.h"
 #import "tztoolpalette.h"
@@ -226,6 +227,10 @@ static void tool_button_toggled_cb (GtkWidget *widget, ToolBox *toolBox);
 
 - (void) present {
     gtk_window_present (GTK_WINDOW (window));
+}
+
+- (void) setTransientFor:(Window*)parent {
+    gtk_window_set_transient_for (GTK_WINDOW (window), [parent gtkWindow]);
 }
 
 - (void) loadConfiguration:(Configuration*)config {

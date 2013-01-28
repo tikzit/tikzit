@@ -345,6 +345,8 @@ Application* app = nil;
                                                   object:window];
     if ([openWindows count] == 0) {
         gtk_main_quit();
+    } else {
+        [self setActiveWindow:[openWindows objectAtIndex:0]];
     }
 }
 
@@ -373,6 +375,9 @@ Application* app = nil;
                                                   object:nil];
 
     [contextWindow setDocument:[window document]];
+
+    [contextWindow setTransientFor:window];
+    [toolBox setTransientFor:window];
 
     [[NSNotificationCenter defaultCenter]
         addObserver:self

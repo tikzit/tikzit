@@ -23,6 +23,7 @@
 #import "PropertiesPane.h"
 #import "SelectionPane.h"
 #import "StyleManager.h"
+#import "Window.h"
 
 #import "gtkhelpers.h"
 
@@ -117,6 +118,10 @@ static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event
 
 - (void) present {
     gtk_window_present (GTK_WINDOW (window));
+}
+
+- (void) setTransientFor:(Window*)parent {
+    gtk_window_set_transient_for (GTK_WINDOW (window), [parent gtkWindow]);
 }
 
 - (void) loadConfiguration:(Configuration*)config {

@@ -25,6 +25,7 @@
 @class SelectionPane;
 @class StyleManager;
 @class TikzDocument;
+@class Window;
 
 @interface ContextWindow: NSObject {
     PropertiesPane  *propsPane;
@@ -42,6 +43,7 @@
             andEdgeStylesModel:(EdgeStylesModel*)esm;
 
 - (void) present;
+- (void) setTransientFor:(Window*)parent;
 
 - (void) loadConfiguration:(Configuration*)config;
 - (void) saveConfiguration:(Configuration*)config;

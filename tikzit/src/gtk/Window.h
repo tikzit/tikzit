@@ -59,8 +59,8 @@
  * The document displayed by the window
  */
 @property (retain)   TikzDocument *document;
-
 @property (readonly) BOOL          hasFocus;
+@property (readonly) GtkWindow    *gtkWindow;
 
 /**
  * Create a window with an empty document
