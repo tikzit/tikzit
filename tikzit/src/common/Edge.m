@@ -39,8 +39,8 @@
 	source = nil;
 	target = nil;
 	edgeNode = nil;
-    sourceAnchor = [[NSString alloc] initWithString:@""];
-    targetAnchor = [[NSString alloc] initWithString:@""];
+    sourceAnchor = @"";
+    targetAnchor = @"";
 	
 	return self;
 }

@@ -722,14 +722,33 @@
 		}
 		
 		NSString *edata = [[e data] stringList];
+        
+        NSString *srcAnchor;
+        NSString *tgtAnchor;
+        
+        if ([[e source] style] == nil) {
+            srcAnchor = @".center";
+        } else if ([[e sourceAnchor] isEqual:@""]) {
+            srcAnchor = @"";
+        } else {
+            srcAnchor = [NSString stringWithFormat:@".%@", [e sourceAnchor]];
+        }
+        
+        if ([[e target] style] == nil) {
+            tgtAnchor = @".center";
+        } else if ([[e targetAnchor] isEqual:@""]) {
+            tgtAnchor = @"";
+        } else {
+            tgtAnchor = [NSString stringWithFormat:@".%@", [e targetAnchor]];
+        }
 		
 		[code appendFormat:@"\t\t\\draw%@ (%@%@) to %@(%@%@);\n",
 			([edata isEqual:@""]) ? @"" : [NSString stringWithFormat:@" %@", edata],
 			[[e source] name],
-         ([[e source] style] == nil) ? @".center" : ([e sourceAnchor] == @"") ? @"" : [NSString stringWithFormat:@".%@", [e sourceAnchor]],
+            srcAnchor,
 			nodeStr,
 			([e source] == [e target]) ? @"" : [[e target] name],
-			([e source] != [e target] && [[e target] style] == nil) ? @".center" : ([e targetAnchor] == @"") ? @"" : [NSString stringWithFormat:@".%@", [e targetAnchor]]
+			tgtAnchor
 		];
 	}
 	
