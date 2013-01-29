@@ -34,7 +34,6 @@
 
 extern char linebuff[500];
 extern int lineno;
-extern yy_size_t yyleng;
 extern int tokenpos;
 
 %}

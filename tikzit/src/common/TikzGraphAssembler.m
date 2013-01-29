@@ -34,11 +34,11 @@ extern int yylex_destroy(void);
 static NSLock *parseLock = nil;
 static id currentAssembler = nil;
 
-int yylineno;
-int yyleng;
+extern int yylineno;
+extern int yyleng;
 int lineno;
 int tokenpos;
-char *yystr;
+extern char *yystr;
 char linebuff[500];
 
 
