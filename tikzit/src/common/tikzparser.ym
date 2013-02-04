@@ -119,7 +119,12 @@ propsyms:
 
 propsym:
 	LWORD { $$ = $<nsstr>1; }
-	| number { $$ = $<nsstr>1; };
+	| number { $$ = $<nsstr>1; }
+	| TO { $$ = @"to"; }
+	| NODE { $$ = @"node"; }
+	| RECTANGLE { $$ = @"rectangle"; }
+	| AT { $$ = @"at"; }
+	| FULLSTOP { $$ = @"."; };
 
 
 nodecmd : NODE { [[TikzGraphAssembler currentAssembler] prepareNode]; };
