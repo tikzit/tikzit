@@ -85,12 +85,6 @@ at                             { tokenpos += yyleng; return AT; }
 }
 
 
-\"[^\"]*\" /* " */ {
-    tokenpos += yyleng;
-	yylval.nsstr=[NSString stringWithUTF8String:yytext];
-	return QUOTEDSTRING;
-}
-
 \{ {
 	NSMutableString *buf = [NSMutableString string];
 	unsigned int brace_depth = 1;

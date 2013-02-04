@@ -1,4 +1,4 @@
-%expect 6
+// %expect 3
 
 %{
 //
@@ -66,7 +66,6 @@ extern void yyerror(const char *str);
 %token REALNUMBER
 %token NATURALNUMBER
 %token LWORD
-%token QUOTEDSTRING
 %token DELIMITEDSTRING
 
 %type<nsstr> nodename
@@ -94,14 +93,14 @@ properties: property extraproperties;
 extraproperties: COMMA property extraproperties | property extraproperties | ;
 
 property:
-	propsyms EQUALS val
+	val EQUALS val
 	{
 		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
 		GraphElementProperty *p = [[GraphElementProperty alloc] initWithPropertyValue:$<nsstr>3 forKey:$<nsstr>1];
 		[[a data] addObject:p];
 		[p release];
 	}
-	| propsyms
+	| val
 	{
 		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
 		GraphElementProperty *p = [[GraphElementProperty alloc] initWithAtomName:$<nsstr>1];
@@ -109,7 +108,7 @@ property:
 		[p release];
 	};
 
-val: propsyms { $$ = $<nsstr>1; } | QUOTEDSTRING { $$ = $<nsstr>1; } | DELIMITEDSTRING { $$ = $<nsstr>1; };
+val: propsyms { $$ = $<nsstr>1; } | DELIMITEDSTRING { $$ = $<nsstr>1; };
 propsyms:
 	propsym { $$ = $<nsstr>1; }
 	| propsyms propsym
