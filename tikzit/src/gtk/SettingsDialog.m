@@ -18,6 +18,8 @@
 #import "SettingsDialog.h"
 
 #import "Configuration.h"
+#import "EdgeStylesPalette.h"
+#import "NodeStylesPalette.h"
 
 // {{{ Internal interfaces
 // {{{ Signals
@@ -45,11 +47,12 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     return nil;
 }
 
-- (id) initWithConfiguration:(Configuration*)c {
+- (id) initWithConfiguration:(Configuration*)c andStyleManager:(StyleManager*)m {
     self = [super init];
 
     if (self) {
         configuration = [c retain];
+        styleManager = [m retain];
     }
 
     return self;
@@ -64,6 +67,9 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     }
 
     [configuration release];
+    [styleManager release];
+    [nodePalette release];
+    [edgePalette release];
 
     [super dealloc];
 }
@@ -77,6 +83,19 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     [configuration release];
     configuration = c;
     [self revert];
+}
+
+- (StyleManager*) styleManager {
+    return styleManager;
+}
+
+- (void) setStyleManager:(StyleManager*)m {
+    [m retain];
+    [styleManager release];
+    styleManager = m;
+
+    [nodePalette setStyleManager:m];
+    [edgePalette setStyleManager:m];
 }
 
 - (GtkWindow*) parentWindow {
@@ -144,7 +163,11 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
         return;
     }
 
+    nodePalette = [[NodeStylesPalette alloc] initWithManager:styleManager];
+    edgePalette = [[EdgeStylesPalette alloc] initWithManager:styleManager];
+
     window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
+    gtk_window_set_default_size (window, 570, -1);
     gtk_window_set_title (window, "Preamble editor");
     gtk_window_set_modal (window, TRUE);
     gtk_window_set_position (window, GTK_WIN_POS_CENTER_ON_PARENT);
@@ -160,6 +183,7 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     GtkWidget *mainBox = gtk_vbox_new (FALSE, 18);
     gtk_container_set_border_width (GTK_CONTAINER (mainBox), 12);
     gtk_container_add (GTK_CONTAINER (window), mainBox);
+    gtk_widget_show (mainBox);
 
 #ifdef HAVE_POPPLER
     /*
@@ -183,9 +207,32 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     gtk_box_pack_start (pdflatexBox,
                         GTK_WIDGET (pdflatexPathEntry),
                         TRUE, TRUE, 0);
+
+    gtk_widget_show_all (pdflatexFrame);
 #else
     pdflatexPathEntry = NULL;
 #endif
+
+    /*
+     * Node styles
+     */
+    GtkWidget *nodeStylesFrame = gtk_frame_new ("Node Styles");
+    gtk_widget_show (nodeStylesFrame);
+    gtk_box_pack_start (GTK_BOX (mainBox), nodeStylesFrame, TRUE, TRUE, 0);
+    gtk_container_add (GTK_CONTAINER (nodeStylesFrame),
+            GTK_WIDGET ([nodePalette widget]));
+    gtk_widget_show ([nodePalette widget]);
+
+
+    /*
+     * Edge styles
+     */
+    GtkWidget *edgeStylesFrame = gtk_frame_new ("Edge Styles");
+    gtk_widget_show (edgeStylesFrame);
+    gtk_box_pack_start (GTK_BOX (mainBox), edgeStylesFrame, TRUE, TRUE, 0);
+    gtk_container_add (GTK_CONTAINER (edgeStylesFrame),
+            GTK_WIDGET ([edgePalette widget]));
+    gtk_widget_show ([edgePalette widget]);
 
 
     /*
@@ -213,9 +260,9 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
                       G_CALLBACK (cancel_button_clicked_cb),
                       self);
 
-    [self revert];
+    gtk_widget_show_all (GTK_WIDGET (buttonBox));
 
-    gtk_widget_show_all (mainBox);
+    [self revert];
 }
 
 - (void) save {

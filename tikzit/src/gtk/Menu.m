@@ -53,13 +53,13 @@ static void refresh_shapes_cb (GtkAction *action, Application *appl) {
     [pool drain];
 }
 
-#ifdef HAVE_POPPLER
 static void show_preferences_cb (GtkAction *action, Application *appl) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [appl showSettingsDialog];
     [pool drain];
 }
 
+#ifdef HAVE_POPPLER
 static void show_preamble_cb (GtkAction *action, Application *appl) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [appl showPreamblesEditor];
@@ -152,10 +152,10 @@ static GtkActionEntry app_action_entries[] = {
 
     { "Tool", NULL, N_("_Tool") },
 
-#ifdef HAVE_POPPLER
     { "ShowPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
       N_("Edit the TikZiT preferences"), G_CALLBACK (show_preferences_cb) },
 
+#ifdef HAVE_POPPLER
     { "ShowPreamble", NULL, N_("_Edit Preambles..."), NULL,
       N_("Edit the preambles used to generate the preview"), G_CALLBACK (show_preamble_cb) },
 #endif
@@ -503,10 +503,8 @@ static const gchar ui_info[] =
 "        <menuitem action='BringForward'/>"
 "        <menuitem action='BringToFront'/>"
 "      </menu>"
-#ifdef HAVE_POPPLER
 "      <separator/>"
 "      <menuitem action='ShowPreferences'/>"
-#endif
 "    </menu>"
 "    <menu action='ViewMenu'>"
 "      <menuitem action='ShowContextWindow'/>"

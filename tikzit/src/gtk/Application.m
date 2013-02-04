@@ -23,6 +23,7 @@
 #import "PreambleEditor.h"
 #import "ContextWindow.h"
 #import "Shape.h"
+#import "SettingsDialog.h"
 #import "StyleManager.h"
 #import "StyleManager+Storage.h"
 #import "SupportDir.h"
@@ -34,7 +35,6 @@
 #import "Preambles.h"
 #import "Preambles+Storage.h"
 #import "PreviewWindow.h"
-#import "SettingsDialog.h"
 #endif
 
 #import "BoundingBoxTool.h"
@@ -287,13 +287,12 @@ Application* app = nil;
 }
 
 - (void) showSettingsDialog {
-#ifdef HAVE_POPPLER
     if (settingsDialog == nil) {
-        settingsDialog = [[SettingsDialog alloc] initWithConfiguration:configFile];
+        settingsDialog = [[SettingsDialog alloc] initWithConfiguration:configFile
+                                                       andStyleManager:styleManager];
         //[settingsDialog setParentWindow:mainWindow];
     }
     [settingsDialog present];
-#endif
 }
 
 - (Configuration*) mainConfiguration {

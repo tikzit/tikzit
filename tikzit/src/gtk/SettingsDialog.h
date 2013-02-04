@@ -19,22 +19,30 @@
 #import <gtk/gtk.h>
 
 @class Configuration;
+@class EdgeStylesPalette;
+@class NodeStylesPalette;
+@class StyleManager;
 
 @interface SettingsDialog: NSObject {
-    Configuration *configuration;
+    Configuration     *configuration;
+    StyleManager      *styleManager;
+    NodeStylesPalette *nodePalette;
+    EdgeStylesPalette *edgePalette;
+
+    GtkWindow     *parentWindow;
+    GtkWindow     *window;
 
     // we don't keep any refs, as we control
     // the top window
-    GtkWindow     *parentWindow;
-    GtkWindow     *window;
     GtkEntry      *pdflatexPathEntry;
 }
 
 @property (retain) Configuration *configuration;
+@property (retain) StyleManager  *styleManager;
 @property (assign) GtkWindow     *parentWindow;
 @property (assign,getter=isVisible) BOOL visible;
 
-- (id) initWithConfiguration:(Configuration*)c;
+- (id) initWithConfiguration:(Configuration*)c andStyleManager:(StyleManager*)m;
 
 - (void) present;
 - (void) show;

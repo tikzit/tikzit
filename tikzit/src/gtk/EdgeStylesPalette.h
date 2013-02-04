@@ -21,10 +21,8 @@
 @class StyleManager;
 @class EdgeStyleSelector;
 @class EdgeStyleEditor;
-@class TikzDocument;
 
 @interface EdgeStylesPalette: NSObject {
-    TikzDocument          *document;
     EdgeStyleSelector     *selector;
     EdgeStyleEditor       *editor;
 
@@ -36,7 +34,6 @@
 }
 
 @property (retain)   StyleManager *styleManager;
-@property (retain)   TikzDocument *document;
 @property (readonly) GtkWidget    *widget;
 
 - (id) initWithManager:(StyleManager*)m;

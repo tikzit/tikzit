@@ -20,20 +20,16 @@
 #import "EdgeStyleSelector.h"
 #import "EdgeStyleEditor.h"
 #import "StyleManager.h"
-#import "TikzDocument.h"
 
 // {{{ Internal interfaces
 // {{{ GTK+ Callbacks
 static void add_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette);
 static void remove_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette);
-static void apply_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette);
-static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette);
 // }}}
 // {{{ Notifications
 
 @interface EdgeStylesPalette (Notifications)
 - (void) selectedStyleChanged:(NSNotification*)notification;
-- (void) edgeSelectionChanged:(NSNotification*)n;
 @end
 
 // }}}
@@ -42,8 +38,6 @@ static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette
 @interface EdgeStylesPalette (Private)
 - (void) updateButtonState;
 - (void) removeSelectedStyle;
-- (void) applySelectedStyle;
-- (void) clearSelectedStyle;
 @end
 
 // }}}
@@ -64,35 +58,40 @@ static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette
     self = [super init];
 
     if (self) {
-        document = nil;
         selector = [[EdgeStyleSelector alloc] initWithStyleManager:m];
         editor = [[EdgeStyleEditor alloc] init];
 
-        palette = gtk_vbox_new (FALSE, 0);
-        // FIXME: remove this line when we add edge styles
+        palette = gtk_vbox_new (FALSE, 6);
         gtk_container_set_border_width (GTK_CONTAINER (palette), 6);
-        gtk_box_set_spacing (GTK_BOX (palette), 6);
         g_object_ref_sink (palette);
 
-        gtk_box_pack_start (GTK_BOX (palette), [editor widget], FALSE, FALSE, 0);
-        gtk_widget_show ([editor widget]);
+        GtkWidget *mainBox = gtk_hbox_new (FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (palette), mainBox, FALSE, FALSE, 0);
+        gtk_widget_show (mainBox);
+
+        GtkWidget *selectorScroller = gtk_scrolled_window_new (NULL, NULL);
+        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (selectorScroller),
+                GTK_POLICY_NEVER,
+                GTK_POLICY_AUTOMATIC);
         GtkWidget *selectorFrame = gtk_frame_new (NULL);
-        gtk_container_add (GTK_CONTAINER (selectorFrame), [selector widget]);
-        gtk_box_pack_start (GTK_BOX (palette), selectorFrame, TRUE, TRUE, 0);
+        gtk_container_add (GTK_CONTAINER (selectorScroller), [selector widget]);
+        gtk_container_add (GTK_CONTAINER (selectorFrame), selectorScroller);
+        gtk_box_pack_start (GTK_BOX (mainBox), selectorFrame, TRUE, TRUE, 0);
+        gtk_widget_show (selectorScroller);
         gtk_widget_show (selectorFrame);
         gtk_widget_show ([selector widget]);
 
-        GtkBox *buttonBox = GTK_BOX (gtk_hbox_new(FALSE, 5));
-        gtk_box_pack_start (GTK_BOX (palette), GTK_WIDGET (buttonBox), FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (mainBox), [editor widget], TRUE, TRUE, 0);
+        gtk_widget_show ([editor widget]);
 
-        GtkBox *bbox1 = GTK_BOX (gtk_hbox_new(FALSE, 0));
-        gtk_box_pack_start (buttonBox, GTK_WIDGET (bbox1), FALSE, FALSE, 0);
+        GtkBox *buttonBox = GTK_BOX (gtk_hbox_new(FALSE, 0));
+        gtk_box_pack_start (GTK_BOX (palette), GTK_WIDGET (buttonBox), FALSE, FALSE, 0);
 
         GtkWidget *addStyleButton = gtk_button_new ();
         gtk_widget_set_tooltip_text (addStyleButton, "Add a new style");
         GtkWidget *addIcon = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_BUTTON);
         gtk_container_add (GTK_CONTAINER (addStyleButton), addIcon);
-        gtk_box_pack_start (bbox1, addStyleButton, FALSE, FALSE, 0);
+        gtk_box_pack_start (buttonBox, addStyleButton, FALSE, FALSE, 0);
         g_signal_connect (G_OBJECT (addStyleButton),
             "clicked",
             G_CALLBACK (add_style_button_cb),
@@ -103,31 +102,10 @@ static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette
         gtk_widget_set_tooltip_text (removeStyleButton, "Delete selected style");
         GtkWidget *removeIcon = gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_BUTTON);
         gtk_container_add (GTK_CONTAINER (removeStyleButton), removeIcon);
-        gtk_box_pack_start (bbox1, removeStyleButton, FALSE, FALSE, 0);
+        gtk_box_pack_start (buttonBox, removeStyleButton, FALSE, FALSE, 0);
         g_signal_connect (G_OBJECT (removeStyleButton),
             "clicked",
             G_CALLBACK (remove_style_button_cb),
-            self);
-
-        GtkBox *bbox2 = GTK_BOX (gtk_hbox_new(FALSE, 0));
-        gtk_box_pack_start (buttonBox, GTK_WIDGET (bbox2), FALSE, FALSE, 0);
-
-        applyStyleButton = gtk_button_new_with_label ("Apply");
-        g_object_ref_sink (applyStyleButton);
-        gtk_widget_set_tooltip_text (applyStyleButton, "Apply style to selected edges");
-        gtk_box_pack_start (bbox2, applyStyleButton, FALSE, FALSE, 5);
-        g_signal_connect (G_OBJECT (applyStyleButton),
-            "clicked",
-            G_CALLBACK (apply_style_button_cb),
-            self);
-
-        clearStyleButton = gtk_button_new_with_label ("Clear");
-        g_object_ref_sink (clearStyleButton);
-        gtk_widget_set_tooltip_text (clearStyleButton, "Clear style from selected edges");
-        gtk_box_pack_start (bbox2, clearStyleButton, FALSE, FALSE, 0);
-        g_signal_connect (G_OBJECT (clearStyleButton),
-            "clicked",
-            G_CALLBACK (clear_style_button_cb),
             self);
 
         gtk_widget_show_all (GTK_WIDGET (buttonBox));
@@ -151,40 +129,14 @@ static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette
     [[selector model] setStyleManager:m];
 }
 
-- (TikzDocument*) document {
-    return document;
-}
-
-- (void) setDocument:(TikzDocument*)doc {
-    if (document != nil) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:nil
-                                                      object:[document pickSupport]];
-    }
-
-    [doc retain];
-    [document release];
-    document = doc;
-
-    if (document != nil) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(edgeSelectionChanged:)
-                                                     name:@"EdgeSelectionChanged"
-                                                   object:[document pickSupport]];
-    }
-}
-
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [editor release];
     [selector release];
-    [document release];
 
     g_object_unref (palette);
     g_object_unref (removeStyleButton);
-    g_object_unref (applyStyleButton);
-    g_object_unref (clearStyleButton);
 
     [super dealloc];
 }
@@ -199,10 +151,6 @@ static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette
     [editor setStyle:[selector selectedStyle]];
     [self updateButtonState];
 }
-
-- (void) edgeSelectionChanged:(NSNotification*)n {
-    [self updateButtonState];
-}
 @end
 
 // }}}
@@ -210,11 +158,7 @@ static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette
 
 @implementation EdgeStylesPalette (Private)
 - (void) updateButtonState {
-    gboolean hasEdgeSelection = [[[document pickSupport] selectedEdges] count] > 0;
     gboolean hasStyleSelection = [selector selectedStyle] != nil;
-
-    gtk_widget_set_sensitive (applyStyleButton, hasEdgeSelection && hasStyleSelection);
-    gtk_widget_set_sensitive (clearStyleButton, hasEdgeSelection);
     gtk_widget_set_sensitive (removeStyleButton, hasStyleSelection);
 }
 
@@ -222,27 +166,6 @@ static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette
     EdgeStyle *style = [selector selectedStyle];
     if (style)
         [[[selector model] styleManager] removeEdgeStyle:style];
-}
-
-- (void) applySelectedStyle {
-    [document startModifyEdges:[[document pickSupport] selectedEdges]];
-
-    EdgeStyle *style = [selector selectedStyle];
-    for (Edge *edge in [[document pickSupport] selectedEdges]) {
-        [edge setStyle:style];
-    }
-
-    [document endModifyEdges];
-}
-
-- (void) clearSelectedStyle {
-    [document startModifyEdges:[[document pickSupport] selectedEdges]];
-
-    for (Edge *edge in [[document pickSupport] selectedEdges]) {
-        [edge setStyle:nil];
-    }
-
-    [document endModifyEdges];
 }
 
 @end
@@ -262,18 +185,6 @@ static void add_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) 
 static void remove_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [palette removeSelectedStyle];
-    [pool drain];
-}
-
-static void apply_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [palette applySelectedStyle];
-    [pool drain];
-}
-
-static void clear_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [palette clearSelectedStyle];
     [pool drain];
 }
 

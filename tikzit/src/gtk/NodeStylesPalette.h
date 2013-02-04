@@ -21,10 +21,8 @@
 @class StyleManager;
 @class NodeStyleSelector;
 @class NodeStyleEditor;
-@class TikzDocument;
 
 @interface NodeStylesPalette: NSObject {
-    TikzDocument          *document;
     NodeStyleSelector     *selector;
     NodeStyleEditor       *editor;
 
@@ -36,7 +34,6 @@
 }
 
 @property (retain)   StyleManager *styleManager;
-@property (retain)   TikzDocument *document;
 @property (readonly) GtkWidget    *widget;
 
 - (id) initWithManager:(StyleManager*)m;
