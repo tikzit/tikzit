@@ -19,7 +19,6 @@
 #import <gtk/gtk.h>
 
 @class Configuration;
-@class EdgeNodePropertyDelegate;
 @class EdgePropertyDelegate;
 @class EdgeStylesModel;
 @class GraphPropertyDelegate;
@@ -41,7 +40,6 @@
     GraphPropertyDelegate    *graphPropDelegate;
     NodePropertyDelegate     *nodePropDelegate;
     EdgePropertyDelegate     *edgePropDelegate;
-    EdgeNodePropertyDelegate *edgeNodePropDelegate;
 
     GtkWidget       *layout;
 

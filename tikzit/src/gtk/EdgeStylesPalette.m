@@ -17,6 +17,7 @@
 
 #import "EdgeStylesPalette.h"
 
+#import "EdgeStylesModel.h"
 #import "EdgeStyleSelector.h"
 #import "EdgeStyleEditor.h"
 #import "StyleManager.h"

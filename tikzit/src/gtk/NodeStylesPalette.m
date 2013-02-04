@@ -19,6 +19,7 @@
 
 #import "NodeStyleSelector.h"
 #import "NodeStyleEditor.h"
+#import "NodeStylesModel.h"
 #import "StyleManager.h"
 
 // {{{ Internal interfaces

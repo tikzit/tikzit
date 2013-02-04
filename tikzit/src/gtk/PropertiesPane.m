@@ -251,7 +251,6 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
     [graphPropDelegate release];
     [nodePropDelegate release];
     [edgePropDelegate release];
-    [edgeNodePropDelegate release];
 
     [document release];
 
