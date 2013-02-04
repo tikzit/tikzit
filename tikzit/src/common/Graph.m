@@ -675,7 +675,7 @@
 	
 	NSMutableString *code = [NSMutableString
 							 stringWithFormat:@"\\begin{tikzpicture}%@\n",
-							 [[self data] stringList]];
+							 [[self data] tikzList]];
 	
 	if ([self hasBoundingBox]) {
 		[code appendFormat:@"\t\\path [use as bounding box] (%@,%@) rectangle (%@,%@);\n",
@@ -696,7 +696,7 @@
 		[n updateData];
 		[n setName:[NSString stringWithFormat:@"%d", i]];
 		[code appendFormat:@"\t\t\\node %@ (%d) at (%@, %@) {%@};\n",
-			[[n data] stringList],
+			[[n data] tikzList],
 			i,
 			[NSNumber numberWithFloat:[n point].x],
 			[NSNumber numberWithFloat:[n point].y],
@@ -714,14 +714,14 @@
 		
 		if ([e hasEdgeNode]) {
 			nodeStr = [NSString stringWithFormat:@"node%@{%@} ",
-					   [[[e edgeNode] data] stringList],
+					   [[[e edgeNode] data] tikzList],
 					   [[e edgeNode] label]
 					   ];
 		} else {
 			nodeStr = @"";
 		}
 		
-		NSString *edata = [[e data] stringList];
+		NSString *edata = [[e data] tikzList];
         
         NSString *srcAnchor;
         NSString *tgtAnchor;

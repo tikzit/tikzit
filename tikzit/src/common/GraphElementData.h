@@ -85,7 +85,7 @@
  @brief      Returns a TikZ-friendly string containing all of the properties.
  @result     A string.
  */
-- (NSString*)stringList;
+- (NSString*)tikzList;
 
 @end
 

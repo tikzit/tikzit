@@ -120,7 +120,7 @@
 	return set;
 }
 
-- (NSString*)stringList {
+- (NSString*)tikzList {
 	NSString *s = [properties componentsJoinedByString:@", "];
 	return ([s isEqualToString:@""]) ? @"" : [NSString stringWithFormat:@"[%@]", s];
 }
