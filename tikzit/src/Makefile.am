@@ -60,6 +60,7 @@ tikzit_SOURCES = gtk/Application.m \
                  gtk/RecentManager.m \
                  gtk/SelectTool.m \
                  gtk/SelectionPane.m \
+                 gtk/SettingsDialog.m \
                  gtk/Shape+Render.m \
                  gtk/StyleManager+Storage.m \
                  gtk/TikzDocument.m \
@@ -110,8 +111,7 @@ tikzit_SOURCES += \
                  gtk/PreambleEditor.m \
                  gtk/Preambles+Storage.m \
                  gtk/PreviewRenderer.m \
-                 gtk/PreviewWindow.m \
-                 gtk/SettingsDialog.m
+                 gtk/PreviewWindow.m
 endif
 
 if WINDOWS
