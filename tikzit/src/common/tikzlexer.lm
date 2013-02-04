@@ -94,13 +94,19 @@ at                             { tokenpos += yyleng; return AT; }
 \{ {
 	NSMutableString *buf = [NSMutableString string];
 	unsigned int brace_depth = 1;
+	unsigned int escape = 0;
 	while (1) {
 		char c = input();
 		// eof reached before closing brace
 		if (c == '\0' || c == EOF) yyterminate();
 
-		if (c == '{') brace_depth++;
-		else if (c == '}') {
+		if (escape) {
+			escape = 0;
+		} else if (c == '\\') {
+			escape = 1;
+		} else if (c == '{') {
+			brace_depth++;
+		} else if (c == '}') {
 			brace_depth--;
 			if (brace_depth == 0) break;
 		}
