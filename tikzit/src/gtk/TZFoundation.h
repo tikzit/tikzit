@@ -24,5 +24,6 @@
 #import "NSFileManager+Utils.h"
 #import "NSString+Glib.h"
 #import "NSString+LatexConstants.h"
+#import "NSString+Tikz.h"
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4

@@ -50,4 +50,7 @@ void tz_restore_window (GtkWindow *window, gint x, gint y, gint w, gint h);
 
 void label_set_bold (GtkLabel *label);
 
+void widget_set_error (GtkWidget *widget);
+void widget_clear_error (GtkWidget *widget);
+
 // vim:ft=objc:sts=2:sw=2:et

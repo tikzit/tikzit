@@ -685,11 +685,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 - (void) _setHasParseError:(BOOL)hasError {
     if (hasError && !hasParseError) {
         gtk_statusbar_push (statusBar, 1, "Parse error");
-        GdkColor color = {0, 65535, 61184, 61184};
-        gtk_widget_modify_base (tikzPane, GTK_STATE_NORMAL, &color);
+        widget_set_error (tikzPane);
     } else if (!hasError && hasParseError) {
         gtk_statusbar_pop (statusBar, 1);
-        gtk_widget_modify_base (tikzPane, GTK_STATE_NORMAL, NULL);
+        widget_clear_error (tikzPane);
     }
     hasParseError = hasError;
 }

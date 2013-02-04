@@ -234,4 +234,13 @@ void label_set_bold (GtkLabel *label) {
     pango_attr_list_unref (attrs);
 }
 
+void widget_set_error (GtkWidget *widget) {
+    GdkColor color = {0, 65535, 61184, 61184};
+    gtk_widget_modify_base (widget, GTK_STATE_NORMAL, &color);
+}
+
+void widget_clear_error (GtkWidget *widget) {
+    gtk_widget_modify_base (widget, GTK_STATE_NORMAL, NULL);
+}
+
 // vim:ft=objc:ts=8:et:sts=4:sw=4

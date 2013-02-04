@@ -16,6 +16,7 @@
  */
 
 #import "PropertyListEditor.h"
+#import "gtkhelpers.h"
 
 // {{{ Constants
 
@@ -45,6 +46,12 @@ static void add_atom_clicked_cb (GtkButton *button,
                                  PropertyListEditor  *editor);
 static void remove_clicked_cb (GtkButton *button,
                                PropertyListEditor  *editor);
+static void text_editing_started (GtkCellRenderer     *cell,
+                                  GtkCellEditable     *editable,
+                                  const gchar         *path,
+                                  PropertyListEditor  *editor);
+static void text_changed_cb (GtkEditable *editable,
+                             PropertyListEditor *pane);
 
 // }}}
 // {{{ Private
@@ -94,6 +101,10 @@ static void remove_clicked_cb (GtkButton *button,
                                                            "text", PLM_NAME_COL,
                                                            NULL);
         gtk_tree_view_append_column (GTK_TREE_VIEW (view), column);
+        g_signal_connect (G_OBJECT (renderer),
+            "editing-started",
+            G_CALLBACK (text_editing_started),
+            self);
         g_signal_connect (G_OBJECT (renderer),
             "edited",
             G_CALLBACK (name_edited_cb),
@@ -237,6 +248,9 @@ static void remove_clicked_cb (GtkButton *button,
 
 @implementation PropertyListEditor (Private)
 - (void) updatePath:(gchar*)pathStr withValue:(NSString*)newText {
+    if (![newText isValidTikz])
+        return;
+
     GtkTreeIter iter;
     GtkTreePath *path = gtk_tree_path_new_from_string (pathStr);
 
@@ -265,6 +279,9 @@ static void remove_clicked_cb (GtkButton *button,
 }
 
 - (void) updatePath:(gchar*)pathStr withName:(NSString*)newText {
+    if (![newText isValidTikz])
+        return;
+
     GtkTreeIter iter;
     GtkTreePath *path = gtk_tree_path_new_from_string (pathStr);
 
@@ -417,6 +434,41 @@ static void remove_clicked_cb (GtkButton *button,
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     [editor removeSelected];
+    [pool drain];
+}
+
+static void text_editing_started (GtkCellRenderer    *cell,
+                                  GtkCellEditable    *editable,
+                                  const gchar        *path,
+                                  PropertyListEditor *editor)
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    if (GTK_IS_EDITABLE (editable) && GTK_IS_WIDGET (editable)) {
+        g_signal_handlers_disconnect_by_func (G_OBJECT (editable),
+            G_CALLBACK (text_changed_cb),
+            editor);
+        widget_clear_error (GTK_WIDGET (editable));
+        g_signal_connect (G_OBJECT (editable),
+            "changed",
+            G_CALLBACK (text_changed_cb),
+            editor);
+    }
+
+    [pool drain];
+}
+
+static void text_changed_cb (GtkEditable *editable, PropertyListEditor *pane)
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    NSString *newValue = gtk_editable_get_string (editable, 0, -1);
+    if (![newValue isValidTikz]) {
+        widget_set_error (GTK_WIDGET (editable));
+    } else {
+        widget_clear_error (GTK_WIDGET (editable));
+    }
+
     [pool drain];
 }
 

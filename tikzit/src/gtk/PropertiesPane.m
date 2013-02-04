@@ -337,10 +337,14 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
         return;
     }
 
-    Node *node = [sel anyObject];
-    [document startModifyNode:node];
-    [node setLabel:newValue];
-    [document endModifyNode];
+    if ([newValue isValidTikz]) {
+        Node *node = [sel anyObject];
+        [document startModifyNode:node];
+        [node setLabel:newValue];
+        [document endModifyNode];
+    } else {
+        widget_set_error (GTK_WIDGET (nodeLabelEntry));
+    }
 }
 
 - (void) edgeNodeLabelEdited:(NSString*)newValue {
@@ -359,9 +363,13 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
         return;
     }
 
-    [document startModifyEdge:edge];
-    [[edge edgeNode] setLabel:newValue];
-    [document endModifyEdge];
+    if ([newValue isValidTikz]) {
+        [document startModifyEdge:edge];
+        [[edge edgeNode] setLabel:newValue];
+        [document endModifyEdge];
+    } else {
+        widget_set_error (GTK_WIDGET (edgeNodeLabelEntry));
+    }
 }
 
 - (void) edgeNodeToggled:(BOOL)newValue {
@@ -410,6 +418,7 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
         [nodePropDelegate setNode:n];
         [nodeProps setData:[n data]];
         gtk_entry_set_text (nodeLabelEntry, [[n label] UTF8String]);
+        widget_clear_error (GTK_WIDGET (nodeLabelEntry));
         [self _setDisplayedWidget:nodePropsWidget];
         editGraphProps = NO;
     } else {
@@ -422,16 +431,17 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
             Edge *e = [edgeSel anyObject];
             [edgePropDelegate setEdge:e];
             [edgeProps setData:[e data]];
+            widget_clear_error (GTK_WIDGET (edgeNodeLabelEntry));
             if ([e hasEdgeNode]) {
                 gtk_toggle_button_set_active (edgeNodeToggle, TRUE);
                 gtk_widget_show (edgeNodePropsWidget);
-                gtk_entry_set_text (GTK_ENTRY (edgeNodeLabelEntry), [[[e edgeNode] label] UTF8String]);
+                gtk_entry_set_text (edgeNodeLabelEntry, [[[e edgeNode] label] UTF8String]);
                 [edgeNodeProps setData:[[e edgeNode] data]];
                 gtk_widget_set_sensitive (edgeNodePropsWidget, TRUE);
             } else {
                 gtk_toggle_button_set_active (edgeNodeToggle, FALSE);
                 gtk_widget_hide (edgeNodePropsWidget);
-                gtk_entry_set_text (GTK_ENTRY (edgeNodeLabelEntry), "");
+                gtk_entry_set_text (edgeNodeLabelEntry, "");
                 [edgeNodeProps setData:nil];
                 gtk_widget_set_sensitive (edgeNodePropsWidget, FALSE);
             }
