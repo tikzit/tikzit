@@ -383,7 +383,6 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
                 // if the node has moved, it may be affecting edges
                 [surface invalidate];
             } else if ([[change oldNode] style] != [[change nwNode] style]) {
-                NSLog(@"Style change");
                 // change in style means that edges may touch at a different point,
                 // but this only matters for bent edges
                 [self invalidateBentIncidentEdgesForNode:[change nodeRef]];
@@ -415,7 +414,6 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
                         [surface invalidate];
                         break;
                     } else if (oldStyle != newStyle) {
-                        NSLog(@"Style change (2)");
                         [self invalidateBentIncidentEdgesForNode:node];
                         [self invalidateNode:[[change oldNodeTable] objectForKey:node]];
                         [self invalidateNode:[[change nwNodeTable] objectForKey:node]];
