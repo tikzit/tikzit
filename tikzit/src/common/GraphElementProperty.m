@@ -23,7 +23,7 @@
 //  
 
 #import "GraphElementProperty.h"
-
+#import "NSString+Tikz.h"
 
 @implementation GraphElementProperty
 
@@ -114,19 +114,13 @@
 
 - (NSString*)description {
 	if ([self isAtom]) {
-		return [self key];
+		return [[self key] tikzEscapedString];
 	} else if ([self isKeyMatch]) {
-		return [NSString stringWithFormat:@"%@=*", [self key]];
+		return [NSString stringWithFormat:@"%@=*", [[self key] tikzEscapedString]];
 	} else {
-		static NSCharacterSet *avoid = nil;
-		if (avoid == nil)
-			avoid = [[[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<>-'0123456789. "] invertedSet] retain];
-
-		if ([[self value] rangeOfCharacterFromSet:avoid].length > 0) {
-			return [NSString stringWithFormat:@"%@={%@}", [self key], [self value]];
-		} else {
-			return [NSString stringWithFormat:@"%@=%@", [self key], [self value]];
-		}
+		return [NSString stringWithFormat:@"%@=%@",
+			   [[self key] tikzEscapedString],
+			   [[self value] tikzEscapedString]];
 	}
 }
 
