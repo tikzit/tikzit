@@ -22,6 +22,7 @@
 
 @synthesize stylePaletteController;
 @synthesize selectedNodes, selectedEdges;
+@synthesize sourceAnchorNames, targetAnchorNames;
 
 - (id)initWithWindowNibName:(NSString *)windowNibName {
 	[super initWithWindowNibName:windowNibName];
@@ -50,8 +51,10 @@
                                                  name:@"NSWindowDidBecomeMainNotification"
                                                object:nil];
     
-    
-    
+    [self setSourceAnchorNames: [[NSMutableArray alloc] initWithArray: [@"north south west east" componentsSeparatedByString:@" "]]];
+
+    [self setTargetAnchorNames: [[NSMutableArray alloc] initWithArray:[@"north south west east" componentsSeparatedByString:@" "]]];
+
     
     [[self window] setLevel:NSNormalWindowLevel];
     [self showWindow:self];

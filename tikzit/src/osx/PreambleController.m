@@ -28,11 +28,12 @@
 
 @synthesize preambleText, preambles;
 
-- (id)initWithWindowNibName:(NSString *)windowNibName plist:(NSString*)plist styles:(NSArray*)sty {
+- (id)initWithWindowNibName:(NSString *)windowNibName plist:(NSString*)plist styles:(NSArray*)sty edges:(NSArray*)edg {
 	[super initWithWindowNibName:windowNibName];
 	
 	preambles = (Preambles*)[NSKeyedUnarchiver unarchiveObjectWithFile:plist];
 	[preambles setStyles:sty];
+    [preambles setEdges:edg];
 	if (preambles == nil) preambles = [[Preambles alloc] init];
 	
 	preambleText = nil;

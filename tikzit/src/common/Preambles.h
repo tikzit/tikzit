@@ -29,6 +29,7 @@
 	NSMutableDictionary *preambleDict;
 	NSString *selectedPreambleName;
 	NSArray *styles;
+	NSArray *edges;
 	StyleManager *styleManager;
 }
 
@@ -40,6 +41,7 @@
 + (Preambles*)preambles;
 - (id)init;
 - (void)setStyles:(NSArray*)sty;
+- (void)setEdges:(NSArray*)edg;
 
 - (NSString*)preambleForName:(NSString*)name;
 - (BOOL)setPreamble:(NSString*)content forName:(NSString*)name;

@@ -64,6 +64,7 @@ static NSString *POSTAMBLE =
 	preambleDict = [[NSMutableDictionary alloc] initWithCapacity:1];
 	[preambleDict setObject:[self defaultPreamble] forKey:@"custom"];
 	styles = nil;
+	edges = nil;
 	styleManager = nil;
 	return self;
 }
@@ -96,6 +97,12 @@ static NSString *POSTAMBLE =
 	styles = sty;
 }
 
+- (void)setEdges:(NSArray*)edg {
+	[edg retain];
+	[edges release];
+	edges = edg;
+}
+
 - (NSString*)styleDefinitions {
 	if (styleManager != nil) {
 		[self setStyles:[styleManager nodeStyles]];
@@ -120,11 +127,16 @@ static NSString *POSTAMBLE =
 			 [stroke hexName], [stroke redFloat], [stroke greenFloat], [stroke blueFloat]];
 		}
 	}
+    
+	if (styleManager != nil) {
+		[self setEdges:[styleManager edgeStyles]];
+	}
+    
 	[buf appendString:@"\n"];
-	for (EdgeStyle *st in [styleManager edgeStyles]) {
+	for (EdgeStyle *st in edges) {
 		[buf appendFormat:@"%@\n", [st tikz]];
 		ColorRGB *color = [st colorRGB];
-		if ([color name] == nil && ![colors containsObject:color]) {
+		if (color != nil && [color name] == nil && ![colors containsObject:color]) {
 			[colors addObject:color];
 			[colbuf appendFormat:@"\\definecolor{%@}{rgb}{%.3f,%.3f,%.3f}\n",
 				[color hexName], [color redFloat], [color greenFloat], [color blueFloat]];

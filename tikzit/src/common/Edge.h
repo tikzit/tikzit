@@ -58,6 +58,8 @@ typedef enum {
 	float weight;
     EdgeStyle *style;
 	GraphElementData *data;
+    NSString *sourceAnchor;
+    NSString *targetAnchor;
 	
     // When set to YES, lazily create the edge node, and keep it around when set
     // to NO (at least until saved/loaded).
@@ -113,6 +115,18 @@ typedef enum {
  @brief      A node attached to this edge, as in a label or tick.
  */
 @property (retain) Node *edgeNode;
+
+/*!
+ @property   sourceAnchor
+ @brief      The source node anchor point, as in north or center.
+ */
+@property (copy) NSString *sourceAnchor;
+
+/*!
+ @property   targetAnchor
+ @brief      The target node anchor point, as in north or center.
+ */
+@property (copy) NSString *targetAnchor;
 
 /*!
  @property   hasEdgeNode

@@ -25,3 +25,4 @@ Makefile.in
 /src/gtk/edgedecdata.m
 /tikzit-*.tar.gz
 /tikzit-*.tar.bz2
+xbuild

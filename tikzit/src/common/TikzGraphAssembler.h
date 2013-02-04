@@ -41,11 +41,14 @@
 - (BOOL)parseTikz:(NSString*)tikz;
 - (BOOL)parseTikz:(NSString*)tikz forGraph:(Graph*)gr;
 
+- (BOOL)testTikz:(NSString*)tikz;
+
 - (void)prepareNode;
 - (void)finishNode;
 
 - (void)prepareEdge;
-- (void)setEdgeSource:(NSString*)src target:(NSString*)targ;
+- (void)setEdgeSource:(NSString*)edge anchor:(NSString*)anch;
+- (void)setEdgeTarget:(NSString*)edge anchor:(NSString*)anch;
 - (void)finishEdge;
 
 - (void)invalidate;

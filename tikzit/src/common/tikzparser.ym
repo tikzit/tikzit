@@ -29,6 +29,9 @@
 #import "TikzGraphAssembler.h"
 #import "GraphElementProperty.h"
 	
+extern char* yystr;
+extern int yylineno;
+extern int tokenpos;
 extern int yylex(void);
 extern void yyerror(const char *str);
 
@@ -39,17 +42,19 @@ extern void yyerror(const char *str);
 	NSString *nsstr;
 };
 
+%error-verbose
+
 %token LATEXBEGIN
 %token LATEXEND
 %token TIKZPICTURE
 %token PGFONLAYER
-%token ANCHORCENTER
 %token LEFTPARENTHESIS
 %token RIGHTPARENTHESIS
 %token LEFTBRACKET
 %token RIGHTBRACKET
 %token SEMICOLON
 %token COMMA
+%token FULLSTOP
 %token EQUALS
 %token DRAW
 %token TO
@@ -65,9 +70,10 @@ extern void yyerror(const char *str);
 %token DELIMITEDSTRING
 
 %type<nsstr> nodename
+%type<nsstr> anchor
+%type<nsstr> optanchor
 %type<nsstr> nodeid
 %type<pt> coords
-%type<nsstr> target
 %type<nsstr> propsym
 %type<nsstr> propsyms
 %type<nsstr> val
@@ -119,6 +125,8 @@ propsym:
 
 nodecmd : NODE { [[TikzGraphAssembler currentAssembler] prepareNode]; };
 
+nodename: LEFTPARENTHESIS nodeid RIGHTPARENTHESIS { $$ = $<nsstr>2; };
+
 node:
 	nodecmd optproperties nodename AT coords nodelabel SEMICOLON
 	{
@@ -135,8 +143,17 @@ nodelabel:
 		[n setLabel:$<nsstr>1];
 	}
 
-optanchor: | ANCHORCENTER;
-nodename: LEFTPARENTHESIS nodeid optanchor RIGHTPARENTHESIS { $$ = $<nsstr>2; };
+anchor: LWORD { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
+
+optanchor:  { $$ = @""; } | FULLSTOP anchor { $$ = $<nsstr>2; };
+
+source: LEFTPARENTHESIS nodeid optanchor RIGHTPARENTHESIS
+    {
+        TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
+        [a setEdgeSource:$<nsstr>2
+        anchor:$<nsstr>3];
+    };
+
 nodeid: LWORD { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
 
 coords:
@@ -147,14 +164,23 @@ coords:
 
 edgecmd : DRAW { [[TikzGraphAssembler currentAssembler] prepareEdge]; };
 edge:
-	edgecmd optproperties nodename TO optedgenode target SEMICOLON 
+	edgecmd optproperties source TO optedgenode target SEMICOLON
 	{
 		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-		[a setEdgeSource:$<nsstr>3
-				  target:$<nsstr>6];
 		[a finishEdge];
 	};
-target: nodename { $$=$<nsstr>1; } | selfloop { $$=@""; };
+target: LEFTPARENTHESIS nodeid optanchor RIGHTPARENTHESIS
+    {
+        TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
+        [a setEdgeTarget:$<nsstr>2
+        anchor:$<nsstr>3];
+    }
+    | selfloop
+    {
+        TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
+        [a setEdgeTarget:@""
+        anchor:@""];
+    };
 selfloop: LEFTPARENTHESIS RIGHTPARENTHESIS;
 
 altnodecmd: ALTNODE { [[TikzGraphAssembler currentAssembler] prepareNode]; };

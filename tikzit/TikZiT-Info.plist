@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>SUPublicDSAKeyFile</key>
-	<string>tikzit_dsa_pub.pem</string>
-	<key>SUFeedURL</key>
-	<string>http://tikzit.sourceforge.net/appcast/tikzit.xml</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
@@ -57,5 +53,9 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUFeedURL</key>
+	<string>http://tikzit.sourceforge.net/appcast/tikzit.xml</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>tikzit_dsa_pub.pem</string>
 </dict>
 </plist>

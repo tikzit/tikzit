@@ -18,6 +18,8 @@
 	IBOutlet NSView *nodePropertiesView;
 	IBOutlet NSView *graphPropertiesView;
 	IBOutlet NSView *edgePropertiesView;
+    IBOutlet NSComboBox *sourceAnchorComboBox;
+    IBOutlet NSComboBox *targetAnchorComboBox;
 	IBOutlet NSTextField *edgeNodeLabelField;
 	IBOutlet NSButton *edgeNodeCheckbox;
 	IBOutlet NSArrayController *nodeDataArrayController;
@@ -25,6 +27,12 @@
 	IBOutlet NSArrayController *edgeDataArrayController;
 	IBOutlet NSArrayController *edgeNodeDataArrayController;
 	
+    NSMutableArray *sourceAnchorNames;
+    IBOutlet NSArrayController *sourceAnchorNamesArrayController;
+    
+    NSMutableArray *targetAnchorNames;
+    IBOutlet NSArrayController *targetAnchorNamesArrayController;
+    
     NSMutableArray *selectedNodes;
     IBOutlet NSArrayController *selectedNodesArrayController;
     
@@ -46,6 +54,8 @@
 //@property (readonly) BOOL enableEdgeDataControls;
 @property (retain) NSMutableArray *selectedNodes;
 @property (retain) NSMutableArray *selectedEdges;
+@property (retain) NSMutableArray *sourceAnchorNames;
+@property (retain) NSMutableArray *targetAnchorNames;
 @property (retain) StylePaletteController *stylePaletteController;
 
 - (id)initWithWindowNibName:(NSString *)windowNibName;

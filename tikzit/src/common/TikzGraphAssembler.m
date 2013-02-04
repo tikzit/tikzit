@@ -34,12 +34,20 @@ extern int yylex_destroy(void);
 static NSLock *parseLock = nil;
 static id currentAssembler = nil;
 
+extern int yylineno;
+extern int yyleng;
+int lineno;
+int tokenpos;
+extern char *yystr;
+char linebuff[500];
+
+
 void yyerror(const char *str) {
-	NSLog(@"Parse error: %s", str);
+    NSLog(@"Parse error on line %i: %s\n%s\n%@\n", lineno, str, linebuff, [[@"" stringByPaddingToLength:(tokenpos-yyleng) withString: @" " startingAtIndex:0] stringByAppendingString:[@"" stringByPaddingToLength:yyleng withString: @"^" startingAtIndex:0]]);
 	if (currentAssembler != nil) {
-		NSError *error = [NSError
-			errorWithMessage:[NSString stringWithCString:str]
-						code:TZ_ERR_PARSE];
+        NSError *error = [NSError errorWithDomain:@"net.sourceforge.tikzit"
+                                     code:TZ_ERR_PARSE
+                                         userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithCString:str] forKey: NSLocalizedDescriptionKey]];
 		[currentAssembler invalidateWithError:error];
 	}
 }
@@ -81,6 +89,10 @@ int yywrap() {
 
 - (BOOL)parseTikz:(NSString*)tikz forGraph:(Graph*)gr {
 	[parseLock lock];
+    
+    lineno = 1;
+    tokenpos = 0;
+    linebuff[0] = 0;
 	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	currentAssembler = self;
@@ -93,12 +105,14 @@ int yywrap() {
 	
 	// the node map keeps track of the mapping of names to nodes
 	nodeMap = [[NSMutableDictionary alloc] init];
-	
-	// do the parsing
-	yy_scan_string([tikz UTF8String]);
-	yyparse();   
-	yylex_destroy();
-	
+    
+	// do the parsing if actual input
+    if([tikz length] > 0){
+        yy_scan_string([tikz UTF8String]);
+        yyparse();
+        yylex_destroy();
+    }
+    
 	[nodeMap release];
 	nodeMap = nil;
 	
@@ -108,6 +122,22 @@ int yywrap() {
 	[parseLock unlock];
 	
 	return (graph != nil);
+}
+
+- (BOOL)testTikz:(NSString *)tikz{
+    BOOL r;
+    
+    NSString * testTikz = [NSString stringWithFormat: @"{%@}", tikz];
+    
+	yy_scan_string([testTikz UTF8String]);
+	yylex();
+    
+    r = !(yyleng < [testTikz length]);
+    
+    [testTikz autorelease];
+	yylex_destroy();
+    
+    return r;
 }
 
 - (void)prepareNode {
@@ -137,14 +167,19 @@ int yywrap() {
 	currentEdge = nil;
 }
 
-- (void)setEdgeSource:(NSString*)src target:(NSString*)targ {
-	if (![targ isEqualToString:@""]) {
-		[currentEdge setSource:[nodeMap objectForKey:src]];
-		[currentEdge setTarget:[nodeMap objectForKey:targ]];
+- (void)setEdgeSource:(NSString*)edge anchor:(NSString*)anch {
+    Node *s = [nodeMap objectForKey:edge];
+    [currentEdge setSource:s];
+    [currentEdge setSourceAnchor:anch];
+}
+
+- (void)setEdgeTarget:(NSString*)edge anchor:(NSString*)anch {
+	if (![edge isEqualToString:@""]) {
+		[currentEdge setTarget:[nodeMap objectForKey:edge]];
+        [currentEdge setTargetAnchor:anch];
 	} else {
-		Node *s = [nodeMap objectForKey:src];
-		[currentEdge setSource:s];
-		[currentEdge setTarget:s];
+        [currentEdge setTargetAnchor:anch];
+        [currentEdge setTarget:[currentEdge source]];
 	}
 }
 
