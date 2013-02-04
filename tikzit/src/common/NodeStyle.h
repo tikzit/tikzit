@@ -115,6 +115,11 @@
  */
 + (NodeStyle*)defaultNodeStyleWithName:(NSString *)nm;
 
+/*!
+ * Make this style the same as the given one
+ */
+- (void) updateFromStyle:(NodeStyle*)style;
+
 @end
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4

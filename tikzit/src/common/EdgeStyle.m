@@ -83,6 +83,16 @@
     [super dealloc];
 }
 
+- (void) updateFromStyle:(EdgeStyle*)style {
+	[self setName:[style name]];
+	[self setCategory:[style category]];
+	[self setHeadStyle:[style headStyle]];
+	[self setTailStyle:[style tailStyle]];
+	[self setDecorationStyle:[style decorationStyle]];
+	[self setThickness:[style thickness]];
+	[self setColorRGB:[style colorRGB]];
+}
+
 + (EdgeStyle*)defaultEdgeStyleWithName:(NSString*)nm {
 	return [[[EdgeStyle alloc] initWithName:nm] autorelease];
 }

@@ -26,6 +26,7 @@
 @interface SettingsDialog: NSObject {
     Configuration     *configuration;
     StyleManager      *styleManager;
+    StyleManager      *tempStyleManager;
     NodeStylesPalette *nodePalette;
     EdgeStylesPalette *edgePalette;
 

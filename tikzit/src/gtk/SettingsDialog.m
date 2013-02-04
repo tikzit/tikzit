@@ -20,6 +20,7 @@
 #import "Configuration.h"
 #import "EdgeStylesPalette.h"
 #import "NodeStylesPalette.h"
+#import "StyleManager.h"
 
 // {{{ Internal interfaces
 // {{{ Signals
@@ -53,6 +54,7 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     if (self) {
         configuration = [c retain];
         styleManager = [m retain];
+        tempStyleManager = [m copy];
     }
 
     return self;
@@ -67,6 +69,7 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     }
 
     [configuration release];
+    [tempStyleManager release];
     [styleManager release];
     [nodePalette release];
     [edgePalette release];
@@ -93,9 +96,6 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     [m retain];
     [styleManager release];
     styleManager = m;
-
-    [nodePalette setStyleManager:m];
-    [edgePalette setStyleManager:m];
 }
 
 - (GtkWindow*) parentWindow {
@@ -163,8 +163,8 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
         return;
     }
 
-    nodePalette = [[NodeStylesPalette alloc] initWithManager:styleManager];
-    edgePalette = [[EdgeStylesPalette alloc] initWithManager:styleManager];
+    nodePalette = [[NodeStylesPalette alloc] initWithManager:tempStyleManager];
+    edgePalette = [[EdgeStylesPalette alloc] initWithManager:tempStyleManager];
 
     window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
     gtk_window_set_default_size (window, 570, -1);
@@ -278,6 +278,8 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     }
 #endif
 
+    [styleManager updateFromManager:tempStyleManager];
+
     [[NSNotificationCenter defaultCenter]
         postNotificationName:@"ConfigurationChanged"
         object:configuration];
@@ -293,6 +295,8 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
                                     withDefault:@"pdflatex"];
     gtk_entry_set_text (pdflatexPathEntry, [path UTF8String]);
 #endif
+
+    [tempStyleManager updateFromManager:styleManager];
 }
 @end
 

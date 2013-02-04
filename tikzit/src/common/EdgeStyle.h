@@ -64,6 +64,7 @@ typedef enum {
 - (id)init;
 - (id)initWithName:(NSString*)nm;
 + (EdgeStyle*)defaultEdgeStyleWithName:(NSString*)nm;
+- (void) updateFromStyle:(EdgeStyle*)style;
 
 @end
 

@@ -95,6 +95,16 @@
 	[super dealloc];
 }
 
+- (void) updateFromStyle:(NodeStyle*)style {
+	[self setStrokeThickness:[style strokeThickness]];
+	[self setScale:[style scale]];
+	[self setStrokeColorRGB:[style strokeColorRGB]];
+	[self setFillColorRGB:[style fillColorRGB]];
+	[self setName:[style name]];
+	[self setShapeName:[style shapeName]];
+	[self setCategory:[style category]];
+}
+
 + (NodeStyle*)defaultNodeStyleWithName:(NSString*)nm {
 	return [[[NodeStyle alloc] initWithName:nm] autorelease];
 }

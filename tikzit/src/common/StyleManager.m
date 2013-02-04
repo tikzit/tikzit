@@ -294,6 +294,48 @@
     [style release];
 }
 
+- (void) updateFromManager:(StyleManager*)m {
+	NSMutableArray *ns = [NSMutableArray arrayWithCapacity:[[m nodeStyles] count]];
+	for (NodeStyle *style in [m nodeStyles]) {
+		NodeStyle *currentStyle = [self nodeStyleForName:[style name]];
+		if (currentStyle != nil) {
+			[currentStyle updateFromStyle:style];
+			[ns addObject:currentStyle];
+		} else {
+			[ns addObject:[[style copy] autorelease]];
+		}
+	}
+	NSMutableArray *es = [NSMutableArray arrayWithCapacity:[[m edgeStyles] count]];
+	for (EdgeStyle *style in [m edgeStyles]) {
+		EdgeStyle *currentStyle = [self edgeStyleForName:[style name]];
+		if (currentStyle != nil) {
+			[currentStyle updateFromStyle:style];
+			[es addObject:currentStyle];
+		} else {
+			[es addObject:[[style copy] autorelease]];
+		}
+	}
+	[self _setNodeStyles:ns];
+	[self _setEdgeStyles:es];
+}
+
+- (id) copyWithZone:(NSZone*)zone {
+	StyleManager *m = [[StyleManager allocWithZone:zone] init];
+
+	NSMutableArray *ns = [NSMutableArray arrayWithCapacity:[nodeStyles count]];
+	for (NodeStyle *style in nodeStyles) {
+		[ns addObject:[[style copyWithZone:zone] autorelease]];
+	}
+	NSMutableArray *es = [NSMutableArray arrayWithCapacity:[edgeStyles count]];
+	for (EdgeStyle *style in edgeStyles) {
+		[es addObject:[[style copyWithZone:zone] autorelease]];
+	}
+	[m _setNodeStyles:ns];
+	[m _setEdgeStyles:es];
+
+	return m;
+}
+
 @end
 
 // vi:ft=objc:ts=4:noet:sts=4:sw=4

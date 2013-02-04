@@ -19,7 +19,7 @@
 #import "NodeStyle.h"
 #import "EdgeStyle.h"
 
-@interface StyleManager: NSObject {
+@interface StyleManager: NSObject <NSCopying> {
     NSMutableArray *nodeStyles;
     NSMutableArray *edgeStyles;
 }
@@ -41,6 +41,8 @@
 - (void) removeNodeStyle:(NodeStyle*)style;
 - (void) addEdgeStyle:(EdgeStyle*)style;
 - (void) removeEdgeStyle:(EdgeStyle*)style;
+
+- (void) updateFromManager:(StyleManager*)manager;
 
 @end
 
