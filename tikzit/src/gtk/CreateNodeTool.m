@@ -24,6 +24,9 @@
 #import "TikzDocument.h"
 #import "tzstockitems.h"
 
+static void clear_style_button_cb (GtkButton *widget,
+                                   NodeStyleSelector *selector);
+
 @implementation CreateNodeTool
 - (NSString*) name { return @"Create Node"; }
 - (const gchar*) stockId { return TIKZIT_STOCK_CREATE_NODE; }
@@ -85,6 +88,18 @@
                             0);
         gtk_container_add (GTK_CONTAINER (selectorFrame),
                            selWindow);
+
+        GtkWidget *button = gtk_button_new_with_label ("No style");
+        gtk_widget_show (button);
+        gtk_box_pack_start (GTK_BOX (configWidget),
+                            button,
+                            FALSE,
+                            FALSE,
+                            0);
+        g_signal_connect (G_OBJECT (button),
+            "clicked",
+            G_CALLBACK (clear_style_button_cb),
+            stylePicker);
     }
 
     return self;
@@ -142,5 +157,13 @@
                      value:[[self activeStyle] name]];
 }
 @end
+
+static void clear_style_button_cb (GtkButton *widget,
+                                   NodeStyleSelector *selector)
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [selector setSelectedStyle:nil];
+    [pool drain];
+}
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4
