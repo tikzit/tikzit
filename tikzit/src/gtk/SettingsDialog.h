@@ -30,17 +30,15 @@
     GtkEntry      *pdflatexPathEntry;
 }
 
-@property (retain) Configuration* configuration;
+@property (retain) Configuration *configuration;
+@property (assign) GtkWindow     *parentWindow;
+@property (assign,getter=isVisible) BOOL visible;
 
 - (id) initWithConfiguration:(Configuration*)c;
-
-- (void) setParentWindow:(GtkWindow*)parent;
 
 - (void) present;
 - (void) show;
 - (void) hide;
-- (BOOL) isVisible;
-- (void) setVisible:(BOOL)visible;
 
 @end
 

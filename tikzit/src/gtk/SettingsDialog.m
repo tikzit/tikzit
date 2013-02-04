@@ -50,11 +50,22 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
 
     if (self) {
         configuration = [c retain];
-        parentWindow = NULL;
-        window = NULL;
     }
 
     return self;
+}
+
+- (void) dealloc {
+    if (window) {
+        gtk_widget_destroy (GTK_WIDGET (window));
+    }
+    if (parentWindow) {
+        g_object_unref (parentWindow);
+    }
+
+    [configuration release];
+
+    [super dealloc];
 }
 
 - (Configuration*) configuration {
@@ -66,6 +77,10 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     [configuration release];
     configuration = c;
     [self revert];
+}
+
+- (GtkWindow*) parentWindow {
+    return parentWindow;
 }
 
 - (void) setParentWindow:(GtkWindow*)parent {
@@ -116,21 +131,6 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
     } else {
         [self hide];
     }
-}
-
-- (void) dealloc {
-    [configuration release];
-    configuration = nil;
-
-    if (window) {
-        gtk_widget_destroy (GTK_WIDGET (window));
-        window = NULL;
-    }
-    if (parentWindow) {
-        g_object_ref (parentWindow);
-    }
-
-    [super dealloc];
 }
 
 @end
