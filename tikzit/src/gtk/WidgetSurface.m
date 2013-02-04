@@ -225,6 +225,30 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
     }
 }
 
+- (BOOL) hasFocus {
+    return gtk_widget_has_focus (widget);
+}
+
+- (void) renderFocus {
+    GdkWindow *window = gtk_widget_get_window (widget);
+    if (window) {
+        int width = 0;
+        int height = 0;
+        gdk_drawable_get_size (window, &width, &height);
+        gtk_paint_focus (gtk_widget_get_style (widget),
+                window,
+                GTK_STATE_NORMAL,
+                NULL,
+                widget,
+                NULL,
+                0,
+                0,
+                width,
+                height
+                );
+    }
+}
+
 - (CGFloat) defaultScale {
     return defaultScale;
 }

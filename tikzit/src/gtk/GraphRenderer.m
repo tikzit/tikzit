@@ -91,8 +91,11 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
     [self invalidateGraph];
 }
 
-- (void) renderWithContext:(id<RenderContext>)context onSurface:(id<Surface>)surface {
+- (void) renderWithContext:(id<RenderContext>)context onSurface:(id<Surface>)s {
     [self renderWithContext:context];
+    if ([s hasFocus]) {
+        [s renderFocus];
+    }
 }
 
 - (void) renderWithContext:(id<RenderContext>)context {

@@ -1,5 +1,4 @@
 GTK port:
- - possibly indicate when the graph surface has focus?
  - Use GooCanvas for the graph display
 
 

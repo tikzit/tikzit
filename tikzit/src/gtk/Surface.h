@@ -99,6 +99,9 @@ typedef enum {
 - (void) zoomResetAboutPoint:(NSPoint)p;
 
 - (void) setCursor:(Cursor)c;
+
+- (BOOL) hasFocus;
+- (void) renderFocus;
 @end
 
 // vim:ft=objc:ts=8:et:sts=4:sw=4
