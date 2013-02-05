@@ -59,6 +59,8 @@ static void tool_button_toggled_cb (GtkWidget *widget, ToolBox *toolBox);
                             FALSE,
                             FALSE,
                             0);
+        gtk_tool_palette_set_style (GTK_TOOL_PALETTE (toolPalette),
+                                    GTK_TOOLBAR_ICONS);
 
         toolGroup = GTK_TOOL_ITEM_GROUP (gtk_tool_item_group_new ("Tools"));
         g_object_ref_sink (G_OBJECT (toolGroup));
