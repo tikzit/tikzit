@@ -79,11 +79,15 @@ static void clear_style_button_cb (GtkButton *widget,
                                         GTK_POLICY_AUTOMATIC);
         gtk_widget_show ([stylePicker widget]);
 
+        GtkWidget *selectorFrame = gtk_frame_new (NULL);
+        gtk_widget_show (selectorFrame);
         gtk_box_pack_start (GTK_BOX (configWidget),
-                            selWindow,
+                            selectorFrame,
                             TRUE,
                             TRUE,
                             0);
+        gtk_container_add (GTK_CONTAINER (selectorFrame),
+                           selWindow);
 
         GtkWidget *button = gtk_button_new_with_label ("No style");
         gtk_widget_show (button);
