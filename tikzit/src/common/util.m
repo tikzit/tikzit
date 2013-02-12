@@ -25,6 +25,24 @@ static BOOL fuzzyCompare(float f1, float f2) {
 	return (ABS(f1 - f2) <= 0.00001f * MIN(ABS(f1), ABS(f2)));
 }
 
+NSRect NSRectWithPoint(NSRect rect, NSPoint p) {
+	CGFloat minX = NSMinX(rect);
+	CGFloat maxX = NSMaxX(rect);
+	CGFloat minY = NSMinY(rect);
+	CGFloat maxY = NSMaxY(rect);
+	if (p.x < minX) {
+		minX = p.x;
+	} else if (p.x > maxX) {
+		maxX = p.x;
+	}
+	if (p.y < minY) {
+		minY = p.y;
+	} else if (p.y > maxY) {
+		maxY = p.y;
+	}
+	return NSMakeRect(minX, minY, maxX - minX, maxY - minY);
+}
+
 NSRect NSRectAroundPointsWithPadding(NSPoint p1, NSPoint p2, float padding) {
 	return NSMakeRect(MIN(p1.x,p2.x)-padding,
 					  MIN(p1.y,p2.y)-padding,

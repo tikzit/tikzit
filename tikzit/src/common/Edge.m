@@ -522,7 +522,27 @@
 
 - (NSRect)boundingRect {
 	[self updateControls];
-	return NSRectAround4Points(src, targ, cp1, cp2);
+	NSRect bound = NSRectAround4Points(head, tail, cp1, cp2);
+    if ([self style] != nil) {
+        switch ([[self style] decorationStyle]) {
+            case ED_Arrow:
+				bound = NSRectWithPoint(bound, [self midTan]);
+            case ED_Tick:
+				bound = NSRectWithPoint(bound, [self leftNormal]);
+				bound = NSRectWithPoint(bound, [self rightNormal]);
+            case ED_None:
+                break;
+        }
+		if ([[self style] headStyle] != AH_None) {
+			bound = NSRectWithPoint(bound, [self leftHeadNormal]);
+			bound = NSRectWithPoint(bound, [self rightHeadNormal]);
+		}
+		if ([[self style] tailStyle] != AH_None) {
+			bound = NSRectWithPoint(bound, [self leftTailNormal]);
+			bound = NSRectWithPoint(bound, [self rightTailNormal]);
+		}
+    }
+	return bound;
 }
 
 - (void) adjustWeight:(float)handle_dist withCourseness:(float)wcourseness {

@@ -43,6 +43,14 @@
 NSRect NSRectAroundPoints(NSPoint p1, NSPoint p2);
 
 /*!
+ @brief      Compute a bounding rectangle for two given points.
+ @param      rect the base rectangle
+ @param      the point to ensure is included
+ @result     A rectangle containing rect and p
+ */
+NSRect NSRectWithPoint(NSRect rect, NSPoint p);
+
+/*!
  @brief      Compute a bounding rectangle for two given points with a given padding.
  @param      p1 a point.
  @param      p2 another point.

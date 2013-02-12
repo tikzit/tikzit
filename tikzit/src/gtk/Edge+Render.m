@@ -30,15 +30,13 @@ static const float cpLineWidth = 1.0;
     return cpRadius;
 }
 
-- (float) controlDistanceWithTransformer:(Transformer*)transformer {
-    NSPoint c_source = [transformer toScreen:src];
-    NSPoint c_target = [transformer toScreen:targ];
-    const float dx = (c_target.x - c_source.x);
-    const float dy = (c_target.y - c_source.y);
+- (float) controlDistance {
+    const float dx = (targ.x - src.x);
+    const float dy = (targ.y - src.y);
     if (dx == 0 && dy == 0) {
-        return [transformer scaleToScreen:weight];
+        return weight;
     } else {
-        return NSDistanceBetweenPoints(c_source, c_target) * weight;
+        return NSDistanceBetweenPoints(src, targ) * weight;
     }
 }
 
@@ -237,12 +235,14 @@ static const float cpLineWidth = 1.0;
 }
 
 - (NSRect) renderedBoundsWithTransformer:(Transformer*)t whenSelected:(BOOL)selected {
-    NSRect bRect = [t rectToScreen:[self boundingRect]];
     if (selected) {
-        float c_dist = [self controlDistanceWithTransformer:t];
-        return NSInsetRect (bRect, -c_dist, -c_dist);
+        float c_dist = [self controlDistance] + cpRadius; // include handle
+        NSRect cp1circ = NSMakeRect (head.x - c_dist, head.y - c_dist, 2*c_dist, 2*c_dist);
+        NSRect cp2circ = NSMakeRect (tail.x - c_dist, tail.y - c_dist, 2*c_dist, 2*c_dist);
+        NSRect rect = NSUnionRect ([self boundingRect], NSUnionRect (cp1circ, cp2circ));
+        return [t rectToScreen:rect];
     } else {
-        return bRect;
+        return [t rectToScreen:[self boundingRect]];
     }
 }
 
