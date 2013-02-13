@@ -176,10 +176,21 @@
 }
 
 - (void) keyPressed:(unsigned int)keyVal withMask:(InputMask)mask {
-    [app activateToolForKey:keyVal withMask:mask];
+    if (![app activateToolForKey:keyVal withMask:mask]) {
+        id<Tool> tool = [panel activeTool];
+        if ([panel hasTool] && [tool respondsToSelector:@selector(keyPressed:withMask:)]) {
+            [tool keyPressed:keyVal withMask:mask];
+        }
+    }
 }
 
 - (void) keyReleased:(unsigned int)keyVal withMask:(InputMask)mask {
+    if (![app activateToolForKey:keyVal withMask:mask]) {
+        id<Tool> tool = [panel activeTool];
+        if ([panel hasTool] && [tool respondsToSelector:@selector(keyReleased:withMask:)]) {
+            [tool keyReleased:keyVal withMask:mask];
+        }
+    }
 }
 @end
 

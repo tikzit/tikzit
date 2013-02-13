@@ -23,6 +23,8 @@
 #import "TikzDocument.h"
 #import "tzstockitems.h"
 
+#import <gdk/gdkkeysyms.h>
+
 #define DRAG_SELECT_MODE_KEY "tikzit-drag-select-mode"
 
 static const InputMask unionSelectMask = ShiftMask;
@@ -73,7 +75,7 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
                             FALSE,
                             0);
 
-        GtkWidget *nodeOpt = gtk_radio_button_new_with_label (NULL, "nodes");
+        GtkWidget *nodeOpt = gtk_radio_button_new_with_label (NULL, "nodes (N)");
         g_object_set_data (G_OBJECT (nodeOpt),
                            DRAG_SELECT_MODE_KEY,
                            (gpointer)DragSelectsNodes);
@@ -89,7 +91,7 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
 
         GtkWidget *edgeOpt = gtk_radio_button_new_with_label (
                 gtk_radio_button_get_group (GTK_RADIO_BUTTON (nodeOpt)),
-                "edges");
+                "edges (E)");
         g_object_set_data (G_OBJECT (edgeOpt),
                            DRAG_SELECT_MODE_KEY,
                            (gpointer)DragSelectsEdges);
@@ -105,7 +107,7 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
 
         GtkWidget *bothOpt = gtk_radio_button_new_with_label (
                 gtk_radio_button_get_group (GTK_RADIO_BUTTON (edgeOpt)),
-                "both");
+                "both (B)");
         g_object_set_data (G_OBJECT (bothOpt),
                            DRAG_SELECT_MODE_KEY,
                            (gpointer)DragSelectsBoth);
@@ -356,6 +358,16 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
 
         [self deselectAllEdges];
         [[[self doc] pickSupport] selectEdge:edge];
+    }
+}
+
+- (void) keyPressed:(unsigned int)keyVal withMask:(InputMask)mask {
+    if (keyVal == GDK_KEY_N && mask == ShiftMask) {
+        [self setDragSelectMode:DragSelectsNodes];
+    } else if (keyVal == GDK_KEY_E && mask == ShiftMask) {
+        [self setDragSelectMode:DragSelectsEdges];
+    } else if (keyVal == GDK_KEY_B && mask == ShiftMask) {
+        [self setDragSelectMode:DragSelectsBoth];
     }
 }
 

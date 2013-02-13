@@ -150,7 +150,10 @@ extern Application* app;
  */
 - (void) saveConfiguration;
 
-- (void) activateToolForKey:(unsigned int)keyVal withMask:(InputMask)mask;
+/**
+ * @result YES if key event was processed, NO otherwise
+ */
+- (BOOL) activateToolForKey:(unsigned int)keyVal withMask:(InputMask)mask;
 
 @end
 

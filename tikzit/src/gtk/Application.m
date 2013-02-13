@@ -209,7 +209,7 @@ Application* app = nil;
     }
 }
 
-- (void) activateToolForKey:(unsigned int)keyVal withMask:(InputMask)mask {
+- (BOOL) activateToolForKey:(unsigned int)keyVal withMask:(InputMask)mask {
     // FIXME: cache the accel info, rather than reparsing it every time?
     for (id<Tool> tool in tools) {
         guint toolKey = 0;
@@ -217,9 +217,10 @@ Application* app = nil;
         gtk_accelerator_parse ([[tool shortcut] UTF8String], &toolKey, &toolMod);
         if (toolKey != 0 && toolKey == keyVal && (int)mask == (int)toolMod) {
             [self setActiveTool:tool];
-            return;
+            return YES;
         }
     }
+    return NO;
 }
 
 - (void) _addWindow:(Window*)window {
