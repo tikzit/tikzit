@@ -46,8 +46,20 @@ void yyerror(const char *str) {
     NSLog(@"Parse error on line %i: %s\n%s\n%@\n", lineno, str, linebuff, [[@"" stringByPaddingToLength:(tokenpos-yyleng) withString: @" " startingAtIndex:0] stringByAppendingString:[@"" stringByPaddingToLength:yyleng withString: @"^" startingAtIndex:0]]);
 	if (currentAssembler != nil) {
         NSError *error = [NSError errorWithDomain:@"net.sourceforge.tikzit"
-                                     code:TZ_ERR_PARSE
-                                         userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithCString:str] forKey: NSLocalizedDescriptionKey]];
+                                             code:TZ_ERR_PARSE
+                                         userInfo:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithCString:str encoding:NSUTF8StringEncoding],
+                                                                                       [NSNumber numberWithInt:lineno],
+                                                                                       [NSString stringWithCString:linebuff encoding:NSUTF8StringEncoding],
+                                                                                       [NSNumber numberWithInt:tokenpos],
+                                                                                       [NSNumber numberWithInt:yyleng],
+                                                                                       nil]
+                                                                              forKeys: [NSArray arrayWithObjects:NSLocalizedDescriptionKey,
+                                                                                        @"lineNumber",
+                                                                                        @"syntaxString",
+                                                                                        @"tokenStart",
+                                                                                        @"tokenLength",
+                                                                                        nil]]];
+        
 		[currentAssembler invalidateWithError:error];
 	}
 }

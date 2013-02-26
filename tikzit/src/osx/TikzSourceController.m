@@ -180,12 +180,37 @@
             [status setStringValue:@"parse error"];
             [status setTextColor:failedColor];
             
+            NSDictionary *d = [[assembler lastError] userInfo];
             
-            NSLog(@"Parse error: %@",[assembler lastError]);
+            NSString *ts = [NSString stringWithFormat: @"Parse error on line %@: %@\n", [d valueForKey:@"lineNumber"], [d valueForKey:NSLocalizedDescriptionKey]];
+            NSMutableAttributedString *as = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat: @"Parse error on line %@: %@\n%@\n", [d valueForKey:@"lineNumber"], [d valueForKey:NSLocalizedDescriptionKey], [[d valueForKey:@"syntaxString"] stringByReplacingOccurrencesOfString:@"\t" withString:@""]]];
             
-            NSError *e = [assembler lastError];
+            NSInteger tokenLength = [[d valueForKey:@"tokenLength"] integerValue];
+            // Bit of a mess, offset around to find correct position and correct for 4 characters for every one character of \t
+            NSInteger addedTokenStart = [[d valueForKey:@"tokenStart"] integerValue] + [ts length] - ([[[d valueForKey:@"syntaxString"] componentsSeparatedByString:@"\t"] count]-1)*4 - tokenLength;
             
-            [errorMessage setStringValue:[[[assembler lastError] userInfo] valueForKey:NSLocalizedDescriptionKey]];
+            // Can't see if the error is a start paranthesis as only that will be underlined, underline the entire paranthesis instead
+            if(tokenLength == 1 && [[as string] characterAtIndex:addedTokenStart] == '('){
+                tokenLength += [[[as string] substringFromIndex:addedTokenStart+1] rangeOfString:@")"].location + 1;
+            }
+            
+            // Same if unexpected endparanthesis
+            if(tokenLength == 1 && [[as string] characterAtIndex:addedTokenStart] == ')'){
+                NSInteger d = addedTokenStart - [[[as string] substringToIndex:addedTokenStart] rangeOfString:@"(" options:NSBackwardsSearch].location;
+                
+                tokenLength += d;
+                addedTokenStart -= d;
+            }
+                        
+            [as beginEditing];
+            [as addAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                               [NSNumber numberWithInt:NSUnderlineStyleSingle | NSUnderlinePatternDot], NSUnderlineStyleAttributeName,
+                               [NSColor redColor], NSUnderlineColorAttributeName,
+                               nil]
+                       range:NSMakeRange(addedTokenStart, tokenLength)];
+            [as endEditing];
+
+            [errorMessage setAttributedStringValue:as];
             [errorNotification setHidden:FALSE];
         }
 	}

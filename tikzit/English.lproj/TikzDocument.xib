@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1070</int>
+		<int key="IBDocument.SystemTarget">1080</int>
 		<string key="IBDocument.SystemVersion">12C60</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2843</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
@@ -69,10 +69,10 @@
 													<reference key="NSNextResponder" ref="1058910169"/>
 													<int key="NSvFlags">265</int>
 													<array class="NSMutableArray" key="NSSubviews"/>
-													<string key="NSFrame">{{422, 18}, {17, 19}}</string>
+													<string key="NSFrame">{{425, 21}, {17, 19}}</string>
 													<reference key="NSSuperview" ref="1058910169"/>
 													<reference key="NSWindow"/>
-													<reference key="NSNextKeyView" ref="363276524"/>
+													<reference key="NSNextKeyView"/>
 													<bool key="NSViewIsLayerTreeHost">YES</bool>
 													<string key="NSReuseIdentifierKey">_NS:1574</string>
 													<bool key="NSEnabled">YES</bool>
@@ -111,7 +111,7 @@
 													<bool key="NSEnabled">YES</bool>
 													<object class="NSTextFieldCell" key="NSCell" id="902332144">
 														<int key="NSCellFlags">68157504</int>
-														<int key="NSCellFlags2">272630784</int>
+														<int key="NSCellFlags2">1077941248</int>
 														<string key="NSContents"/>
 														<object class="NSFont" key="NSSupport" id="929913442">
 															<string key="NSName">LucidaGrande</string>
@@ -206,7 +206,7 @@
 															<string key="NSFrame">{{0, -14}, {445, 14}}</string>
 															<reference key="NSSuperview" ref="1053475928"/>
 															<reference key="NSWindow"/>
-															<reference key="NSNextKeyView" ref="316980985"/>
+															<reference key="NSNextKeyView" ref="845088135"/>
 															<object class="NSTextContainer" key="NSTextContainer" id="655316054">
 																<object class="NSLayoutManager" key="NSLayoutManager">
 																	<object class="NSTextStorage" key="NSTextStorage">
@@ -343,7 +343,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 											<string key="NSFrameSize">{447, 0}</string>
 											<reference key="NSSuperview" ref="363276524"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="1053475928"/>
+											<reference key="NSNextKeyView" ref="316980985"/>
 											<int key="NSsFlags">133202</int>
 											<reference key="NSVScroller" ref="334949682"/>
 											<reference key="NSHScroller" ref="316980985"/>
@@ -371,6 +371,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							<string key="NSFrame">{{305, -184}, {128, 14}}</string>
 							<reference key="NSSuperview" ref="568628114"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="884817082">
 								<int key="NSCellFlags">68157504</int>
@@ -395,7 +396,7 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="129838346"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1600, 1178}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1600, 1200}}</string>
 				<string key="NSMinSize">{94, 108}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
@@ -849,10 +850,6 @@ AAEAAQAAAT0AAwAAAAEAAgAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<real value="1070" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
 			<real value="3200" key="NS.object.0"/>

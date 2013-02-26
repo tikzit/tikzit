@@ -130,6 +130,7 @@
 		7F6E2C8A16B0096000BFE20D /* SupportDir.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652DF813E1F2030023F4C6 /* SupportDir.m */; };
 		7F6E2C8C16B00ABA00BFE20D /* SFBInspectors.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
 		7F781C1A16B5DE1400239826 /* ParseErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F781C1916B5DE1400239826 /* ParseErrorView.m */; };
+		7F90E88616DD29600069EBCD /* NSString+Tikz.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F90E88516DD29600069EBCD /* NSString+Tikz.m */; };
 		7FB9BFEE16B57C2E00773146 /* TikzFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9BFED16B57C2E00773146 /* TikzFormatter.m */; };
 		7FEED45716B1A7C500B056CB /* StyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FEED45616B1A7C500B056CB /* StyleManager.m */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -343,6 +344,8 @@
 		7F6E2C8716B0091300BFE20D /* maths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = maths.m; path = src/common/test/maths.m; sourceTree = "<group>"; };
 		7F781C1816B5DE1400239826 /* ParseErrorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParseErrorView.h; path = src/osx/ParseErrorView.h; sourceTree = "<group>"; };
 		7F781C1916B5DE1400239826 /* ParseErrorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParseErrorView.m; path = src/osx/ParseErrorView.m; sourceTree = "<group>"; };
+		7F90E88416DD29600069EBCD /* NSString+Tikz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Tikz.h"; path = "src/common/NSString+Tikz.h"; sourceTree = "<group>"; };
+		7F90E88516DD29600069EBCD /* NSString+Tikz.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Tikz.m"; path = "src/common/NSString+Tikz.m"; sourceTree = "<group>"; };
 		7FB9BFEC16B57C2E00773146 /* TikzFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TikzFormatter.h; path = src/osx/TikzFormatter.h; sourceTree = "<group>"; };
 		7FB9BFED16B57C2E00773146 /* TikzFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TikzFormatter.m; path = src/osx/TikzFormatter.m; sourceTree = "<group>"; };
 		7FEED45516B1A7C400B056CB /* StyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StyleManager.h; path = src/common/StyleManager.h; sourceTree = "<group>"; };
@@ -607,6 +610,8 @@
 				558F18C0117B031C009863B2 /* GraphElementData.m */,
 				558F18C1117B031C009863B2 /* Node.h */,
 				558F18C2117B031C009863B2 /* Node.m */,
+				7F90E88416DD29600069EBCD /* NSString+Tikz.h */,
+				7F90E88516DD29600069EBCD /* NSString+Tikz.m */,
 				558F18C3117B031C009863B2 /* NodeStyle.h */,
 				558F18C4117B031C009863B2 /* NodeStyle.m */,
 				5585E5C0117F681800124513 /* NodeStyle+Coder.h */,
@@ -901,6 +906,7 @@
 				7FEED45716B1A7C500B056CB /* StyleManager.m in Sources */,
 				7FB9BFEE16B57C2E00773146 /* TikzFormatter.m in Sources */,
 				7F781C1A16B5DE1400239826 /* ParseErrorView.m in Sources */,
+				7F90E88616DD29600069EBCD /* NSString+Tikz.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1004,7 +1010,7 @@
 					AppKit,
 				);
 				PRODUCT_NAME = tests;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1029,7 +1035,7 @@
 					AppKit,
 				);
 				PRODUCT_NAME = tests;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -1038,6 +1044,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1054,7 +1061,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = TikZiT;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1062,6 +1069,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1076,7 +1084,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = TikZiT;
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -1093,7 +1101,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx;
 				SYMROOT = xbuild;
 				USER_HEADER_SEARCH_PATHS = "src/osx src/common";
 				VALID_ARCHS = "i386 x86_64";
@@ -1112,7 +1120,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx;
 				SYMROOT = xbuild;
 				USER_HEADER_SEARCH_PATHS = "src/osx src/common";
 				VALID_ARCHS = "i386 x86_64";
