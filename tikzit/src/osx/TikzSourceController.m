@@ -28,6 +28,7 @@
 
 @synthesize graphicsView, sourceView, source, status;
 @synthesize documentUndoManager, tikzChanged;
+@synthesize errorMessage, errorNotification;
 
 - (void)endEditing {
 	NSResponder *res = [[sourceView window] firstResponder];
@@ -125,6 +126,10 @@
 	if ([graphicsView enabled]) [self updateTikzFromGraph];
 }
 
+- (IBAction)closeParseError:(id)pId{
+   [errorNotification setHidden:TRUE];
+}
+
 - (void)textDidBeginEditing:(NSNotification *)notification {
 	if ([graphicsView enabled]) {
 		[graphicsView setEnabled:NO];
@@ -169,9 +174,19 @@
             
             [status setStringValue:@"success"];
             [status setTextColor:successColor];
+            
+            [errorNotification setHidden:TRUE];
         } else {
             [status setStringValue:@"parse error"];
             [status setTextColor:failedColor];
+            
+            
+            NSLog(@"Parse error: %@",[assembler lastError]);
+            
+            NSError *e = [assembler lastError];
+            
+            [errorMessage setStringValue:[[[assembler lastError] userInfo] valueForKey:NSLocalizedDescriptionKey]];
+            [errorNotification setHidden:FALSE];
         }
 	}
 }

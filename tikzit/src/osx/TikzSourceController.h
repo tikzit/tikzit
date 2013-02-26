@@ -25,6 +25,7 @@
 
 #import "GraphicsView.h"
 #import "TikzGraphAssembler.h"
+#import "ParseErrorView.h"
 
 @interface TikzSourceController : NSObject {
 	GraphicsView *graphicsView;
@@ -34,8 +35,9 @@
 	NSDictionary *textAttrs;
 	NSColor *successColor;
 	NSColor *failedColor;
-	
-	
+	NSTextField *errorMessage;
+	ParseErrorView *errorNotification;
+    
 	NSUndoManager *documentUndoManager;
 	
 	BOOL tikzChanged;
@@ -51,9 +53,13 @@
 @property NSUndoManager *documentUndoManager;
 @property (copy) NSAttributedString *source;
 @property (copy) NSString *tikz;
+@property IBOutlet ParseErrorView *errorNotification;
+@property IBOutlet NSTextField *errorMessage;
 
 - (void)updateTikzFromGraph;
 - (void)graphChanged:(NSNotification*)n;
+
+- (IBAction)closeParseError:(id)pId;
 
 // called by code, these do not register an undo
 - (BOOL)tryParseTikz;
