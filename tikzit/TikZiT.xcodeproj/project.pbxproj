@@ -131,6 +131,9 @@
 		7F6E2C8C16B00ABA00BFE20D /* SFBInspectors.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
 		7F781C1A16B5DE1400239826 /* ParseErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F781C1916B5DE1400239826 /* ParseErrorView.m */; };
 		7F90E88616DD29600069EBCD /* NSString+Tikz.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F90E88516DD29600069EBCD /* NSString+Tikz.m */; };
+		7F90E88D16DD47540069EBCD /* PreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F90E88B16DD47540069EBCD /* PreferenceController.m */; };
+		7F90E88E16DD47540069EBCD /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7F90E88C16DD47540069EBCD /* Preferences.xib */; };
+		7F90E89116DD54440069EBCD /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7F90E88F16DD54440069EBCD /* UserDefaults.plist */; };
 		7FB9BFEE16B57C2E00773146 /* TikzFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9BFED16B57C2E00773146 /* TikzFormatter.m */; };
 		7FEED45716B1A7C500B056CB /* StyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FEED45616B1A7C500B056CB /* StyleManager.m */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -346,6 +349,10 @@
 		7F781C1916B5DE1400239826 /* ParseErrorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParseErrorView.m; path = src/osx/ParseErrorView.m; sourceTree = "<group>"; };
 		7F90E88416DD29600069EBCD /* NSString+Tikz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Tikz.h"; path = "src/common/NSString+Tikz.h"; sourceTree = "<group>"; };
 		7F90E88516DD29600069EBCD /* NSString+Tikz.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Tikz.m"; path = "src/common/NSString+Tikz.m"; sourceTree = "<group>"; };
+		7F90E88A16DD47540069EBCD /* PreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferenceController.h; path = src/osx/PreferenceController.h; sourceTree = "<group>"; };
+		7F90E88B16DD47540069EBCD /* PreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferenceController.m; path = src/osx/PreferenceController.m; sourceTree = "<group>"; };
+		7F90E88C16DD47540069EBCD /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Preferences.xib; path = src/osx/Preferences.xib; sourceTree = "<group>"; };
+		7F90E89016DD54440069EBCD /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = English; path = English.lproj/UserDefaults.plist; sourceTree = "<group>"; };
 		7FB9BFEC16B57C2E00773146 /* TikzFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TikzFormatter.h; path = src/osx/TikzFormatter.h; sourceTree = "<group>"; };
 		7FB9BFED16B57C2E00773146 /* TikzFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TikzFormatter.m; path = src/osx/TikzFormatter.m; sourceTree = "<group>"; };
 		7FEED45516B1A7C400B056CB /* StyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StyleManager.h; path = src/common/StyleManager.h; sourceTree = "<group>"; };
@@ -466,6 +473,7 @@
 				55E5E99D1215C8E300256F69 /* transform-crop-and-resize.png */,
 				5573B98711DA377C00B5DC5D /* text-x-script.png */,
 				8D15AC360486D014006FF6A4 /* TikZiT-Info.plist */,
+				7F90E88F16DD54440069EBCD /* UserDefaults.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				55D949111165D8870044178C /* draw-ellipse.png */,
@@ -477,6 +485,7 @@
 				559EFA5611C7D95F00D020F4 /* tikzit_dsa_pub.pem */,
 				55D945701165904F0044178C /* tikzitdoc.icns */,
 				55D945711165904F0044178C /* tikzit.icns */,
+				7F90E88C16DD47540069EBCD /* Preferences.xib */,
 				55391AF713D3250F007DBE71 /* Preamble.xib */,
 				55391AF513D324FE007DBE71 /* Preview.xib */,
 				55391B0013D32608007DBE71 /* PropertyInspector.xib */,
@@ -647,6 +656,8 @@
 				55CA997112F08281008F0368 /* TikzWindowController.m */,
 				553A4C58144ED3D500AA6FAC /* NilToEmptyStringTransformer.h */,
 				553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */,
+				7F90E88A16DD47540069EBCD /* PreferenceController.h */,
+				7F90E88B16DD47540069EBCD /* PreferenceController.m */,
 			);
 			name = Gui;
 			sourceTree = "<group>";
@@ -802,6 +813,8 @@
 				55397C8D1449ABFC006942FB /* AH_latex_tail.png in Resources */,
 				55397C901449AC7C006942FB /* AH_latex_head.png in Resources */,
 				55397C911449AC7C006942FB /* AH_plain_head.png in Resources */,
+				7F90E88E16DD47540069EBCD /* Preferences.xib in Resources */,
+				7F90E89116DD54440069EBCD /* UserDefaults.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -907,6 +920,7 @@
 				7FB9BFEE16B57C2E00773146 /* TikzFormatter.m in Sources */,
 				7F781C1A16B5DE1400239826 /* ParseErrorView.m in Sources */,
 				7F90E88616DD29600069EBCD /* NSString+Tikz.m in Sources */,
+				7F90E88D16DD47540069EBCD /* PreferenceController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -983,6 +997,14 @@
 				55D947301165A5D40044178C /* English */,
 			);
 			name = StylePalette.xib;
+			sourceTree = "<group>";
+		};
+		7F90E88F16DD54440069EBCD /* UserDefaults.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7F90E89016DD54440069EBCD /* English */,
+			);
+			name = UserDefaults.plist;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

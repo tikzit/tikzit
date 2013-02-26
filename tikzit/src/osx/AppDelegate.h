@@ -28,6 +28,7 @@
 #import "PreambleController.h"
 #import "PreviewController.h"
 #import "GraphicsView.h"
+#import "PreferenceController.h";
 
 @interface AppDelegate : NSObject {
 	NSMapTable *table;
@@ -35,6 +36,7 @@
 	PropertyInspectorController *propertyInspectorController;
 	PreambleController *preambleController;
 	PreviewController *previewController;
+	PreferenceController *preferenceController;
 	ToolPaletteController *toolPaletteController;
 	IBOutlet GraphicsView *graphicsView;
 	NSString *tempDir;
@@ -44,10 +46,12 @@
 @property IBOutlet ToolPaletteController *toolPaletteController;
 
 - (void)awakeFromNib;
++ (void)setDefaults;
 - (void)applicationWillTerminate:(NSNotification *)notification;
 - (IBAction)toggleStyleInspector:(id)sender;
 - (IBAction)togglePropertyInspector:(id)sender;
 - (IBAction)togglePreamble:(id)sender;
+- (IBAction)togglePreferences:(id)sender;
 - (IBAction)refreshShapes:(id)sender;
 
 @end
