@@ -77,34 +77,14 @@
 }
 
 + (void)setDefaults{
-    NSLog(@"Setting defaults...");
-    
     NSString *userDefaultsValuesPath;
     NSDictionary *userDefaultsValuesDict;
-    NSDictionary *initialValuesDict;
-    NSArray *resettableUserDefaultsKeys;
     
-    // load the default values for the user defaults
     userDefaultsValuesPath=[[NSBundle mainBundle] pathForResource:@"UserDefaults"
                                                            ofType:@"plist"];
     userDefaultsValuesDict=[NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
     
-    NSLog(@"Defaults dict: %@",userDefaultsValuesDict);
-    
-    // set them in the standard user defaults
     [[NSUserDefaults standardUserDefaults] registerDefaults:userDefaultsValuesDict];
-    
-    // if your application supports resetting a subset of the defaults to
-    // factory values, you should set those values
-    // in the shared user defaults controller
-    //resettableUserDefaultsKeys=[NSArray arrayWithObjects:@"Value1",@"Value2",@"Value3",nil];
-    //initialValuesDict=[userDefaultsValuesDict dictionaryWithValuesForKeys:resettableUserDefaultsKeys];
-    
-    // Set the initial values in the shared user defaults controller
-    //[[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:initialValuesDict];
-    
-    
-    NSLog(@"Done with defaults...");
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {

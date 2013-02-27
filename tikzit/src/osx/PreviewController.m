@@ -45,7 +45,11 @@ static PreviewController *preview = nil;
 	// Only build one tex file at a time, so we don't get funky results.
 	//[latexLock lock];
 	[progressIndicator startAnimation:self];
-	
+    
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"net.sourceforge.tikzit.previewfocus"]){
+        [[preview window] makeKeyAndOrderFront:self];
+	}
+    
 	int fnum = typesetCount++;
 	
 	NSString *tex = [NSString stringWithFormat:@"%@%@%@",
@@ -57,12 +61,14 @@ static PreviewController *preview = nil;
 	NSString *pdfFile = [NSString stringWithFormat:@"%@/tikzit_%d.pdf", tempDir, fnum];
 	
 	[tex writeToFile:texFile atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+    
+    NSString *pdflatexPath = [[NSUserDefaults standardUserDefaults] stringForKey:@"net.sourceforge.tikzit.pdflatexpath"];
 	
 	// We run pdflatex in a bash shell to have easy access to the setup from unix-land
 	NSTask *latexTask = [[NSTask alloc] init];
 	[latexTask setCurrentDirectoryPath:tempDir];
 	[latexTask setLaunchPath:@"/bin/bash"];
-	
+    
 	// This assumes the user has $PATH set up to find pdflatex in either .profile
 	// or .bashrc. This should be improved to take other path setups into account
 	// and to be customisable.
@@ -70,10 +76,9 @@ static PreviewController *preview = nil;
 	[NSString stringWithFormat:
 	 @"if [ -e ~/.profile ]; then source ~/.profile; fi\n"
 	 @"if [ -e ~/.bashrc ]; then source ~/.bashrc; fi\n"
-	 @"pdflatex -interaction=nonstopmode -output-format=pdf -halt-on-error '%@'\n",
-	 texFile];
+	 @"%@ -interaction=nonstopmode -output-format=pdf -halt-on-error '%@'\n", pdflatexPath, texFile];
     
-    //NSLog(@"Telling bash: %@", latexCmd);
+    NSLog(@"Telling bash: %@", latexCmd);
 	
 	NSPipe *pout = [NSPipe pipe];
 	NSPipe *pin = [NSPipe pipe];
@@ -94,9 +99,15 @@ static PreviewController *preview = nil;
 	
     [latexTask waitUntilExit];
 	if ([latexTask terminationStatus] != 0) {
-		[errorTextView setHidden:YES];
-		[errorText setString:[@"\nAN ERROR HAS OCCURRED, PDFLATEX SAID:\n\n" stringByAppendingString:str]];
-		[errorTextView setHidden:NO];
+        if ([latexTask terminationStatus] == 127) {
+            [errorTextView setHidden:YES];
+            [errorText setString:@"\nCouldn't find pdflatex, change settings and try again."];
+            [errorTextView setHidden:NO];
+        }else{
+            [errorTextView setHidden:YES];
+            [errorText setString:[@"\nAN ERROR HAS OCCURRED, PDFLATEX SAID:\n\n" stringByAppendingString:str]];
+            [errorTextView setHidden:NO];
+        }
 	} else {
 		[errorText setString:@""];
 		[errorTextView setHidden:YES];

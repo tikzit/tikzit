@@ -2,7 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>testDefaultsHandler</key>
-	<string>foo</string>
+	<key>net.sourceforge.tikzit.pdflatexpath</key>
+	<string>/usr/texbin/pdflatex</string>
+	<key>net.sourceforge.tikzit.previewfocus</key>
+	<false/>
 </dict>
 </plist>
