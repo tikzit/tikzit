@@ -43,6 +43,12 @@ char linebuff[500];
 
 
 void yyerror(const char *str) {
+    // if the error is on the first line, treat specially
+    if(lineno == 1){
+//        strcpy(linebuff, yytext+1);
+        NSLog(@"Problem ahoy!");
+    }
+    
     NSLog(@"Parse error on line %i: %s\n%s\n%@\n", lineno, str, linebuff, [[@"" stringByPaddingToLength:(tokenpos-yyleng) withString: @" " startingAtIndex:0] stringByAppendingString:[@"" stringByPaddingToLength:yyleng withString: @"^" startingAtIndex:0]]);
 	if (currentAssembler != nil) {
         NSError *error = [NSError errorWithDomain:@"net.sourceforge.tikzit"
@@ -104,7 +110,15 @@ int yywrap() {
     
     lineno = 1;
     tokenpos = 0;
-    linebuff[0] = 0;
+    NSRange range = [tikz rangeOfString:@"\n"];
+    [tikz      getBytes:linebuff
+              maxLength:499
+             usedLength:NULL
+               encoding:NSUTF8StringEncoding
+                options:0
+                  range:NSMakeRange(0, range.location)
+         remainingRange:NULL];
+    linebuff[range.location] = 0;
 	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	currentAssembler = self;
