@@ -120,6 +120,7 @@
 
 - (void)updateTikzFromGraph {
  	[self setTikz:[[graphicsView graph] tikz]];
+    [errorNotification setHidden:TRUE];
 }
 
 - (void)graphChanged:(NSNotification*)n {
@@ -131,7 +132,7 @@
 }
 
 - (void)textDidBeginEditing:(NSNotification *)notification {
-	if ([graphicsView enabled]) {
+	if ([graphicsView enabled]){
 		[graphicsView setEnabled:NO];
 		[graphicsView refreshLayers];
 		[documentUndoManager registerUndoWithTarget:self
