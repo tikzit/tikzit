@@ -111,14 +111,13 @@ int yywrap() {
     lineno = 1;
     tokenpos = 0;
     NSRange range = [tikz rangeOfString:@"\n"];
-    [tikz      getBytes:linebuff
-              maxLength:499
-             usedLength:NULL
-               encoding:NSUTF8StringEncoding
-                options:0
-                  range:NSMakeRange(0, range.location)
-         remainingRange:NULL];
-    linebuff[range.location] = 0;
+	if (![tikz getCString:linebuff
+		        maxLength:500
+			     encoding:NSUTF8StringEncoding]) {
+		linebuff[0] = 0;
+	} else {
+		linebuff[range.location] = 0;
+	}
 	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	currentAssembler = self;
