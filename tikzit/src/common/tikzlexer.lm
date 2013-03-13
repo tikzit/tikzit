@@ -39,7 +39,8 @@ extern int tokenpos;
 %}
 %%
 %\n                             /* ignore end of line */;
-\n.*    {   strcpy(linebuff, yytext+1);
+\n.*    {   strncpy(linebuff, yytext+1, 500);
+			linebuff[499] = 0; // ensure null-terminated
             lineno++;
             tokenpos = 0;
             yyless(1);
