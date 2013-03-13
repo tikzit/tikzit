@@ -111,12 +111,17 @@ int yywrap() {
     lineno = 1;
     tokenpos = 0;
     NSRange range = [tikz rangeOfString:@"\n"];
-	if (![tikz getCString:linebuff
-		        maxLength:500
-			     encoding:NSUTF8StringEncoding]) {
-		linebuff[0] = 0;
+	NSString *firstLine;
+	if (range.length == 0) {
+		firstLine = tikz;
 	} else {
-		linebuff[range.location] = 0;
+		firstLine = [tikz substringToIndex:range.location];
+	}
+	if (![firstLine getCString:linebuff
+					 maxLength:500
+					  encoding:NSUTF8StringEncoding]) {
+		// first line too long; just terminate it at the end of the buffer
+		linebuff[499] = 0;
 	}
 	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
