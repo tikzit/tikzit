@@ -397,7 +397,7 @@
 
 - (void)setSourceAnchor:(NSString *)_sourceAnchor{
     if(_sourceAnchor != nil){
-        sourceAnchor = _sourceAnchor;
+        sourceAnchor = [_sourceAnchor copy];
     }else{
         sourceAnchor = @"";
     }
@@ -405,7 +405,7 @@
 
 - (void)setTargetAnchor:(NSString *)_targetAnchor{
     if(_targetAnchor != nil){
-        targetAnchor = _targetAnchor;
+        targetAnchor = [_targetAnchor copy];
     }else{
         targetAnchor = @"";
     }
