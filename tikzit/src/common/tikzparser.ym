@@ -121,7 +121,7 @@ propsym:
 	LWORD { $$ = $<nsstr>1; }
 	| number { $$ = $<nsstr>1; }
 	| TO { $$ = @"to"; }
-	| NODE { $$ = @"node"; }
+	| ALTNODE { $$ = @"node"; }
 	| RECTANGLE { $$ = @"rectangle"; }
 	| AT { $$ = @"at"; }
 	| FULLSTOP { $$ = @"."; };
