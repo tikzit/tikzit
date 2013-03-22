@@ -17,6 +17,7 @@
 
 #import "SettingsDialog.h"
 
+#import "Application.h"
 #import "Configuration.h"
 #import "EdgeStylesPalette.h"
 #import "NodeStylesPalette.h"
@@ -280,9 +281,7 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
 
     [styleManager updateFromManager:tempStyleManager];
 
-    [[NSNotificationCenter defaultCenter]
-        postNotificationName:@"ConfigurationChanged"
-        object:configuration];
+    [app saveConfiguration];
 }
 
 - (void) revert {

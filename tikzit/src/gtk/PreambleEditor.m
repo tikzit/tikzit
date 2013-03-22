@@ -16,6 +16,8 @@
  */
 
 #import "PreambleEditor.h"
+
+#import "Application.h"
 #import "Preambles.h"
 #import <gdk/gdk.h>
 
@@ -334,6 +336,7 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 	NSString *preamble = [NSString stringWithUTF8String:text];
 	g_free (text);
 	[preambles setCurrentPreamble:preamble];
+    [app saveConfiguration];
 }
 
 - (void) revert {
