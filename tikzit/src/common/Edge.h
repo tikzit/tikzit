@@ -222,6 +222,8 @@ typedef enum {
  */
 @property (readonly) NSPoint rightNormal;
 
+@property (readonly) NSPoint headTan;
+
 /*!
  @property   leftHeadNormal
  */
@@ -231,6 +233,8 @@ typedef enum {
  @property   rightHeadNormal
  */
 @property (readonly) NSPoint rightHeadNormal;
+
+@property (readonly) NSPoint tailTan;
 
 /*!
  @property   leftTailNormal

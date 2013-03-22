@@ -368,6 +368,75 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
         [self setDragSelectMode:DragSelectsEdges];
     } else if (keyVal == GDK_KEY_B && mask == ShiftMask) {
         [self setDragSelectMode:DragSelectsBoth];
+    } else if (keyVal == GDK_KEY_D && (!mask || mask == ShiftMask)) {
+        PickSupport *ps = [[self doc] pickSupport];
+        for (Node* node in [ps selectedNodes]) {
+            NSRect b = [node boundingRect];
+            NSLog(@"%@ @ (%f,%f) {style=%@, label=%@, data=%@, bounds=(%f,%f),(%fx%f)}",
+                    [node name],
+                    [node point].x,
+                    [node point].y,
+                    [[node style] name],
+                    [node label],
+                    [[node data] tikzList],
+                    b.origin.x, b.origin.y, b.size.width, b.size.height);
+        }
+        for (Edge* edge in [ps selectedEdges]) {
+            NSRect b = [edge boundingRect];
+            NSLog(@"%@:%@->%@:%@ {\n"
+                  @"  style=%@, data=%@,\n"
+                  @"  bend=%d, weight=%f, inAngle=%d, outAngle=%d, bendMode=%d,\n"
+                  @"  head=(%f,%f), headTan=(%f,%f) leftHeadNormal=(%f,%f), rightHeadNormal=(%f,%f),\n"
+                  @"  cp1=(%f,%f),\n"
+                  @"  mid=(%f,%f), midTan=(%f,%f), leftNormal=(%f,%f), rightNormal=(%f,%f)\n"
+                  @"  cp2=(%f,%f),\n"
+                  @"  tail=(%f,%f), tailTan=(%f,%f), leftTailNormal=(%f,%f), rightTailNormal=(%f,%f),\n"
+                  @"  isSelfLoop=%s, isStraight=%s,\n"
+                  @"  bounds=(%f,%f),(%fx%f)\n"
+                  @"}",
+                    [[edge source] name],
+                    [edge sourceAnchor],
+                    [[edge target] name],
+                    [edge targetAnchor],
+                    [[edge style] name],
+                    [[edge data] tikzList],
+                    [edge bend],
+                    [edge weight],
+                    [edge inAngle],
+                    [edge outAngle],
+                    [edge bendMode],
+                    [edge head].x,
+                    [edge head].y,
+                    [edge headTan].x,
+                    [edge headTan].y,
+                    [edge leftHeadNormal].x,
+                    [edge leftHeadNormal].y,
+                    [edge rightHeadNormal].x,
+                    [edge rightHeadNormal].y,
+                    [edge cp1].x,
+                    [edge cp1].y,
+                    [edge mid].x,
+                    [edge mid].y,
+                    [edge midTan].x,
+                    [edge midTan].y,
+                    [edge leftNormal].x,
+                    [edge leftNormal].y,
+                    [edge rightNormal].x,
+                    [edge rightNormal].y,
+                    [edge cp2].x,
+                    [edge cp2].y,
+                    [edge tail].x,
+                    [edge tail].y,
+                    [edge tailTan].x,
+                    [edge tailTan].y,
+                    [edge leftTailNormal].x,
+                    [edge leftTailNormal].y,
+                    [edge rightTailNormal].x,
+                    [edge rightTailNormal].y,
+                    [edge isSelfLoop] ? "yes" : "no",
+                    [edge isStraight] ? "yes" : "no",
+                    b.origin.x, b.origin.y, b.size.width, b.size.height);
+        }
     }
 }
 

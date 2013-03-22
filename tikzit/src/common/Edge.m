@@ -228,6 +228,11 @@
 	return NSMakePoint(mid.x - (mid.y - midTan.y), mid.y + (mid.x - midTan.x));
 }
 
+- (NSPoint)headTan {
+	[self updateControls];
+	return headTan;
+}
+
 - (NSPoint)leftHeadNormal {
 	[self updateControls];
 	return NSMakePoint(headTan.x + (head.y - headTan.y), headTan.y - (head.x - headTan.x));
@@ -236,6 +241,11 @@
 - (NSPoint)rightHeadNormal {
     [self updateControls];
 	return NSMakePoint(headTan.x - (head.y - headTan.y), headTan.y + (head.x - headTan.x));
+}
+
+- (NSPoint)tailTan {
+	[self updateControls];
+	return tailTan;
 }
 
 - (NSPoint)leftTailNormal {
