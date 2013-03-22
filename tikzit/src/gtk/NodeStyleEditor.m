@@ -279,6 +279,11 @@ static void scale_adjustment_changed_cb (GtkAdjustment *widget, NodeStyleEditor 
     return GTK_WIDGET (table);
 }
 
+- (void) selectNameField {
+    gtk_widget_grab_focus (GTK_WIDGET (nameEdit));
+    gtk_editable_select_region (GTK_EDITABLE (nameEdit), 0, -1);
+}
+
 @end
 
 // }}}

@@ -39,6 +39,7 @@ static void remove_style_button_cb (GtkButton *widget, EdgeStylesPalette *palett
 @interface EdgeStylesPalette (Private)
 - (void) updateButtonState;
 - (void) removeSelectedStyle;
+- (void) addStyle;
 @end
 
 // }}}
@@ -169,6 +170,13 @@ static void remove_style_button_cb (GtkButton *widget, EdgeStylesPalette *palett
         [[[selector model] styleManager] removeEdgeStyle:style];
 }
 
+- (void) addStyle {
+    EdgeStyle *newStyle = [EdgeStyle defaultEdgeStyleWithName:@"newstyle"];
+    [[self styleManager] addEdgeStyle:newStyle];
+    [selector setSelectedStyle:newStyle];
+    [editor selectNameField];
+}
+
 @end
 
 // }}}
@@ -176,10 +184,7 @@ static void remove_style_button_cb (GtkButton *widget, EdgeStylesPalette *palett
 
 static void add_style_button_cb (GtkButton *widget, EdgeStylesPalette *palette) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-    EdgeStyle *newStyle = [EdgeStyle defaultEdgeStyleWithName:@"newstyle"];
-    [[palette styleManager] addEdgeStyle:newStyle];
-
+    [palette addStyle];
     [pool drain];
 }
 

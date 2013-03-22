@@ -38,6 +38,8 @@
 
 - (id) init;
 
+- (void) selectNameField;
+
 @end
 
 // vim:ft=objc:ts=4:et:sts=4:sw=4:foldmethod=marker

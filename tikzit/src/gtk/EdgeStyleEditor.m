@@ -318,6 +318,11 @@ static void make_color_safe_button_clicked_cb (GtkButton *widget, EdgeStyleEdito
     return GTK_WIDGET (table);
 }
 
+- (void) selectNameField {
+    gtk_widget_grab_focus (GTK_WIDGET (nameEdit));
+    gtk_editable_select_region (GTK_EDITABLE (nameEdit), 0, -1);
+}
+
 @end
 
 // }}}

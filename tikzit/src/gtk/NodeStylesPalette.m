@@ -39,6 +39,7 @@ static void remove_style_button_cb (GtkButton *widget, NodeStylesPalette *palett
 @interface NodeStylesPalette (Private)
 - (void) updateButtonState;
 - (void) removeSelectedStyle;
+- (void) addStyle;
 @end
 
 // }}}
@@ -168,6 +169,13 @@ static void remove_style_button_cb (GtkButton *widget, NodeStylesPalette *palett
         [[[selector model] styleManager] removeNodeStyle:style];
 }
 
+- (void) addStyle {
+    NodeStyle *newStyle = [NodeStyle defaultNodeStyleWithName:@"newstyle"];
+    [[self styleManager] addNodeStyle:newStyle];
+    [selector setSelectedStyle:newStyle];
+    [editor selectNameField];
+}
+
 @end
 
 // }}}
@@ -175,10 +183,7 @@ static void remove_style_button_cb (GtkButton *widget, NodeStylesPalette *palett
 
 static void add_style_button_cb (GtkButton *widget, NodeStylesPalette *palette) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-    NodeStyle *newStyle = [NodeStyle defaultNodeStyleWithName:@"newstyle"];
-    [[palette styleManager] addNodeStyle:newStyle];
-
+    [palette addStyle];
     [pool drain];
 }
 
