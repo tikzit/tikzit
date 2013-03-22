@@ -44,55 +44,46 @@ extern void yyerror(const char *str);
 
 %error-verbose
 
-%token LATEXBEGIN
-%token LATEXEND
-%token TIKZPICTURE
-%token PGFONLAYER
+%token BEGIN_TIKZPICTURE_CMD
+%token END_TIKZPICTURE_CMD
+%token BEGIN_PGFONLAYER_CMD
+%token END_PGFONLAYER_CMD
+%token DRAW_CMD
+%token NODE_CMD
+%token PATH_CMD
+%token RECTANGLE
+%token NODE
+%token AT
+%token TO
+%token SEMICOLON
+%token COMMA
+
 %token LEFTPARENTHESIS
 %token RIGHTPARENTHESIS
 %token LEFTBRACKET
 %token RIGHTBRACKET
-%token SEMICOLON
-%token COMMA
 %token FULLSTOP
 %token EQUALS
-%token DRAW
-%token TO
-%token NODE
-%token RECTANGLE
-%token PATH
-%token ALTNODE
-%token AT
-%token REALNUMBER
-%token NATURALNUMBER
-%token LWORD
+%token COORD
+%token PROPSTRING
+%token REFSTRING
 %token DELIMITEDSTRING
 
 %type<nsstr> nodename
-%type<nsstr> anchor
-%type<nsstr> anchorsym
 %type<nsstr> optanchor
-%type<nsstr> nodeid
-%type<pt> coords
-%type<nsstr> propsym
-%type<nsstr> propsyms
 %type<nsstr> val
-%type<nsstr> number
 
 %%
 
-tikzpicture: LATEXBEGIN TIKZPICTURE optproperties expressions LATEXEND TIKZPICTURE;
-expressions: expressions expression | ;
-expression: node | edge | boundingbox | ignore;
+tikzpicture: BEGIN_TIKZPICTURE_CMD optproperties tikzcmds END_TIKZPICTURE_CMD;
+tikzcmds: tikzcmds tikzcmd | ;
+tikzcmd: node | edge | boundingbox | ignore;
 
-ignore: LATEXBEGIN PGFONLAYER DELIMITEDSTRING | LATEXEND PGFONLAYER;
-
-number: REALNUMBER { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
+ignore: BEGIN_PGFONLAYER_CMD DELIMITEDSTRING | END_PGFONLAYER_CMD;
 
 optproperties: LEFTBRACKET properties RIGHTBRACKET | ;
 properties: property extraproperties;
-extraproperties: COMMA property extraproperties | property extraproperties | ;
-
+extraproperties: COMMA property extraproperties | ;
 property:
 	val EQUALS val
 	{
@@ -108,79 +99,33 @@ property:
 		[[a data] addObject:p];
 		[p release];
 	};
+val: PROPSTRING { $$ = $<nsstr>1; } | DELIMITEDSTRING { $$ = $<nsstr>1; };
 
-val: propsyms { $$ = $<nsstr>1; } | DELIMITEDSTRING { $$ = $<nsstr>1; };
-propsyms:
-	propsym { $$ = $<nsstr>1; }
-	| propsyms propsym
-	{
-		NSString *s = [$<nsstr>1 stringByAppendingFormat:@" %@", $<nsstr>2];
-		$$ = s;
-	};
-
-propsym:
-	LWORD { $$ = $<nsstr>1; }
-	| number { $$ = $<nsstr>1; }
-	| TO { $$ = @"to"; }
-	| ALTNODE { $$ = @"node"; }
-	| RECTANGLE { $$ = @"rectangle"; }
-	| AT { $$ = @"at"; }
-	| FULLSTOP { $$ = @"."; };
-
-
-nodecmd : NODE { [[TikzGraphAssembler currentAssembler] prepareNode]; };
-
-nodename: LEFTPARENTHESIS nodeid RIGHTPARENTHESIS { $$ = $<nsstr>2; };
-
-node:
-	nodecmd optproperties nodename AT coords nodelabel SEMICOLON
+nodecmd: NODE_CMD { [[TikzGraphAssembler currentAssembler] prepareNode]; };
+nodename: LEFTPARENTHESIS REFSTRING RIGHTPARENTHESIS { $$ = $<nsstr>2; };
+node: nodecmd optproperties nodename AT COORD DELIMITEDSTRING SEMICOLON
 	{
 		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
 		[[a currentNode] setName:$<nsstr>3];
 		[[a currentNode] setPoint:$<pt>5];
+		[[a currentNode] setLabel:$<nsstr>6];
 		[a finishNode];
 	};
 
-nodelabel:
-	DELIMITEDSTRING
+edgecmd : DRAW_CMD { [[TikzGraphAssembler currentAssembler] prepareEdge]; };
+edge: edgecmd optproperties source TO optedgenode target SEMICOLON
 	{
-		Node *n = [[TikzGraphAssembler currentAssembler] currentNode];
-		[n setLabel:$<nsstr>1];
-	}
-
-anchor: anchorsym { $$ = $<nsstr>1; }
-	| anchor anchorsym
-	{
-		NSString *s = [$<nsstr>1 stringByAppendingFormat:@" %@", $<nsstr>2];
-		$$ = s;
+		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
+		[a finishEdge];
 	};
-anchorsym: LWORD { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
-
-optanchor:  { $$ = @""; } | FULLSTOP anchor { $$ = $<nsstr>2; };
-
-source: LEFTPARENTHESIS nodeid optanchor RIGHTPARENTHESIS
+optanchor:  { $$ = @""; } | FULLSTOP REFSTRING { $$ = $<nsstr>2; };
+source: LEFTPARENTHESIS REFSTRING optanchor RIGHTPARENTHESIS
     {
         TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
         [a setEdgeSource:$<nsstr>2
         anchor:$<nsstr>3];
     };
-
-nodeid: LWORD { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
-
-coords:
-	LEFTPARENTHESIS number COMMA number RIGHTPARENTHESIS
-	{
-		$$ = NSMakePoint([$<nsstr>2 floatValue], [$<nsstr>4 floatValue]);
-	};
-
-edgecmd : DRAW { [[TikzGraphAssembler currentAssembler] prepareEdge]; };
-edge:
-	edgecmd optproperties source TO optedgenode target SEMICOLON
-	{
-		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-		[a finishEdge];
-	};
-target: LEFTPARENTHESIS nodeid optanchor RIGHTPARENTHESIS
+target: LEFTPARENTHESIS REFSTRING optanchor RIGHTPARENTHESIS
     {
         TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
         [a setEdgeTarget:$<nsstr>2
@@ -194,18 +139,20 @@ target: LEFTPARENTHESIS nodeid optanchor RIGHTPARENTHESIS
     };
 selfloop: LEFTPARENTHESIS RIGHTPARENTHESIS;
 
-altnodecmd: ALTNODE { [[TikzGraphAssembler currentAssembler] prepareNode]; };
+edgenodecmd: NODE { [[TikzGraphAssembler currentAssembler] prepareNode]; };
 optedgenode:
-	| altnodecmd optproperties nodelabel
+	| edgenodecmd optproperties DELIMITEDSTRING
 	{
-		[[TikzGraphAssembler currentAssembler] finishNode];
+		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
+		[[a currentNode] setLabel:$<nsstr>3];
+		[a finishNode];
 	}
 
-bbox_ignoreprops:
-	| LEFTBRACKET LWORD LWORD LWORD LWORD RIGHTBRACKET;
-
+ignoreprop: val | val EQUALS val;
+ignoreprops: ignoreprop ignoreprops | ;
+optignoreprops: LEFTBRACKET ignoreprops RIGHTBRACKET;
 boundingbox:
-	PATH bbox_ignoreprops coords RECTANGLE coords SEMICOLON
+	PATH_CMD optignoreprops COORD RECTANGLE COORD SEMICOLON
 	{
 		Graph *g = [[TikzGraphAssembler currentAssembler] graph];
 		[g setBoundingBox:NSRectAroundPoints($<pt>3, $<pt>5)];

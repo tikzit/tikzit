@@ -1,5 +1,10 @@
 %option nounput
 %option yylineno
+%s props
+%s xcoord
+%s ycoord
+%s noderef
+FLOAT \-?[0-9]*(\.[0-9]+)?
 
 %{
 //
@@ -7,6 +12,9 @@
 //  TikZiT
 //  
 //  Copyright 2010 Chris Heunen. All rights reserved.
+//  Copyright 2012 Aleks Kissinger
+//  Copyright 2012 KJ
+//  Copyright 2013 Alex Merry
 //  
 //  
 //  This file is part of TikZiT.
@@ -45,48 +53,82 @@ extern int tokenpos;
             tokenpos = 0;
             yyless(1);
         }
-[ ]+                           { tokenpos += yyleng; } /* ignore whitespace */;
-[\t]+                          { tokenpos += 4*yyleng; } /* ignore whitespace */;
-\\begin                        { tokenpos += yyleng; return LATEXBEGIN; }
-\\end                          { tokenpos += yyleng; return LATEXEND; }
-\{tikzpicture\}                { tokenpos += yyleng; return TIKZPICTURE; }
-\{pgfonlayer\}                 { tokenpos += yyleng; return PGFONLAYER; }
-\(                             { tokenpos += yyleng; return LEFTPARENTHESIS; }
-\)                             { tokenpos += yyleng; return RIGHTPARENTHESIS; }	       
-\[                             { tokenpos += yyleng; return LEFTBRACKET; }
-\]                             { tokenpos += yyleng; return RIGHTBRACKET; }
-;                              { tokenpos += yyleng; return SEMICOLON; }
-,                              { tokenpos += yyleng; return COMMA; }
-\.                             { tokenpos += yyleng; return FULLSTOP; }
-=                              { tokenpos += yyleng; return EQUALS; }
-\\draw                         { tokenpos += yyleng; return DRAW; }
-to                             { tokenpos += yyleng; return TO; }
-\\node                         { tokenpos += yyleng; return NODE; }
-\\path                         { tokenpos += yyleng; return PATH; }
-node                           { tokenpos += yyleng; return ALTNODE; }
+<INITIAL,xcoord,ycoord,props,noderef>[ ]+  { tokenpos += yyleng; } /* ignore whitespace */;
+<INITIAL,xcoord,ycoord,props,noderef>[\t]+ { tokenpos += 8*yyleng; } /* ignore whitespace */;
+\\begin\{tikzpicture\}         { tokenpos += yyleng; return BEGIN_TIKZPICTURE_CMD; }
+\\end\{tikzpicture\}           { tokenpos += yyleng; return END_TIKZPICTURE_CMD; }
+\\begin\{pgfonlayer\}          { tokenpos += yyleng; return BEGIN_PGFONLAYER_CMD; }
+\\end\{pgfonlayer\}            { tokenpos += yyleng; return END_PGFONLAYER_CMD; }
+\\draw                         { tokenpos += yyleng; return DRAW_CMD; }
+\\node                         { tokenpos += yyleng; return NODE_CMD; }
+\\path                         { tokenpos += yyleng; return PATH_CMD; }
 rectangle                      { tokenpos += yyleng; return RECTANGLE; }
+node                           { tokenpos += yyleng; return NODE; }
 at                             { tokenpos += yyleng; return AT; }
+to                             { tokenpos += yyleng; return TO; }
+;                              { tokenpos += yyleng; return SEMICOLON; }
 
-[0-9]+ {
-    tokenpos += yyleng;
-	yylval.nsstr=[NSString stringWithUTF8String:yytext];
-	return NATURALNUMBER;
+\([ ]*{FLOAT}[ ]*,[ ]*{FLOAT}[ ]*\) {
+	tokenpos += 1;
+	yyless(1);
+	BEGIN(xcoord);
+}
+<xcoord>{FLOAT} {
+	tokenpos += yyleng;
+	yylval.pt.x=(float)strtod(yytext,NULL);
+	BEGIN(ycoord);
+}
+<ycoord>, { tokenpos += yyleng; }
+<ycoord>{FLOAT} {
+	tokenpos += yyleng;
+	yylval.pt.y=(float)strtod(yytext,NULL);
+}
+<ycoord>\) {
+	tokenpos += yyleng;
+	BEGIN(INITIAL);
+	return COORD;
 }
 
-(\-?[0-9]*\.[0-9]+)|(\-?[0-9]+) {
-    tokenpos += yyleng;
+ /* when we see "[", change parsing mode */
+\[ /*syntaxhlfix]*/ {
+	tokenpos += yyleng;
+	BEGIN(props);
+	return LEFTBRACKET;
+}
+<props>= { tokenpos += yyleng; return EQUALS; }
+<props>, { tokenpos += yyleng; return COMMA; }
+<props>[^=,\{\] \t]([^=,\{\]]*[^=,\{\] \t])? {
+	tokenpos += yyleng;
 	yylval.nsstr=[NSString stringWithUTF8String:yytext];
-	return REALNUMBER;
+	return PROPSTRING;
+}
+<props>\] {
+	tokenpos += yyleng;
+	BEGIN(INITIAL);
+	return RIGHTBRACKET;
 }
 
-\\?[a-zA-Z<>\-\'][a-zA-Z<>\-\'0-9]* { //'
-    tokenpos += yyleng;
+\( {
+	tokenpos += yyleng;
+	BEGIN(noderef);
+	return LEFTPARENTHESIS;
+}
+<noderef>\. {
+	tokenpos += yyleng;
+	return FULLSTOP;
+}
+<noderef>[^\.\{\)]+ {
+	tokenpos += yyleng;
 	yylval.nsstr=[NSString stringWithUTF8String:yytext];
-	return LWORD;
+	return REFSTRING;
+}
+<noderef>\) {
+	tokenpos += yyleng;
+	BEGIN(INITIAL);
+	return RIGHTPARENTHESIS;
 }
 
-
-\{ {
+<INITIAL,props>\{ {
 	NSMutableString *buf = [NSMutableString string];
 	unsigned int brace_depth = 1;
 	unsigned int escape = 0;
