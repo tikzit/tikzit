@@ -83,7 +83,8 @@
 	}
 
 	Transformer *shapeTrans = [node shapeTransformer];
-	NSRect searchArea = [node boundsUsingShapeTransform:shapeTrans];
+	// rounding errors are a pain
+	NSRect searchArea = NSInsetRect([node boundsUsingShapeTransform:shapeTrans],-0.01,-0.01);
 	if (!NSPointInRect(rayStart, searchArea)) {
 		return rayStart;
 	}
