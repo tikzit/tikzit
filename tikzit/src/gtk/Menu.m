@@ -55,21 +55,21 @@ static void refresh_shapes_cb (GtkAction *action, Application *appl) {
 
 static void show_preferences_cb (GtkAction *action, Application *appl) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [appl showSettingsDialog];
+    [appl presentSettingsDialog];
     [pool drain];
 }
 
 #ifdef HAVE_POPPLER
 static void show_preamble_cb (GtkAction *action, Application *appl) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [appl showPreamblesEditor];
+    [appl presentPreamblesEditor];
     [pool drain];
 }
 #endif
 
 static void show_context_window_cb (GtkAction *action, Application *appl) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [appl showContextWindow];
+    [appl presentContextWindow];
     [pool drain];
 }
 
@@ -316,7 +316,7 @@ static void send_to_back_cb (GtkAction *action, Window *window) {
 #ifdef HAVE_POPPLER
 static void show_preview_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [app showPreviewForDocument:[window document]];
+    [app presentPreviewForDocument:[window document]];
     [pool drain];
 }
 #endif

@@ -24,6 +24,8 @@
 #import "TikzDocument.h"
 #import "WidgetSurface.h"
 
+#import <gdk/gdkkeysyms.h>
+
 @class GraphRenderer;
 @class WidgetSurface;
 
@@ -176,6 +178,9 @@
 }
 
 - (void) keyPressed:(unsigned int)keyVal withMask:(InputMask)mask {
+    if (keyVal == GDK_KEY_space && !mask) {
+        return;
+    }
     if (![app activateToolForKey:keyVal withMask:mask]) {
         id<Tool> tool = [panel activeTool];
         if ([panel hasTool] && [tool respondsToSelector:@selector(keyPressed:withMask:)]) {
@@ -185,6 +190,9 @@
 }
 
 - (void) keyReleased:(unsigned int)keyVal withMask:(InputMask)mask {
+    if (keyVal == GDK_KEY_space && !mask) {
+        [app previewDocument:[panel document]];
+    }
     if (![app activateToolForKey:keyVal withMask:mask]) {
         id<Tool> tool = [panel activeTool];
         if ([panel hasTool] && [tool respondsToSelector:@selector(keyReleased:withMask:)]) {

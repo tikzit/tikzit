@@ -129,19 +129,23 @@ extern Application* app;
 /**
  * Show the dialog for editing preambles.
  */
-- (void) showPreamblesEditor;
+- (void) presentPreamblesEditor;
 /**
  * Show the context-aware window
  */
-- (void) showContextWindow;
+- (void) presentContextWindow;
 /**
  * Show or update the preview window.
  */
-- (void) showPreviewForDocument:(TikzDocument*)doc;
+- (void) presentPreviewForDocument:(TikzDocument*)doc;
+/**
+ * Show or update the preview window without it grabbing focus
+ */
+- (void) previewDocument:(TikzDocument*)doc;
 /**
  * Show the settings dialog.
  */
-- (void) showSettingsDialog;
+- (void) presentSettingsDialog;
 
 /**
  * Save the application configuration to permanent storage

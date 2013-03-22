@@ -262,7 +262,7 @@ Application* app = nil;
     gtk_main_quit();
 }
 
-- (void) showPreamblesEditor {
+- (void) presentPreamblesEditor {
 #ifdef HAVE_POPPLER
     if (preambleWindow == nil) {
         preambleWindow = [[PreambleEditor alloc] initWithPreambles:preambles];
@@ -272,11 +272,11 @@ Application* app = nil;
 #endif
 }
 
-- (void) showContextWindow {
+- (void) presentContextWindow {
     [contextWindow present];
 }
 
-- (void) showPreviewForDocument:(TikzDocument*)doc {
+- (void) presentPreviewForDocument:(TikzDocument*)doc {
 #ifdef HAVE_POPPLER
     if (previewWindow == nil) {
         previewWindow = [[PreviewWindow alloc] initWithPreambles:preambles config:configFile];
@@ -287,7 +287,18 @@ Application* app = nil;
 #endif
 }
 
-- (void) showSettingsDialog {
+- (void) previewDocument:(TikzDocument*)doc {
+#ifdef HAVE_POPPLER
+    if (previewWindow == nil) {
+        previewWindow = [[PreviewWindow alloc] initWithPreambles:preambles config:configFile];
+        //[previewWindow setParentWindow:mainWindow];
+        [previewWindow setDocument:doc];
+    }
+    [previewWindow show];
+#endif
+}
+
+- (void) presentSettingsDialog {
     if (settingsDialog == nil) {
         settingsDialog = [[SettingsDialog alloc] initWithConfiguration:configFile
                                                        andStyleManager:styleManager];
