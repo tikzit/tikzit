@@ -70,6 +70,7 @@ extern void yyerror(const char *str);
 
 %type<nsstr> nodename
 %type<nsstr> anchor
+%type<nsstr> anchorsym
 %type<nsstr> optanchor
 %type<nsstr> nodeid
 %type<pt> coords
@@ -147,7 +148,13 @@ nodelabel:
 		[n setLabel:$<nsstr>1];
 	}
 
-anchor: LWORD { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
+anchor: anchorsym { $$ = $<nsstr>1; }
+	| anchor anchorsym
+	{
+		NSString *s = [$<nsstr>1 stringByAppendingFormat:@" %@", $<nsstr>2];
+		$$ = s;
+	};
+anchorsym: LWORD { $$ = $<nsstr>1; } | NATURALNUMBER { $$ = $<nsstr>1; };
 
 optanchor:  { $$ = @""; } | FULLSTOP anchor { $$ = $<nsstr>2; };
 
