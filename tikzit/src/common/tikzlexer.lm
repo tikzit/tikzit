@@ -45,7 +45,7 @@ FLOAT \-?[0-9]*(\.[0-9]+)?
 
 %%
 
-\n {
+<INITIAL,xcoord,ycoord,props,noderef>\n {
 	yylloc->first_line += 1;
 	yylloc->last_line = yylloc->first_line;
 	yylloc->first_column = yylloc->last_column = 0;
@@ -94,7 +94,10 @@ to                             {  return TO; }
 }
 <props>= {  return EQUALS; }
 <props>, {  return COMMA; }
-<props>[^=,\{\] \t]([^=,\{\]]*[^=,\{\] \t])? {
+ /* technically, it is possible to have newlines in the middle of
+	property names or values, but in practice this is unlikely and
+	screws up our line counting */
+<props>[^=,\{\] \t\n]([^=,\{\]\n]*[^=,\{\] \t\n])? {
 	yylval->nsstr=[NSString stringWithUTF8String:yytext];
 	return PROPSTRING;
 }
@@ -110,7 +113,9 @@ to                             {  return TO; }
 <noderef>\. {
 	return FULLSTOP;
 }
-<noderef>[^\.\{\)]+ {
+ /* we assume node names (and anchor names) never contain
+	newlines */
+<noderef>[^\.\{\)\n]+ {
 	yylval->nsstr=[NSString stringWithUTF8String:yytext];
 	return REFSTRING;
 }
@@ -156,8 +161,9 @@ to                             {  return TO; }
 
 \\begin { return UNKNOWN_BEGIN_CMD; }
 \\end { return UNKNOWN_END_CMD; }
-\\[a-zA-Z]+[a-zA-Z0-9]* { return UNKNOWN_CMD; }
-. { return UNKNOWN_STR; }
+\\[a-zA-Z0-9]+ { return UNKNOWN_CMD; }
+[a-zA-Z0-9]+ { return UNKNOWN_STR; }
+<INITIAL,xcoord,ycoord,props,noderef>. { return UNKNOWN_STR; }
 
  /* vi:ft=lex:noet:ts=4:sts=4:sw=4:
  */
