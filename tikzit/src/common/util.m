@@ -361,5 +361,20 @@ NSString *alphaHex(unsigned short sh) {
 	return [NSString stringWithFormat:@"%c%c", ahex[sh/16], ahex[sh%16]];
 }
 
+const char *find_start_of_nth_line (const char * string, int line) {
+	int l = 0;
+	const char *lineStart = string;
+	while (*lineStart && l < line) {
+		while (*lineStart && *lineStart != '\n') {
+			++lineStart;
+		}
+		if (*lineStart) {
+			++l;
+			++lineStart;
+		}
+	}
+	return lineStart;
+}
+
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4

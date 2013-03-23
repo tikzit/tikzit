@@ -189,4 +189,6 @@ float normaliseAngleRad (float rads);
  */
 NSString *alphaHex(unsigned short sh);
 
+const char *find_start_of_nth_line (const char * string, int line);
+
 // vi:ft=objc:noet:ts=4:sts=4:sw=4

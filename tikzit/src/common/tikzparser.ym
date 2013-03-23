@@ -24,10 +24,11 @@
 %}
 
 %code requires {
-#import "TikzGraphAssembler+Parser.h"
-#import "GraphElementData.h"
-#import "GraphElementProperty.h"
-#import "Node.h"
+#import <Foundation/Foundation.h>
+@class TikzGraphAssembler;
+@class GraphElementData;
+@class GraphElementProperty;
+@class Node;
 struct noderef {
 	Node *node;
 	NSString *anchor;
@@ -36,9 +37,9 @@ struct noderef {
 
 %defines "common/tikzparser.h"
 %pure-parser
+%locations
 %parse-param {TikzGraphAssembler *assembler}
 %error-verbose
-
 
 %union {
 	NSPoint pt;
@@ -50,7 +51,15 @@ struct noderef {
 };
 
 %{
+#import "TikzGraphAssembler+Parser.h"
+#import "GraphElementData.h"
+#import "GraphElementProperty.h"
+#import "Node.h"
 #import "tikzlexer.h"
+#define YYLEX_PARAM [assembler scanner]
+void yyerror(YYLTYPE *yylloc, TikzGraphAssembler *assembler, const char *str) {
+	[assembler reportError:str atLocation:yylloc];
+}
 %}
 
 
@@ -78,6 +87,12 @@ struct noderef {
 %token <nsstr> PROPSTRING "key/value string"
 %token <nsstr> REFSTRING "string"
 %token <nsstr> DELIMITEDSTRING "{-delimited string"
+
+%token UNKNOWN_BEGIN_CMD "unknown \\begin command"
+%token UNKNOWN_END_CMD "unknown \\end command"
+%token UNKNOWN_CMD "unknown latex command"
+%token UNKNOWN_STR "unknown string"
+%token UNCLOSED_DELIM_STR "unclosed {-delimited string"
 
 %type<nsstr>   nodename
 %type<nsstr>   optanchor
@@ -125,7 +140,8 @@ nodename: "(" REFSTRING ")" { $$ = $2; };
 node: "\\node" optproperties nodename "at" COORD DELIMITEDSTRING ";"
 	{
 		Node *node = [Node node];
-		[node setData:$2];
+		if ($2)
+			[node setData:$2];
 		[node setName:$3];
 		[node setPoint:$5];
 		[node setLabel:$6];
@@ -147,13 +163,15 @@ optedgenode:
 	| "node" optproperties DELIMITEDSTRING
 	{
 		$$ = [Node node];
-		[$$ setData:$2];
+		if ($2)
+			[$$ setData:$2];
 		[$$ setLabel:$3];
 	}
 edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
 	{
 		Edge *edge = [Edge edge];
-		[edge setData:$2];
+		if ($2)
+			[edge setData:$2];
 		[edge setSource:$3.node];
 		[edge setSourceAnchor:$3.anchor];
 		[edge setEdgeNode:$5];

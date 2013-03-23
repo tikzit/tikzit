@@ -22,9 +22,15 @@
 #import <Foundation/Foundation.h>
 #import "tikzparser.h"
 
+#define YY_USER_ACTION \
+	yylloc->first_line = yylloc->last_line; \
+	if (yylloc->last_line != 1 || yylloc->last_column != 1) \
+		yylloc->first_column = yylloc->last_column + 1; \
+	yylloc->last_column = yylloc->first_column + yyleng;
+
 %}
 
-%option reentrant bison-bridge 8bit
+%option reentrant bison-bridge bison-locations 8bit
 %option nounput
 %option yylineno
 %option noyywrap
@@ -39,81 +45,76 @@ FLOAT \-?[0-9]*(\.[0-9]+)?
 
 %%
 
-\n.* {
-	[yyextra newLineStarted:yytext+1];
-	yyless(1);
+\n {
+	yylloc->first_line += 1;
+	yylloc->last_line = yylloc->first_line;
+	yylloc->first_column = yylloc->last_column = 0;
 }
-<INITIAL,xcoord,ycoord,props,noderef>[ ]+  { [yyextra incrementPosBy:yyleng]; } /* ignore whitespace */;
-<INITIAL,xcoord,ycoord,props,noderef>[\t]+ { [yyextra incrementPosBy:8*yyleng]; } /* ignore whitespace */;
-\\begin\{tikzpicture\}         { [yyextra incrementPosBy:yyleng]; return BEGIN_TIKZPICTURE_CMD; }
-\\end\{tikzpicture\}           { [yyextra incrementPosBy:yyleng]; return END_TIKZPICTURE_CMD; }
-\\begin\{pgfonlayer\}          { [yyextra incrementPosBy:yyleng]; return BEGIN_PGFONLAYER_CMD; }
-\\end\{pgfonlayer\}            { [yyextra incrementPosBy:yyleng]; return END_PGFONLAYER_CMD; }
-\\draw                         { [yyextra incrementPosBy:yyleng]; return DRAW_CMD; }
-\\node                         { [yyextra incrementPosBy:yyleng]; return NODE_CMD; }
-\\path                         { [yyextra incrementPosBy:yyleng]; return PATH_CMD; }
-rectangle                      { [yyextra incrementPosBy:yyleng]; return RECTANGLE; }
-node                           { [yyextra incrementPosBy:yyleng]; return NODE; }
-at                             { [yyextra incrementPosBy:yyleng]; return AT; }
-to                             { [yyextra incrementPosBy:yyleng]; return TO; }
-;                              { [yyextra incrementPosBy:yyleng]; return SEMICOLON; }
+<INITIAL,xcoord,ycoord,props,noderef>[ ]+  {  } /* ignore whitespace */;
+<INITIAL,xcoord,ycoord,props,noderef>[\t]+ {
+	// tab = 8 columns
+	// note that we have already adjusted by yyleng at this point
+	yylloc->last_column = yylloc->first_column + 7*yyleng;
+}
+\\begin\{tikzpicture\}         {  return BEGIN_TIKZPICTURE_CMD; }
+\\end\{tikzpicture\}           {  return END_TIKZPICTURE_CMD; }
+\\begin\{pgfonlayer\}          {  return BEGIN_PGFONLAYER_CMD; }
+\\end\{pgfonlayer\}            {  return END_PGFONLAYER_CMD; }
+\\draw                         {  return DRAW_CMD; }
+\\node                         {  return NODE_CMD; }
+\\path                         {  return PATH_CMD; }
+rectangle                      {  return RECTANGLE; }
+node                           {  return NODE; }
+at                             {  return AT; }
+to                             {  return TO; }
+;                              {  return SEMICOLON; }
 
 \([ ]*{FLOAT}[ ]*,[ ]*{FLOAT}[ ]*\) {
-	[yyextra incrementPosBy:1];
+	yylloc->last_column = yylloc->first_column + 1;
 	yyless(1);
 	BEGIN(xcoord);
 }
 <xcoord>{FLOAT} {
-	[yyextra incrementPosBy:yyleng];
 	yylval->pt.x=(float)strtod(yytext,NULL);
 	BEGIN(ycoord);
 }
-<ycoord>, { [yyextra incrementPosBy:yyleng]; }
+<ycoord>, {  }
 <ycoord>{FLOAT} {
-	[yyextra incrementPosBy:yyleng];
 	yylval->pt.y=(float)strtod(yytext,NULL);
 }
 <ycoord>\) {
-	[yyextra incrementPosBy:yyleng];
 	BEGIN(INITIAL);
 	return COORD;
 }
 
  /* when we see "[", change parsing mode */
 \[ /*syntaxhlfix]*/ {
-	[yyextra incrementPosBy:yyleng];
 	BEGIN(props);
 	return LEFTBRACKET;
 }
-<props>= { [yyextra incrementPosBy:yyleng]; return EQUALS; }
-<props>, { [yyextra incrementPosBy:yyleng]; return COMMA; }
+<props>= {  return EQUALS; }
+<props>, {  return COMMA; }
 <props>[^=,\{\] \t]([^=,\{\]]*[^=,\{\] \t])? {
-	[yyextra incrementPosBy:yyleng];
 	yylval->nsstr=[NSString stringWithUTF8String:yytext];
 	return PROPSTRING;
 }
 <props>\] {
-	[yyextra incrementPosBy:yyleng];
 	BEGIN(INITIAL);
 	return RIGHTBRACKET;
 }
 
 \( {
-	[yyextra incrementPosBy:yyleng];
 	BEGIN(noderef);
 	return LEFTPARENTHESIS;
 }
 <noderef>\. {
-	[yyextra incrementPosBy:yyleng];
 	return FULLSTOP;
 }
 <noderef>[^\.\{\)]+ {
-	[yyextra incrementPosBy:yyleng];
 	yylval->nsstr=[NSString stringWithUTF8String:yytext];
 	return REFSTRING;
 }
 <noderef>\) {
-	[yyextra incrementPosBy:yyleng];
 	BEGIN(INITIAL);
 	return RIGHTPARENTHESIS;
 }
@@ -125,8 +126,12 @@ to                             { [yyextra incrementPosBy:yyleng]; return TO; }
 	while (1) {
 		char c = input(yyscanner);
 		// eof reached before closing brace
-		if (c == '\0' || c == EOF) yyterminate();
+		if (c == '\0' || c == EOF) {
+			return UNCLOSED_DELIM_STR;
+		}
 
+		yylloc->last_column += 1;
+		yyleng += 1;
 		if (escape) {
 			escape = 0;
 		} else if (c == '\\') {
@@ -136,17 +141,23 @@ to                             { [yyextra incrementPosBy:yyleng]; return TO; }
 		} else if (c == '}') {
 			brace_depth--;
 			if (brace_depth == 0) break;
+		} else if (c == '\n') {
+			yylloc->last_line += 1;
+			yylloc->last_column = 0;
 		}
 		[buf appendFormat:@"%c", c];
 	}
 	
 	NSString *s = [buf copy];
-    yyleng += 1 + [buf length];
 	[s autorelease];
 	yylval->nsstr = s;
-    [yyextra incrementPosBy:yyleng];
 	return DELIMITEDSTRING;
 }
+
+\\begin { return UNKNOWN_BEGIN_CMD; }
+\\end { return UNKNOWN_END_CMD; }
+\\[a-zA-Z]+[a-zA-Z0-9]* { return UNKNOWN_CMD; }
+. { return UNKNOWN_STR; }
 
  /* vi:ft=lex:noet:ts=4:sts=4:sw=4:
  */

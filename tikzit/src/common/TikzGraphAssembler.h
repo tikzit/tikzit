@@ -25,13 +25,11 @@
 #import "Graph.h"
 
 @interface TikzGraphAssembler : NSObject {
+	const char *tikzStr;
 	Graph *graph;
 	void *scanner;
 	NSMutableDictionary *nodeMap;
 	NSError *lastError;
-	char linebuff[500];
-	int lineno;
-	size_t tokenpos;
 }
 
 + (BOOL) parseTikz:(NSString*)tikz forGraph:(Graph*)gr error:(NSError**)e;

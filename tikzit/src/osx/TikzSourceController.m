@@ -183,8 +183,8 @@
             
             NSDictionary *d = [lastError userInfo];
             
-            NSString *ts = [NSString stringWithFormat: @"Parse error on line %@: %@\n", [d valueForKey:@"lineNumber"], [d valueForKey:NSLocalizedDescriptionKey]];
-            NSMutableAttributedString *as = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat: @"Parse error on line %@: %@\n%@\n", [d valueForKey:@"lineNumber"], [d valueForKey:NSLocalizedDescriptionKey], [[d valueForKey:@"syntaxString"] stringByReplacingOccurrencesOfString:@"\t" withString:@""]]];
+            NSString *ts = [NSString stringWithFormat: @"Parse error on line %@: %@\n", [d valueForKey:@"startLine"], [d valueForKey:NSLocalizedDescriptionKey]];
+            NSMutableAttributedString *as = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat: @"Parse error on line %@: %@\n%@\n", [d valueForKey:@"startLine"], [d valueForKey:NSLocalizedDescriptionKey], [[d valueForKey:@"syntaxString"] stringByReplacingOccurrencesOfString:@"\t" withString:@""]]];
             
             NSInteger tokenLength = [[d valueForKey:@"tokenLength"] integerValue];
             // Bit of a mess, offset around to find correct position and correct for 4 characters for every one character of \t
