@@ -46,6 +46,7 @@
  @result     A key-matching object.
  */
 - (id)initWithKeyMatching:(NSString*)k;
++ (id)keyMatching:(NSString*)k;
 
 /*!
  @brief      Initialize a new atomic property.
@@ -53,6 +54,7 @@
  @result     An atom.
  */
 - (id)initWithAtomName:(NSString*)n;
++ (id)atom:(NSString*)n;
 
 /*!
  @brief      Initialize a new property.
@@ -61,6 +63,7 @@
  @result     A property.
  */
 - (id)initWithPropertyValue:(NSString*)v forKey:(NSString*)k;
++ (id)property:(NSString*)k withValue:(NSString*)v;
 
 /*!
  @brief      A matching function for properties.

@@ -1,34 +1,29 @@
-// %expect 3
+%error-verbose
 
 %{
-//
-//  tikzparser.y
-//  TikZiT
-//  
-//  Copyright 2010 Chris Heunen. All rights reserved.
-//  
-//  
-//  This file is part of TikZiT.
-//  
-//  TikZiT is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//  
-//  TikZiT is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//  
-//  You should have received a copy of the GNU General Public License
-//  along with TikZiT.  If not, see <http://www.gnu.org/licenses/>.
-//  
-#include <stdio.h>
-#include <string.h>
-#import <Foundation/Foundation.h>
-#import "TikzGraphAssembler.h"
-#import "GraphElementProperty.h"
-	
+/*
+ * Copyright 2010       Chris Heunen
+ * Copyright 2010-2013  Aleks Kissinger
+ * Copyright 2013       K. Johan Paulsson
+ * Copyright 2013       Alex Merry <dev@randomguy3.me.uk>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#import "TikzGraphAssembler+Parser.h"
+#import "Edge.h"
+
 extern char* yystr;
 extern int yylineno;
 extern int tokenpos;
@@ -37,12 +32,25 @@ extern void yyerror(const char *str);
 
 %}
 
+%code requires {
+#import "GraphElementData.h"
+#import "GraphElementProperty.h"
+#import "Node.h"
+struct noderef {
+	Node *node;
+	NSString *anchor;
+};
+}
+
 %union {
 	NSPoint pt;
 	NSString *nsstr;
+	GraphElementProperty *prop;
+	GraphElementData *data;
+	Node *node;
+	struct noderef noderef;
 };
 
-%error-verbose
 
 %token BEGIN_TIKZPICTURE_CMD
 %token END_TIKZPICTURE_CMD
@@ -69,9 +77,16 @@ extern void yyerror(const char *str);
 %token REFSTRING
 %token DELIMITEDSTRING
 
-%type<nsstr> nodename
-%type<nsstr> optanchor
-%type<nsstr> val
+%type<nsstr>   nodename
+%type<nsstr>   optanchor
+%type<nsstr>   val
+%type<prop>    property
+%type<data>    extraproperties
+%type<data>    properties
+%type<data>    optproperties
+%type<node>    optedgenode
+%type<noderef> noderef
+%type<noderef> optnoderef
 
 %%
 
@@ -81,72 +96,75 @@ tikzcmd: node | edge | boundingbox | ignore;
 
 ignore: BEGIN_PGFONLAYER_CMD DELIMITEDSTRING | END_PGFONLAYER_CMD;
 
-optproperties: LEFTBRACKET properties RIGHTBRACKET | ;
-properties: property extraproperties;
-extraproperties: COMMA property extraproperties | ;
+optproperties:
+	LEFTBRACKET properties RIGHTBRACKET
+	{ $$ = $<data>2; }
+	| { $$ = nil; };
+properties: property extraproperties
+	{
+		[$<data>2 addObject:$<prop>1];
+		$$ = $<data>2;
+	};
+extraproperties:
+	COMMA property extraproperties
+	{
+		[$<data>3 addObject:$<prop>2];
+		$$ = $<data>3;
+	}
+	| { $$ = [GraphElementData data]; };
 property:
 	val EQUALS val
-	{
-		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-		GraphElementProperty *p = [[GraphElementProperty alloc] initWithPropertyValue:$<nsstr>3 forKey:$<nsstr>1];
-		[[a data] addObject:p];
-		[p release];
-	}
+	{ $$ = [GraphElementProperty property:$<nsstr>1 withValue:$<nsstr>3]; }
 	| val
-	{
-		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-		GraphElementProperty *p = [[GraphElementProperty alloc] initWithAtomName:$<nsstr>1];
-		[[a data] addObject:p];
-		[p release];
-	};
+	{ $$ = [GraphElementProperty atom:$<nsstr>1]; };
 val: PROPSTRING { $$ = $<nsstr>1; } | DELIMITEDSTRING { $$ = $<nsstr>1; };
 
-nodecmd: NODE_CMD { [[TikzGraphAssembler currentAssembler] prepareNode]; };
 nodename: LEFTPARENTHESIS REFSTRING RIGHTPARENTHESIS { $$ = $<nsstr>2; };
-node: nodecmd optproperties nodename AT COORD DELIMITEDSTRING SEMICOLON
+node: NODE_CMD optproperties nodename AT COORD DELIMITEDSTRING SEMICOLON
 	{
-		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-		[[a currentNode] setName:$<nsstr>3];
-		[[a currentNode] setPoint:$<pt>5];
-		[[a currentNode] setLabel:$<nsstr>6];
-		[a finishNode];
+		Node *node = [Node node];
+		[node setData:$<data>2];
+		[node setName:$<nsstr>3];
+		[node setPoint:$<pt>5];
+		[node setLabel:$<nsstr>6];
+		[[TikzGraphAssembler currentAssembler] addNodeToMap:node];
+		[[[TikzGraphAssembler currentAssembler] graph] addNode:node];
 	};
 
-edgecmd : DRAW_CMD { [[TikzGraphAssembler currentAssembler] prepareEdge]; };
-edge: edgecmd optproperties source TO optedgenode target SEMICOLON
+optanchor:  { $$ = nil; } | FULLSTOP REFSTRING { $$ = $<nsstr>2; };
+noderef: LEFTPARENTHESIS REFSTRING optanchor RIGHTPARENTHESIS
 	{
-		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-		[a finishEdge];
+		$$.node = [[TikzGraphAssembler currentAssembler] nodeWithName:$<nsstr>2];
+		$$.anchor = $<nsstr>3;
 	};
-optanchor:  { $$ = @""; } | FULLSTOP REFSTRING { $$ = $<nsstr>2; };
-source: LEFTPARENTHESIS REFSTRING optanchor RIGHTPARENTHESIS
-    {
-        TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-        [a setEdgeSource:$<nsstr>2
-        anchor:$<nsstr>3];
-    };
-target: LEFTPARENTHESIS REFSTRING optanchor RIGHTPARENTHESIS
-    {
-        TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-        [a setEdgeTarget:$<nsstr>2
-        anchor:$<nsstr>3];
-    }
-    | selfloop
-    {
-        TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-        [a setEdgeTarget:@""
-        anchor:@""];
-    };
-selfloop: LEFTPARENTHESIS RIGHTPARENTHESIS;
-
-edgenodecmd: NODE { [[TikzGraphAssembler currentAssembler] prepareNode]; };
+optnoderef:
+	noderef { $$ = $<noderef>1; }
+	| LEFTPARENTHESIS RIGHTPARENTHESIS { $$.node = nil; $$.anchor = nil; }
 optedgenode:
-	| edgenodecmd optproperties DELIMITEDSTRING
+	{ $$ = nil; }
+	| NODE optproperties DELIMITEDSTRING
 	{
-		TikzGraphAssembler *a = [TikzGraphAssembler currentAssembler];
-		[[a currentNode] setLabel:$<nsstr>3];
-		[a finishNode];
+		$$ = [Node node];
+		[$$ setData:$<data>2];
+		[$$ setLabel:$<nsstr>3];
 	}
+edge: DRAW_CMD optproperties noderef TO optedgenode optnoderef SEMICOLON
+	{
+		Edge *edge = [Edge edge];
+		[edge setData:$<data>2];
+		[edge setSource:$<noderef>3.node];
+		[edge setSourceAnchor:$<noderef>3.anchor];
+		[edge setEdgeNode:$<node>5];
+		if ($<noderef>6.node) {
+			[edge setTarget:$<noderef>6.node];
+			[edge setTargetAnchor:$<noderef>6.anchor];
+		} else {
+			[edge setTarget:$<noderef>3.node];
+			[edge setTargetAnchor:$<noderef>3.anchor];
+		}
+		[edge setAttributesFromData];
+		[[[TikzGraphAssembler currentAssembler] graph] addEdge:edge];
+	};
 
 ignoreprop: val | val EQUALS val;
 ignoreprops: ignoreprop ignoreprops | ;
@@ -154,8 +172,7 @@ optignoreprops: LEFTBRACKET ignoreprops RIGHTBRACKET;
 boundingbox:
 	PATH_CMD optignoreprops COORD RECTANGLE COORD SEMICOLON
 	{
-		Graph *g = [[TikzGraphAssembler currentAssembler] graph];
-		[g setBoundingBox:NSRectAroundPoints($<pt>3, $<pt>5)];
+		[[[TikzGraphAssembler currentAssembler] graph] setBoundingBox:NSRectAroundPoints($<pt>3, $<pt>5)];
 	};
 
 /* vi:ft=yacc:noet:ts=4:sts=4:sw=4

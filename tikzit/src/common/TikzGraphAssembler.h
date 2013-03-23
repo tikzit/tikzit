@@ -26,30 +26,17 @@
 
 @interface TikzGraphAssembler : NSObject {
 	Graph *graph;
-	Node *currentNode;
-	Edge *currentEdge;
 	NSMutableDictionary *nodeMap;
 	NSError *lastError;
 }
 
 @property (readonly) Graph *graph;
-@property (readonly) GraphElementData *data;
-@property (readonly) Node *currentNode;
-@property (readonly) Edge *currentEdge;
 @property (readonly) NSError *lastError;
 
 - (BOOL)parseTikz:(NSString*)tikz;
 - (BOOL)parseTikz:(NSString*)tikz forGraph:(Graph*)gr;
 
 - (BOOL)testTikz:(NSString*)tikz;
-
-- (void)prepareNode;
-- (void)finishNode;
-
-- (void)prepareEdge;
-- (void)setEdgeSource:(NSString*)edge anchor:(NSString*)anch;
-- (void)setEdgeTarget:(NSString*)edge anchor:(NSString*)anch;
-- (void)finishEdge;
 
 - (void)invalidate;
 - (void)invalidateWithError:(NSError*)error;

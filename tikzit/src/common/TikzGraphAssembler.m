@@ -77,29 +77,18 @@ int yywrap() {
 @implementation TikzGraphAssembler
 
 - (id)init {
-	[super init];
-	graph = nil;
-	currentNode = nil;
-	currentEdge = nil;
-	nodeMap = nil;
+	self = [super init];
 	return self;
+}
+
+- (void)dealloc {
+	[graph release];
+	[lastError release];
+	[super dealloc];
 }
 
 - (Graph*)graph { return graph; }
 - (NSError*)lastError { return lastError; }
-
-- (GraphElementData *)data {
-	if (currentNode != nil) {
-		return [currentNode data];
-	} else if (currentEdge != nil) {
-		return [currentEdge data];
-	} else {
-		return [graph data];
-	}
-}
-
-- (Node*)currentNode { return currentNode; }
-- (Edge*)currentEdge { return currentEdge; }
 
 - (BOOL)parseTikz:(NSString *)tikz {
 	return [self parseTikz:tikz forGraph:[Graph graph]];
@@ -170,55 +159,6 @@ int yywrap() {
     return r;
 }
 
-- (void)prepareNode {
-	currentNode = [[Node alloc] init];
-}
-
-- (void)finishNode {
-	if (currentEdge != nil) { // this is an edge node
-		[currentEdge setEdgeNode:currentNode];
-	} else { // this is a normal node
-		[graph addNode:currentNode];
-		[nodeMap setObject:currentNode forKey:[currentNode name]];
-	}
-	
-	[currentNode release];
-	currentNode = nil;
-}
-
-- (void)prepareEdge {
-	currentEdge = [[Edge alloc] init];
-}
-
-- (void)finishEdge {
-	[currentEdge setAttributesFromData];
-	[graph addEdge:currentEdge];
-	[currentEdge release];
-	currentEdge = nil;
-}
-
-- (void)setEdgeSource:(NSString*)edge anchor:(NSString*)anch {
-    Node *s = [nodeMap objectForKey:edge];
-    [currentEdge setSource:s];
-    [currentEdge setSourceAnchor:anch];
-}
-
-- (void)setEdgeTarget:(NSString*)edge anchor:(NSString*)anch {
-	if (![edge isEqualToString:@""]) {
-		[currentEdge setTarget:[nodeMap objectForKey:edge]];
-        [currentEdge setTargetAnchor:anch];
-	} else {
-        [currentEdge setTargetAnchor:anch];
-        [currentEdge setTarget:[currentEdge source]];
-	}
-}
-
-- (void)dealloc {
-	[graph release];
-	[lastError release];
-	[super dealloc];
-}
-
 - (void)invalidate {
 	[graph release];
 	graph = nil;
@@ -242,6 +182,15 @@ int yywrap() {
 	return [[[TikzGraphAssembler alloc] init] autorelease];
 }
 
+@end
+
+@implementation TikzGraphAssembler (Parser)
+- (void)addNodeToMap:(Node*)n {
+	[nodeMap setObject:n forKey:[n name]];
+}
+- (Node*)nodeWithName:(NSString*)name {
+    return [nodeMap objectForKey:name];
+}
 @end
 
 // vi:ft=objc:ts=4:noet:sts=4:sw=4

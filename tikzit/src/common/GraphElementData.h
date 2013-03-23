@@ -40,6 +40,8 @@
 	NSMutableArray *properties;
 }
 
+- (id)init;
++ (id)data;
 
 /*!
  @brief      Set the given value for the *first* property matching this key. Add a

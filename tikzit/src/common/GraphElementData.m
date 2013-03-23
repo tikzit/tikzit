@@ -27,6 +27,10 @@
 
 @implementation GraphElementData
 
++ (id)data {
+	return [[[self alloc] init] autorelease];
+}
+
 - (id)init {
 	[super init];
 	properties = [[NSMutableArray alloc] init];

@@ -27,6 +27,16 @@
 
 @implementation GraphElementProperty
 
++ (id)atom:(NSString*)n {
+	return [[[self alloc] initWithAtomName:n] autorelease];
+}
++ (id)property:(NSString*)k withValue:(NSString*)v {
+	return [[[self alloc] initWithPropertyValue:v forKey:k] autorelease];
+}
++ (id)keyMatching:(NSString*)k {
+	return [[[self alloc] initWithKeyMatching:k] autorelease];
+}
+
 - (id)initWithAtomName:(NSString*)n {
 	[super init];
 	[self setKey:n];
