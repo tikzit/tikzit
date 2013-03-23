@@ -62,6 +62,10 @@ void yyerror(YYLTYPE *yylloc, TikzGraphAssembler *assembler, const char *str) {
 }
 %}
 
+%initial-action {
+	yylloc.first_column = yylloc.last_column = 0;
+};
+
 
 %token BEGIN_TIKZPICTURE_CMD "\\begin{tikzpicture}"
 %token END_TIKZPICTURE_CMD "\\end{tikzpicture}"

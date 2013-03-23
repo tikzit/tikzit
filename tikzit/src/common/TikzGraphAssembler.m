@@ -162,28 +162,39 @@
 		// points to just after end of last line
 		++last_line_end;
 	}
-	const char *error_start = first_line_start + (yylloc->first_column - 1);
-	const char *error_end = last_line_start + (yylloc->last_column - 1);
 	
-	if (error_start > error_end || error_end > last_line_end) {
+	size_t context_len = last_line_end - first_line_start;
+	size_t token_offset = yylloc->first_column - 1;
+	size_t token_len = ((last_line_start - first_line_start) + yylloc->last_column) - token_offset;
+	
+	// damn you, tabs!
+	// we need to convert "column offsets" into "character/byte offsets"
+	for (int i = 0; i < MIN(token_offset + token_len,context_len); ++i) {
+		if (*(first_line_start + i) == '\t') {
+			if (i < token_offset)
+				token_offset -= 7;
+			else
+				token_len -= 7;
+		}
+	}
+	
+	if (token_offset + token_len > context_len) {
 		// error position state is corrupted
-		NSLog(@"Got bad error state for error \"%s\": start(%i,%i), end(%i,%i)",
+		NSLog(@"Got bad error state for error \"%s\": start(%i,%i), end(%i,%i)\n    context_len = %d; token_offset = %d; token_len = %d",
 				message,
 				yylloc->first_line,
 				yylloc->first_column,
 				yylloc->last_line,
-				yylloc->last_column);
+				yylloc->last_column,
+				context_len,
+				token_offset,
+				token_len);
 		[self setLastError:[NSError errorWithMessage:nsmsg
 												code:TZ_ERR_PARSE]];
 	} else {
-		// +1 for null terminator
-		size_t error_text_len = last_line_end - first_line_start;
-		char *error_text = malloc (error_text_len + 1);
-		strncpy (error_text, first_line_start, error_text_len);
-		*(error_text + error_text_len) = '\0';
-		
-		int error_start_pos = error_start - first_line_start;
-		int error_end_pos = error_end - first_line_start;
+		char *context = malloc (context_len + 1);
+		strncpy (context, first_line_start, context_len);
+		*(context + context_len) = '\0';
 
 		NSDictionary *userInfo =
 			[NSDictionary dictionaryWithObjectsAndKeys:
@@ -197,11 +208,11 @@
 					@"endLine",
 				[NSNumber numberWithInt:yylloc->last_column],
 					@"endColumn",
-				[NSString stringWithUTF8String:error_text],
+				[NSString stringWithUTF8String:context],
 					@"syntaxString",
-				[NSNumber numberWithInt:error_start_pos],
+				[NSNumber numberWithInt:token_offset],
 					@"tokenStart",
-				[NSNumber numberWithInt:error_end_pos],
+				[NSNumber numberWithInt:token_len],
 					@"tokenLength",
 				nil];
 		[self setLastError:
@@ -209,33 +220,53 @@
 								code:TZ_ERR_PARSE
 							userInfo:userInfo]];
 		
-		// we can now freely edit error_text
+		// we can now freely edit context string
 		// we only bother printing out the first line
 		if (yylloc->last_line > yylloc->first_line) {
-			char *nlp = strchr(error_text, '\n');
+			char *nlp = strchr(context, '\n');
 			if (nlp) {
 				*nlp = '\0';
-				error_text_len = nlp - error_text;
-				if (error_end_pos > error_text_len)
-					error_end_pos = error_text_len;
+				context_len = nlp - context;
+				if (token_offset >= context_len) {
+					NSLog(@"token_offset (%d) >= context_len (%d) -- what?", token_offset, context_len);
+					return;
+				} else if (token_offset + token_len > context_len) {
+					token_len = context_len - token_offset;
+				}
+			} else {
+				NSLog(@"Didn't find any newlines in context string!");
 			}
 		}
+		size_t token_col_offset = 0;
+		size_t token_col_len = 0;
+		for (int i = 0; i < token_offset; ++i) {
+			if (*(context + i) == '\t')
+				token_col_offset += 8;
+			else
+				++token_col_offset;
+		}
+		for (int i = token_offset; i < token_offset + token_len; ++i) {
+			if (*(context + i) == '\t')
+				token_col_len += 8;
+			else
+				++token_col_len;
+		}
 		NSString *pointerLinePadding =
-			[@"" stringByPaddingToLength:error_start_pos
+			[@"" stringByPaddingToLength:token_col_offset
 							  withString:@" "
 						 startingAtIndex:0];
 		NSString *pointerLineCarets =
-			[@"" stringByPaddingToLength:(error_end_pos - error_start_pos)
+			[@"" stringByPaddingToLength:token_col_len
 							  withString:@"^"
 						 startingAtIndex:0];
 		NSLog(@"Parse error on line %i, starting at %i: %s\n%s\n%@%@",
 				yylloc->first_line,
 				yylloc->first_column,
 				message,
-				error_text,
+				context,
 				pointerLinePadding,
 				pointerLineCarets);
-		free (error_text);
+		free (context);
 	}
 }
 - (void*) scanner { return scanner; }

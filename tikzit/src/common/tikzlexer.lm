@@ -24,9 +24,8 @@
 
 #define YY_USER_ACTION \
 	yylloc->first_line = yylloc->last_line; \
-	if (yylloc->last_line != 1 || yylloc->last_column != 1) \
-		yylloc->first_column = yylloc->last_column + 1; \
-	yylloc->last_column = yylloc->first_column + yyleng;
+	yylloc->first_column = yylloc->last_column + 1; \
+	yylloc->last_column = yylloc->first_column + yyleng - 1;
 
 %}
 
@@ -54,7 +53,7 @@ FLOAT \-?[0-9]*(\.[0-9]+)?
 <INITIAL,xcoord,ycoord,props,noderef>[\t]+ {
 	// tab = 8 columns
 	// note that we have already adjusted by yyleng at this point
-	yylloc->last_column = yylloc->first_column + 7*yyleng;
+	yylloc->last_column += 7*yyleng;
 }
 \\begin\{tikzpicture\}         {  return BEGIN_TIKZPICTURE_CMD; }
 \\end\{tikzpicture\}           {  return END_TIKZPICTURE_CMD; }
