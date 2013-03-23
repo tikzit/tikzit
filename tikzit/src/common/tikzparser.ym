@@ -1,5 +1,3 @@
-%error-verbose
-
 %{
 /*
  * Copyright 2010       Chris Heunen
@@ -21,18 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "TikzGraphAssembler+Parser.h"
 #import "Edge.h"
-
-extern char* yystr;
-extern int yylineno;
-extern int tokenpos;
-extern int yylex(void);
-extern void yyerror(const char *str);
 
 %}
 
 %code requires {
+#import "TikzGraphAssembler+Parser.h"
 #import "GraphElementData.h"
 #import "GraphElementProperty.h"
 #import "Node.h"
@@ -42,6 +34,12 @@ struct noderef {
 };
 }
 
+%defines "common/tikzparser.h"
+%pure-parser
+%parse-param {TikzGraphAssembler *assembler}
+%error-verbose
+
+
 %union {
 	NSPoint pt;
 	NSString *nsstr;
@@ -50,6 +48,10 @@ struct noderef {
 	Node *node;
 	struct noderef noderef;
 };
+
+%{
+#import "tikzlexer.h"
+%}
 
 
 %token BEGIN_TIKZPICTURE_CMD "\\begin{tikzpicture}"
@@ -127,14 +129,14 @@ node: "\\node" optproperties nodename "at" COORD DELIMITEDSTRING ";"
 		[node setName:$3];
 		[node setPoint:$5];
 		[node setLabel:$6];
-		[[TikzGraphAssembler currentAssembler] addNodeToMap:node];
-		[[[TikzGraphAssembler currentAssembler] graph] addNode:node];
+		[assembler addNodeToMap:node];
+		[[assembler graph] addNode:node];
 	};
 
 optanchor:  { $$ = nil; } | "." REFSTRING { $$ = $2; };
 noderef: "(" REFSTRING optanchor ")"
 	{
-		$$.node = [[TikzGraphAssembler currentAssembler] nodeWithName:$2];
+		$$.node = [assembler nodeWithName:$2];
 		$$.anchor = $3;
 	};
 optnoderef:
@@ -163,7 +165,7 @@ edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
 			[edge setTargetAnchor:$3.anchor];
 		}
 		[edge setAttributesFromData];
-		[[[TikzGraphAssembler currentAssembler] graph] addEdge:edge];
+		[[assembler graph] addEdge:edge];
 	};
 
 ignoreprop: val | val "=" val;
@@ -172,7 +174,7 @@ optignoreprops: "[" ignoreprops "]";
 boundingbox:
 	"\\path" optignoreprops COORD "rectangle" COORD ";"
 	{
-		[[[TikzGraphAssembler currentAssembler] graph] setBoundingBox:NSRectAroundPoints($3, $5)];
+		[[assembler graph] setBoundingBox:NSRectAroundPoints($3, $5)];
 	};
 
 /* vi:ft=yacc:noet:ts=4:sts=4:sw=4

@@ -38,8 +38,7 @@
 - (BOOL)getObjectValue:(out id *)obj forString:(NSString *)string errorDescription:(out NSString **)error{    
     *obj = [NSString stringWithString:string];
     
-    TikzGraphAssembler *ass = [[TikzGraphAssembler alloc] init];
-	BOOL r = [ass testTikz:string];
+	BOOL r = [TikzGraphAssembler validateTikzPropertyNameOrValue:string];
     
     if (!r && error)
         *error = NSLocalizedString(@"Invalid input, couldn't parse value.", @"tikz user input error");

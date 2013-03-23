@@ -26,24 +26,19 @@
 
 @interface TikzGraphAssembler : NSObject {
 	Graph *graph;
+	void *scanner;
 	NSMutableDictionary *nodeMap;
 	NSError *lastError;
+	char linebuff[500];
+	int lineno;
+	size_t tokenpos;
 }
 
-@property (readonly) Graph *graph;
-@property (readonly) NSError *lastError;
-
-- (BOOL)parseTikz:(NSString*)tikz;
-- (BOOL)parseTikz:(NSString*)tikz forGraph:(Graph*)gr;
-
-- (BOOL)testTikz:(NSString*)tikz;
-
-- (void)invalidate;
-- (void)invalidateWithError:(NSError*)error;
-
-+ (void)setup;
-+ (TikzGraphAssembler*)currentAssembler;
-+ (TikzGraphAssembler*)assembler;
++ (BOOL) parseTikz:(NSString*)tikz forGraph:(Graph*)gr error:(NSError**)e;
++ (BOOL) parseTikz:(NSString*)tikz forGraph:(Graph*)gr;
++ (Graph*) parseTikz:(NSString*)tikz error:(NSError**)e;
++ (Graph*) parseTikz:(NSString*)tikz;
++ (BOOL)validateTikzPropertyNameOrValue:(NSString*)tikz;
 
 @end
 

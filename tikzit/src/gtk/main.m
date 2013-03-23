@@ -81,7 +81,6 @@ int main (int argc, char *argv[]) {
 
     tz_register_stock_items();
     clipboard_init();
-    [TikzGraphAssembler setup];
 
     Application *app = nil;
     if (argc > 1) {

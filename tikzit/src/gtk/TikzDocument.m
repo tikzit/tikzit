@@ -256,26 +256,6 @@
     return tikz;
 }
 
-- (BOOL) validateTikz:(NSString**)t error:(NSError**)error {
-    if (*t == nil) {
-        return NO;
-    }
-    if (*t == tikz || [*t isEqual:tikz]) {
-        return YES;
-    }
-
-    TikzGraphAssembler *a = [TikzGraphAssembler assembler];
-    BOOL success = [a parseTikz:*t];
-    if (!success && error != NULL) {
-        *error = [a lastError];
-        if (*error == nil) {
-            *error = [NSError errorWithMessage:@"Unknown error"
-                                          code:TZ_ERR_PARSE];
-        }
-    }
-    return success;
-}
-
 - (BOOL) updateTikz:(NSString*)t error:(NSError**)error {
     if (t == nil) {
         t = [NSString string];
@@ -284,25 +264,17 @@
         return YES;
     }
 
-    TikzGraphAssembler *a = [TikzGraphAssembler assembler];
-    BOOL success = [a parseTikz:t];
-    if (success) {
+    Graph *g = [TikzGraphAssembler parseTikz:t error:error];
+    if (g) {
         // updateTikz actually generates a graph from the tikz,
         // and generates the final tikz from that
         [self startUndoGroup];
-        [self setGraph:[a graph]];
+        [self setGraph:g];
         [self nameAndEndUndoGroup:@"Update tikz"];
-    } else {
-        if (error != NULL) {
-            *error = [a lastError];
-            if (*error == nil) {
-                *error = [NSError errorWithMessage:@"Unknown error"
-                                              code:TZ_ERR_PARSE];
-            }
-        }
+        return YES;
     }
 
-    return success;
+    return NO;
 }
 
 - (Graph*) cutSelection {
@@ -338,9 +310,8 @@
 }
 
 - (void) pasteFromTikz:(NSString*)t {
-    TikzGraphAssembler *a = [TikzGraphAssembler assembler];
-    if ([a parseTikz:t]) {
-        Graph *clipboard = [a graph];
+    Graph *clipboard = [TikzGraphAssembler parseTikz:t];
+    if (clipboard) {
         [self attachStylesToGraph:clipboard];
         [self paste:clipboard];
     }

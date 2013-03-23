@@ -13,8 +13,7 @@
 
 - (id)initWithCoder:(NSCoder*)coder {
 	NSString *tikz = [coder decodeObject];
-	TikzGraphAssembler *ass = [[TikzGraphAssembler alloc] init];
-	[ass parseTikz:tikz forGraph:self];
+        [TikzGraphAssembler parseTikz:tikz forGraph:self];
 	return self;
 }
 

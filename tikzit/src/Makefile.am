@@ -127,7 +127,7 @@ common/tikzlexer.m: common/tikzlexer.lm
 	$(AM_V_GEN)$(LEX) -o $@ $^
 
 common/tikzparser.m: common/tikzparser.ym
-	$(AM_V_GEN)$(YACC) --defines=common/tikzparser.h --output=$@ $^
+	$(AM_V_GEN)$(YACC) --output=$@ $^
 
 common/tikzparser.h: common/tikzparser.m
 

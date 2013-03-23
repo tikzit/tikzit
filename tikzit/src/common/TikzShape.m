@@ -35,11 +35,7 @@
 												  error:NULL];
 	if (tikz == nil) return nil;
 	
-	TikzGraphAssembler *ass = [[TikzGraphAssembler alloc] init];
-	[ass parseTikz:tikz];
-	
-	Graph *graph = [ass graph];
-    [ass release];
+	Graph *graph = [TikzGraphAssembler parseTikz:tikz];
 	if (graph == nil) return nil;
 	
 	NSRect graphBounds = ([graph hasBoundingBox]) ? [graph boundingBox] : [graph bounds];

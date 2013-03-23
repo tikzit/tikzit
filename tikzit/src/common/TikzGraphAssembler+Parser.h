@@ -25,9 +25,19 @@
 #import "TikzGraphAssembler.h"
 
 @interface TikzGraphAssembler (Parser)
+- (Graph*) graph;
 /** Store a node so that it can be looked up by name later */
-- (void)addNodeToMap:(Node*)n;
-- (Node*)nodeWithName:(NSString*)name;
+- (void) addNodeToMap:(Node*)n;
+/** Get a previously-stored node by name */
+- (Node*) nodeWithName:(NSString*)name;
+- (void) newLineStarted:(char *)text;
+- (void) incrementPosBy:(size_t)amount;
+- (void) invalidateWithError:(const char *)message;
+- (void*) scanner;
 @end
+
+#define YY_EXTRA_TYPE TikzGraphAssembler *
+#define YYLEX_PARAM [assembler scanner]
+void yyerror(TikzGraphAssembler *assembler, const char *str);
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4

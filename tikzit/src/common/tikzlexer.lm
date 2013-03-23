@@ -1,11 +1,3 @@
-%option nounput
-%option yylineno
-%s props
-%s xcoord
-%s ycoord
-%s noderef
-FLOAT \-?[0-9]*(\.[0-9]+)?
-
 %{
 /*
  * Copyright 2010       Chris Heunen
@@ -28,96 +20,100 @@ FLOAT \-?[0-9]*(\.[0-9]+)?
  */
 
 #import <Foundation/Foundation.h>
-#ifdef __APPLE__
-#include "y.tab.h"
-#else
-#include "tikzparser.h"
-#endif
-
-extern char linebuff[500];
-extern int lineno;
-extern int tokenpos;
+#import "tikzparser.h"
 
 %}
+
+%option reentrant bison-bridge 8bit
+%option nounput
+%option yylineno
+%option noyywrap
+%option header-file="common/tikzlexer.h"
+
+%s props
+%s xcoord
+%s ycoord
+%s noderef
+
+FLOAT \-?[0-9]*(\.[0-9]+)?
+
 %%
-%\n                             /* ignore end of line */;
-\n.*    {   strncpy(linebuff, yytext+1, 500);
-			linebuff[499] = 0; // ensure null-terminated
-            lineno++;
-            tokenpos = 0;
-            yyless(1);
-        }
-<INITIAL,xcoord,ycoord,props,noderef>[ ]+  { tokenpos += yyleng; } /* ignore whitespace */;
-<INITIAL,xcoord,ycoord,props,noderef>[\t]+ { tokenpos += 8*yyleng; } /* ignore whitespace */;
-\\begin\{tikzpicture\}         { tokenpos += yyleng; return BEGIN_TIKZPICTURE_CMD; }
-\\end\{tikzpicture\}           { tokenpos += yyleng; return END_TIKZPICTURE_CMD; }
-\\begin\{pgfonlayer\}          { tokenpos += yyleng; return BEGIN_PGFONLAYER_CMD; }
-\\end\{pgfonlayer\}            { tokenpos += yyleng; return END_PGFONLAYER_CMD; }
-\\draw                         { tokenpos += yyleng; return DRAW_CMD; }
-\\node                         { tokenpos += yyleng; return NODE_CMD; }
-\\path                         { tokenpos += yyleng; return PATH_CMD; }
-rectangle                      { tokenpos += yyleng; return RECTANGLE; }
-node                           { tokenpos += yyleng; return NODE; }
-at                             { tokenpos += yyleng; return AT; }
-to                             { tokenpos += yyleng; return TO; }
-;                              { tokenpos += yyleng; return SEMICOLON; }
+
+\n.* {
+	[yyextra newLineStarted:yytext+1];
+	yyless(1);
+}
+<INITIAL,xcoord,ycoord,props,noderef>[ ]+  { [yyextra incrementPosBy:yyleng]; } /* ignore whitespace */;
+<INITIAL,xcoord,ycoord,props,noderef>[\t]+ { [yyextra incrementPosBy:8*yyleng]; } /* ignore whitespace */;
+\\begin\{tikzpicture\}         { [yyextra incrementPosBy:yyleng]; return BEGIN_TIKZPICTURE_CMD; }
+\\end\{tikzpicture\}           { [yyextra incrementPosBy:yyleng]; return END_TIKZPICTURE_CMD; }
+\\begin\{pgfonlayer\}          { [yyextra incrementPosBy:yyleng]; return BEGIN_PGFONLAYER_CMD; }
+\\end\{pgfonlayer\}            { [yyextra incrementPosBy:yyleng]; return END_PGFONLAYER_CMD; }
+\\draw                         { [yyextra incrementPosBy:yyleng]; return DRAW_CMD; }
+\\node                         { [yyextra incrementPosBy:yyleng]; return NODE_CMD; }
+\\path                         { [yyextra incrementPosBy:yyleng]; return PATH_CMD; }
+rectangle                      { [yyextra incrementPosBy:yyleng]; return RECTANGLE; }
+node                           { [yyextra incrementPosBy:yyleng]; return NODE; }
+at                             { [yyextra incrementPosBy:yyleng]; return AT; }
+to                             { [yyextra incrementPosBy:yyleng]; return TO; }
+;                              { [yyextra incrementPosBy:yyleng]; return SEMICOLON; }
 
 \([ ]*{FLOAT}[ ]*,[ ]*{FLOAT}[ ]*\) {
-	tokenpos += 1;
+	[yyextra incrementPosBy:1];
 	yyless(1);
 	BEGIN(xcoord);
 }
 <xcoord>{FLOAT} {
-	tokenpos += yyleng;
-	yylval.pt.x=(float)strtod(yytext,NULL);
+	[yyextra incrementPosBy:yyleng];
+	yylval->pt.x=(float)strtod(yytext,NULL);
 	BEGIN(ycoord);
 }
-<ycoord>, { tokenpos += yyleng; }
+<ycoord>, { [yyextra incrementPosBy:yyleng]; }
 <ycoord>{FLOAT} {
-	tokenpos += yyleng;
-	yylval.pt.y=(float)strtod(yytext,NULL);
+	[yyextra incrementPosBy:yyleng];
+	yylval->pt.y=(float)strtod(yytext,NULL);
 }
 <ycoord>\) {
-	tokenpos += yyleng;
+	[yyextra incrementPosBy:yyleng];
 	BEGIN(INITIAL);
 	return COORD;
 }
 
  /* when we see "[", change parsing mode */
 \[ /*syntaxhlfix]*/ {
-	tokenpos += yyleng;
+	[yyextra incrementPosBy:yyleng];
 	BEGIN(props);
 	return LEFTBRACKET;
 }
-<props>= { tokenpos += yyleng; return EQUALS; }
-<props>, { tokenpos += yyleng; return COMMA; }
+<props>= { [yyextra incrementPosBy:yyleng]; return EQUALS; }
+<props>, { [yyextra incrementPosBy:yyleng]; return COMMA; }
 <props>[^=,\{\] \t]([^=,\{\]]*[^=,\{\] \t])? {
-	tokenpos += yyleng;
-	yylval.nsstr=[NSString stringWithUTF8String:yytext];
+	[yyextra incrementPosBy:yyleng];
+	yylval->nsstr=[NSString stringWithUTF8String:yytext];
 	return PROPSTRING;
 }
 <props>\] {
-	tokenpos += yyleng;
+	[yyextra incrementPosBy:yyleng];
 	BEGIN(INITIAL);
 	return RIGHTBRACKET;
 }
 
 \( {
-	tokenpos += yyleng;
+	[yyextra incrementPosBy:yyleng];
 	BEGIN(noderef);
 	return LEFTPARENTHESIS;
 }
 <noderef>\. {
-	tokenpos += yyleng;
+	[yyextra incrementPosBy:yyleng];
 	return FULLSTOP;
 }
 <noderef>[^\.\{\)]+ {
-	tokenpos += yyleng;
-	yylval.nsstr=[NSString stringWithUTF8String:yytext];
+	[yyextra incrementPosBy:yyleng];
+	yylval->nsstr=[NSString stringWithUTF8String:yytext];
 	return REFSTRING;
 }
 <noderef>\) {
-	tokenpos += yyleng;
+	[yyextra incrementPosBy:yyleng];
 	BEGIN(INITIAL);
 	return RIGHTPARENTHESIS;
 }
@@ -127,7 +123,7 @@ to                             { tokenpos += yyleng; return TO; }
 	unsigned int brace_depth = 1;
 	unsigned int escape = 0;
 	while (1) {
-		char c = input();
+		char c = input(yyscanner);
 		// eof reached before closing brace
 		if (c == '\0' || c == EOF) yyterminate();
 
@@ -147,8 +143,8 @@ to                             { tokenpos += yyleng; return TO; }
 	NSString *s = [buf copy];
     yyleng += 1 + [buf length];
 	[s autorelease];
-	yylval.nsstr = s;
-    tokenpos += yyleng;
+	yylval->nsstr = s;
+    [yyextra incrementPosBy:yyleng];
 	return DELIMITEDSTRING;
 }
 

@@ -22,6 +22,7 @@
 //  
 
 #import "TikzSourceController.h"
+#import "TikzGraphAssembler.h"
 #import "Graph.h"
 
 @implementation TikzSourceController
@@ -82,8 +83,6 @@
 
 - (void)awakeFromNib {
 	justUndid = NO;
-	assembler = [[TikzGraphAssembler alloc] init];
-	
 	successColor = [NSColor colorWithCalibratedRed:0.0f
 											 green:0.5f
 											  blue:0.0f
@@ -143,11 +142,12 @@
 }
 
 - (BOOL)tryParseTikz {
-    BOOL success = [assembler parseTikz:[self tikz]];
+    Graph *g = [TikzGraphAssembler parseTikz:[self tikz]
+                                       error:&lastError];
     
-    if (success) {
+    if (g) {
         [graphicsView deselectAll:self];
-        [graphicsView setGraph:[assembler graph]];
+        [graphicsView setGraph:g];
         [graphicsView refreshLayers];
         [self doRevertTikz];
     }
@@ -181,7 +181,7 @@
             [status setStringValue:@"parse error"];
             [status setTextColor:failedColor];
             
-            NSDictionary *d = [[assembler lastError] userInfo];
+            NSDictionary *d = [lastError userInfo];
             
             NSString *ts = [NSString stringWithFormat: @"Parse error on line %@: %@\n", [d valueForKey:@"lineNumber"], [d valueForKey:NSLocalizedDescriptionKey]];
             NSMutableAttributedString *as = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat: @"Parse error on line %@: %@\n%@\n", [d valueForKey:@"lineNumber"], [d valueForKey:NSLocalizedDescriptionKey], [[d valueForKey:@"syntaxString"] stringByReplacingOccurrencesOfString:@"\t" withString:@""]]];

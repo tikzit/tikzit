@@ -24,7 +24,6 @@
 #import <Cocoa/Cocoa.h>
 
 #import "GraphicsView.h"
-#import "TikzGraphAssembler.h"
 #import "ParseErrorView.h"
 
 @interface TikzSourceController : NSObject {
@@ -43,7 +42,7 @@
 	BOOL tikzChanged;
 	BOOL justUndid;
 	
-	TikzGraphAssembler *assembler;
+	NSError *lastError;
 }
 
 @property BOOL tikzChanged;

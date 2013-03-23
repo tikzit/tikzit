@@ -22,7 +22,6 @@
 //  
 
 #import "AppDelegate.h"
-#import "TikzGraphAssembler.h"
 #import "TikzDocument.h"
 #import "Shape.h"
 #import "SupportDir.h"
@@ -36,8 +35,6 @@
 }
 
 - (void)awakeFromNib {
-	[TikzGraphAssembler setup]; // initialise lex/yacc parser globals
-	
 	[SupportDir createUserSupportDir];
 	NSString *supportDir = [SupportDir userSupportDir];
 	//NSLog(stylePlist);

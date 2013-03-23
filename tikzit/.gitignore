@@ -17,6 +17,7 @@ Makefile.in
 /missing
 /src/tikzit
 /src/tikzit.res
+/src/common/tikzlexer.h
 /src/common/tikzlexer.m
 /src/common/tikzparser.m
 /src/common/tikzparser.h

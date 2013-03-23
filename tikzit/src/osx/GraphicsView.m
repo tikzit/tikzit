@@ -1099,11 +1099,9 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 		NSData *data = [cb dataForType:type];
 		NSString *tikz = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         //NSLog(@"pasting tikz:\n%@",tikz);
-		TikzGraphAssembler *ass = [[TikzGraphAssembler alloc] init];
-		if ([ass parseTikz:tikz]) {
+		Graph *clip = [TikzGraphAssembler parseTikz:tikz];
+		if (clip) {
             //NSLog(@"tikz pasted:\n%@",tikz);
-			Graph *clip = [ass graph];
-			
 			NSRect graphBounds = [graph bounds];
 			NSRect clipBounds = [clip bounds];
 			float dx = graphBounds.origin.x +
