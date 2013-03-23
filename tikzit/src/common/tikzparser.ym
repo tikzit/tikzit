@@ -52,30 +52,30 @@ struct noderef {
 };
 
 
-%token BEGIN_TIKZPICTURE_CMD
-%token END_TIKZPICTURE_CMD
-%token BEGIN_PGFONLAYER_CMD
-%token END_PGFONLAYER_CMD
-%token DRAW_CMD
-%token NODE_CMD
-%token PATH_CMD
-%token RECTANGLE
-%token NODE
-%token AT
-%token TO
-%token SEMICOLON
-%token COMMA
+%token BEGIN_TIKZPICTURE_CMD "\\begin{tikzpicture}"
+%token END_TIKZPICTURE_CMD "\\end{tikzpicture}"
+%token BEGIN_PGFONLAYER_CMD "\\begin{pgfonlayer}"
+%token END_PGFONLAYER_CMD "\\end{pgfonlayer}"
+%token DRAW_CMD "\\draw"
+%token NODE_CMD "\\node"
+%token PATH_CMD "\\path"
+%token RECTANGLE "rectangle"
+%token NODE "node"
+%token AT "at"
+%token TO "to"
+%token SEMICOLON ";"
+%token COMMA ","
 
-%token LEFTPARENTHESIS
-%token RIGHTPARENTHESIS
-%token LEFTBRACKET
-%token RIGHTBRACKET
-%token FULLSTOP
-%token EQUALS
-%token COORD
-%token PROPSTRING
-%token REFSTRING
-%token DELIMITEDSTRING
+%token LEFTPARENTHESIS "("
+%token RIGHTPARENTHESIS ")"
+%token LEFTBRACKET "["
+%token RIGHTBRACKET "]"
+%token FULLSTOP "."
+%token EQUALS "="
+%token <pt> COORD "co-ordinate"
+%token <nsstr> PROPSTRING "key/value string"
+%token <nsstr> REFSTRING "string"
+%token <nsstr> DELIMITEDSTRING "{-delimited string"
 
 %type<nsstr>   nodename
 %type<nsstr>   optanchor
@@ -90,89 +90,89 @@ struct noderef {
 
 %%
 
-tikzpicture: BEGIN_TIKZPICTURE_CMD optproperties tikzcmds END_TIKZPICTURE_CMD;
+tikzpicture: "\\begin{tikzpicture}" optproperties tikzcmds "\\end{tikzpicture}";
 tikzcmds: tikzcmds tikzcmd | ;
 tikzcmd: node | edge | boundingbox | ignore;
 
-ignore: BEGIN_PGFONLAYER_CMD DELIMITEDSTRING | END_PGFONLAYER_CMD;
+ignore: "\\begin{pgfonlayer}" DELIMITEDSTRING | "\\end{pgfonlayer}";
 
 optproperties:
-	LEFTBRACKET properties RIGHTBRACKET
-	{ $$ = $<data>2; }
+	"[" properties "]"
+	{ $$ = $2; }
 	| { $$ = nil; };
 properties: property extraproperties
 	{
-		[$<data>2 addObject:$<prop>1];
-		$$ = $<data>2;
+		[$2 addObject:$1];
+		$$ = $2;
 	};
 extraproperties:
-	COMMA property extraproperties
+	"," property extraproperties
 	{
-		[$<data>3 addObject:$<prop>2];
-		$$ = $<data>3;
+		[$3 addObject:$2];
+		$$ = $3;
 	}
 	| { $$ = [GraphElementData data]; };
 property:
-	val EQUALS val
-	{ $$ = [GraphElementProperty property:$<nsstr>1 withValue:$<nsstr>3]; }
+	val "=" val
+	{ $$ = [GraphElementProperty property:$1 withValue:$3]; }
 	| val
-	{ $$ = [GraphElementProperty atom:$<nsstr>1]; };
-val: PROPSTRING { $$ = $<nsstr>1; } | DELIMITEDSTRING { $$ = $<nsstr>1; };
+	{ $$ = [GraphElementProperty atom:$1]; };
+val: PROPSTRING { $$ = $1; } | DELIMITEDSTRING { $$ = $1; };
 
-nodename: LEFTPARENTHESIS REFSTRING RIGHTPARENTHESIS { $$ = $<nsstr>2; };
-node: NODE_CMD optproperties nodename AT COORD DELIMITEDSTRING SEMICOLON
+nodename: "(" REFSTRING ")" { $$ = $2; };
+node: "\\node" optproperties nodename "at" COORD DELIMITEDSTRING ";"
 	{
 		Node *node = [Node node];
-		[node setData:$<data>2];
-		[node setName:$<nsstr>3];
-		[node setPoint:$<pt>5];
-		[node setLabel:$<nsstr>6];
+		[node setData:$2];
+		[node setName:$3];
+		[node setPoint:$5];
+		[node setLabel:$6];
 		[[TikzGraphAssembler currentAssembler] addNodeToMap:node];
 		[[[TikzGraphAssembler currentAssembler] graph] addNode:node];
 	};
 
-optanchor:  { $$ = nil; } | FULLSTOP REFSTRING { $$ = $<nsstr>2; };
-noderef: LEFTPARENTHESIS REFSTRING optanchor RIGHTPARENTHESIS
+optanchor:  { $$ = nil; } | "." REFSTRING { $$ = $2; };
+noderef: "(" REFSTRING optanchor ")"
 	{
-		$$.node = [[TikzGraphAssembler currentAssembler] nodeWithName:$<nsstr>2];
-		$$.anchor = $<nsstr>3;
+		$$.node = [[TikzGraphAssembler currentAssembler] nodeWithName:$2];
+		$$.anchor = $3;
 	};
 optnoderef:
-	noderef { $$ = $<noderef>1; }
-	| LEFTPARENTHESIS RIGHTPARENTHESIS { $$.node = nil; $$.anchor = nil; }
+	noderef { $$ = $1; }
+	| "(" ")" { $$.node = nil; $$.anchor = nil; }
 optedgenode:
 	{ $$ = nil; }
-	| NODE optproperties DELIMITEDSTRING
+	| "node" optproperties DELIMITEDSTRING
 	{
 		$$ = [Node node];
-		[$$ setData:$<data>2];
-		[$$ setLabel:$<nsstr>3];
+		[$$ setData:$2];
+		[$$ setLabel:$3];
 	}
-edge: DRAW_CMD optproperties noderef TO optedgenode optnoderef SEMICOLON
+edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
 	{
 		Edge *edge = [Edge edge];
-		[edge setData:$<data>2];
-		[edge setSource:$<noderef>3.node];
-		[edge setSourceAnchor:$<noderef>3.anchor];
-		[edge setEdgeNode:$<node>5];
-		if ($<noderef>6.node) {
-			[edge setTarget:$<noderef>6.node];
-			[edge setTargetAnchor:$<noderef>6.anchor];
+		[edge setData:$2];
+		[edge setSource:$3.node];
+		[edge setSourceAnchor:$3.anchor];
+		[edge setEdgeNode:$5];
+		if ($6.node) {
+			[edge setTarget:$6.node];
+			[edge setTargetAnchor:$6.anchor];
 		} else {
-			[edge setTarget:$<noderef>3.node];
-			[edge setTargetAnchor:$<noderef>3.anchor];
+			[edge setTarget:$3.node];
+			[edge setTargetAnchor:$3.anchor];
 		}
 		[edge setAttributesFromData];
 		[[[TikzGraphAssembler currentAssembler] graph] addEdge:edge];
 	};
 
-ignoreprop: val | val EQUALS val;
+ignoreprop: val | val "=" val;
 ignoreprops: ignoreprop ignoreprops | ;
-optignoreprops: LEFTBRACKET ignoreprops RIGHTBRACKET;
+optignoreprops: "[" ignoreprops "]";
 boundingbox:
-	PATH_CMD optignoreprops COORD RECTANGLE COORD SEMICOLON
+	"\\path" optignoreprops COORD "rectangle" COORD ";"
 	{
-		[[[TikzGraphAssembler currentAssembler] graph] setBoundingBox:NSRectAroundPoints($<pt>3, $<pt>5)];
+		[[[TikzGraphAssembler currentAssembler] graph] setBoundingBox:NSRectAroundPoints($3, $5)];
 	};
 
 /* vi:ft=yacc:noet:ts=4:sts=4:sw=4
