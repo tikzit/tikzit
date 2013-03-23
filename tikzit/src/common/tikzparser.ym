@@ -107,7 +107,12 @@ void yyerror(YYLTYPE *yylloc, TikzGraphAssembler *assembler, const char *str) {
 
 %%
 
-tikzpicture: "\\begin{tikzpicture}" optproperties tikzcmds "\\end{tikzpicture}";
+tikzpicture: "\\begin{tikzpicture}" optproperties tikzcmds "\\end{tikzpicture}"
+	{
+		if ($2) {
+			[[assembler graph] setData:$2];
+		}
+	};
 tikzcmds: tikzcmds tikzcmd | ;
 tikzcmd: node | edge | boundingbox | ignore;
 
