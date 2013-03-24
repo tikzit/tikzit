@@ -52,6 +52,8 @@ static void text_editing_started (GtkCellRenderer     *cell,
                                   PropertyListEditor  *editor);
 static void text_changed_cb (GtkEditable *editable,
                              PropertyListEditor *pane);
+static void selection_changed_cb (GtkTreeSelection *selection,
+                                  PropertyListEditor *pane);
 
 // }}}
 // {{{ Private
@@ -62,6 +64,8 @@ static void text_changed_cb (GtkEditable *editable,
 - (void) addProperty;
 - (void) addAtom;
 - (void) removeSelected;
+- (void) selectionCountChanged:(int)newSelectionCount;
+- (void) clearStore;
 @end
 
 // }}}
@@ -163,7 +167,9 @@ static void text_changed_cb (GtkEditable *editable,
             G_CALLBACK (add_atom_clicked_cb),
             self);
 
-        GtkWidget *removeButton = gtk_button_new ();
+        removeButton = gtk_button_new ();
+        g_object_ref_sink (G_OBJECT (removeButton));
+        gtk_widget_set_sensitive (removeButton, FALSE);
         //gtk_widget_set_size_request (removeButton, 27, 27);
         gtk_widget_set_tooltip_text (removeButton, "Remove selected");
         GtkWidget *removeIcon = gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_BUTTON);
@@ -172,6 +178,12 @@ static void text_changed_cb (GtkEditable *editable,
         g_signal_connect (G_OBJECT (removeButton),
             "clicked",
             G_CALLBACK (remove_clicked_cb),
+            self);
+
+        GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (view));
+        g_signal_connect (G_OBJECT (selection),
+            "changed",
+            G_CALLBACK (selection_changed_cb),
             self);
 
         gtk_widget_show_all (GTK_WIDGET (buttonBox));
@@ -183,18 +195,24 @@ static void text_changed_cb (GtkEditable *editable,
     return self;
 }
 
-- (void) clearStore {
-    GtkTreeIter iter;
-    if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list), &iter)) {
-        do {
-            void *prop;
-            gtk_tree_model_get (GTK_TREE_MODEL (list), &iter,
-                PLM_PROPERTY_COL, &prop,
-                -1);
-            [(id)prop release];
-        } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list), &iter));
-        gtk_list_store_clear (list);
-    }
+- (void) dealloc {
+    [self clearStore];
+    [data release];
+    g_object_unref (list);
+    g_object_unref (widget);
+    g_object_unref (removeButton);
+    [super dealloc];
+}
+
+@synthesize widget, delegate;
+
+- (GraphElementData*) data { return data; }
+- (void) setData:(GraphElementData*)d {
+    [d retain];
+    [data release];
+    data = d;
+    [self reloadProperties];
+    gtk_widget_set_sensitive (widget, data != nil);
 }
 
 - (void) reloadProperties {
@@ -211,34 +229,6 @@ static void text_changed_cb (GtkEditable *editable,
                 -1);
         ++pos;
     }
-}
-
-- (GtkWidget*) widget { return widget; }
-- (GraphElementData*) data { return data; }
-- (void) setData:(GraphElementData*)d {
-    [d retain];
-    [data release];
-    data = d;
-    [self reloadProperties];
-    gtk_widget_set_sensitive (widget, data != nil);
-}
-
-- (NSObject<PropertyChangeDelegate>*) delegate {
-    return delegate;
-}
-
-- (void) setDelegate:(NSObject<PropertyChangeDelegate>*)d {
-    id oldDelegate = delegate;
-    delegate = [d retain];
-    [oldDelegate release];
-}
-
-- (void) dealloc {
-    [self clearStore];
-    [data release];
-    g_object_unref (list);
-    g_object_unref (widget);
-    [super dealloc];
 }
 
 @end
@@ -388,6 +378,24 @@ static void text_changed_cb (GtkEditable *editable,
     g_list_foreach (selPaths, (GFunc) gtk_tree_path_free, NULL);
     g_list_free (selPaths);
 }
+
+- (void) selectionCountChanged:(int)count {
+    gtk_widget_set_sensitive (removeButton, count > 0);
+}
+
+- (void) clearStore {
+    GtkTreeIter iter;
+    if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list), &iter)) {
+        do {
+            void *prop;
+            gtk_tree_model_get (GTK_TREE_MODEL (list), &iter,
+                PLM_PROPERTY_COL, &prop,
+                -1);
+            [(id)prop release];
+        } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list), &iter));
+        gtk_list_store_clear (list);
+    }
+}
 @end
 
 // }}}
@@ -469,6 +477,15 @@ static void text_changed_cb (GtkEditable *editable, PropertyListEditor *pane)
         widget_clear_error (GTK_WIDGET (editable));
     }
 
+    [pool drain];
+}
+
+static void selection_changed_cb (GtkTreeSelection *selection,
+                                  PropertyListEditor *pane)
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    int selcount = gtk_tree_selection_count_selected_rows (selection);
+    [pane selectionCountChanged:selcount];
     [pool drain];
 }
 

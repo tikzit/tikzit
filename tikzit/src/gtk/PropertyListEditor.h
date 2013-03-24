@@ -32,6 +32,7 @@
     GtkWidget                        *view;
     GraphElementData                 *data;
     GtkWidget                        *widget;
+    GtkWidget                        *removeButton;
     NSObject<PropertyChangeDelegate> *delegate;
 }
 
