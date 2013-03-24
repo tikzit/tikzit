@@ -80,17 +80,6 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
 
 @implementation PropertiesPane
 
-// we don't currently use the styles models
-- (id) initWithStyleManager:(StyleManager*)sm {
-    return [self init];
-}
-
-// we don't currently use the styles models
-- (id) initWithNodeStylesModel:(NodeStylesModel*)nsm
-            andEdgeStylesModel:(EdgeStylesModel*)esm {
-    return [self init];
-}
-
 - (id) init {
     self = [super init];
 

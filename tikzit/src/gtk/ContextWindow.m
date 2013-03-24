@@ -65,8 +65,7 @@ static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event
 
         gtk_container_add (GTK_CONTAINER (window), layout);
 
-        propsPane = [[PropertiesPane alloc] initWithNodeStylesModel:nsm
-                                                 andEdgeStylesModel:esm];
+        propsPane = [[PropertiesPane alloc] init];
         gtk_box_pack_start (GTK_BOX (layout), [propsPane gtkWidget],
                             TRUE, TRUE, 0);
 

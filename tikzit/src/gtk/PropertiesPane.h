@@ -59,10 +59,6 @@
 @property (assign)   BOOL          visible;
 @property (readonly) GtkWidget    *gtkWidget;
 
-- (id) initWithStyleManager:(StyleManager*)mgr;
-- (id) initWithNodeStylesModel:(NodeStylesModel*)nsm
-            andEdgeStylesModel:(EdgeStylesModel*)esm;
-
 - (void) loadConfiguration:(Configuration*)config;
 - (void) saveConfiguration:(Configuration*)config;
 
