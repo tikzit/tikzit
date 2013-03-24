@@ -37,7 +37,10 @@ static GOptionEntry entries[] =
 
 void onUncaughtException(NSException* exception)
 {
-    NSLog(@"uncaught exception: %@", [exception description]);
+    NSString *joinStr =         @"\n             ";
+    NSLog(@"uncaught exception: %@\n  backtrace: %@",
+            [exception description],
+            [[exception callStackSymbols] componentsJoinedByString:joinStr]);
 }
 
 int main (int argc, char *argv[]) {
