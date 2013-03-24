@@ -42,6 +42,7 @@
     GtkWidget         *tikzPane;
 
     gulong             clipboard_handler_id;
+    GtkTextTag        *errorHighlightTag; // owned by tikzBuffer
 
     // Classes that manage parts of the window
     Menu              *menu;

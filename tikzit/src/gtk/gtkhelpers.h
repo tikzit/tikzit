@@ -53,4 +53,6 @@ void label_set_bold (GtkLabel *label);
 void widget_set_error (GtkWidget *widget);
 void widget_clear_error (GtkWidget *widget);
 
+void text_buffer_clear_tag (GtkTextBuffer *buffer, GtkTextTag *tag);
+
 // vim:ft=objc:sts=2:sw=2:et

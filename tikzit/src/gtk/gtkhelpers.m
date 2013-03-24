@@ -243,4 +243,12 @@ void widget_clear_error (GtkWidget *widget) {
     gtk_widget_modify_base (widget, GTK_STATE_NORMAL, NULL);
 }
 
+void text_buffer_clear_tag (GtkTextBuffer *buffer, GtkTextTag *tag) {
+    GtkTextIter start;
+    GtkTextIter end;
+    gtk_text_buffer_get_start_iter (buffer, &start);
+    gtk_text_buffer_get_end_iter (buffer, &end);
+    gtk_text_buffer_remove_tag (buffer, tag, &start, &end);
+}
+
 // vim:ft=objc:ts=8:et:sts=4:sw=4

@@ -31,6 +31,10 @@
 #import "SupportDir.h"
 #import "TikzDocument.h"
 
+enum {
+    GraphInfoStatus,
+    ParseStatus
+};
 
 // {{{ Internal interfaces
 // {{{ Clipboard support
@@ -80,7 +84,8 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 /** Open a document, dealing with errors as necessary */
 - (TikzDocument*) _openDocument:(NSString*)path;
 - (void) _placeGraphOnClipboard:(Graph*)graph;
-- (void) _setHasParseError:(BOOL)hasError;
+- (void) _clearParseError;
+- (void) _setParseError:(NSError*)error;
 /** Update the window title. */
 - (void) _updateTitle;
 /** Update the window status bar default text. */
@@ -467,8 +472,12 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         gtk_text_buffer_get_bounds (tikzBuffer, &start, &end);
         gchar *text = gtk_text_buffer_get_text (tikzBuffer, &start, &end, FALSE);
 
-        BOOL success = [document updateTikz:[NSString stringWithUTF8String:text] error:NULL];
-        [self _setHasParseError:!success];
+        NSError *error = nil;
+        BOOL success = [document updateTikz:[NSString stringWithUTF8String:text] error:&error];
+        if (success)
+            [self _clearParseError];
+        else
+            [self _setParseError:error];
 
         g_free (text);
 
@@ -541,6 +550,13 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
     tikzBuffer = gtk_text_buffer_new (NULL);
     g_object_ref_sink (tikzBuffer);
+    errorHighlightTag = gtk_text_buffer_create_tag (
+            tikzBuffer, NULL,
+            "foreground", "#d40000",
+            "foreground-set", TRUE,
+            "weight", PANGO_WEIGHT_SEMIBOLD,
+            "weight-set", TRUE,
+            NULL);
     GtkWidget *tikzScroller = gtk_scrolled_window_new (NULL, NULL);
     gtk_widget_show (tikzScroller);
 
@@ -682,15 +698,39 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         clipboard_graph_data_new (graph));
 }
 
-- (void) _setHasParseError:(BOOL)hasError {
-    if (hasError && !hasParseError) {
-        gtk_statusbar_push (statusBar, 1, "Parse error");
+- (void) _clearParseError {
+    if (!hasParseError)
+        return;
+    gtk_statusbar_pop (statusBar, ParseStatus);
+    text_buffer_clear_tag (tikzBuffer, errorHighlightTag);
+    widget_clear_error (tikzPane);
+    hasParseError = NO;
+}
+
+- (void) _setParseError:(NSError*)error {
+    if (!hasParseError) {
         widget_set_error (tikzPane);
-    } else if (!hasError && hasParseError) {
-        gtk_statusbar_pop (statusBar, 1);
-        widget_clear_error (tikzPane);
+        hasParseError = YES;
     }
-    hasParseError = hasError;
+    NSString *message = [NSString stringWithFormat:@"Parse error: %@", [error localizedDescription]];
+    gtk_statusbar_pop (statusBar, ParseStatus);
+    gtk_statusbar_push (statusBar, ParseStatus, [message UTF8String]);
+
+    text_buffer_clear_tag (tikzBuffer, errorHighlightTag);
+
+    NSDictionary *errorInfo = [error userInfo];
+    if ([errorInfo objectForKey:@"startLine"] != nil) {
+        GtkTextIter symbolStart;
+        GtkTextIter symbolEnd;
+        gtk_text_buffer_get_iter_at_line_index (tikzBuffer, &symbolStart,
+                [[errorInfo objectForKey:@"startLine"] intValue] - 1,
+                [[errorInfo objectForKey:@"startColumn"] intValue] - 1);
+        gtk_text_buffer_get_iter_at_line_index (tikzBuffer, &symbolEnd,
+                [[errorInfo objectForKey:@"endLine"] intValue] - 1,
+                [[errorInfo objectForKey:@"endColumn"] intValue]);
+        gtk_text_buffer_apply_tag (tikzBuffer, errorHighlightTag,
+                &symbolStart, &symbolEnd);
+    }
 }
 
 - (void) _updateUndoActions {
@@ -740,8 +780,8 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
                 nrEdges,
                 nrEdges!=1 ? "s" : "");
     }
-    gtk_statusbar_pop(statusBar, 0);
-    gtk_statusbar_push(statusBar, 0, buffer->str);
+    gtk_statusbar_pop(statusBar, GraphInfoStatus);
+    gtk_statusbar_push(statusBar, GraphInfoStatus, buffer->str);
 
     g_string_free (buffer, TRUE);
 }
@@ -756,7 +796,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
         } else {
             gtk_text_buffer_set_text (tikzBuffer, "", -1);
         }
-        [self _setHasParseError:NO];
+        [self _clearParseError];
 
         suppressTikzUpdates = FALSE;
     }
