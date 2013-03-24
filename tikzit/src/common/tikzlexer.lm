@@ -44,17 +44,18 @@ FLOAT \-?[0-9]*(\.[0-9]+)?
 
 %%
 
-<INITIAL,xcoord,ycoord,props,noderef>\n {
+ /* whitespace is ignored, except for position counting; we don't
+    count formfeed and vtab as whitespace, because it's not obvious
+    how they should be dealt with and no-one actually uses them */
+
+ /* lex will take the longest-matching string */
+<INITIAL,xcoord,ycoord,props,noderef>\r\n|\r|\n {
 	yylloc->first_line += 1;
 	yylloc->last_line = yylloc->first_line;
 	yylloc->first_column = yylloc->last_column = 0;
 }
-<INITIAL,xcoord,ycoord,props,noderef>[ ]+  {  } /* ignore whitespace */;
-<INITIAL,xcoord,ycoord,props,noderef>[\t]+ {
-	// tab = 8 columns
-	// note that we have already adjusted by yyleng at this point
-	yylloc->last_column += 7*yyleng;
-}
+<INITIAL,xcoord,ycoord,props,noderef>[\t ]+  {  }
+
 \\begin\{tikzpicture\}         {  return BEGIN_TIKZPICTURE_CMD; }
 \\end\{tikzpicture\}           {  return END_TIKZPICTURE_CMD; }
 \\begin\{pgfonlayer\}          {  return BEGIN_PGFONLAYER_CMD; }

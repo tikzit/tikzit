@@ -167,17 +167,6 @@
 	size_t token_offset = yylloc->first_column - 1;
 	size_t token_len = ((last_line_start - first_line_start) + yylloc->last_column) - token_offset;
 	
-	// damn you, tabs!
-	// we need to convert "column offsets" into "character/byte offsets"
-	for (int i = 0; i < MIN(token_offset + token_len,context_len); ++i) {
-		if (*(first_line_start + i) == '\t') {
-			if (i < token_offset)
-				token_offset -= 7;
-			else
-				token_len -= 7;
-		}
-	}
-	
 	if (token_offset + token_len > context_len) {
 		// error position state is corrupted
 		NSLog(@"Got bad error state for error \"%s\": start(%i,%i), end(%i,%i)\n    context_len = %d; token_offset = %d; token_len = %d",
