@@ -22,7 +22,6 @@
 //  
 
 #import "TikzShape.h"
-#import "TikzGraphAssembler.h"
 #import "Graph.h"
 
 @implementation TikzShape
@@ -35,7 +34,7 @@
 												  error:NULL];
 	if (tikz == nil) return nil;
 	
-	Graph *graph = [TikzGraphAssembler parseTikz:tikz];
+	Graph *graph = [Graph graphFromTikz:tikz];
 	if (graph == nil) return nil;
 	
 	NSRect graphBounds = ([graph hasBoundingBox]) ? [graph boundingBox] : [graph bounds];

@@ -22,7 +22,6 @@
 //
 
 #import "TikzDocument.h"
-#import "TikzGraphAssembler.h"
 
 @interface TikzDocument (Private)
 - (void) styleRenamed:(NSNotification*)n;
@@ -264,7 +263,7 @@
         return YES;
     }
 
-    Graph *g = [TikzGraphAssembler parseTikz:t error:error];
+    Graph *g = [Graph graphFromTikz:t error:error];
     if (g) {
         // updateTikz actually generates a graph from the tikz,
         // and generates the final tikz from that
@@ -310,7 +309,7 @@
 }
 
 - (void) pasteFromTikz:(NSString*)t {
-    Graph *clipboard = [TikzGraphAssembler parseTikz:t];
+    Graph *clipboard = [Graph graphFromTikz:t];
     if (clipboard) {
         [self attachStylesToGraph:clipboard];
         [self paste:clipboard];

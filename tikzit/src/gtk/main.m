@@ -28,7 +28,6 @@
 #import "tzstockitems.h"
 
 #import "Application.h"
-#import "TikzGraphAssembler.h"
 
 static GOptionEntry entries[] =
 {

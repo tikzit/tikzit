@@ -22,10 +22,11 @@
 //  
 
 #import "Graph.h"
+#import "TikzGraphAssembler.h"
 
 @implementation Graph
 
-- (Graph*)init {
+- (id)init {
 	self = [super init];
 	if (self != nil) {
 		data = [[GraphElementData alloc] init];
@@ -37,6 +38,15 @@
 		outEdges = nil;
 	}
 	return self;
+}
+
+- (id)initFromTikz:(NSString*)tikz error:(NSError**)e {
+	[self release];
+	return [[TikzGraphAssembler parseTikz:tikz error:e] retain];
+}
+
+- (id)initFromTikz:(NSString*)tikz {
+	return [self initFromTikz:tikz error:NULL];
 }
 
 - (id) copyWithZone:(NSZone*)zone {
@@ -763,6 +773,14 @@
 
 + (Graph*)graph {
 	return [[[self alloc] init] autorelease];
+}
+
++ (Graph*)graphFromTikz:(NSString*)tikz error:(NSError**)e {
+	return [TikzGraphAssembler parseTikz:tikz error:e];
+}
+
++ (Graph*)graphFromTikz:(NSString*)tikz {
+	return [self graphFromTikz:tikz error:NULL];
 }
 
 + (NSMapTable*)nodeTableForNodes:(NSSet*)nds {

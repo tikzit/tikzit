@@ -361,6 +361,41 @@
  */
 + (Graph*)graph;
 
+/**
+ * Initialize an empty graph
+ */
+- (id)init;
+
+/**
+ * Constructs a graph from the given tikz code
+ *
+ * See TikzGraphAssembler for more information about the error argument.
+ */
++ (Graph*)graphFromTikz:(NSString*)tikz error:(NSError**)e;
+
+/**
+ * Constructs a graph from the given tikz code
+ */
++ (Graph*)graphFromTikz:(NSString*)tikz;
+
+/**
+ * Initialize an empty graph from the given tikz code
+ *
+ * Note that this may not return the same object it was called on,
+ * and will return nil if parsing failed.
+ *
+ * See TikzGraphAssembler for more information about the error argument.
+ */
+- (id)initFromTikz:(NSString*)tikz error:(NSError**)e;
+
+/**
+ * Initialize an empty graph from the given tikz code
+ *
+ * Note that this may not return the same object it was called on,
+ * and will return nil if parsing failed.
+ */
+- (id)initFromTikz:(NSString*)tikz;
+
 @end
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4

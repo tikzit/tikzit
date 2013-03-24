@@ -16,7 +16,6 @@
  */
 
 #import "NSString+Tikz.h"
-#import "TikzGraphAssembler.h"
 
 @implementation NSString (Tikz)
 
