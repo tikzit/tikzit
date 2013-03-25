@@ -28,26 +28,27 @@
 @implementation RectangleShape
 
 - (id)init {
-	[super init];
-	Node *n0,*n1,*n2,*n3;
-	float sz = 0.2f;
-	
-	n0 = [Node nodeWithPoint:NSMakePoint(-sz, sz)];
-	n1 = [Node nodeWithPoint:NSMakePoint( sz, sz)];
-	n2 = [Node nodeWithPoint:NSMakePoint( sz,-sz)];
-	n3 = [Node nodeWithPoint:NSMakePoint(-sz,-sz)];
-	
-	Edge *e0,*e1,*e2,*e3;
-	
-	e0 = [Edge edgeWithSource:n0 andTarget:n1];
-	e1 = [Edge edgeWithSource:n1 andTarget:n2];
-	e2 = [Edge edgeWithSource:n2 andTarget:n3];
-	e3 = [Edge edgeWithSource:n3 andTarget:n0];
-	
-	paths = [[NSSet alloc] initWithObjects:[NSArray arrayWithObjects:e0,e1,e2,e3,nil],nil];
-
-	styleTikz = @"rectangle";
-	
+	self = [super init];
+	if (self) {
+		Node *n0,*n1,*n2,*n3;
+		float sz = 0.2f;
+		
+		n0 = [Node nodeWithPoint:NSMakePoint(-sz, sz)];
+		n1 = [Node nodeWithPoint:NSMakePoint( sz, sz)];
+		n2 = [Node nodeWithPoint:NSMakePoint( sz,-sz)];
+		n3 = [Node nodeWithPoint:NSMakePoint(-sz,-sz)];
+		
+		Edge *e0,*e1,*e2,*e3;
+		
+		e0 = [Edge edgeWithSource:n0 andTarget:n1];
+		e1 = [Edge edgeWithSource:n1 andTarget:n2];
+		e2 = [Edge edgeWithSource:n2 andTarget:n3];
+		e3 = [Edge edgeWithSource:n3 andTarget:n0];
+		
+		paths = [[NSSet alloc] initWithObjects:[NSArray arrayWithObjects:e0,e1,e2,e3,nil],nil];
+		
+		styleTikz = @"rectangle";
+	}
 	return self;
 }
 

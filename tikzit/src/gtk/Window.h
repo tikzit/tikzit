@@ -114,15 +114,15 @@
 /**
  * Cut the current selection to the clipboard.
  */
-- (void) cut;
+- (void) selectionCutToClipboard;
 /**
  * Copy the current selection to the clipboard.
  */
-- (void) copy;
+- (void) selectionCopyToClipboard;
 /**
  * Paste from the clipboard to the appropriate place.
  */
-- (void) paste;
+- (void) pasteFromClipboard;
 
 /**
  * The GTK+ window that this class manages.

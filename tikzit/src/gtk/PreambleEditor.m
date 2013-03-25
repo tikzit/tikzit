@@ -72,7 +72,6 @@ static void preamble_selection_changed_cb (GtkTreeSelection *treeselection,
 
 - (id) init {
 	[self release];
-	self = nil;
 	return nil;
 }
 

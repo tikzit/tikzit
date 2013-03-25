@@ -268,7 +268,7 @@
     gsize length;
     gchar **list = g_key_file_get_string_list (file, [group UTF8String], [key UTF8String], &length, NULL);
     if (list) {
-        NSMutableArray *result = [NSMutableArray new];
+        NSMutableArray *result = [NSMutableArray arrayWithCapacity:length];
         for (int i = 0; i < length; ++i) {
             [result addObject:[NSString stringWithUTF8String:list[i]]];
         }
@@ -288,7 +288,7 @@
     gsize length;
     gboolean *list = g_key_file_get_boolean_list (file, [group UTF8String], [key UTF8String], &length, NULL);
     if (list) {
-        NSMutableArray *result = [NSMutableArray new];
+        NSMutableArray *result = [NSMutableArray arrayWithCapacity:length];
         for (int i = 0; i < length; ++i) {
             [result addObject:[NSNumber numberWithBool:list[i]]];
         }
@@ -308,7 +308,7 @@
     gsize length;
     gint *list = g_key_file_get_integer_list (file, [group UTF8String], [key UTF8String], &length, NULL);
     if (list) {
-        NSMutableArray *result = [NSMutableArray new];
+        NSMutableArray *result = [NSMutableArray arrayWithCapacity:length];
         for (int i = 0; i < length; ++i) {
             [result addObject:[NSNumber numberWithInt:list[i]]];
         }
@@ -328,7 +328,7 @@
     gsize length;
     double *list = g_key_file_get_double_list (file, [group UTF8String], [key UTF8String], &length, NULL);
     if (list) {
-        NSMutableArray *result = [NSMutableArray new];
+        NSMutableArray *result = [NSMutableArray arrayWithCapacity:length];
         for (int i = 0; i < length; ++i) {
             [result addObject:[NSNumber numberWithDouble:list[i]]];
         }

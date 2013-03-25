@@ -51,8 +51,10 @@
 }
 
 - (id)init {
-	[super init];
-	paths = nil;
+	self = [super init];
+	if (self) {
+		paths = nil;
+	}
 	return self;
 }
 

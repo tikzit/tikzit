@@ -234,19 +234,19 @@ static void redo_cb (GtkAction *action, Window *window) {
 
 static void cut_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window cut];
+    [window selectionCutToClipboard];
     [pool drain];
 }
 
 static void copy_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window copy];
+    [window selectionCopyToClipboard];
     [pool drain];
 }
 
 static void paste_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [window paste];
+    [window pasteFromClipboard];
     [pool drain];
 }
 
@@ -574,7 +574,6 @@ static void tool_cb (GtkAction *action, id<Tool> tool) {
 
 - (id) init {
     [self release];
-    self = nil;
     return nil;
 }
 

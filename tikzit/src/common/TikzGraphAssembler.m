@@ -30,7 +30,7 @@
 @implementation TikzGraphAssembler
 
 - (id)init {
-	self = nil;
+	[self release];
 	return nil;
 }
 
@@ -126,7 +126,6 @@
 	yylex(&lval, &lloc, scanner);
     r = !(yyget_leng(scanner) < [testTikz length]);
 	yylex_destroy(scanner);
-    [testTikz autorelease];
     
     return r;
 }

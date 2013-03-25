@@ -354,19 +354,19 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     }
 }
 
-- (void) cut {
+- (void) selectionCutToClipboard {
     if ([[[document pickSupport] selectedNodes] count] > 0) {
-        [self _placeGraphOnClipboard:[document cutSelection]];
+        [self _placeGraphOnClipboard:[document selectionCut]];
     }
 }
 
-- (void) copy {
+- (void) selectionCopyToClipboard {
     if ([[[document pickSupport] selectedNodes] count] > 0) {
-        [self _placeGraphOnClipboard:[document copySelection]];
+        [self _placeGraphOnClipboard:[document selectionCopy]];
     }
 }
 
-- (void) paste {
+- (void) pasteFromClipboard {
     gtk_clipboard_request_contents (gtk_clipboard_get (GDK_SELECTION_CLIPBOARD),
                                     tikzit_picture_atom,
                                     clipboard_paste_contents,

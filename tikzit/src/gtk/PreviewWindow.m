@@ -35,7 +35,6 @@
 
 - (id) init {
     [self release];
-    self = nil;
     return nil;
 }
 

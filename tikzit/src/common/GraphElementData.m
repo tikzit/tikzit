@@ -32,8 +32,10 @@
 }
 
 - (id)init {
-	[super init];
-	properties = [[NSMutableArray alloc] init];
+	self = [super init];
+	if (self) {
+		properties = [[NSMutableArray alloc] init];
+	}
 	return self;
 }
 

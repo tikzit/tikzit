@@ -27,32 +27,32 @@
 @implementation TikzShape
 
 - (id)initWithTikzFile:(NSString*)file {
-	[super init];
-	
-	NSString *tikz = [NSString stringWithContentsOfFile:file
-											   encoding:NSUTF8StringEncoding
-												  error:NULL];
-	if (tikz == nil) return nil;
-	
-	Graph *graph = [Graph graphFromTikz:tikz];
-	if (graph == nil) return nil;
-	
-	NSRect graphBounds = ([graph hasBoundingBox]) ? [graph boundingBox] : [graph bounds];
-	
-	float sz = 0.5f;
-	
-	// the "screen" coordinate space fits in the shape bounds
-	Transformer *t = [Transformer transformer];
-	float width_ratio = (2*sz) / graphBounds.size.width;
-	float height_ratio = (2*sz) / graphBounds.size.height;
-	[t setScale:MIN(width_ratio, height_ratio)];
-	NSRect bds = [t rectToScreen:graphBounds];
-	NSPoint shift = NSMakePoint(-NSMidX(bds),
-								-NSMidY(bds));
-	[t setOrigin:shift];
-	[graph applyTransformer:t];
-	paths = [[graph pathCover] retain];
-	
+	self = [super init];
+	if (self) {
+		NSString *tikz = [NSString stringWithContentsOfFile:file
+												   encoding:NSUTF8StringEncoding
+													  error:NULL];
+		if (tikz == nil) return nil;
+		
+		Graph *graph = [Graph graphFromTikz:tikz];
+		if (graph == nil) return nil;
+		
+		NSRect graphBounds = ([graph hasBoundingBox]) ? [graph boundingBox] : [graph bounds];
+		
+		float sz = 0.5f;
+		
+		// the "screen" coordinate space fits in the shape bounds
+		Transformer *t = [Transformer transformer];
+		float width_ratio = (2*sz) / graphBounds.size.width;
+		float height_ratio = (2*sz) / graphBounds.size.height;
+		[t setScale:MIN(width_ratio, height_ratio)];
+		NSRect bds = [t rectToScreen:graphBounds];
+		NSPoint shift = NSMakePoint(-NSMidX(bds),
+									-NSMidY(bds));
+		[t setOrigin:shift];
+		[graph applyTransformer:t];
+		paths = [[graph pathCover] retain];
+	}
 	return self;
 }
 

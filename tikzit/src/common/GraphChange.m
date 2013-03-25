@@ -32,8 +32,7 @@
 @implementation GraphChange
 
 - (id)init {
-	[super init];
-	return self;
+	return [super init];
 }
 
 @synthesize changeType;

@@ -26,7 +26,6 @@
 
 - (id) init {
     [self release];
-    self = nil;
     return nil;
 }
 
@@ -91,7 +90,6 @@
 
 - (id) init {
     [self release];
-    self = nil;
     return nil;
 }
 

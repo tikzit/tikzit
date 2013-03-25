@@ -28,26 +28,26 @@
 @implementation CircleShape
 
 - (id)init {
-	[super init];
-	
-	Node *n0,*n1,*n2,*n3;
-	
-	n0 = [Node nodeWithPoint:NSMakePoint( 0.0f,  0.2f)];
-	n1 = [Node nodeWithPoint:NSMakePoint( 0.2f,  0.0f)];
-	n2 = [Node nodeWithPoint:NSMakePoint( 0.0f, -0.2f)];
-	n3 = [Node nodeWithPoint:NSMakePoint(-0.2f,  0.0f)];
-	
-	Edge *e0,*e1,*e2,*e3;
-	
-	e0 = [Edge edgeWithSource:n0 andTarget:n1]; [e0 setBend:-45];
-	e1 = [Edge edgeWithSource:n1 andTarget:n2]; [e1 setBend:-45];
-	e2 = [Edge edgeWithSource:n2 andTarget:n3]; [e2 setBend:-45];
-	e3 = [Edge edgeWithSource:n3 andTarget:n0]; [e3 setBend:-45];
-	
-	paths = [[NSSet alloc] initWithObjects:[NSArray arrayWithObjects:e0,e1,e2,e3,nil],nil];
+	self = [super init];
+	if (self) {
+		Node *n0,*n1,*n2,*n3;
+		
+		n0 = [Node nodeWithPoint:NSMakePoint( 0.0f,  0.2f)];
+		n1 = [Node nodeWithPoint:NSMakePoint( 0.2f,  0.0f)];
+		n2 = [Node nodeWithPoint:NSMakePoint( 0.0f, -0.2f)];
+		n3 = [Node nodeWithPoint:NSMakePoint(-0.2f,  0.0f)];
+		
+		Edge *e0,*e1,*e2,*e3;
+		
+		e0 = [Edge edgeWithSource:n0 andTarget:n1]; [e0 setBend:-45];
+		e1 = [Edge edgeWithSource:n1 andTarget:n2]; [e1 setBend:-45];
+		e2 = [Edge edgeWithSource:n2 andTarget:n3]; [e2 setBend:-45];
+		e3 = [Edge edgeWithSource:n3 andTarget:n0]; [e3 setBend:-45];
+		
+		paths = [[NSSet alloc] initWithObjects:[NSArray arrayWithObjects:e0,e1,e2,e3,nil],nil];
 
-	styleTikz = @"circle";
-	
+		styleTikz = @"circle";
+	}
 	return self;
 }
 

@@ -276,15 +276,15 @@
     return NO;
 }
 
-- (Graph*) cutSelection {
-    Graph *selection = [self copySelection];
+- (Graph*) selectionCut {
+    Graph *selection = [self selectionCopy];
     [self startUndoGroup];
     [self removeSelected];
     [self nameAndEndUndoGroup:@"Cut"];
     return selection;
 }
 
-- (Graph*) copySelection {
+- (Graph*) selectionCopy {
     return [[graph copyOfSubgraphWithNodes:[pickSupport selectedNodes]] autorelease];
 }
 

@@ -59,13 +59,15 @@ static NSString *POSTAMBLE =
 }
 
 - (id)init {
-	[super init];
-	selectedPreambleName = @"default";
-	preambleDict = [[NSMutableDictionary alloc] initWithCapacity:1];
-	[preambleDict setObject:[self defaultPreamble] forKey:@"custom"];
-	styles = nil;
-	edges = nil;
-	styleManager = nil;
+	self = [super init];
+	if (self) {
+		selectedPreambleName = @"default";
+		preambleDict = [[NSMutableDictionary alloc] initWithCapacity:1];
+		[preambleDict setObject:[self defaultPreamble] forKey:@"custom"];
+		styles = nil;
+		edges = nil;
+		styleManager = nil;
+	}
 	return self;
 }
 

@@ -205,18 +205,22 @@ static NSMapTable *colorHash = nil;
 }
 
 - (id)initWithRed:(unsigned short)r green:(unsigned short)g blue:(unsigned short)b {
-	[super init];
-	red = r;
-	green = g;
-	blue = b;
+	self = [super init];
+	if (self) {
+		red = r;
+		green = g;
+		blue = b;
+	}
 	return self;
 }
 
 - (id)initWithFloatRed:(float)r green:(float)g blue:(float)b {
-	[super init];
-	red = round(r*255.0f);
-	green = round(g*255.0f);
-	blue = round(b*255.0f);
+	self = [super init];
+	if (self) {
+		red = round(r*255.0f);
+		green = round(g*255.0f);
+		blue = round(b*255.0f);
+	}
 	return self;
 }
 

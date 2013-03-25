@@ -77,7 +77,7 @@ Application* app = nil;
     if (app != nil) {
         [self release];
         self = app;
-        return app;
+        return self;
     }
     self = [super init];
 

@@ -28,32 +28,33 @@
 @implementation Edge
 
 - (id)init {
-	[super init];
-	data = [[GraphElementData alloc] init];
-	bend = 0;
-	inAngle = 135;
-	outAngle = 45;
-	bendMode = EdgeBendModeBasic;
-	weight = 0.4f;
-	dirty = YES;
-	source = nil;
-	target = nil;
-	edgeNode = nil;
-    sourceAnchor = @"";
-    targetAnchor = @"";
-	
+	self = [super init];
+	if (self) {
+		data = [[GraphElementData alloc] init];
+		bend = 0;
+		inAngle = 135;
+		outAngle = 45;
+		bendMode = EdgeBendModeBasic;
+		weight = 0.4f;
+		dirty = YES;
+		source = nil;
+		target = nil;
+		edgeNode = nil;
+		sourceAnchor = @"";
+		targetAnchor = @"";
+	}
 	return self;
 }
 
 - (id)initWithSource:(Node*)s andTarget:(Node*)t {
-	[self init];
-	
-	[self setSource:s];
-	[self setTarget:t];
-	edgeNode = nil;
-	
-	dirty = YES;
-	
+	self = [self init];
+	if (self) {
+		[self setSource:s];
+		[self setTarget:t];
+		edgeNode = nil;
+		
+		dirty = YES;
+	}
 	return self;
 }
 

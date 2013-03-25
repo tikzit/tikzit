@@ -45,7 +45,6 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
 
 - (id) init {
     [self release];
-    self = nil;
     return nil;
 }
 

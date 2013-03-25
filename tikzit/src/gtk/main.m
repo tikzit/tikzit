@@ -102,6 +102,7 @@ int main (int argc, char *argv[]) {
     gtk_main ();
 
     [app saveConfiguration];
+    [app release];
 
     return 0;
 }

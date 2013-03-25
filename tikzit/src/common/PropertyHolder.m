@@ -27,14 +27,18 @@
 
 
 - (id)init {
-    [super init];
-    notificationName = @"UnknownPropertyChanged";
+    self = [super init];
+    if (self) {
+        notificationName = @"UnknownPropertyChanged";
+    }
     return self;
 }
 
 - (id)initWithNotificationName:(NSString*)n {
-    [super init];
-    notificationName = [n copy];
+    self = [super init];
+    if (self) {
+        notificationName = [n copy];
+    }
     return self;
 }
 
@@ -65,4 +69,4 @@
 
 @end
 
-// vi:ft=objc:ts=4:noet:sts=4:sw=4
+// vi:ft=objc:ts=4:et:sts=4:sw=4

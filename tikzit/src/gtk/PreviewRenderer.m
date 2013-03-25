@@ -28,7 +28,6 @@
 
 - (id) init {
     [self release];
-    self = nil;
     return nil;
 }
 
@@ -140,27 +139,30 @@
     } NS_HANDLER {
         NSLog(@"Failed to run '%@'; error was: %@", path, [localException reason]);
         (void)localException;
-        NSString *desc = [NSString stringWithFormat:@"Failed to run '%@'", path];
-        NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:2];
-        [errorDetail setValue:desc forKey:NSLocalizedDescriptionKey];
-        *error = [NSError errorWithDomain:TZErrorDomain code:TZ_ERR_IO userInfo:errorDetail];
+        if (error) {
+            NSString *desc = [NSString stringWithFormat:@"Failed to run '%@'", path];
+            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:2];
+            [errorDetail setValue:desc forKey:NSLocalizedDescriptionKey];
+            *error = [NSError errorWithDomain:TZErrorDomain code:TZ_ERR_IO userInfo:errorDetail];
+        }
 
         // remove all temporary files
         [[NSFileManager defaultManager] removeFileAtPath:tempDir handler:NULL];
+        [latexTask release];
 
         return NO;
     } NS_ENDHANDLER
 
-    NSData *data = [latexOut readDataToEndOfFile];
-    NSString *str = [[NSString alloc] initWithData:data
-                                          encoding:NSUTF8StringEncoding];
-
     if ([latexTask terminationStatus] != 0) {
         if (error) {
+            NSData *data = [latexOut readDataToEndOfFile];
+            NSString *str = [[NSString alloc] initWithData:data
+                                                  encoding:NSUTF8StringEncoding];
             NSMutableDictionary *errorDetail = [NSMutableDictionary dictionaryWithCapacity:2];
             [errorDetail setValue:@"Generating a PDF file with pdflatex failed" forKey:NSLocalizedDescriptionKey];
             [errorDetail setValue:str forKey:TZToolOutputErrorKey];
             *error = [NSError errorWithDomain:TZErrorDomain code:TZ_ERR_TOOL_FAILED userInfo:errorDetail];
+            [str release];
         }
     } else {
         // load pdf document
@@ -189,6 +191,7 @@
 
     // remove all temporary files
     [[NSFileManager defaultManager] removeFileAtPath:tempDir handler:NULL];
+    [latexTask release];
 
     return success;
 }

@@ -52,7 +52,6 @@ static void remove_style_button_cb (GtkButton *widget, EdgeStylesPalette *palett
 
 - (id) init {
     [self release];
-    self = nil;
     return nil;
 }
 

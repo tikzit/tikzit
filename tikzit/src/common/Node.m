@@ -29,17 +29,18 @@
 @implementation Node
 
 - (id)initWithPoint:(NSPoint)p {
-	[super init];
-	data = [[GraphElementData alloc] init];
-	style = nil;
-	label = @"";
-	point = p;
+	self = [super init];
+	if (self) {
+		data = [[GraphElementData alloc] init];
+		style = nil;
+		label = @"";
+		point = p;
+	}
 	return self;
 }
 
 - (id)init {
-	[self initWithPoint:NSMakePoint(0.0f, 0.0f)];
-	return self;
+	return [self initWithPoint:NSMakePoint(0.0f, 0.0f)];
 }
 
 - (id)copyWithZone:(NSZone*)z {

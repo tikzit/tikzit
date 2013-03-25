@@ -72,8 +72,8 @@
 
 - (BOOL) updateTikz:(NSString*)t error:(NSError**)error;
 
-- (Graph*) cutSelection;
-- (Graph*) copySelection;
+- (Graph*) selectionCut;
+- (Graph*) selectionCopy;
 - (void) paste:(Graph*)graph;
 - (void) pasteFromTikz:(NSString*)tikz;
 

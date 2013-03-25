@@ -38,29 +38,35 @@
 }
 
 - (id)initWithAtomName:(NSString*)n {
-	[super init];
-	[self setKey:n];
-	[self setValue:nil];
-	isAtom = YES;
-	isKeyMatch = NO;
+	self = [super init];
+	if (self) {
+		[self setKey:n];
+		[self setValue:nil];
+		isAtom = YES;
+		isKeyMatch = NO;
+	}
 	return self;
 }
 
 - (id)initWithPropertyValue:(NSString*)v forKey:(NSString*)k {
-	[super init];
-	[self setKey:k];
-	[self setValue:v];
-	isAtom = NO;
-	isKeyMatch = NO;
+	self = [super init];
+	if (self) {
+		[self setKey:k];
+		[self setValue:v];
+		isAtom = NO;
+		isKeyMatch = NO;
+	}
 	return self;
 }
 
 - (id)initWithKeyMatching:(NSString*)k {
-	[super init];
-	[self setKey:k];
-	[self setValue:nil];
-	isAtom = NO;
-	isKeyMatch = YES;
+	self = [super init];
+	if (self) {
+		[self setKey:k];
+		[self setValue:nil];
+		isAtom = NO;
+		isKeyMatch = YES;
+	}
 	return self;
 }
 
