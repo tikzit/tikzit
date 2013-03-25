@@ -153,9 +153,7 @@ to                             {  return TO; }
 		[buf appendFormat:@"%c", c];
 	}
 	
-	NSString *s = [buf copy];
-	[s autorelease];
-	yylval->nsstr = s;
+	yylval->nsstr = buf;
 	return DELIMITEDSTRING;
 }
 

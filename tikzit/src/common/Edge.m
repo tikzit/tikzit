@@ -402,23 +402,26 @@
     [self didChangeValueForKey:@"hasEdgeNode"];
 }
 
-@synthesize sourceAnchor;
-@synthesize targetAnchor;
-
+- (NSString*) sourceAnchor { return sourceAnchor; }
 - (void)setSourceAnchor:(NSString *)_sourceAnchor{
+	NSString *oldSourceAnchor = sourceAnchor;
     if(_sourceAnchor != nil){
         sourceAnchor = [_sourceAnchor copy];
     }else{
         sourceAnchor = @"";
     }
+	[oldSourceAnchor release];
 }
 
+- (NSString*) targetAnchor { return targetAnchor; }
 - (void)setTargetAnchor:(NSString *)_targetAnchor{
+	NSString *oldTargetAnchor = targetAnchor;
     if(_targetAnchor != nil){
         targetAnchor = [_targetAnchor copy];
     }else{
         targetAnchor = @"";
     }
+	[oldTargetAnchor release];
 }
 
 @synthesize data;

@@ -169,15 +169,12 @@
 	
 	if (token_offset + token_len > context_len) {
 		// error position state is corrupted
-		NSLog(@"Got bad error state for error \"%s\": start(%i,%i), end(%i,%i)\n    context_len = %d; token_offset = %d; token_len = %d",
+		NSLog(@"Got bad error state for error \"%s\": start(%i,%i), end(%i,%i)",
 				message,
 				yylloc->first_line,
 				yylloc->first_column,
 				yylloc->last_line,
-				yylloc->last_column,
-				context_len,
-				token_offset,
-				token_len);
+				yylloc->last_column);
 		[self setLastError:[NSError errorWithMessage:nsmsg
 												code:TZ_ERR_PARSE]];
 	} else {
@@ -216,10 +213,8 @@
 			if (nlp) {
 				*nlp = '\0';
 				context_len = nlp - context;
-				if (token_offset >= context_len) {
-					NSLog(@"token_offset (%d) >= context_len (%d) -- what?", token_offset, context_len);
-					return;
-				} else if (token_offset + token_len > context_len) {
+				NSAssert2(token_offset < context_len, @"token_offset (%lu) < context_len (%lu)", token_offset, context_len);
+				if (token_offset + token_len > context_len) {
 					token_len = context_len - token_offset;
 				}
 			} else {
