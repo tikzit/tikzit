@@ -272,6 +272,7 @@
         for (int i = 0; i < length; ++i) {
             [result addObject:[NSString stringWithUTF8String:list[i]]];
         }
+        g_strfreev (list);
         return result;
     } else {
         return def;
@@ -292,6 +293,7 @@
         for (int i = 0; i < length; ++i) {
             [result addObject:[NSNumber numberWithBool:list[i]]];
         }
+        g_free (list);
         return result;
     } else {
         return def;
@@ -312,6 +314,7 @@
         for (int i = 0; i < length; ++i) {
             [result addObject:[NSNumber numberWithInt:list[i]]];
         }
+        g_free (list);
         return result;
     } else {
         return def;
@@ -332,6 +335,7 @@
         for (int i = 0; i < length; ++i) {
             [result addObject:[NSNumber numberWithDouble:list[i]]];
         }
+        g_free (list);
         return result;
     } else {
         return def;

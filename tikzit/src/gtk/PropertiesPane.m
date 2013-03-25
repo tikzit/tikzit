@@ -463,6 +463,10 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
     }
     return self;
 }
+- (void) dealloc {
+    // doc is not retained
+    [super dealloc];
+}
 - (void) setDocument:(TikzDocument*)d {
     doc = d;
 }
@@ -489,6 +493,10 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
         node = nil;
     }
     return self;
+}
+- (void) dealloc {
+    // doc,node not retained
+    [super dealloc];
 }
 - (void) setDocument:(TikzDocument*)d {
     doc = d;
@@ -520,6 +528,10 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
         edge = nil;
     }
     return self;
+}
+- (void) dealloc {
+    // doc,edge not retained
+    [super dealloc];
 }
 - (void) setDocument:(TikzDocument*)d {
     doc = d;

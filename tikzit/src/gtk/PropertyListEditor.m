@@ -83,7 +83,9 @@ static void selection_changed_cb (GtkTreeSelection *selection,
                                    G_TYPE_STRING,
                                    G_TYPE_BOOLEAN,
                                    G_TYPE_POINTER);
+        g_object_ref_sink (G_OBJECT (list));
         view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list));
+        g_object_ref_sink (G_OBJECT (view));
         GtkWidget *scrolledview = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledview),
                 GTK_POLICY_AUTOMATIC,
@@ -197,10 +199,15 @@ static void selection_changed_cb (GtkTreeSelection *selection,
 
 - (void) dealloc {
     [self clearStore];
+
     [data release];
+    [delegate release];
+
     g_object_unref (list);
+    g_object_unref (view);
     g_object_unref (widget);
     g_object_unref (removeButton);
+
     [super dealloc];
 }
 

@@ -41,9 +41,7 @@
 	self = [super init];
 	if (self) {
 		[self setKey:n];
-		[self setValue:nil];
 		isAtom = YES;
-		isKeyMatch = NO;
 	}
 	return self;
 }
@@ -53,8 +51,6 @@
 	if (self) {
 		[self setKey:k];
 		[self setValue:v];
-		isAtom = NO;
-		isKeyMatch = NO;
 	}
 	return self;
 }
@@ -63,11 +59,15 @@
 	self = [super init];
 	if (self) {
 		[self setKey:k];
-		[self setValue:nil];
-		isAtom = NO;
 		isKeyMatch = YES;
 	}
 	return self;
+}
+
+- (void) dealloc {
+	[key release];
+	[value release];
+	[super dealloc];
 }
 
 - (void)setValue:(NSString *)v {
@@ -87,11 +87,12 @@
 
 
 - (void)setKey:(NSString *)k {
-    if (k == nil) k = @""; // don't allow nil keys
 	if (key != k) {
 		[key release];
-		key = [k retain];
+		key = [k copy];
 	}
+    if (key == nil)
+		key = @""; // don't allow nil keys
 }
 
 - (NSString*)key {

@@ -62,6 +62,7 @@ int main (int argc, char *argv[]) {
         }
         exit (1);
     }
+    g_option_context_free (context);
 
 #ifndef WINDOWS
     GList *icon_list = NULL;

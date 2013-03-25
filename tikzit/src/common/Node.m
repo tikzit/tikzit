@@ -53,6 +53,7 @@
 	[name release];
 	[style release];
 	[data release];
+	[label release];
 	[super dealloc];
 }
 

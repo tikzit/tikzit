@@ -35,8 +35,8 @@
 	BOOL isKeyMatch;
 }
 
-@property (readwrite,retain) NSString *key;
-@property (readwrite,retain) NSString *value;
+@property (copy) NSString *key;
+@property (copy) NSString *value;
 @property (readonly) BOOL isAtom;
 @property (readonly) BOOL isKeyMatch;
 

@@ -28,12 +28,13 @@
 @end
 
 @interface PropertyListEditor: NSObject {
+    GraphElementData                 *data;
+    NSObject<PropertyChangeDelegate> *delegate;
+
     GtkListStore                     *list;
     GtkWidget                        *view;
-    GraphElementData                 *data;
     GtkWidget                        *widget;
     GtkWidget                        *removeButton;
-    NSObject<PropertyChangeDelegate> *delegate;
 }
 
 /*!

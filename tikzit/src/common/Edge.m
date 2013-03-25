@@ -640,6 +640,10 @@
 }
 
 - (void)dealloc {
+	[source removeObserver:self
+				forKeyPath:@"style"];
+	[target removeObserver:self
+				forKeyPath:@"style"];
 	[source release];
 	[target release];
 	[data release];

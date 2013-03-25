@@ -35,6 +35,29 @@
 	return [super init];
 }
 
+- (void)dealloc {
+	[affectedNodes release];
+	[affectedEdges release];
+	[nodeRef release];
+	[edgeRef release];
+	[oldNode release];
+	[nwNode release];
+	[oldEdge release];
+	[nwEdge release];
+	[oldNodeTable release];
+	[nwNodeTable release];
+	[oldEdgeTable release];
+	[nwEdgeTable release];
+	[oldGraphData release];
+	[nwGraphData release];
+	[oldNodeOrder release];
+	[nwNodeOrder release];
+	[oldEdgeOrder release];
+	[nwEdgeOrder release];
+	
+	[super dealloc];
+}
+
 @synthesize changeType;
 @synthesize shiftPoint, horizontal;
 @synthesize affectedEdges, affectedNodes;
@@ -113,22 +136,6 @@
 	}
 
 	return [inverse autorelease];
-}
-
-- (void)dealloc {
-	[affectedNodes release];
-	[affectedEdges release];
-	[nodeRef release];
-	[oldNode release];
-	[nwNode release];
-	[edgeRef release];	
-	[oldEdge release];
-	[oldNodeTable release];
-	[nwNodeTable release];
-	[oldEdgeTable release];
-	[nwEdgeTable release];
-	
-	[super dealloc];
 }
 
 + (GraphChange*)graphAdditionWithNodes:(NSSet *)ns edges:(NSSet *)es {

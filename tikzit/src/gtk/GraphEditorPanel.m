@@ -125,8 +125,11 @@
     return self;
 }
 - (id) init {
-    [self dealloc];
+    [self release];
     return nil;
+}
+- (void) dealloc {
+    [super dealloc];
 }
 
 // FIXME: use a local copy of HandTool to implement CTRL-dragging

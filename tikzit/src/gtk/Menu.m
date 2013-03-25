@@ -679,8 +679,10 @@ static void tool_cb (GtkAction *action, id<Tool> tool) {
 
 - (void) dealloc {
     g_free (nodeSelBasedActions);
+    g_free (edgeSelBasedActions);
     g_free (selBasedActions);
     g_object_unref (menubar);
+    g_object_unref (appActions);
     g_object_unref (windowActions);
 
     [super dealloc];
