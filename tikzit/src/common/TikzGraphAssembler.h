@@ -100,6 +100,16 @@
  */
 + (BOOL)validateTikzPropertyNameOrValue:(NSString*)tikz;
 
+/**
+ * Validate an edge anchor
+ *
+ * Checks that the given string will successfully lex if used as an anchor for
+ * and edge
+ * @param tikz   the string to validate
+ * @return       YES if the string can be used as an edge anchor, NO otherwise
+ */
++ (BOOL)validateTikzEdgeAnchor:(NSString*)tikz;
+
 @end
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4

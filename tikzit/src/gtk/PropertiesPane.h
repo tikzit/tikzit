@@ -53,6 +53,8 @@
     GtkToggleButton *edgeNodeToggle;
     GtkWidget       *edgeNodePropsWidget;
     GtkEntry        *edgeNodeLabelEntry;
+    GtkEntry        *edgeSourceAnchorEntry;
+    GtkEntry        *edgeTargetAnchorEntry;
 }
 
 @property (retain)   TikzDocument *document;

@@ -113,21 +113,44 @@
 }
 
 + (BOOL)validateTikzPropertyNameOrValue:(NSString*)tikz {
-    BOOL r;
-    
-    NSString * testTikz = [NSString stringWithFormat: @"{%@}", tikz];
-    
+	BOOL valid;
+	
+	NSString * testTikz = [NSString stringWithFormat: @"{%@}", tikz];
+	
 	void *scanner;
 	yylex_init (&scanner);
 	yyset_extra(nil, scanner);
 	yy_scan_string([testTikz UTF8String], scanner);
 	YYSTYPE lval;
 	YYLTYPE lloc;
-	yylex(&lval, &lloc, scanner);
-    r = !(yyget_leng(scanner) < [testTikz length]);
+	int result = yylex(&lval, &lloc, scanner);
+	valid = (result == DELIMITEDSTRING) &&
+		    (yyget_leng(scanner) == [testTikz length]);
 	yylex_destroy(scanner);
-    
-    return r;
+	
+    return valid;
+}
+
++ (BOOL)validateTikzEdgeAnchor:(NSString*)tikz {
+	BOOL valid = YES;
+	
+	NSString * testTikz = [NSString stringWithFormat: @"(1.%@)", tikz];
+	
+	void *scanner;
+	yylex_init (&scanner);
+	yyset_extra(nil, scanner);
+	yy_scan_string([testTikz UTF8String], scanner);
+	YYSTYPE lval;
+	YYLTYPE lloc;
+	valid = valid && (yylex(&lval, &lloc, scanner) == LEFTPARENTHESIS);
+	valid = valid && (yylex(&lval, &lloc, scanner) == REFSTRING);
+	valid = valid && (yylex(&lval, &lloc, scanner) == FULLSTOP);
+	valid = valid && (yylex(&lval, &lloc, scanner) == REFSTRING);
+	valid = valid && (yylex(&lval, &lloc, scanner) == RIGHTPARENTHESIS);
+	valid = valid && (lloc.last_column == [testTikz length]);
+	yylex_destroy(scanner);
+	
+    return valid;
 }
 
 @end

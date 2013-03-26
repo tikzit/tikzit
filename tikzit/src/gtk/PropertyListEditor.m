@@ -245,7 +245,7 @@ static void selection_changed_cb (GtkTreeSelection *selection,
 
 @implementation PropertyListEditor (Private)
 - (void) updatePath:(gchar*)pathStr withValue:(NSString*)newText {
-    if (![newText isValidTikz])
+    if (![newText isValidTikzPropertyNameOrValue])
         return;
 
     GtkTreeIter iter;
@@ -276,7 +276,7 @@ static void selection_changed_cb (GtkTreeSelection *selection,
 }
 
 - (void) updatePath:(gchar*)pathStr withName:(NSString*)newText {
-    if (![newText isValidTikz])
+    if (![newText isValidTikzPropertyNameOrValue])
         return;
 
     GtkTreeIter iter;
@@ -478,7 +478,7 @@ static void text_changed_cb (GtkEditable *editable, PropertyListEditor *pane)
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     NSString *newValue = gtk_editable_get_string (editable, 0, -1);
-    if (![newValue isValidTikz]) {
+    if (![newValue isValidTikzPropertyNameOrValue]) {
         widget_set_error (GTK_WIDGET (editable));
     } else {
         widget_clear_error (GTK_WIDGET (editable));

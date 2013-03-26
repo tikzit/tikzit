@@ -33,6 +33,8 @@ static GtkWidget *createBoldLabel (const gchar *text);
 static void node_label_changed_cb (GtkEditable *widget, PropertiesPane *pane);
 static void edge_node_label_changed_cb (GtkEditable *widget, PropertiesPane *pane);
 static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane);
+static void edge_source_anchor_changed_cb (GtkEditable *widget, PropertiesPane *pane);
+static void edge_target_anchor_changed_cb (GtkEditable *widget, PropertiesPane *pane);
 // }}}
 
 @interface PropertiesPane (Notifications)
@@ -42,6 +44,8 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
 - (void) nodeLabelEdited:(NSString*)newValue;
 - (void) edgeNodeLabelEdited:(NSString*)newValue;
 - (void) edgeNodeToggled:(BOOL)newValue;
+- (BOOL) edgeSourceAnchorEdited:(NSString*)newValue;
+- (BOOL) edgeTargetAnchorEdited:(NSString*)newValue;
 @end
 
 @interface PropertiesPane (Private)
@@ -186,6 +190,45 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
                             split,
                             FALSE, FALSE, 0);
 
+        GtkWidget *anchorTable = gtk_table_new (2, 2, FALSE);
+
+        label = gtk_label_new ("Source anchor:");
+        gtk_table_attach_defaults (GTK_TABLE (anchorTable), label,
+                                   0, 1, 0, 1);
+        edgeSourceAnchorEntry = GTK_ENTRY (gtk_entry_new ());
+        g_object_ref_sink (edgeSourceAnchorEntry);
+        gtk_table_attach_defaults (GTK_TABLE (anchorTable),
+                                   GTK_WIDGET (edgeSourceAnchorEntry),
+                                   1, 2, 0, 1);
+        g_signal_connect (G_OBJECT (edgeSourceAnchorEntry),
+            "changed",
+            G_CALLBACK (edge_source_anchor_changed_cb),
+            self);
+
+        label = gtk_label_new ("Target anchor:");
+        gtk_table_attach_defaults (GTK_TABLE (anchorTable), label,
+                                   0, 1, 1, 2);
+        edgeTargetAnchorEntry = GTK_ENTRY (gtk_entry_new ());
+        g_object_ref_sink (edgeTargetAnchorEntry);
+        gtk_table_attach_defaults (GTK_TABLE (anchorTable),
+                                   GTK_WIDGET (edgeTargetAnchorEntry),
+                                   1, 2, 1, 2);
+        g_signal_connect (G_OBJECT (edgeTargetAnchorEntry),
+            "changed",
+            G_CALLBACK (edge_target_anchor_changed_cb),
+            self);
+
+        gtk_widget_show_all (anchorTable);
+        gtk_box_pack_start (GTK_BOX (edgePropsWidget),
+                            anchorTable,
+                            FALSE, FALSE, 0);
+
+        split = gtk_hseparator_new ();
+        gtk_widget_show (split);
+        gtk_box_pack_start (GTK_BOX (edgePropsWidget),
+                            split,
+                            FALSE, FALSE, 0);
+
         edgeNodeToggle = GTK_TOGGLE_BUTTON (gtk_check_button_new_with_label ("Child node"));
         g_object_ref_sink (edgeNodeToggle);
         gtk_widget_show (GTK_WIDGET (edgeNodeToggle));
@@ -229,6 +272,8 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
     g_object_unref (edgeNodeToggle);
     g_object_unref (edgeNodePropsWidget);
     g_object_unref (edgeNodeLabelEntry);
+    g_object_unref (edgeSourceAnchorEntry);
+    g_object_unref (edgeTargetAnchorEntry);
 
     g_object_unref (layout);
 
@@ -325,7 +370,7 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
         return;
     }
 
-    if ([newValue isValidTikz]) {
+    if ([newValue isValidTikzPropertyNameOrValue]) {
         Node *node = [sel anyObject];
         [document startModifyNode:node];
         [node setLabel:newValue];
@@ -351,7 +396,7 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
         return;
     }
 
-    if ([newValue isValidTikz]) {
+    if ([newValue isValidTikzPropertyNameOrValue]) {
         [document startModifyEdge:edge];
         [[edge edgeNode] setLabel:newValue];
         [document endModifyEdge];
@@ -375,6 +420,48 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
     [document startModifyEdge:edge];
     [edge setHasEdgeNode:newValue];
     [document endModifyEdge];
+}
+
+- (BOOL) edgeSourceAnchorEdited:(NSString*)newValue {
+    if (blockUpdates)
+        return YES;
+
+    NSSet *sel = [[document pickSupport] selectedEdges];
+    if ([sel count] != 1) {
+        NSLog(@"Expected single edge selected; got %lu", [sel count]);
+        return YES;
+    }
+
+    Edge *edge = [sel anyObject];
+    if ([newValue isValidAnchor]) {
+        [document startModifyEdge:edge];
+        [edge setSourceAnchor:newValue];
+        [document endModifyEdge];
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (BOOL) edgeTargetAnchorEdited:(NSString*)newValue {
+    if (blockUpdates)
+        return YES;
+
+    NSSet *sel = [[document pickSupport] selectedEdges];
+    if ([sel count] != 1) {
+        NSLog(@"Expected single edge selected; got %lu", [sel count]);
+        return YES;
+    }
+
+    Edge *edge = [sel anyObject];
+    if ([newValue isValidAnchor]) {
+        [document startModifyEdge:edge];
+        [edge setTargetAnchor:newValue];
+        [document endModifyEdge];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 @end
@@ -419,6 +506,12 @@ static void edge_node_toggled_cb (GtkToggleButton *widget, PropertiesPane *pane)
             Edge *e = [edgeSel anyObject];
             [edgePropDelegate setEdge:e];
             [edgeProps setData:[e data]];
+            gtk_entry_set_text (edgeSourceAnchorEntry,
+                                [[e sourceAnchor] UTF8String]);
+            gtk_entry_set_text (edgeTargetAnchorEntry,
+                                [[e targetAnchor] UTF8String]);
+            widget_clear_error (GTK_WIDGET (edgeSourceAnchorEntry));
+            widget_clear_error (GTK_WIDGET (edgeTargetAnchorEntry));
             widget_clear_error (GTK_WIDGET (edgeNodeLabelEntry));
             if ([e hasEdgeNode]) {
                 gtk_toggle_button_set_active (edgeNodeToggle, TRUE);
@@ -631,6 +724,36 @@ static void edge_node_toggled_cb (GtkToggleButton *toggle, PropertiesPane *pane)
 
     gboolean newValue = gtk_toggle_button_get_active (toggle);
     [pane edgeNodeToggled:newValue];
+
+    [pool drain];
+}
+
+static void edge_source_anchor_changed_cb (GtkEditable *editable, PropertiesPane *pane) {
+    if (!gtk_widget_is_sensitive (GTK_WIDGET (editable))) {
+        // clearly wasn't the user editing
+        return;
+    }
+
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    NSString *newValue = gtk_editable_get_string (editable, 0, -1);
+    if (![pane edgeSourceAnchorEdited:newValue])
+        widget_set_error (GTK_WIDGET (editable));
+
+    [pool drain];
+}
+
+static void edge_target_anchor_changed_cb (GtkEditable *editable, PropertiesPane *pane) {
+    if (!gtk_widget_is_sensitive (GTK_WIDGET (editable))) {
+        // clearly wasn't the user editing
+        return;
+    }
+
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    NSString *newValue = gtk_editable_get_string (editable, 0, -1);
+    if (![pane edgeTargetAnchorEdited:newValue])
+        widget_set_error (GTK_WIDGET (editable));
 
     [pool drain];
 }

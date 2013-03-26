@@ -16,6 +16,7 @@
  */
 
 #import "NSString+Tikz.h"
+#import "TikzGraphAssembler.h"
 
 @implementation NSString (Tikz)
 
@@ -31,7 +32,7 @@
 	}
 }
 
-- (BOOL) isValidTikz {
+- (BOOL) isValidTikzPropertyNameOrValue {
 	NSUInteger length = [self length];
 	unsigned int brace_depth = 0;
 	unsigned int escape = 0;
@@ -51,6 +52,10 @@
 		}
 	}
 	return !escape && brace_depth == 0;
+}
+
+- (BOOL) isValidAnchor {
+	return [TikzGraphAssembler validateTikzEdgeAnchor:self];
 }
 
 @end

@@ -19,7 +19,8 @@
 
 @interface NSString (Tikz)
 	- (NSString*) tikzEscapedString;
-	- (BOOL)      isValidTikz;
+	- (BOOL)      isValidTikzPropertyNameOrValue;
+	- (BOOL)      isValidAnchor;
 @end
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4
