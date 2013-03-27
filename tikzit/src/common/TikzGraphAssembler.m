@@ -132,6 +132,9 @@
 }
 
 + (BOOL)validateTikzEdgeAnchor:(NSString*)tikz {
+	if ([tikz length] == 0)
+		return YES;
+
 	BOOL valid = YES;
 	
 	NSString * testTikz = [NSString stringWithFormat: @"(1.%@)", tikz];
