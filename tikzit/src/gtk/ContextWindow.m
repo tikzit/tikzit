@@ -119,8 +119,8 @@ static gboolean props_window_delete_event_cb (GtkWidget *widget, GdkEvent *event
     gtk_window_present (GTK_WINDOW (window));
 }
 
-- (void) setTransientFor:(Window*)parent {
-    gtk_window_set_transient_for (GTK_WINDOW (window), [parent gtkWindow]);
+- (void) attachToWindow:(Window*)parent {
+    utility_window_attach (GTK_WINDOW (window), [parent gtkWindow]);
 }
 
 - (void) loadConfiguration:(Configuration*)config {

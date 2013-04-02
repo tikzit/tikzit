@@ -387,8 +387,8 @@ Application* app = nil;
 
     [contextWindow setDocument:[window document]];
 
-    [contextWindow setTransientFor:window];
-    [toolBox setTransientFor:window];
+    [contextWindow attachToWindow:window];
+    [toolBox attachToWindow:window];
 
     [[NSNotificationCenter defaultCenter]
         addObserver:self

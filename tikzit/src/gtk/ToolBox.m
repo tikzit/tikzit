@@ -231,8 +231,8 @@ static void tool_button_toggled_cb (GtkWidget *widget, ToolBox *toolBox);
     gtk_window_present (GTK_WINDOW (window));
 }
 
-- (void) setTransientFor:(Window*)parent {
-    gtk_window_set_transient_for (GTK_WINDOW (window), [parent gtkWindow]);
+- (void) attachToWindow:(Window*)parent {
+    utility_window_attach (GTK_WINDOW (window), [parent gtkWindow]);
 }
 
 - (void) loadConfiguration:(Configuration*)config {

@@ -36,7 +36,7 @@
 
 - (void) show;
 - (void) present;
-- (void) setTransientFor:(Window*)w;
+- (void) attachToWindow:(Window*)parent;
 
 - (void) loadConfiguration:(Configuration*)config;
 - (void) saveConfiguration:(Configuration*)config;

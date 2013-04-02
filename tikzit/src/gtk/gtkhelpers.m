@@ -251,4 +251,25 @@ void text_buffer_clear_tag (GtkTextBuffer *buffer, GtkTextTag *tag) {
     gtk_text_buffer_remove_tag (buffer, tag, &start, &end);
 }
 
+void utility_window_attach (GtkWindow *util_win, GtkWindow *parent_win) {
+    if (parent_win == gtk_window_get_transient_for (util_win))
+        return;
+
+    // HACK: X window managers tend to move windows around when they are
+    //       unmapped and mapped again, so we save the position
+    gint x, y;
+    gtk_window_get_position (util_win, &x, &y);
+
+    // HACK: Altering WM_TRANSIENT_FOR on a non-hidden but unmapped window
+    //       (eg: when you have minimised the original parent window) can
+    //       cause the window to be lost forever, so we hide it first
+    gtk_widget_hide (GTK_WIDGET (util_win));
+    gtk_window_set_focus_on_map (util_win, FALSE);
+    gtk_window_set_transient_for (util_win, parent_win);
+    gtk_widget_show (GTK_WIDGET (util_win));
+
+    // HACK: see above
+    gtk_window_move (util_win, x, y);
+}
+
 // vim:ft=objc:ts=8:et:sts=4:sw=4

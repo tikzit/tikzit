@@ -43,7 +43,7 @@
             andEdgeStylesModel:(EdgeStylesModel*)esm;
 
 - (void) present;
-- (void) setTransientFor:(Window*)parent;
+- (void) attachToWindow:(Window*)parent;
 
 - (void) loadConfiguration:(Configuration*)config;
 - (void) saveConfiguration:(Configuration*)config;

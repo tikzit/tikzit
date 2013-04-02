@@ -55,4 +55,6 @@ void widget_clear_error (GtkWidget *widget);
 
 void text_buffer_clear_tag (GtkTextBuffer *buffer, GtkTextTag *tag);
 
+void utility_window_attach (GtkWindow *util_win, GtkWindow *parent_win);
+
 // vim:ft=objc:sts=2:sw=2:et
