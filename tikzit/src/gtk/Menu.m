@@ -316,7 +316,7 @@ static void send_to_back_cb (GtkAction *action, Window *window) {
 #ifdef HAVE_POPPLER
 static void show_preview_cb (GtkAction *action, Window *window) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    [app presentPreviewForDocument:[window document]];
+    [window presentPreview];
     [pool drain];
 }
 #endif

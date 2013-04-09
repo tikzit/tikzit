@@ -24,15 +24,20 @@
 @class TikzDocument;
 @class WidgetSurface;
 
+@protocol PreviewHandler <NSObject>
+- (void) showPreview;
+@end
 @interface GraphEditorPanel : NSObject {
-    GraphRenderer     *renderer;
-    WidgetSurface     *surface;
-    GraphInputHandler *inputHandler;
-    id<Tool>           tool;
+    GraphRenderer      *renderer;
+    WidgetSurface      *surface;
+    GraphInputHandler  *inputHandler;
+    id<PreviewHandler>  previewHandler;
+    id<Tool>            tool;
 }
 @property (retain)   TikzDocument      *document;
 @property (readonly) GtkWidget         *widget;
 @property (retain)   id<Tool>           activeTool;
+@property (assign)   id<PreviewHandler> previewHandler;
 
 - (id) init;
 - (id) initWithDocument:(TikzDocument*)document;

@@ -48,6 +48,8 @@
     Menu              *menu;
     GraphEditorPanel  *graphPanel;
 
+    PreviewWindow     *previewWindow;
+
     // state variables
     BOOL               suppressTikzUpdates;
     BOOL               hasParseError;
@@ -165,6 +167,15 @@
 - (void) zoomIn;
 - (void) zoomOut;
 - (void) zoomReset;
+
+/**
+ * Show or update the preview window.
+ */
+- (void) presentPreview;
+/**
+ * Show or update the preview window without it grabbing focus
+ */
+- (void) updatePreview;
 
 @end
 

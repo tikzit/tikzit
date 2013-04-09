@@ -39,6 +39,9 @@
 @end
 
 @implementation GraphEditorPanel
+
+@synthesize previewHandler;
+
 - (id) init {
     return [self initWithDocument:nil];
 }
@@ -194,7 +197,7 @@
 
 - (void) keyReleased:(unsigned int)keyVal withMask:(InputMask)mask {
     if (keyVal == GDK_KEY_space && !mask) {
-        [app previewDocument:[panel document]];
+        [[panel previewHandler] showPreview];
     }
     if (![app activateToolForKey:keyVal withMask:mask]) {
         id<Tool> tool = [panel activeTool];

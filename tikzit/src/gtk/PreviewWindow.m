@@ -126,9 +126,9 @@
 }
 
 - (void) dealloc {
+    gtk_widget_destroy (GTK_WIDGET (window));
     [previewer release];
     [surface release];
-    gtk_widget_destroy (GTK_WIDGET (window));
 
     [super dealloc];
 }

@@ -34,7 +34,6 @@
 #ifdef HAVE_POPPLER
 #import "Preambles.h"
 #import "Preambles+Storage.h"
-#import "PreviewWindow.h"
 #endif
 
 #import "BoundingBoxTool.h"
@@ -186,7 +185,6 @@ Application* app = nil;
     [lastOpenFolder release];
     [lastSaveAsFolder release];
     [preambleWindow release];
-    [previewWindow release];
     [settingsDialog release];
     [openWindows release];
     [tools release];
@@ -274,28 +272,6 @@ Application* app = nil;
 
 - (void) presentContextWindow {
     [contextWindow present];
-}
-
-- (void) presentPreviewForDocument:(TikzDocument*)doc {
-#ifdef HAVE_POPPLER
-    if (previewWindow == nil) {
-        previewWindow = [[PreviewWindow alloc] initWithPreambles:preambles config:configFile];
-        //[previewWindow setParentWindow:mainWindow];
-        [previewWindow setDocument:doc];
-    }
-    [previewWindow present];
-#endif
-}
-
-- (void) previewDocument:(TikzDocument*)doc {
-#ifdef HAVE_POPPLER
-    if (previewWindow == nil) {
-        previewWindow = [[PreviewWindow alloc] initWithPreambles:preambles config:configFile];
-        //[previewWindow setParentWindow:mainWindow];
-        [previewWindow setDocument:doc];
-    }
-    [previewWindow show];
-#endif
 }
 
 - (void) presentSettingsDialog {

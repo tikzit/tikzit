@@ -49,7 +49,6 @@ extern Application* app;
 
     ToolBox           *toolBox;
     PreambleEditor    *preambleWindow;
-    PreviewWindow     *previewWindow;
     ContextWindow     *contextWindow;
     SettingsDialog    *settingsDialog;
 
@@ -134,14 +133,6 @@ extern Application* app;
  * Show the context-aware window
  */
 - (void) presentContextWindow;
-/**
- * Show or update the preview window.
- */
-- (void) presentPreviewForDocument:(TikzDocument*)doc;
-/**
- * Show or update the preview window without it grabbing focus
- */
-- (void) previewDocument:(TikzDocument*)doc;
 /**
  * Show the settings dialog.
  */

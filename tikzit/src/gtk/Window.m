@@ -31,6 +31,10 @@
 #import "SupportDir.h"
 #import "TikzDocument.h"
 
+#ifdef HAVE_POPPLER
+#import "PreviewWindow.h"
+#endif
+
 enum {
     GraphInfoStatus,
     ParseStatus
@@ -79,7 +83,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 - (void) _connectSignals;
 @end
 
-@interface Window (Private)
+@interface Window (Private) <PreviewHandler>
 - (BOOL) _askCanClose;
 /** Open a document, dealing with errors as necessary */
 - (TikzDocument*) _openDocument:(NSString*)path;
@@ -95,6 +99,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 /** Update the undo and redo actions to match the active document's
  *  undo stack. */
 - (void) _updateUndoActions;
+- (void) showPreview;
 @end
 
 // }}}
@@ -130,11 +135,14 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 }
 
 - (void) dealloc {
+    // The GTK+ window has already been destroyed at this point
+
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     g_signal_handler_disconnect (
             gtk_clipboard_get (GDK_SELECTION_CLIPBOARD),
             clipboard_handler_id);
 
+    [previewWindow release];
     [menu release];
     [graphPanel release];
     [document release];
@@ -159,6 +167,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     document = [newDoc retain];
 
     [graphPanel setDocument:document];
+    [previewWindow setDocument:document];
     [self _updateTikz];
     [self _updateTitle];
     [self _updateStatus];
@@ -336,7 +345,6 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
             if (![[NSFileManager defaultManager] ensureDirectoryExists:userShapeDir error:&error]) {
                 [self presentError:error withMessage:@"Could not create user shape directory"];
             } else {
-                NSLog (@"Saving shape to %@", file);
                 if (![document saveCopyToPath:file error:&error]) {
                     [self presentError:error withMessage:@"Could not save shape file"];
                 } else {
@@ -452,6 +460,30 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     [graphPanel zoomReset];
 }
 
+- (void) presentPreview {
+#ifdef HAVE_POPPLER
+    if (previewWindow == nil) {
+        previewWindow = [[PreviewWindow alloc] initWithPreambles:[app preambles]
+                                                          config:[app mainConfiguration]];
+        //[previewWindow setParentWindow:self];
+        [previewWindow setDocument:document];
+    }
+    [previewWindow present];
+#endif
+}
+
+- (void) updatePreview {
+#ifdef HAVE_POPPLER
+    if (previewWindow == nil) {
+        previewWindow = [[PreviewWindow alloc] initWithPreambles:[app preambles]
+                                                          config:[app mainConfiguration]];
+        //[previewWindow setParentWindow:self];
+        [previewWindow setDocument:document];
+    }
+    [previewWindow show];
+#endif
+}
+
 @end
 
 // }}}
@@ -541,6 +573,7 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
     gtk_box_pack_start (mainLayout, GTK_WIDGET (tikzPaneSplitter), TRUE, TRUE, 0);
 
     graphPanel = [[GraphEditorPanel alloc] initWithDocument:document];
+    [graphPanel setPreviewHandler:self];
     GtkWidget *graphEditorWidget = [graphPanel widget];
     gtk_widget_show (graphEditorWidget);
     GtkWidget *graphFrame = gtk_frame_new (NULL);
@@ -804,6 +837,10 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 
 - (GraphEditorPanel*) _graphPanel {
     return graphPanel;
+}
+
+- (void) showPreview {
+    [self updatePreview];
 }
 
 @end
