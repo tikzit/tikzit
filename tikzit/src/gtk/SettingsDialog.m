@@ -168,7 +168,7 @@ static void cancel_button_clicked_cb (GtkButton *widget, SettingsDialog *dialog)
 
     window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
     gtk_window_set_default_size (window, 570, -1);
-    gtk_window_set_title (window, "Preamble editor");
+    gtk_window_set_title (window, "TikZiT Configuration");
     gtk_window_set_modal (window, TRUE);
     gtk_window_set_position (window, GTK_WIN_POS_CENTER_ON_PARENT);
     gtk_window_set_type_hint (window, GDK_WINDOW_TYPE_HINT_DIALOG);

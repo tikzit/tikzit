@@ -152,8 +152,8 @@ static GtkActionEntry app_action_entries[] = {
 
     { "Tool", NULL, N_("_Tool") },
 
-    { "ShowPreferences", GTK_STOCK_PREFERENCES, NULL, NULL,
-      N_("Edit the TikZiT preferences"), G_CALLBACK (show_preferences_cb) },
+    { "ShowPreferences", GTK_STOCK_PREFERENCES, N_("Configure TikZiT..."), NULL,
+      N_("Edit the TikZiT configuration"), G_CALLBACK (show_preferences_cb) },
 
 #ifdef HAVE_POPPLER
     { "ShowPreamble", NULL, N_("_Edit Preambles..."), NULL,
