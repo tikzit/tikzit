@@ -1,5 +1,5 @@
 Name:           tikzit
-Version:        0.9
+Version:        1.0
 Release:        1%{?dist}
 Summary:        Tool for creating and modifying pgf/TikZ diagrams for TeX
 
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 7 2013 Alex Merry <dev@randomguy3.me.uk> 1.0-1
+-Bumped version
+
 * Fri Aug 24 2012 Alex Merry <dev@randomguy3.me.uk> 0.9-1
 -Bumped version
 -Bumped requirements

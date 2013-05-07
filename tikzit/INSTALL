@@ -24,9 +24,7 @@ To build from subversion (and for development) you will additionally need:
   automake
 
 and you will need to prepare the source tree by running
-  aclocal
-  autoconf
-  automake --add-missing
+  ./autogen.sh
 
 
 

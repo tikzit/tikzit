@@ -1,3 +1,13 @@
+tikzit 1.0 (2013-05-07):
+	* GIMP-like user interface (multiple documents, separate toolboxes)
+	* Preferences now called Configuration, and includes node and edge styles
+	* Error-highlighting in the code pane
+	* Single-key-shortcuts for tool selection, and <space> to update the preview
+	* Edge anchor support
+	* Option for drag-select to select nodes, edges or both
+	* Memory leak fixes
+	* Should now be impossible to use the UI to create a graph that cannot be parsed
+
 tikzit 0.9 (2012-08-24):
 	* Compilers without basic Objective C 2 support cannot be
 	  used to compile TikZiT any more

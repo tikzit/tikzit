@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.60])
-AC_INIT([TikZiT], [0.9],
+AC_INIT([TikZiT], [1.0],
 	[http://sourceforge.net/apps/trac/tikzit],
 	[tikzit],
 	[http://tikzit.sourceforge.net])
