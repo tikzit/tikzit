@@ -14,7 +14,11 @@ Group:          Applications/Productivity
 %endif
 %endif
 
+%if 0%{?suse_version}
+License:        GPL-2.0+
+%else
 License:        GPLv2+
+%endif
 URL:            http://tikzit.sourceforge.net
 Source0:        http://switch.dl.sourceforge.net/project/%{name}/%{name}-%{version}/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-build
@@ -71,6 +75,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 17 2013 Alex Merry <dev@randomguy3.me.uk> 1.0-2
+-Fixed license on openSUSE
+
 * Tue May 7 2013 Alex Merry <dev@randomguy3.me.uk> 1.0-1
 -Bumped version
 
