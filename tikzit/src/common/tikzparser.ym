@@ -38,7 +38,8 @@ struct noderef {
 %defines "common/tikzparser.h"
 %pure-parser
 %locations
-%parse-param {TikzGraphAssembler *assembler}
+%lex-param {void *scanner}
+%parse-param {void *scanner}
 %error-verbose
 
 %union {
@@ -47,8 +48,7 @@ struct noderef {
 	GraphElementProperty *prop;
 	GraphElementData *data;
 	Node *node;
-	struct noderef noderef;
-};
+	struct noderef noderef; };
 
 %{
 #import "TikzGraphAssembler+Parser.h"
@@ -56,8 +56,8 @@ struct noderef {
 #import "GraphElementProperty.h"
 #import "Node.h"
 #import "tikzlexer.h"
-#define YYLEX_PARAM [assembler scanner]
-void yyerror(YYLTYPE *yylloc, TikzGraphAssembler *assembler, const char *str) {
+#define assembler yyget_extra(scanner)
+void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 	[assembler reportError:str atLocation:yylloc];
 }
 %}

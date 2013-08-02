@@ -31,9 +31,6 @@
 /** Get a previously-stored node by name */
 - (Node*) nodeWithName:(NSString*)name;
 - (void) reportError:(const char *)message atLocation:(YYLTYPE*)yylloc;
-- (void*) scanner;
 @end
-
-#define YY_EXTRA_TYPE TikzGraphAssembler *
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4

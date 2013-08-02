@@ -58,7 +58,7 @@
 
 	tikzStr = [t UTF8String];
 	yy_scan_string(tikzStr, scanner);
-	int result = yyparse(self);
+	int result = yyparse(scanner);
 	tikzStr = NULL;
 
 	[pool drain];
@@ -278,7 +278,6 @@
 		free (context);
 	}
 }
-- (void*) scanner { return scanner; }
 @end
 
 // vi:ft=objc:ts=4:noet:sts=4:sw=4
