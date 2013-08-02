@@ -18,11 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#import "Edge.h"
-
 %}
 
+%error-verbose
+/* enable maintaining locations for better error messages */
+%locations
+/* the name of the header file */
+%defines "common/tikzparser.h"
+/* make it re-entrant (no global variables) */
+%pure-parser
+/* We use a pure (re-entrant) lexer.  This means yylex
+   will take a void* (opaque) type to maintain its state */
+%lex-param {void *scanner}
+/* Since this parser is also pure, yyparse needs to take
+   that lexer state as an argument */
+%parse-param {void *scanner}
+
+/* things required to use the parser (will go in the header);
+   in particular, declarations/imports for types in the %union
+   must go here */
 %code requires {
 #import <Foundation/Foundation.h>
 @class TikzGraphAssembler;
@@ -35,36 +49,40 @@ struct noderef {
 };
 }
 
-%defines "common/tikzparser.h"
-%pure-parser
-%locations
-%lex-param {void *scanner}
-%parse-param {void *scanner}
-%error-verbose
-
+/* possible data types for semantic values */
 %union {
 	NSPoint pt;
 	NSString *nsstr;
 	GraphElementProperty *prop;
 	GraphElementData *data;
 	Node *node;
-	struct noderef noderef; };
+	struct noderef noderef;
+}
 
-%{
-#import "TikzGraphAssembler+Parser.h"
+%code {
 #import "GraphElementData.h"
 #import "GraphElementProperty.h"
 #import "Node.h"
+#import "Edge.h"
+
 #import "tikzlexer.h"
+#import "TikzGraphAssembler+Parser.h"
+/* the assembler (used by this parser) is stored in the lexer
+   state as "extra" data */
 #define assembler yyget_extra(scanner)
+
+/* pass errors off to the assembler */
 void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 	[assembler reportError:str atLocation:yylloc];
 }
-%}
+}
 
+/* yyloc is set up with first_column = last_column = 1 by default;
+   however, it makes more sense to think of us being "before the
+   start of the line" before we parse anything */
 %initial-action {
 	yylloc.first_column = yylloc.last_column = 0;
-};
+}
 
 
 %token BEGIN_TIKZPICTURE_CMD "\\begin{tikzpicture}"
