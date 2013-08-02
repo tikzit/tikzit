@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Name=TikZit
-Comment=TeX pgf/TikZ graph editor
+Comment=Editor for PGF/TikZ-based node-and-edge graphs for LaTeX documents
 GenericName=TikZ Graph Editor
 MimeType=text/x-tikz
 Exec=tikzit

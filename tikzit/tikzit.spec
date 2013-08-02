@@ -1,7 +1,7 @@
 Name:           tikzit
 Version:        1.0
 Release:        1%{?dist}
-Summary:        Tool for creating and modifying pgf/TikZ diagrams for TeX
+Summary:        Tool for creating and modifying PGF/TikZ-based node-and-edge graphs for LaTeX documents
 
 # try to choose a sensible group for this distro
 %if 0%{?suse_version}
