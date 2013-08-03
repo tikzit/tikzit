@@ -3,11 +3,15 @@ For building on systems other than MacOS/X:
 Dependencies:
   GNUstep (core libraries) >= 1.18.0
   gtk+-2.0 >= 2.18.0
-  poppler (including glib bindings, which may be in
-    a separate poppler-glib package)
+  gdk-pixbuf >= 2.16.0
+  poppler >= 0.10
+    including glib bindings, which may be in
+    a separate poppler-glib package
   Objective C compiler (eg: gcc with ObjC support) with
     support for properties, optional protocols and
     fast enumeration (eg: gcc 4.6 or clang).
+  pkg-config
+    build-time dependency only
 
 To install, just run:
 
@@ -18,10 +22,10 @@ To install, just run:
 
 
 To build from subversion (and for development) you will additionally need:
-  lex (eg: flex)
-  yacc (eg: bison)
+  flex >= 2.5.34
+  bison >= 2.4
   autoconf >= 2.60
-  automake
+  automake >= 1.10
 
 and you will need to prepare the source tree by running
   ./autogen.sh

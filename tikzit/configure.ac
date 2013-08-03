@@ -6,8 +6,8 @@ AC_INIT([TikZiT], [1.0],
 	[http://sourceforge.net/apps/trac/tikzit],
 	[tikzit],
 	[http://tikzit.sourceforge.net])
-AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
-AM_SILENT_RULES([yes])
+AM_INIT_AUTOMAKE([1.10 foreign subdir-objects -Wall -Werror])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_OUTPUT(Makefile
           src/Makefile
           share/Makefile

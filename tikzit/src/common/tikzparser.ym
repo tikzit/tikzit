@@ -20,6 +20,9 @@
  */
 %}
 
+/* we use features added to bison 2.4 */
+%require "2.4"
+
 %error-verbose
 /* enable maintaining locations for better error messages */
 %locations
