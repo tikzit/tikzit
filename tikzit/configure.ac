@@ -21,8 +21,19 @@ AC_PROG_OBJC([gcc clang objc objcc])
 AC_LANG([Objective C])
 
 AC_PROG_LEX
-AM_PROG_LEX
+AS_IF([$LEX --version 2>/dev/null | grep "^flex" >/dev/null 2>/dev/null],[],
+  [
+    AC_MSG_WARN([flex not found; this may cause problems for developers])
+    LEX="\${SHELL} \$(top_srcdir)/missing flex"
+    AC_SUBST([LEX_OUTPUT_ROOT], [lex.yy])
+    AC_SUBST([LEXLIB], [''])
+  ])
 AC_PROG_YACC
+AS_IF([$YACC --version 2>/dev/null | grep "^bison" >/dev/null 2>/dev/null],[],
+  [
+    AC_MSG_WARN([bison not found; this may cause problems for developers])
+    YACC="\${SHELL} \$(top_srcdir)/missing bison"
+  ])
 
 # Checks for libraries.
 FOUNDATION_OBJCFLAGS=`eval "gnustep-config --objc-flags"`
