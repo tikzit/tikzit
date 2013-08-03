@@ -20,20 +20,23 @@ m4_include([m4/objc.m4])
 AC_PROG_OBJC([gcc clang objc objcc])
 AC_LANG([Objective C])
 
-AC_PROG_LEX
-AS_IF([$LEX --version 2>/dev/null | grep "^flex" >/dev/null 2>/dev/null],[],
+AC_CHECK_PROGS([FLEX], [flex lex], [flex])
+AS_IF([$FLEX --version 2>/dev/null | grep "^flex" >/dev/null 2>/dev/null],[],
   [
     AC_MSG_WARN([flex not found; this may cause problems for developers])
-    LEX="\${SHELL} \$(top_srcdir)/missing flex"
-    AC_SUBST([LEX_OUTPUT_ROOT], [lex.yy])
-    AC_SUBST([LEXLIB], [''])
+    # in case a lex that wasn't flex was found
+    FLEX=flex
   ])
-AC_PROG_YACC
-AS_IF([$YACC --version 2>/dev/null | grep "^bison" >/dev/null 2>/dev/null],[],
+AM_MISSING_PROG([LEX], [$FLEX])
+
+AC_CHECK_PROGS([BISON], [bison yacc], [bison])
+AS_IF([$BISON --version 2>/dev/null | grep "^bison" >/dev/null 2>/dev/null],[],
   [
     AC_MSG_WARN([bison not found; this may cause problems for developers])
-    YACC="\${SHELL} \$(top_srcdir)/missing bison"
+    # in case a yacc that wasn't bison was found
+    BISON=bison
   ])
+AM_MISSING_PROG([YACC], [$BISON])
 
 # Checks for libraries.
 FOUNDATION_OBJCFLAGS=`eval "gnustep-config --objc-flags"`
