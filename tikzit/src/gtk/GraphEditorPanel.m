@@ -29,11 +29,17 @@
 @class GraphRenderer;
 @class WidgetSurface;
 
+static const InputMask zoomPanMask = ControlMask;
+
 /**
- * Mostly just a multiplexer
+ * Mostly just a multiplexer, but also handles zoom and pan
+ * when ctrl is held
  */
 @interface GraphInputHandler : NSObject<InputDelegate> {
     GraphEditorPanel *panel;
+    NSPoint           dragOrigin;
+    NSPoint           oldGraphOrigin;
+    BOOL              zoomPanActive;
 }
 - (id) initForPanel:(GraphEditorPanel*)p;
 @end
@@ -68,6 +74,9 @@
     [super dealloc];
 }
 
+- (GraphRenderer*) renderer {
+    return renderer;
+}
 - (TikzDocument*) document {
     return [renderer document];
 }
@@ -135,12 +144,19 @@
     [super dealloc];
 }
 
-// FIXME: use a local copy of HandTool to implement CTRL-dragging
+// FIXME: share code with HandTool?
 - (void) mousePressAt:(NSPoint)pos withButton:(MouseButton)button andMask:(InputMask)mask {
-    [panel grabTool];
-    id<Tool> tool = [panel activeTool];
-    if ([tool respondsToSelector:@selector(mousePressAt:withButton:andMask:)]) {
-        [tool mousePressAt:pos withButton:button andMask:mask];
+    if (mask == zoomPanMask && button == LeftButton) {
+        dragOrigin = pos;
+        oldGraphOrigin = [[[panel renderer] transformer] origin];
+        zoomPanActive = YES;
+    } else {
+        zoomPanActive = NO;
+        [panel grabTool];
+        id<Tool> tool = [panel activeTool];
+        if ([tool respondsToSelector:@selector(mousePressAt:withButton:andMask:)]) {
+            [tool mousePressAt:pos withButton:button andMask:mask];
+        }
     }
 }
 
@@ -153,33 +169,43 @@
 }
 
 - (void) mouseReleaseAt:(NSPoint)pos withButton:(MouseButton)button andMask:(InputMask)mask {
-    if (![panel hasTool])
-        return;
-    id<Tool> tool = [panel activeTool];
-    if ([tool respondsToSelector:@selector(mouseReleaseAt:withButton:andMask:)]) {
-        [tool mouseReleaseAt:pos withButton:button andMask:mask];
+    if (zoomPanActive && button == LeftButton) {
+        zoomPanActive = NO;
+    } else if ([panel hasTool]) {
+        id<Tool> tool = [panel activeTool];
+        if ([tool respondsToSelector:@selector(mouseReleaseAt:withButton:andMask:)]) {
+            [tool mouseReleaseAt:pos withButton:button andMask:mask];
+        }
     }
 }
 
 - (void) mouseMoveTo:(NSPoint)pos withButtons:(MouseButton)buttons andMask:(InputMask)mask {
-    if (![panel hasTool])
-        return;
-    id<Tool> tool = [panel activeTool];
-    if ([tool respondsToSelector:@selector(mouseMoveTo:withButtons:andMask:)]) {
-        [tool mouseMoveTo:pos withButtons:buttons andMask:mask];
+    if (zoomPanActive && (buttons & LeftButton)) {
+        NSPoint newGraphOrigin = oldGraphOrigin;
+        newGraphOrigin.x += pos.x - dragOrigin.x;
+        newGraphOrigin.y += pos.y - dragOrigin.y;
+        [[[panel renderer] transformer] setOrigin:newGraphOrigin];
+        [[panel renderer] invalidateGraph];
+    } else if ([panel hasTool]) {
+        id<Tool> tool = [panel activeTool];
+        if ([tool respondsToSelector:@selector(mouseMoveTo:withButtons:andMask:)]) {
+            [tool mouseMoveTo:pos withButtons:buttons andMask:mask];
+        }
     }
 }
 
 - (void) mouseScrolledAt:(NSPoint)pos inDirection:(ScrollDirection)dir withMask:(InputMask)mask {
-    id<Tool> tool = [panel activeTool];
-    if (mask == ControlMask) {
+    if (mask == zoomPanMask) {
         if (dir == ScrollUp) {
             [panel zoomInAboutPoint:pos];
         } else if (dir == ScrollDown) {
             [panel zoomOutAboutPoint:pos];
         }
-    } else if ([panel hasTool] && [tool respondsToSelector:@selector(mouseScrolledAt:inDirection:withMask:)]) {
-        [tool mouseScrolledAt:pos inDirection:dir withMask:mask];
+    } else {
+        id<Tool> tool = [panel activeTool];
+        if ([panel hasTool] && [tool respondsToSelector:@selector(mouseScrolledAt:inDirection:withMask:)]) {
+            [tool mouseScrolledAt:pos inDirection:dir withMask:mask];
+        }
     }
 }
 
