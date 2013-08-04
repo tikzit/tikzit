@@ -335,6 +335,8 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
         // FIXME: check if there was any real change
         [[self doc] endModifyEdge];
     }
+
+    state = QuietState;
 }
 
 - (void) mouseDoubleClickAt:(NSPoint)pos withButton:(MouseButton)button andMask:(InputMask)mask {
