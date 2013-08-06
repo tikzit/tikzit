@@ -394,47 +394,63 @@ static void update_paste_action (GtkClipboard *clipboard, GdkEvent *event, GtkAc
 }
 
 - (void) presentError:(NSError*)error {
+    const gchar *errorDesc = "unknown error";
+    if (error && [error localizedDescription]) {
+        errorDesc = [[error localizedDescription] UTF8String];
+    }
     GtkWidget *dialog = gtk_message_dialog_new (window,
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
                                                 "%s",
-                                                [[error localizedDescription] UTF8String]);
+                                                errorDesc);
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
 }
 
 - (void) presentError:(NSError*)error withMessage:(NSString*)message {
+    const gchar *errorDesc = "unknown error";
+    if (error && [error localizedDescription]) {
+        errorDesc = [[error localizedDescription] UTF8String];
+    }
     GtkWidget *dialog = gtk_message_dialog_new (window,
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
                                                 "%s: %s",
                                                 [message UTF8String],
-                                                [[error localizedDescription] UTF8String]);
+                                                errorDesc);
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
 }
 
 - (void) presentGError:(GError*)error {
+    const gchar *errorDesc = "unknown error";
+    if (error && error->message) {
+        errorDesc = error->message;
+    }
     GtkWidget *dialog = gtk_message_dialog_new (window,
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
                                                 "%s",
-                                                error->message);
+                                                errorDesc);
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
 }
 
 - (void) presentGError:(GError*)error withMessage:(NSString*)message {
+    const gchar *errorDesc = "unknown error";
+    if (error && error->message) {
+        errorDesc = error->message;
+    }
     GtkWidget *dialog = gtk_message_dialog_new (window,
                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
                                                 GTK_MESSAGE_ERROR,
                                                 GTK_BUTTONS_CLOSE,
                                                 "%s: %s",
                                                 [message UTF8String],
-                                                error->message);
+                                                errorDesc);
     gtk_dialog_run (GTK_DIALOG (dialog));
     gtk_widget_destroy (dialog);
 }
