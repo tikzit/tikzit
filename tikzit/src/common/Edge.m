@@ -656,6 +656,8 @@
 	Edge *cp = [[Edge allocWithZone:zone] init];
 	[cp setSource:[self source]];
 	[cp setTarget:[self target]];
+	[cp setSourceAnchor:[self sourceAnchor]];
+	[cp setTargetAnchor:[self targetAnchor]];
 	[cp setPropertiesFromEdge:self];
 	return cp;
 }
