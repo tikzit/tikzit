@@ -90,6 +90,7 @@ tikzit_SOURCES = gtk/Application.m \
                  common/NSFileManager+Utils.m \
                  common/NSString+LatexConstants.m \
                  common/NSString+Tikz.m \
+                 common/NSString+Util.m \
                  common/PickSupport.m \
                  common/PropertyHolder.m \
                  common/GraphElementProperty.m \

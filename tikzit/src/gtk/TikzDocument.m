@@ -139,9 +139,7 @@
        styleManager:(StyleManager*)manager
               error:(NSError**)error
 {
-    NSStringEncoding enc; // we can't pass in NULL here...
-    NSString *t = [NSString stringWithContentsOfFile:pth
-                            usedEncoding:&enc error:error];
+    NSString *t = [NSString stringWithContentsOfFile:pth error:error];
     if (t == nil) {
         [self release];
         return nil;

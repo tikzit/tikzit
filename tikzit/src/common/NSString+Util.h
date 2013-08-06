@@ -1,5 +1,5 @@
 /*
- * Copyright 2011  Alex Merry <alex.merry@kdemail.net>
+ * Copyright 2013  Alex Merry <alex.merry@kdemail.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -16,15 +16,12 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <glib.h>
 
-#import "NSError+Glib.h"
-#import "NSError+Tikzit.h"
-#import "NSFileManager+Glib.h"
-#import "NSFileManager+Utils.h"
-#import "NSString+Glib.h"
-#import "NSString+LatexConstants.h"
-#import "NSString+Tikz.h"
-#import "NSString+Util.h"
+@interface NSString (Util)
+	+ (NSString*) stringWithContentsOfFile:(NSString*)path
+									 error:(NSError**)error;
+	- (id) initWithContentsOfFile:(NSString*)path
+							error:(NSError**)error;
+@end
 
-// vim:ft=objc:ts=8:et:sts=4:sw=4
+// vi:ft=objc:noet:ts=4:sts=4:sw=4
