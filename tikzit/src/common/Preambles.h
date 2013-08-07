@@ -25,6 +25,8 @@
 #import <Foundation/Foundation.h>
 #import "StyleManager.h"
 
+@class Graph;
+
 @interface Preambles : NSObject {
 	NSMutableDictionary *preambleDict;
 	NSString *selectedPreambleName;
@@ -62,6 +64,9 @@
 - (NSString*)defaultPreamble;
 - (NSString*)defaultPreambleName;
 - (NSString*)currentPostamble;
+
+- (NSString*)buildDocumentForTikz:(NSString*)tikz;
+- (NSString*)buildDocumentForGraph:(Graph*)g;
 
 @end
 

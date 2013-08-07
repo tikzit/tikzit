@@ -48,6 +48,7 @@
 - (void)savePreambles:(NSString*)plist;
 - (NSString*)currentPreamble;
 - (NSString*)currentPostamble;
+- (NSString*)buildDocumentForTikz:(NSString*)tikz;
 - (IBAction)setPreamble:(id)sender;
 - (IBAction)insertDefaultStyles:(id)sender;
 

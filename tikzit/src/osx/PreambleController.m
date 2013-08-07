@@ -108,6 +108,11 @@
 	return [preambles currentPostamble];
 }
 
+- (NSString*)buildDocumentForTikz:(NSString*)tikz {
+	[self flushText];
+	return [preambles buildDocumentForTikz:tikz];
+}
+
 - (void)setSelectionIndexes:(NSIndexSet *)idx {
 	[self willChangeValueForKey:@"selectionIndexes"];
 	selectionIndexes = idx;

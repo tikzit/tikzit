@@ -24,14 +24,13 @@
 #import "Preambles.h"
 #import "NodeStyle.h"
 #import "EdgeStyle.h"
+#import "Graph.h"
 
-static NSString *PREAMBLE_HEAD =
-@"\\documentclass{article}\n"
+static NSString *DEF_PREAMBLE_START =
 @"\\usepackage[svgnames]{xcolor}\n"
 @"\\usepackage{tikz}\n"
 @"\\usetikzlibrary{decorations.markings}\n"
 @"\\usetikzlibrary{shapes.geometric}\n"
-@"\\pagestyle{empty}\n"
 @"\n"
 @"\\pgfdeclarelayer{edgelayer}\n"
 @"\\pgfdeclarelayer{nodelayer}\n"
@@ -41,6 +40,7 @@ static NSString *PREAMBLE_HEAD =
 
 static NSString *PREAMBLE_TAIL =
 @"\n"
+@"\\pagestyle{empty}\n"
 @"\\usepackage[graphics,tightpage,active]{preview}\n"
 @"\\PreviewEnvironment{tikzpicture}\n"
 @"\\newlength{\\imagewidth}\n"
@@ -69,6 +69,13 @@ static NSString *POSTAMBLE =
 		styleManager = nil;
 	}
 	return self;
+}
+
+- (void)dealloc {
+	[selectedPreambleName release];
+	[styles release];
+	[styleManager release];
+	[super dealloc];
 }
 
 - (NSString*)preambleForName:(NSString*)name {
@@ -152,8 +159,8 @@ static NSString *POSTAMBLE =
 }
 
 - (NSString*)defaultPreamble {
-	return [NSString stringWithFormat:@"%@%@%@",
-			PREAMBLE_HEAD, [self styleDefinitions], PREAMBLE_TAIL];
+	return [NSString stringWithFormat:@"%@%@",
+			DEF_PREAMBLE_START, [self styleDefinitions]];
 }
 
 - (BOOL)selectedPreambleIsDefault {
@@ -255,11 +262,29 @@ static NSString *POSTAMBLE =
 	return YES;
 }
 
-- (void)dealloc {
-	[selectedPreambleName release];
-	[styles release];
-	[styleManager release];
-	[super dealloc];
+- (NSString*)buildDocumentForTikz:(NSString*)tikz
+{
+	NSString *preamble = [self currentPreamble];
+	NSString *doc_head = @"";
+	if (![preamble hasPrefix:@"\\documentclass"]) {
+		doc_head = @"\\documentclass{article}\n";
+	}
+	NSString *preamble_suffix = @"";
+	if ([preamble rangeOfString:@"\\begin{document}"
+						options:NSBackwardsSearch].length == 0) {
+		preamble_suffix = PREAMBLE_TAIL;
+	}
+    return [NSString stringWithFormat:@"%@%@%@%@%@",
+			 doc_head,
+             [self currentPreamble],
+			 preamble_suffix,
+             tikz,
+             POSTAMBLE];
+}
+
+- (NSString*)buildDocumentForGraph:(Graph*)g
+{
+	return [self buildDocumentForTikz:[g tikz]];
 }
 
 @end

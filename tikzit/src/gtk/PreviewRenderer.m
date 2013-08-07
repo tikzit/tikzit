@@ -90,10 +90,7 @@
         return NO;
     }
 
-    NSString *tex = [NSString stringWithFormat:@"%@%@%@",
-                        [preambles currentPreamble],
-                        [document tikz],
-                        [preambles currentPostamble]];
+    NSString *tex = [preambles buildDocumentForTikz:[document tikz]];
 
     NSString *tempDir = [[NSFileManager defaultManager] createTempDirectoryWithError:error];
     if (!tempDir) {

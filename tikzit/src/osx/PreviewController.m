@@ -52,10 +52,7 @@ static PreviewController *preview = nil;
     
 	int fnum = typesetCount++;
 	
-	NSString *tex = [NSString stringWithFormat:@"%@%@%@",
-					 [preambleController currentPreamble],
-					 tikz,
-					 [preambleController currentPostamble]];
+	NSString *tex = [preambleController buildDocumentForTikz:tikz];
 	
 	NSString *texFile = [NSString stringWithFormat:@"%@/tikzit_%d.tex", tempDir, fnum];
 	NSString *pdfFile = [NSString stringWithFormat:@"%@/tikzit_%d.pdf", tempDir, fnum];
