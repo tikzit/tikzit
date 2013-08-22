@@ -325,6 +325,12 @@
 		[source removeObserver:self
 		            forKeyPath:@"style"];
 
+		if ([s style] == nil) {
+			[self setSourceAnchor:@"center"];
+		} else if ([sourceAnchor isEqual:@"center"]) {
+			[self setSourceAnchor:@""];
+		}
+
 		[source release];
 		source = [s retain];
 		
@@ -336,6 +342,7 @@
 		[source addObserver:self
 		         forKeyPath:@"style"
 		            options:NSKeyValueObservingOptionNew
+		                    | NSKeyValueObservingOptionOld
 		            context:NULL];
 		
 		dirty = YES;
@@ -348,6 +355,12 @@
 		[target removeObserver:self
 		            forKeyPath:@"style"];
 
+		if ([t style] == nil) {
+			[self setTargetAnchor:@"center"];
+		} else if ([targetAnchor isEqual:@"center"]) {
+			[self setTargetAnchor:@""];
+		}
+
 		[target release];
 		target = [t retain];
 		
@@ -359,6 +372,7 @@
 		[target addObserver:self
 		         forKeyPath:@"style"
 		            options:NSKeyValueObservingOptionNew
+		                    | NSKeyValueObservingOptionOld
 		            context:NULL];
 		
 		dirty = YES;
@@ -371,6 +385,27 @@
 					   context:(void *)context
 
 {
+	if ([keyPath isEqual:@"style"]) {
+		id oldStyle = [change objectForKey:NSKeyValueChangeOldKey];
+		id newStyle = [change objectForKey:NSKeyValueChangeNewKey];
+		id none = [NSNull null];
+		if (object == source) {
+			if (oldStyle != none && newStyle == none) {
+				[self setSourceAnchor:@"center"];
+			} else if (oldStyle == none && newStyle != none &&
+			           [sourceAnchor isEqual:@"center"]) {
+				[self setSourceAnchor:@""];
+			}
+		}
+		if (object == target) {
+			if (oldStyle != none && newStyle == none) {
+				[self setTargetAnchor:@"center"];
+			} else if (oldStyle == none && newStyle != none &&
+			           [targetAnchor isEqual:@"center"]) {
+				[self setTargetAnchor:@""];
+			}
+		}
+	}
 	dirty = YES;
 }
 

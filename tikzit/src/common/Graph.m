@@ -736,17 +736,13 @@
         NSString *srcAnchor;
         NSString *tgtAnchor;
         
-        if ([[e source] style] == nil) {
-            srcAnchor = @".center";
-        } else if ([[e sourceAnchor] isEqual:@""]) {
+        if ([[e sourceAnchor] isEqual:@""]) {
             srcAnchor = @"";
         } else {
             srcAnchor = [NSString stringWithFormat:@".%@", [e sourceAnchor]];
         }
         
-        if ([[e target] style] == nil) {
-            tgtAnchor = @".center";
-        } else if ([[e targetAnchor] isEqual:@""]) {
+        if ([[e targetAnchor] isEqual:@""]) {
             tgtAnchor = @"";
         } else {
             tgtAnchor = [NSString stringWithFormat:@".%@", [e targetAnchor]];
