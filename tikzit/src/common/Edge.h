@@ -274,6 +274,11 @@ typedef enum {
 - (id)initWithSource:(Node*)s andTarget:(Node*)t;
 
 /*!
+ @brief      Force the recalculation of the derived properties.
+ */
+- (void)recalculateProperties;
+
+/*!
  @brief      Recompute the control points and midpoint.
  */
 - (void)updateControls;

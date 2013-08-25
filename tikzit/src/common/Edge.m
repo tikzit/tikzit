@@ -127,6 +127,10 @@
 	return NSMakePoint (pt.x + dx, pt.y + dy);
 }
 
+- (void)recalculateProperties {
+	dirty = YES;
+}
+
 - (void)updateControls {
 	// check for external modification to the node locations
 	if (src.x != [source point].x || src.y != [source point].y ||

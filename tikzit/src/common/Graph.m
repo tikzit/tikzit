@@ -23,6 +23,11 @@
 
 #import "Graph.h"
 #import "TikzGraphAssembler.h"
+#import "Shape.h"
+
+@interface Graph (Private)
+- (void) shapeDictionaryReplaced:(NSNotification*)notification;
+@end
 
 @implementation Graph
 
@@ -36,6 +41,11 @@
 		edges = [[NSMutableArray alloc] initWithCapacity:10];
 		inEdges = nil;
 		outEdges = nil;
+		[[NSNotificationCenter defaultCenter]
+		        addObserver:self
+		           selector:@selector(shapeDictionaryReplaced:)
+		               name:@"ShapeDictionaryReplaced"
+		             object:[Shape class]];
 	}
 	return self;
 }
@@ -56,6 +66,8 @@
 }
 
 - (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[graphLock lock];
 	[inEdges release];
 	[outEdges release];
@@ -835,6 +847,14 @@
     return (hasPoints) ? NSRectAroundPoints(tl, br) : NSMakeRect(0, 0, 0, 0);
 }
 
+@end
+
+@implementation Graph (Private)
+- (void) shapeDictionaryReplaced:(NSNotification*)notification {
+	for (Edge *e in edges) {
+		[e recalculateProperties];
+	}
+}
 @end
 
 // vi:ft=objc:ts=4:noet:sts=4:sw=4
