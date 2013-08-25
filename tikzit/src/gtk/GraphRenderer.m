@@ -19,6 +19,7 @@
 #import "GraphRenderer.h"
 #import "Edge+Render.h"
 #import "Node+Render.h"
+#import "Shape.h"
 
 void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
 
@@ -31,6 +32,7 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
 - (void) graphChanged:(NSNotification*)notification;
 - (void) nodeStylePropertyChanged:(NSNotification*)notification;
 - (void) edgeStylePropertyChanged:(NSNotification*)notification;
+- (void) shapeDictionaryReplaced:(NSNotification*)notification;
 @end
 
 @implementation GraphRenderer
@@ -288,6 +290,11 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
                 addObserver:self
                 selector:@selector(graphNeedsRefreshing:)
                 name:@"EdgeSelectionReplaced" object:[doc pickSupport]];
+        [[NSNotificationCenter defaultCenter]
+                addObserver:self
+                   selector:@selector(shapeDictionaryReplaced:)
+                       name:@"ShapeDictionaryReplaced"
+                     object:[Shape class]];
     }
     [surface invalidate];
 }
@@ -458,6 +465,10 @@ void graph_renderer_expose_event(GtkWidget *widget, GdkEventExpose *event);
         if (affected)
             [surface invalidate];
     }
+}
+
+- (void) shapeDictionaryReplaced:(NSNotification*)notification {
+    [surface invalidate];
 }
 
 @end
