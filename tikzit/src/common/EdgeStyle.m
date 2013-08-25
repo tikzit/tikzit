@@ -83,6 +83,10 @@
     [super dealloc];
 }
 
+- (NSString*) description {
+	return [NSString stringWithFormat:@"Edge style \"%@\"", name];
+}
+
 - (void) updateFromStyle:(EdgeStyle*)style {
 	[self setName:[style name]];
 	[self setCategory:[style category]];

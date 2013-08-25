@@ -95,6 +95,10 @@
 	[super dealloc];
 }
 
+- (NSString*) description {
+	return [NSString stringWithFormat:@"Node style \"%@\"", name];
+}
+
 - (void) updateFromStyle:(NodeStyle*)style {
 	[self setStrokeThickness:[style strokeThickness]];
 	[self setScale:[style scale]];
