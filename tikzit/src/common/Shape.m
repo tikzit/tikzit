@@ -129,11 +129,14 @@ NSDictionary *shapeDictionary = nil;
 	[Shape addShapesInDir:systemShapeDir to:shapeDict];
 	[Shape addShapesInDir:userShapeDir to:shapeDict];
 	
+	NSDictionary *oldShapeDictionary = shapeDictionary;
 	shapeDictionary = shapeDict;
 
 	[[NSNotificationCenter defaultCenter]
 		postNotificationName:@"ShapeDictionaryReplaced"
 		object:self];
+
+	[oldShapeDictionary release];
 }
 
 + (NSDictionary*)shapeDictionary {
@@ -142,7 +145,7 @@ NSDictionary *shapeDictionary = nil;
 }
 
 + (Shape*)shapeForName:(NSString*)shapeName {
-	Shape *s = [[[Shape shapeDictionary] objectForKey:shapeName] copy];
+	Shape *s = [[[self shapeDictionary] objectForKey:shapeName] copy];
 	return [s autorelease];
 }
 
