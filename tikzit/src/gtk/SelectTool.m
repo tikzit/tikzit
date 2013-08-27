@@ -560,8 +560,7 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
 - (void) clearSelectionBox {
     NSRect oldRect = selectionBox;
 
-    NSRect emptyRect;
-    selectionBox = emptyRect;
+    selectionBox = NSZeroRect;
 
     [renderer invalidateRect:NSInsetRect (oldRect, -2, -2)];
     [renderer clearHighlightedNodes];
