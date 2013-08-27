@@ -720,8 +720,8 @@
 		[code appendFormat:@"\t\t\\node %@ (%d) at (%@, %@) {%@};\n",
 			[[n data] tikzList],
 			i,
-			[NSNumber numberWithFloat:[n point].x],
-			[NSNumber numberWithFloat:[n point].y],
+			formatFloat([n point].x, 4),
+			formatFloat([n point].y, 4),
 			[n label]
 		];
         i++;

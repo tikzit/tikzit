@@ -191,4 +191,11 @@ NSString *alphaHex(unsigned short sh);
 
 const char *find_start_of_nth_line (const char * string, int line);
 
-// vi:ft=objc:noet:ts=4:sts=4:sw=4
+/*!
+ @brief      Formats a CGFloat as a string, removing trailing zeros
+ @detail     Unlike formatting an NSNumber, or using %g, it will never
+             produce scientific notation (like "2.00e2").  Unlike %f,
+             it will not include unnecessary trailing zeros.
+ */
+NSString *formatFloat(CGFloat f, int maxdps);
+

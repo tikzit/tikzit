@@ -376,5 +376,28 @@ const char *find_start_of_nth_line (const char * string, int line) {
 	return lineStart;
 }
 
+NSString *formatFloat(CGFloat f, int maxdps) {
+	NSMutableString *result = [NSMutableString
+		stringWithFormat:@"%.*f", maxdps, f];
+	// delete trailing zeros
+	NSUInteger lastPos = [result length] - 1;
+	NSUInteger firstDigit = ([result characterAtIndex:0] == '-') ? 1 : 0;
+	while (lastPos > firstDigit) {
+		if ([result characterAtIndex:lastPos] == '0') {
+			[result deleteCharactersInRange:NSMakeRange(lastPos, 1)];
+			lastPos -= 1;
+		} else {
+			break;
+		}
+	}
+	if ([result characterAtIndex:lastPos] == '.') {
+		[result deleteCharactersInRange:NSMakeRange(lastPos, 1)];
+		lastPos -= 1;
+	}
+	if ([@"-0" isEqualToString:result])
+		return @"0";
+	else
+		return result;
+}
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4
