@@ -14,7 +14,7 @@ AM_OBJCFLAGS = @FOUNDATION_OBJCFLAGS@ \
 LIBS = @FOUNDATION_LIBS@ \
        @GTK_LIBS@
 AM_YFLAGS = -d
-PARSERFILES = common/tikzlexer.m common/tikzparser.m common/tikzparser.h
+PARSERFILES = common/tikzlexer.m common/tikzlexer.h common/tikzparser.m common/tikzparser.h
 ICONFILES = ../draw-ellipse.png \
 	    ../draw-path.png \
 	    ../select-rectangular.png \
@@ -126,10 +126,10 @@ endif
 
 common/tikzlexer.m: common/tikzlexer.lm
 	$(AM_V_GEN)$(LEX) -o $@ $^
+common/tikzlexer.h: common/tikzlexer.m
 
 common/tikzparser.m: common/tikzparser.ym
-	$(AM_V_GEN)$(YACC) --output=$@ $^
-
+	$(AM_V_GEN)$(YACC) --defines=common/tikzparser.h --output-file=$@ $^
 common/tikzparser.h: common/tikzparser.m
 
 gtk/icondata.m: $(ICONFILES)

@@ -23,7 +23,7 @@ To install, just run:
 
 To build from subversion (and for development) you will additionally need:
   flex >= 2.5.34
-  bison >= 2.4
+  bison >= 2.3
   autoconf >= 2.60
   automake >= 1.10
 

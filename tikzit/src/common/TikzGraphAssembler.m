@@ -22,6 +22,7 @@
 //  
 
 #import "TikzGraphAssembler.h"
+#import "tikzparserdefs.h"
 #import "tikzparser.h"
 #import "TikzGraphAssembler+Parser.h"
 #import "tikzlexer.h"

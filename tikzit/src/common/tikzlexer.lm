@@ -20,6 +20,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "tikzparserdefs.h"
 #import "tikzparser.h"
 
 #define YY_USER_ACTION \
