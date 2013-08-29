@@ -141,6 +141,31 @@
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		74112B2117CE36C500B9CF16 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = sourcecode.lex;
+			isEditable = 1;
+			outputFiles = (
+				tikzlexer.m,
+				tikzlexer.h,
+			);
+			script = "cd src\nflex -o common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.lm\ncp common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.h ${DERIVED_SOURCES_DIR}";
+		};
+		74E535F317CE329A0040610D /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = sourcecode.yacc;
+			isEditable = 1;
+			outputFiles = (
+				tikzparser.h,
+				tikzparser.m,
+			);
+			script = "cd src\nbison --defines=common/${INPUT_FILE_BASE}.h --output=common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.ym\ncp common/${INPUT_FILE_BASE}.h common/${INPUT_FILE_BASE}.m ${DERIVED_SOURCES_DIR}\n";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXContainerItemProxy section */
 		5504C91A11D36CD5002A1478 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -742,6 +767,8 @@
 				8D15AC330486D014006FF6A4 /* Frameworks */,
 			);
 			buildRules = (
+				74112B2117CE36C500B9CF16 /* PBXBuildRule */,
+				74E535F317CE329A0040610D /* PBXBuildRule */,
 			);
 			dependencies = (
 			);

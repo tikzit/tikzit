@@ -150,9 +150,10 @@
         [graphicsView setGraph:g];
         [graphicsView refreshLayers];
         [self doRevertTikz];
+        return YES;
+    } else {
+        return NO;
     }
-    
-    return success;
 }
 
 - (void)doRevertTikz {

@@ -32,7 +32,7 @@
     self.layer.backgroundColor = [[NSColor controlColor] CGColor];
     //CGColorCreate(CGColorSpaceCreateDeviceRGB(), (CGFloat[]){ 1, .9, .64, 1 });
 //    newLayer.backgroundColor = [NSColor redColor].CGColor;
-    newLayer.frame = NSMakeRect(100,100,100,100);//NSMakeRect(0,0,image.size.width,image.size.height);
+    newLayer.frame = CGRectMake(100,100,100,100);//NSMakeRect(0,0,image.size.width,image.size.height);
     newLayer.position  = CGPointMake(20,20);
     //[self.layer addSublayer:newLayer];
 }
