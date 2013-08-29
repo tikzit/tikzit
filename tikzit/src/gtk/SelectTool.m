@@ -501,7 +501,7 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
     Transformer *transformer = [renderer transformer];
 
     NSPoint from = [transformer toScreen:[leader point]];
-    //to = [[renderer grid] snapScreenPoint:to];
+    to = [[renderer grid] snapScreenPoint:to];
     float dx = to.x - from.x;
     float dy = to.y - from.y;
 
@@ -509,7 +509,6 @@ static void drag_select_mode_cb (GtkToggleButton *button, SelectTool *tool);
         NSPoint p = [transformer toScreen:[node point]];
         p.x += dx;
         p.y += dy;
-        p = [[renderer grid] snapScreenPoint:p];
         [node setPoint:[transformer fromScreen:p]];
     }
 }
