@@ -96,13 +96,16 @@ static const InputMask zoomPanMask = ControlMask;
     [[[renderer document] pickSupport] deselectAllNodes];
     [[[renderer document] pickSupport] deselectAllEdges];
 
-    BOOL hadOldTool = ([tool activeRenderer] == renderer);
-
     id oldTool = tool;
+    BOOL weHadTool = ([oldTool activeRenderer] == renderer);
+    if (weHadTool) {
+        [oldTool setActiveRenderer:nil];
+    }
+
     tool = [t retain];
     [oldTool release];
 
-    if (hadOldTool) {
+    if (weHadTool) {
         [self grabTool];
     }
 }
