@@ -31,6 +31,8 @@ static gboolean motion_notify_event_cb (GtkWidget *widget, GdkEventMotion *event
 static gboolean key_press_event_cb (GtkWidget *widget, GdkEventKey *event, WidgetSurface *surface);
 static gboolean key_release_event_cb (GtkWidget *widget, GdkEventKey *event, WidgetSurface *surface);
 static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, WidgetSurface *surface);
+static void set_cursor (GtkWidget *widget, GdkCursor *cursor);
+static void unref_cursor (gpointer cursor, GClosure *closure);
 // }}}
 
 @interface WidgetSurface (Private)
@@ -298,7 +300,6 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
 }
 
 - (void) setCursor:(Cursor)c {
-    GdkWindow *window = gtk_widget_get_window (widget);
     GdkCursor *cursor = NULL;
     switch (c) {
         case ResizeRightCursor:
@@ -327,9 +328,19 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
             break;
         default: break;
     }
-    gdk_window_set_cursor (window, cursor);
-    if (cursor != NULL) {
-        gdk_cursor_unref (cursor);
+    GdkWindow *window = gtk_widget_get_window (widget);
+    g_signal_handlers_disconnect_matched (window,
+            G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+            G_CALLBACK (set_cursor), NULL);
+    if (window) {
+        gdk_window_set_cursor (window, cursor);
+        if (cursor != NULL) {
+            gdk_cursor_unref (cursor);
+        }
+    } else {
+        g_signal_connect_data (widget,
+                "realize", G_CALLBACK (set_cursor), cursor,
+                unref_cursor, 0);
     }
 }
 
@@ -597,6 +608,22 @@ static gboolean scroll_event_cb (GtkWidget *widget, GdkEventScroll *event, Widge
 
     [pool drain];
     return FALSE;
+}
+
+static void unref_cursor (gpointer cursor, GClosure *closure) {
+    if (cursor != NULL) {
+        gdk_cursor_unref ((GdkCursor*)cursor);
+    }
+}
+
+static void set_cursor (GtkWidget *widget, GdkCursor *cursor) {
+    GdkWindow *window = gtk_widget_get_window (widget);
+    if (window) {
+        gdk_window_set_cursor (window, cursor);
+        if (cursor != NULL) {
+            gdk_cursor_unref (cursor);
+        }
+    }
 }
 // }}}
 
