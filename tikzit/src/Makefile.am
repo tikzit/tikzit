@@ -124,12 +124,14 @@ tikzit_LDADD = tikzit.res
 CLEANFILES = tikzit.res
 endif
 
-common/tikzlexer.m: common/tikzlexer.lm
-	$(AM_V_GEN)$(LEX) -o $@ $^
+common/tikzlexer.m common/tikzlexer.h: common/tikzlexer.lm
+	$(AM_V_GEN)$(LEX) -o common/tikzlexer.m $^
+# ordering hack for parallel builds
 common/tikzlexer.h: common/tikzlexer.m
 
-common/tikzparser.m: common/tikzparser.ym
-	$(AM_V_GEN)$(YACC) --defines=common/tikzparser.h --output-file=$@ $^
+common/tikzparser.m common/tikzparser.h: common/tikzparser.ym
+	$(AM_V_GEN)$(YACC) --defines=common/tikzparser.h --output-file=common/tikzparser.m $^
+# ordering hack for parallel builds
 common/tikzparser.h: common/tikzparser.m
 
 gtk/icondata.m: $(ICONFILES)
