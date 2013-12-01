@@ -38,17 +38,21 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    NSPasteboard *pboard;
-
     NSRect pageBox = [[[self document] pageAtIndex:0] boundsForBox:kPDFDisplayBoxMediaBox];
     NSRect pageRect= [self convertRect:pageBox fromPage:[[self document] pageAtIndex:0]];
     
-    pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
-    [pboard declareTypes:[NSArray arrayWithObject:NSPasteboardTypePDF] owner:self];
-    [pboard setData:[[self document] dataRepresentation] forType:NSPasteboardTypePDF];
+    NSArray *fileList = [NSArray arrayWithObjects:[[[self document] documentURL] path], nil];
+    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+    [pboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:nil];
+    [pboard setPropertyList:fileList forType:NSFilenamesPboardType];
     
-    [self dragImage:[[NSImage alloc] initWithData:[[self document] dataRepresentation]] at:pageRect.origin offset:pageRect.size
-              event:theEvent pasteboard:pboard source:self slideBack:YES];
+    [self dragImage:[[NSImage alloc] initWithData:[[self document] dataRepresentation]]
+                 at:pageRect.origin
+             offset:pageRect.size
+              event:theEvent
+         pasteboard:pboard
+             source:self
+          slideBack:YES];
     
     return;
 }

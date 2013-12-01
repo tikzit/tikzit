@@ -109,8 +109,7 @@ static PreviewController *preview = nil;
 		[errorText setString:@""];
 		[errorTextView setHidden:YES];
 		
-		data = [NSData dataWithContentsOfFile:pdfFile];
-		PDFDocument *doc = [[PDFDocument alloc] initWithData:data];
+        PDFDocument *doc = [[PDFDocument alloc] initWithURL:[[NSURL alloc] initFileURLWithPath:pdfFile]];
 		
 		// pad the PDF by a couple of pixels
 		if ([doc pageCount] >= 1) {
