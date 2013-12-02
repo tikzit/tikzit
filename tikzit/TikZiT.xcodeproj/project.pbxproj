@@ -116,6 +116,8 @@
 		55F9585C1181B09600F99434 /* PickSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F958591181B09600F99434 /* PickSupport.m */; };
 		55F9585D1181B09600F99434 /* Transformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F9585B1181B09600F99434 /* Transformer.m */; };
 		55F9E04511FF54F000F5659E /* NSString+LatexConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F9E04411FF54F000F5659E /* NSString+LatexConstants.m */; };
+		7F18A321184C577000BC3081 /* UpdatePreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F18A320184C577000BC3081 /* UpdatePreferenceController.m */; };
+		7F18A323184C599100BC3081 /* UpdatePreferencePanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7F18A322184C599100BC3081 /* UpdatePreferencePanel.xib */; };
 		7F6E2C7D16B007F000BFE20D /* EdgeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7814498C22006942FB /* EdgeStyle.m */; };
 		7F6E2C7E16B0080400BFE20D /* GraphElementProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 55432E051444BF2D00401BB3 /* GraphElementProperty.m */; };
 		7F6E2C7F16B0081D00BFE20D /* PropertyHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7E144999C4006942FB /* PropertyHolder.m */; };
@@ -370,6 +372,9 @@
 		55F9E04311FF54F000F5659E /* NSString+LatexConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+LatexConstants.h"; path = "src/common/NSString+LatexConstants.h"; sourceTree = "<group>"; };
 		55F9E04411FF54F000F5659E /* NSString+LatexConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+LatexConstants.m"; path = "src/common/NSString+LatexConstants.m"; sourceTree = "<group>"; };
 		55FF4E64116A401B000C22B4 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		7F18A31F184C577000BC3081 /* UpdatePreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UpdatePreferenceController.h; path = src/osx/UpdatePreferenceController.h; sourceTree = "<group>"; };
+		7F18A320184C577000BC3081 /* UpdatePreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UpdatePreferenceController.m; path = src/osx/UpdatePreferenceController.m; sourceTree = "<group>"; };
+		7F18A322184C599100BC3081 /* UpdatePreferencePanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UpdatePreferencePanel.xib; path = src/osx/UpdatePreferencePanel.xib; sourceTree = "<group>"; };
 		7F6E2C8716B0091300BFE20D /* maths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = maths.m; path = src/common/test/maths.m; sourceTree = "<group>"; };
 		7F734388184AC559002897D0 /* DraggablePDFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DraggablePDFView.h; path = src/osx/DraggablePDFView.h; sourceTree = "<group>"; };
 		7F734389184AC559002897D0 /* DraggablePDFView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DraggablePDFView.m; path = src/osx/DraggablePDFView.m; sourceTree = "<group>"; };
@@ -514,6 +519,7 @@
 				55D945701165904F0044178C /* tikzitdoc.icns */,
 				55D945711165904F0044178C /* tikzit.icns */,
 				7F90E88C16DD47540069EBCD /* Preferences.xib */,
+				7F18A322184C599100BC3081 /* UpdatePreferencePanel.xib */,
 				55391AF713D3250F007DBE71 /* Preamble.xib */,
 				55391AF513D324FE007DBE71 /* Preview.xib */,
 				55391B0013D32608007DBE71 /* PropertyInspector.xib */,
@@ -686,8 +692,7 @@
 				55CA997112F08281008F0368 /* TikzWindowController.m */,
 				553A4C58144ED3D500AA6FAC /* NilToEmptyStringTransformer.h */,
 				553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */,
-				7F90E88A16DD47540069EBCD /* PreferenceController.h */,
-				7F90E88B16DD47540069EBCD /* PreferenceController.m */,
+				7F18A31E184C563800BC3081 /* Preferences */,
 			);
 			name = Gui;
 			sourceTree = "<group>";
@@ -729,6 +734,17 @@
 				558F18EE117B043B009863B2 /* StylePaletteController.m */,
 			);
 			name = StylePalette;
+			sourceTree = "<group>";
+		};
+		7F18A31E184C563800BC3081 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				7F90E88A16DD47540069EBCD /* PreferenceController.h */,
+				7F90E88B16DD47540069EBCD /* PreferenceController.m */,
+				7F18A31F184C577000BC3081 /* UpdatePreferenceController.h */,
+				7F18A320184C577000BC3081 /* UpdatePreferenceController.m */,
+			);
+			name = Preferences;
 			sourceTree = "<group>";
 		};
 		7FB9BFE616B54BE300773146 /* Formatter */ = {
@@ -845,6 +861,7 @@
 				55397C8D1449ABFC006942FB /* AH_latex_tail.png in Resources */,
 				55397C901449AC7C006942FB /* AH_latex_head.png in Resources */,
 				55397C911449AC7C006942FB /* AH_plain_head.png in Resources */,
+				7F18A323184C599100BC3081 /* UpdatePreferencePanel.xib in Resources */,
 				7F90E88E16DD47540069EBCD /* Preferences.xib in Resources */,
 				7F90E89116DD54440069EBCD /* UserDefaults.plist in Resources */,
 			);
@@ -954,6 +971,7 @@
 				7F781C1A16B5DE1400239826 /* ParseErrorView.m in Sources */,
 				7F90E88616DD29600069EBCD /* NSString+Tikz.m in Sources */,
 				7F90E88D16DD47540069EBCD /* PreferenceController.m in Sources */,
+				7F18A321184C577000BC3081 /* UpdatePreferenceController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

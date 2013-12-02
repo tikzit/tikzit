@@ -1,8 +1,7 @@
 //
-//  PreferenceController.h
+//  UpdatePreferenceController.h
 //  TikZiT
 //
-//  Created by Karl Johan Paulsson on 26/02/2013.
 //  Copyright (c) 2013 Aleks Kissinger. All rights reserved.
 //
 //
@@ -23,19 +22,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "UpdatePreferenceController.h"
+#import <Sparkle/Sparkle.h>
 
-@interface PreferenceController : NSWindowController{
-    
-    IBOutlet NSView *engineView;
-    IBOutlet NSView *generalView;
-    IBOutlet NSView *updateView;
-    
-    UpdatePreferenceController *updateController;
-    
-    int currentViewTag;
+@interface UpdatePreferenceController : NSViewController{
+    IBOutlet SUUpdater *sharedUpdater;
+    IBOutlet NSDate *lastUpdate;
 }
 
-- (IBAction)switchView:(id)sender;
+- (IBAction)checkForUpdates:(id)sender;
 
 @end

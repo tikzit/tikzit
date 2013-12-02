@@ -30,25 +30,7 @@
 
 @implementation PreferenceController
 
-- (id)initWithWindow:(NSWindow *)window
-{
-    self = [super initWithWindow:window];
-    if (self) {
-        // Initialization code here.
-    }
-    
-    return self;
-}
-
-- (void)windowDidLoad
-{
-    [super windowDidLoad];
-    
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-}
-
 - (NSRect)newFrameForNewContentView:(NSView*)view {
-    
     NSWindow *window = [self window];
     NSRect newFrameRect = [window frameRectForContentRect:[view frame]];
     NSRect oldFrameRect = [window frame];
@@ -73,6 +55,9 @@
         case 1:
             view = engineView;
             break;
+        case 2:
+            view = updateView;
+        break;
     }
     
     return  view;
@@ -90,6 +75,11 @@
     [[self window] setContentSize:[generalView frame].size];
     [[[self window] contentView] addSubview:generalView];
     [[[self window] contentView] setWantsLayer:YES];
+    
+    updateController = [[UpdatePreferenceController alloc] initWithNibName:@"UpdatePreferencePanel" bundle:nil];
+    [[updateController view] setFrame:[updateView frame]];
+    [[[self window] contentView] replaceSubview:updateView with:[updateController view]];
+    updateView = [updateController view];
 }
 
 - (IBAction)switchView:(id)sender {
@@ -110,7 +100,7 @@
     [[[self window] animator] setFrame:newFrame display:YES];
     
     [NSAnimationContext endGrouping];
-    
+
 }
 
 @end

@@ -1,8 +1,7 @@
 //
-//  PreferenceController.h
+//  UpdatePreferenceController.h
 //  TikZiT
 //
-//  Created by Karl Johan Paulsson on 26/02/2013.
 //  Copyright (c) 2013 Aleks Kissinger. All rights reserved.
 //
 //
@@ -22,20 +21,29 @@
 //  along with TikZiT.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <Cocoa/Cocoa.h>
 #import "UpdatePreferenceController.h"
 
-@interface PreferenceController : NSWindowController{
-    
-    IBOutlet NSView *engineView;
-    IBOutlet NSView *generalView;
-    IBOutlet NSView *updateView;
-    
-    UpdatePreferenceController *updateController;
-    
-    int currentViewTag;
+@interface UpdatePreferenceController ()
+
+@end
+
+@implementation UpdatePreferenceController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        sharedUpdater = [SUUpdater sharedUpdater];
+    }
+    return self;
 }
 
-- (IBAction)switchView:(id)sender;
+- (IBAction)checkForUpdates:(id)sender{
+    [sharedUpdater checkForUpdates:sender];
+}
+
+- (NSDate*)getLastUpdate{
+    return [sharedUpdater lastUpdateCheckDate];
+}
 
 @end
