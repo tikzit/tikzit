@@ -593,8 +593,6 @@
 		5573B90C11DA22E500B5DC5D /* Preamble */ = {
 			isa = PBXGroup;
 			children = (
-				5573B90D11DA231A00B5DC5D /* PreambleController.h */,
-				5573B90E11DA231A00B5DC5D /* PreambleController.m */,
 				5573B92711DA292F00B5DC5D /* Preambles.h */,
 				5573B92811DA292F00B5DC5D /* Preambles.m */,
 				5573BDC911DB4D2600B5DC5D /* Preambles+Coder.h */,
@@ -739,6 +737,8 @@
 		7F18A31E184C563800BC3081 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				5573B90D11DA231A00B5DC5D /* PreambleController.h */,
+				5573B90E11DA231A00B5DC5D /* PreambleController.m */,
 				7F90E88A16DD47540069EBCD /* PreferenceController.h */,
 				7F90E88B16DD47540069EBCD /* PreferenceController.m */,
 				7F18A31F184C577000BC3081 /* UpdatePreferenceController.h */,

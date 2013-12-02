@@ -49,7 +49,7 @@
 	
 	NSString *preamblePlist = [supportDir stringByAppendingPathComponent:@"preambles.plist"];
 	preambleController =
-	[[PreambleController alloc] initWithWindowNibName:@"Preamble"
+	[[PreambleController alloc] initWithNibName:@"Preamble"
 												plist:preamblePlist
 											   styles:[stylePaletteController nodeStyles]
 											    edges:[stylePaletteController edgeStyles]];
@@ -67,7 +67,7 @@
 								  preambleController:preambleController
 											 tempDir:tempDir];
     
-    preferenceController = [[PreferenceController alloc] initWithWindowNibName:@"Preferences"];
+    preferenceController = [[PreferenceController alloc] initWithWindowNibName:@"Preferences" preambleController:preambleController];
 	
 	// each application has one global preview controller
 	[PreviewController setDefaultPreviewController:previewController];

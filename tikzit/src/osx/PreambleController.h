@@ -25,17 +25,14 @@
 #import "Preambles.h"
 #import "Preambles+Coder.h"
 
-@interface PreambleController : NSWindowController {
+@interface PreambleController : NSViewController {
 	Preambles *preambles;
 	IBOutlet NSTextView *textView;
-	IBOutlet NSToolbar *toolbar;
-	IBOutlet NSToolbarItem *defaultToolbarItem;
-	IBOutlet NSToolbarItem *customToolbarItem;
 	IBOutlet NSDictionaryController *preambleDictionaryController;
+
 	NSDictionary *textAttrs;
 	NSAttributedString *preambleText;
 	NSColor *ghostColor;
-	
 	NSIndexSet *selectionIndexes;
 }
 
@@ -44,11 +41,13 @@
 @property (retain) NSAttributedString *preambleText;
 @property (retain) NSIndexSet *selectionIndexes;
 
-- (id)initWithWindowNibName:(NSString *)windowNibName plist:(NSString*)plist styles:(NSArray*)sty edges:(NSArray*)edg;
+- (id)initWithNibName:(NSString *)nibName plist:(NSString*)plist styles:(NSArray*)sty edges:(NSArray*)edg;
 - (void)savePreambles:(NSString*)plist;
 - (NSString*)currentPreamble;
 - (NSString*)currentPostamble;
 - (NSString*)buildDocumentForTikz:(NSString*)tikz;
+
+- (IBAction)setPreambleToDefault:(id)sender;
 - (IBAction)setPreamble:(id)sender;
 - (IBAction)insertDefaultStyles:(id)sender;
 

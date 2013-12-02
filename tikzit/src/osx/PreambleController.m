@@ -28,8 +28,8 @@
 
 @synthesize preambleText, preambles;
 
-- (id)initWithWindowNibName:(NSString *)windowNibName plist:(NSString*)plist styles:(NSArray*)sty edges:(NSArray*)edg {
-	[super initWithWindowNibName:windowNibName];
+- (id)initWithNibName:(NSString *)nibName plist:(NSString*)plist styles:(NSArray*)sty edges:(NSArray*)edg {
+	[super initWithNibName:nibName bundle:Nil];
 	
 	preambles = (Preambles*)[NSKeyedUnarchiver unarchiveObjectWithFile:plist];
 	[preambles setStyles:sty];
@@ -83,17 +83,6 @@
 									attributes:textAttrs]];
 }
 
-- (void)showWindow:(id)sender {
-	[super showWindow:sender];
-	if ([self useDefaultPreamble]) {
-		[toolbar setSelectedItemIdentifier:[defaultToolbarItem itemIdentifier]];
-	} else {
-		[toolbar setSelectedItemIdentifier:[customToolbarItem itemIdentifier]];
-	}
-	
-	[self setPreamble:self];
-}
-
 - (void)savePreambles:(NSString*)plist {
 	[self flushText];
 	[NSKeyedArchiver archiveRootObject:preambles toFile:plist];
@@ -125,11 +114,16 @@
 	return selectionIndexes;
 }
 
+- (IBAction)setPreambleToDefault:(id)sender{
+    [self setCurrentPreamble:@"default"];
+    [textView setBackgroundColor:ghostColor];
+}
+
 - (IBAction)setPreamble:(id)sender {
-	if ([[toolbar selectedItemIdentifier] isEqualToString:[defaultToolbarItem itemIdentifier]]) {
-		[self setCurrentPreamble:@"default"];
-		[textView setBackgroundColor:ghostColor];
-	} else if ([[toolbar selectedItemIdentifier] isEqualToString:[customToolbarItem itemIdentifier]]) {
+	//if ([[toolbar selectedItemIdentifier] isEqualToString:[defaultToolbarItem itemIdentifier]]) {
+	//	[self setCurrentPreamble:@"default"];
+	//	[textView setBackgroundColor:ghostColor];
+	//} else if ([[toolbar selectedItemIdentifier] isEqualToString:[customToolbarItem itemIdentifier]]) {
 		NSString *key = nil;
 		if ([selectionIndexes count]==1) {
 			int i = [selectionIndexes firstIndex];
@@ -143,7 +137,7 @@
 			//NSLog(@"preamble set to custom");
 		}
 		[textView setBackgroundColor:[NSColor whiteColor]];
-	}
+	//}
 }
 
 - (IBAction)insertDefaultStyles:(id)sender {

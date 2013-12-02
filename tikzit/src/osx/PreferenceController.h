@@ -24,14 +24,17 @@
 
 #import <Cocoa/Cocoa.h>
 #import "UpdatePreferenceController.h"
+#import "PreambleController.h"
 
 @interface PreferenceController : NSWindowController{
     
     IBOutlet NSView *engineView;
     IBOutlet NSView *generalView;
     IBOutlet NSView *updateView;
+    IBOutlet NSView *preambleView;
     
     UpdatePreferenceController *updateController;
+    PreambleController *preambleController;
     
     int currentViewTag;
 }

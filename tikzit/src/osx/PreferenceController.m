@@ -30,6 +30,14 @@
 
 @implementation PreferenceController
 
+- (id)initWithWindowNibName:(NSString *)windowNibName preambleController:(PreambleController*)pc{
+    [super initWithWindowNibName:windowNibName];
+    
+    preambleController = pc;
+    
+    return self;
+}
+
 - (NSRect)newFrameForNewContentView:(NSView*)view {
     NSWindow *window = [self window];
     NSRect newFrameRect = [window frameRectForContentRect:[view frame]];
@@ -51,12 +59,15 @@
         default:
         case 0:
             view = generalView;
-            break;
+        break;
         case 1:
             view = engineView;
-            break;
+        break;
         case 2:
             view = updateView;
+        break;
+        case 3:
+            view = preambleView;
         break;
     }
     
@@ -80,6 +91,10 @@
     [[updateController view] setFrame:[updateView frame]];
     [[[self window] contentView] replaceSubview:updateView with:[updateController view]];
     updateView = [updateController view];
+    
+    [[preambleController view] setFrame:[preambleView frame]];
+    [[[self window] contentView] replaceSubview:preambleView with:[preambleController view]];
+    preambleView = [preambleController view];
 }
 
 - (IBAction)switchView:(id)sender {
