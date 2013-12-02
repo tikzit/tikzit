@@ -82,19 +82,23 @@
 }
 
 - (void)awakeFromNib {
-    
+
     [[self window] setContentSize:[generalView frame].size];
     [[[self window] contentView] addSubview:generalView];
     [[[self window] contentView] setWantsLayer:YES];
-    
+
     updateController = [[UpdatePreferenceController alloc] initWithNibName:@"UpdatePreferencePanel" bundle:nil];
     [[updateController view] setFrame:[updateView frame]];
     [[[self window] contentView] replaceSubview:updateView with:[updateController view]];
     updateView = [updateController view];
-    
+
     [[preambleController view] setFrame:[preambleView frame]];
     [[[self window] contentView] replaceSubview:preambleView with:[preambleController view]];
     preambleView = [preambleController view];
+    
+    [[self window] setContentSize:[preambleView frame].size];
+    [[[self window] contentView] addSubview:preambleView];
+    currentViewTag = 3;
 }
 
 - (IBAction)switchView:(id)sender {

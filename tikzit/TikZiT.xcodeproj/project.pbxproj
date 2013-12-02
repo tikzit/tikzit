@@ -137,6 +137,9 @@
 		7F90E88D16DD47540069EBCD /* PreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F90E88B16DD47540069EBCD /* PreferenceController.m */; };
 		7F90E88E16DD47540069EBCD /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7F90E88C16DD47540069EBCD /* Preferences.xib */; };
 		7F90E89116DD54440069EBCD /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7F90E88F16DD54440069EBCD /* UserDefaults.plist */; };
+		7F93852E184D176E00FAED38 /* updates.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F93852D184D176E00FAED38 /* updates.png */; };
+		7F938530184D178B00FAED38 /* engine.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F93852F184D178B00FAED38 /* engine.png */; };
+		7F938532184D184700FAED38 /* preamble.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F938531184D184700FAED38 /* preamble.png */; };
 		7FB9BFEE16B57C2E00773146 /* TikzFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9BFED16B57C2E00773146 /* TikzFormatter.m */; };
 		7FEED45716B1A7C500B056CB /* StyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FEED45616B1A7C500B056CB /* StyleManager.m */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -386,6 +389,9 @@
 		7F90E88B16DD47540069EBCD /* PreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferenceController.m; path = src/osx/PreferenceController.m; sourceTree = "<group>"; };
 		7F90E88C16DD47540069EBCD /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Preferences.xib; path = src/osx/Preferences.xib; sourceTree = "<group>"; };
 		7F90E89016DD54440069EBCD /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = English; path = English.lproj/UserDefaults.plist; sourceTree = "<group>"; };
+		7F93852D184D176E00FAED38 /* updates.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = updates.png; sourceTree = "<group>"; };
+		7F93852F184D178B00FAED38 /* engine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = engine.png; sourceTree = "<group>"; };
+		7F938531184D184700FAED38 /* preamble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = preamble.png; sourceTree = "<group>"; };
 		7FB9BFEC16B57C2E00773146 /* TikzFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TikzFormatter.h; path = src/osx/TikzFormatter.h; sourceTree = "<group>"; };
 		7FB9BFED16B57C2E00773146 /* TikzFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TikzFormatter.m; path = src/osx/TikzFormatter.m; sourceTree = "<group>"; };
 		7FEED45516B1A7C400B056CB /* StyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StyleManager.h; path = src/common/StyleManager.h; sourceTree = "<group>"; };
@@ -501,6 +507,7 @@
 				55397C841449A9BF006942FB /* ED_none.png */,
 				55397C821449A8F1006942FB /* ED_tick.png */,
 				55397C801449A877006942FB /* ED_arrow.png */,
+				7F93852C184D175400FAED38 /* Icons */,
 				55652E5013E1FC660023F4C6 /* shapes */,
 				55900AE2135FB305002DD28E /* emblem-unreadable-grey.png */,
 				55E5E99D1215C8E300256F69 /* transform-crop-and-resize.png */,
@@ -747,6 +754,16 @@
 			name = Preferences;
 			sourceTree = "<group>";
 		};
+		7F93852C184D175400FAED38 /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				7F93852F184D178B00FAED38 /* engine.png */,
+				7F938531184D184700FAED38 /* preamble.png */,
+				7F93852D184D176E00FAED38 /* updates.png */,
+			);
+			name = Icons;
+			sourceTree = "<group>";
+		};
 		7FB9BFE616B54BE300773146 /* Formatter */ = {
 			isa = PBXGroup;
 			children = (
@@ -835,7 +852,9 @@
 			files = (
 				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
+				7F938532184D184700FAED38 /* preamble.png in Resources */,
 				1DDD582C0DA1D0D100B32029 /* TikzDocument.xib in Resources */,
+				7F938530184D178B00FAED38 /* engine.png in Resources */,
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				55D945721165904F0044178C /* tikzitdoc.icns in Resources */,
 				55D945731165904F0044178C /* tikzit.icns in Resources */,
@@ -844,6 +863,7 @@
 				55D949151165D8870044178C /* draw-path.png in Resources */,
 				55D949161165D8870044178C /* select-rectangular.png in Resources */,
 				559EFA5711C7D95F00D020F4 /* tikzit_dsa_pub.pem in Resources */,
+				7F93852E184D176E00FAED38 /* updates.png in Resources */,
 				555B30F911D8BE3300CAECF5 /* emblem-important.png in Resources */,
 				55391AF613D324FE007DBE71 /* Preview.xib in Resources */,
 				55391AF813D3250F007DBE71 /* Preamble.xib in Resources */,
