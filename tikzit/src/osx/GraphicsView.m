@@ -829,8 +829,8 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 	float tdx = cp2.x - targ.x;
 	float tdy = cp2.y - targ.y;
 	float tdist = sqrt(tdx*tdx + tdy*tdy);
-	float tshortx = (tdist==0) ? 0 : tdx/sdist * tradius;
-	float tshorty = (tdist==0) ? 0 : tdy/sdist * tradius;
+	float tshortx = (tdist==0) ? 0 : tdx/tdist * tradius;
+	float tshorty = (tdist==0) ? 0 : tdy/tdist * tradius;
 	
 	CGContextMoveToPoint(context, src.x+sshortx, src.y+sshorty);
 	CGContextAddCurveToPoint(context, cp1.x, cp1.y, cp2.x, cp2.y, targ.x+tshortx, targ.y+tshorty);
