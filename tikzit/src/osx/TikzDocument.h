@@ -32,6 +32,6 @@
 }
 
 @property (readonly) NSString *tikz;
-@property (readonly) GraphicsView *graphicsView;
+@property (weak, readonly) GraphicsView *graphicsView;
 
 @end

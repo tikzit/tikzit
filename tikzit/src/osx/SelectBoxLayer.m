@@ -14,7 +14,7 @@
 @synthesize active;
 
 - (id)init {
-	[super init];
+	if (!(self = [super init])) return nil;
 	box = CGRectMake(0.0f, 0.0f, 0.0f, 0.0f);
 	active = NO;
 	return self;
@@ -42,7 +42,7 @@
 }
 
 + (SelectBoxLayer*)layer {
-	return [[[SelectBoxLayer alloc] init] autorelease];
+	return [[SelectBoxLayer alloc] init];
 }
 
 @end

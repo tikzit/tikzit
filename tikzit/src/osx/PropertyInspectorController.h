@@ -52,11 +52,11 @@
 
 //@property (readonly) BOOL enableNodeDataControls;
 //@property (readonly) BOOL enableEdgeDataControls;
-@property (retain) NSMutableArray *selectedNodes;
-@property (retain) NSMutableArray *selectedEdges;
-@property (retain) NSMutableArray *sourceAnchorNames;
-@property (retain) NSMutableArray *targetAnchorNames;
-@property (retain) StylePaletteController *stylePaletteController;
+@property (strong) NSMutableArray *selectedNodes;
+@property (strong) NSMutableArray *selectedEdges;
+@property (strong) NSMutableArray *sourceAnchorNames;
+@property (strong) NSMutableArray *targetAnchorNames;
+@property (strong) StylePaletteController *stylePaletteController;
 
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)graphSelectionChanged:(NSNotification*)notification;

@@ -18,6 +18,6 @@
     BOOL selected;
 }
 
-@property (retain) id objectValue;
+@property (strong) id objectValue;
 
 @end

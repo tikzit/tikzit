@@ -27,7 +27,7 @@
 @implementation Preambles (Coder)
 
 - (id)initWithCoder:(NSCoder *)coder {
-	[super init];
+	if (!(self = [super init])) return nil;
 	selectedPreambleName = [coder decodeObjectForKey:@"selectedPreamble"];
 	preambleDict = [coder decodeObjectForKey:@"preambles"];
 	return self;

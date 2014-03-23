@@ -25,6 +25,7 @@
 #import <Cocoa/Cocoa.h>
 #import "UpdatePreferenceController.h"
 #import "PreambleController.h"
+#import "CustomNodeController.h"
 
 @interface PreferenceController : NSWindowController{
     
@@ -32,12 +33,16 @@
     IBOutlet NSView *generalView;
     IBOutlet NSView *updateView;
     IBOutlet NSView *preambleView;
+    IBOutlet NSView *customNodeView;
     
     UpdatePreferenceController *updateController;
     PreambleController *preambleController;
+    CustomNodeController *customNodeController;
     
     int currentViewTag;
 }
+
+- (id)initWithWindowNibName:(NSString *)windowNibName preambleController:(PreambleController *)pc;
 
 - (IBAction)switchView:(id)sender;
 

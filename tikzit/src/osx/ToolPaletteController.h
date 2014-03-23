@@ -30,13 +30,13 @@ typedef enum {
 } TikzTool;
 
 @interface ToolPaletteController : NSObject {
-	NSPanel *toolPalette;
-	NSMatrix *toolMatrix;
+	NSPanel *__weak toolPalette;
+	NSMatrix *__weak toolMatrix;
 }
 
 @property TikzTool selectedTool;
-@property IBOutlet NSPanel *toolPalette;
-@property IBOutlet NSMatrix *toolMatrix;
+@property (weak) IBOutlet NSPanel *toolPalette;
+@property (weak) IBOutlet NSMatrix *toolMatrix;
 
 
 @end

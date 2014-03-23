@@ -38,8 +38,8 @@
 
 @property (readonly) BOOL useDefaultPreamble;
 @property (readonly) Preambles *preambles;
-@property (retain) NSAttributedString *preambleText;
-@property (retain) NSIndexSet *selectionIndexes;
+@property (strong) NSAttributedString *preambleText;
+@property (strong) NSIndexSet *selectionIndexes;
 
 - (id)initWithNibName:(NSString *)nibName plist:(NSString*)plist styles:(NSArray*)sty edges:(NSArray*)edg;
 - (void)savePreambles:(NSString*)plist;

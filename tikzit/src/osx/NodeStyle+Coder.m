@@ -59,7 +59,7 @@
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
-	[super init];
+	if (!(self = [super init])) return nil;
 	
 	// decode keys
 	name = [coder decodeObjectForKey:@"name"];

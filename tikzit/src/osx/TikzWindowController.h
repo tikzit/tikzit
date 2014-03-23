@@ -11,13 +11,13 @@
 @class TikzDocument, GraphicsView, TikzSourceController;
 
 @interface TikzWindowController : NSWindowController {
-	GraphicsView *graphicsView;
-	TikzSourceController *tikzSourceController;
+	GraphicsView *__weak graphicsView;
+	TikzSourceController *__weak tikzSourceController;
 	TikzDocument *document;
 }
 
-@property IBOutlet GraphicsView *graphicsView;
-@property IBOutlet TikzSourceController *tikzSourceController;
+@property (weak) IBOutlet GraphicsView *graphicsView;
+@property (weak) IBOutlet TikzSourceController *tikzSourceController;
 
 - (id)initWithDocument:(TikzDocument*)doc;
 

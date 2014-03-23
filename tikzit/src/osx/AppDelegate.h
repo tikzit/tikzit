@@ -37,13 +37,13 @@
 	PreambleController *preambleController;
 	PreviewController *previewController;
 	PreferenceController *preferenceController;
-	ToolPaletteController *toolPaletteController;
+	ToolPaletteController *__weak toolPaletteController;
 	IBOutlet GraphicsView *graphicsView;
 	NSString *tempDir;
 }
 
 @property IBOutlet StylePaletteController *stylePaletteController;
-@property IBOutlet ToolPaletteController *toolPaletteController;
+@property (weak) IBOutlet ToolPaletteController *toolPaletteController;
 
 - (void)awakeFromNib;
 + (void)setDefaults;

@@ -33,7 +33,7 @@ static PreviewController *preview = nil;
 - (id)initWithWindowNibName:(NSString*)nib
 		 preambleController:(PreambleController*)pc
 					tempDir:(NSString*)dir {
-	[super initWithWindowNibName:nib];
+	if (!(self = [super initWithWindowNibName:nib])) return nil;
 	tempDir = [dir copy];
 	typesetCount = 0;
 	preambleController = pc;

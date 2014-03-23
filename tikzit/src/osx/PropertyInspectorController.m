@@ -25,7 +25,7 @@
 @synthesize sourceAnchorNames, targetAnchorNames;
 
 - (id)initWithWindowNibName:(NSString *)windowNibName {
-	[super initWithWindowNibName:windowNibName];
+	if (!(self = [super initWithWindowNibName:windowNibName])) return nil;
     
     noSelection = [[GraphElementData alloc] init];
     [noSelection setProperty:@"" forKey:@"No Selection"];

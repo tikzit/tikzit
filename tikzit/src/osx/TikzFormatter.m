@@ -76,10 +76,6 @@
             }
         }
         
-        [cs autorelease];
-        [scanner autorelease];
-        [strippedString autorelease];
-        
         if([strippedString length] % 2 == 1){
             return NO;
         }

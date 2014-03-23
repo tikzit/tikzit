@@ -16,18 +16,18 @@
 #import "SupportDir.h"
 
 @interface CustomNodeController : NSViewController <NSTableViewDelegate>{
-    NSDictionary* nodeStyles;
+    NSDictionary* __weak nodeStyles;
     NSMutableArray* customNodeStyles;
-    NSMutableArray* onodeStyles;
+    NSMutableArray* __weak onodeStyles;
     
-	GraphicsView *graphicsView;
-	TikzSourceController *tikzSourceController;
+	GraphicsView *__weak graphicsView;
+	TikzSourceController *__weak tikzSourceController;
 }
 
-@property (readonly) NSDictionary *nodeStyles;
-@property (readonly) NSMutableArray* onodeStyles;
+@property (weak, readonly) NSDictionary *nodeStyles;
+@property (weak, readonly) NSMutableArray* onodeStyles;
 
-@property IBOutlet GraphicsView *graphicsView;
-@property IBOutlet TikzSourceController *tikzSourceController;
+@property (weak) IBOutlet GraphicsView *graphicsView;
+@property (weak) IBOutlet TikzSourceController *tikzSourceController;
 
 @end

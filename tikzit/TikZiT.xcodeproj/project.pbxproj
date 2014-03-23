@@ -21,9 +21,9 @@
 		55391AF813D3250F007DBE71 /* Preamble.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55391AF713D3250F007DBE71 /* Preamble.xib */; };
 		55391B0213D32608007DBE71 /* PropertyInspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55391B0013D32608007DBE71 /* PropertyInspector.xib */; };
 		55391B0A13D32765007DBE71 /* PropertyInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55391B0913D32765007DBE71 /* PropertyInspectorController.m */; };
-		55397C7914498C22006942FB /* EdgeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7814498C22006942FB /* EdgeStyle.m */; };
+		55397C7914498C22006942FB /* EdgeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7814498C22006942FB /* EdgeStyle.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		55397C7C144990EA006942FB /* EdgeStyle+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7B144990EA006942FB /* EdgeStyle+Coder.m */; };
-		55397C7F144999C4006942FB /* PropertyHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7E144999C4006942FB /* PropertyHolder.m */; };
+		55397C7F144999C4006942FB /* PropertyHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7E144999C4006942FB /* PropertyHolder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		55397C811449A877006942FB /* ED_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C801449A877006942FB /* ED_arrow.png */; };
 		55397C831449A8F1006942FB /* ED_tick.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C821449A8F1006942FB /* ED_tick.png */; };
 		55397C851449A9BF006942FB /* ED_none.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C841449A9BF006942FB /* ED_none.png */; };
@@ -33,17 +33,17 @@
 		55397C901449AC7C006942FB /* AH_latex_head.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C8E1449AC7C006942FB /* AH_latex_head.png */; };
 		55397C911449AC7C006942FB /* AH_plain_head.png in Resources */ = {isa = PBXBuildFile; fileRef = 55397C8F1449AC7C006942FB /* AH_plain_head.png */; };
 		553A4C5A144ED3D500AA6FAC /* NilToEmptyStringTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 553A4C59144ED3D500AA6FAC /* NilToEmptyStringTransformer.m */; };
-		55432E061444BF2D00401BB3 /* GraphElementProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 55432E051444BF2D00401BB3 /* GraphElementProperty.m */; };
-		55598E351635372E0023450A /* DiamondShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55598E341635372E0023450A /* DiamondShape.m */; };
+		55432E061444BF2D00401BB3 /* GraphElementProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 55432E051444BF2D00401BB3 /* GraphElementProperty.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		55598E351635372E0023450A /* DiamondShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55598E341635372E0023450A /* DiamondShape.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		555B30F911D8BE3300CAECF5 /* emblem-important.png in Resources */ = {isa = PBXBuildFile; fileRef = 555B30F811D8BE3300CAECF5 /* emblem-important.png */; };
 		555B313511D8C6DA00CAECF5 /* color.m in Sources */ = {isa = PBXBuildFile; fileRef = 555B313411D8C6DA00CAECF5 /* color.m */; };
 		555ECE9B1378A3AA0052DB71 /* CALayer+DrawLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 555ECE9A1378A3AA0052DB71 /* CALayer+DrawLabel.m */; };
-		55652DF913E1F2030023F4C6 /* SupportDir.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652DF813E1F2030023F4C6 /* SupportDir.m */; };
-		55652E3B13E1FAEE0023F4C6 /* CircleShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3413E1FAED0023F4C6 /* CircleShape.m */; };
-		55652E3C13E1FAEE0023F4C6 /* RectangleShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3613E1FAED0023F4C6 /* RectangleShape.m */; };
-		55652E3D13E1FAEE0023F4C6 /* RegularPolyShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3813E1FAED0023F4C6 /* RegularPolyShape.m */; };
-		55652E3E13E1FAEE0023F4C6 /* TikzShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3A13E1FAEE0023F4C6 /* TikzShape.m */; };
-		55652E4113E1FB0A0023F4C6 /* Shape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E4013E1FB0A0023F4C6 /* Shape.m */; };
+		55652DF913E1F2030023F4C6 /* SupportDir.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652DF813E1F2030023F4C6 /* SupportDir.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		55652E3B13E1FAEE0023F4C6 /* CircleShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3413E1FAED0023F4C6 /* CircleShape.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		55652E3C13E1FAEE0023F4C6 /* RectangleShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3613E1FAED0023F4C6 /* RectangleShape.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		55652E3D13E1FAEE0023F4C6 /* RegularPolyShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3813E1FAED0023F4C6 /* RegularPolyShape.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		55652E3E13E1FAEE0023F4C6 /* TikzShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E3A13E1FAEE0023F4C6 /* TikzShape.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		55652E4113E1FB0A0023F4C6 /* Shape.m in Sources */ = {isa = PBXBuildFile; fileRef = 55652E4013E1FB0A0023F4C6 /* Shape.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		55652E5613E1FC660023F4C6 /* cap.tikz in Copy Shapes */ = {isa = PBXBuildFile; fileRef = 55652E5113E1FC660023F4C6 /* cap.tikz */; };
 		55652E5713E1FC660023F4C6 /* copants.tikz in Copy Shapes */ = {isa = PBXBuildFile; fileRef = 55652E5213E1FC660023F4C6 /* copants.tikz */; };
 		55652E5813E1FC660023F4C6 /* cup.tikz in Copy Shapes */ = {isa = PBXBuildFile; fileRef = 55652E5313E1FC660023F4C6 /* cup.tikz */; };
@@ -55,13 +55,11 @@
 		5573B90F11DA231A00B5DC5D /* PreambleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5573B90E11DA231A00B5DC5D /* PreambleController.m */; };
 		5573B92111DA259C00B5DC5D /* text-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 5573B92011DA259C00B5DC5D /* text-x-generic.png */; };
 		5573B92511DA273400B5DC5D /* format-indent-less.png in Resources */ = {isa = PBXBuildFile; fileRef = 5573B92411DA273400B5DC5D /* format-indent-less.png */; };
-		5573B92911DA292F00B5DC5D /* Preambles.m in Sources */ = {isa = PBXBuildFile; fileRef = 5573B92811DA292F00B5DC5D /* Preambles.m */; };
+		5573B92911DA292F00B5DC5D /* Preambles.m in Sources */ = {isa = PBXBuildFile; fileRef = 5573B92811DA292F00B5DC5D /* Preambles.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		5573B98811DA377C00B5DC5D /* text-x-script.png in Resources */ = {isa = PBXBuildFile; fileRef = 5573B98711DA377C00B5DC5D /* text-x-script.png */; };
 		5573BDCB11DB4D2600B5DC5D /* Preambles+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5573BDCA11DB4D2600B5DC5D /* Preambles+Coder.m */; };
 		5585E5C2117F681800124513 /* NodeStyle+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5585E5C1117F681800124513 /* NodeStyle+Coder.m */; };
-		5589A9AF11C500060064D310 /* tikzlexer.lm in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AA11C500060064D310 /* tikzlexer.lm */; };
-		5589A9B011C500060064D310 /* tikzparser.ym in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AB11C500060064D310 /* tikzparser.ym */; };
-		5589A9FF11C51E780064D310 /* TikzGraphAssembler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */; };
+		5589A9FF11C51E780064D310 /* TikzGraphAssembler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		5589AA6C11C542D30064D310 /* TikzGraphAssembler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */; };
 		5589AA6D11C542D30064D310 /* tikzlexer.lm in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AA11C500060064D310 /* tikzlexer.lm */; };
 		5589AA6E11C542D30064D310 /* tikzparser.ym in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AB11C500060064D310 /* tikzparser.ym */; };
@@ -73,14 +71,14 @@
 		5589AA8011C542E60064D310 /* NodeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C4117B031C009863B2 /* NodeStyle.m */; };
 		5589AA8511C543500064D310 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18CD117B03DD009863B2 /* util.m */; };
 		5589AD4411C633EE0064D310 /* SelectBoxLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589AD4311C633EE0064D310 /* SelectBoxLayer.m */; };
-		558F18C5117B031C009863B2 /* Edge.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BA117B031C009863B2 /* Edge.m */; };
-		558F18C6117B031C009863B2 /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BC117B031C009863B2 /* Graph.m */; };
-		558F18C7117B031C009863B2 /* GraphChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BE117B031C009863B2 /* GraphChange.m */; };
-		558F18C8117B031C009863B2 /* GraphElementData.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C0117B031C009863B2 /* GraphElementData.m */; };
-		558F18C9117B031C009863B2 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C2117B031C009863B2 /* Node.m */; };
-		558F18CA117B031C009863B2 /* NodeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C4117B031C009863B2 /* NodeStyle.m */; };
+		558F18C5117B031C009863B2 /* Edge.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BA117B031C009863B2 /* Edge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		558F18C6117B031C009863B2 /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BC117B031C009863B2 /* Graph.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		558F18C7117B031C009863B2 /* GraphChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18BE117B031C009863B2 /* GraphChange.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		558F18C8117B031C009863B2 /* GraphElementData.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C0117B031C009863B2 /* GraphElementData.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		558F18C9117B031C009863B2 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C2117B031C009863B2 /* Node.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		558F18CA117B031C009863B2 /* NodeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18C4117B031C009863B2 /* NodeStyle.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		558F18CE117B03DD009863B2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18CB117B03DD009863B2 /* main.m */; };
-		558F18CF117B03DD009863B2 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18CD117B03DD009863B2 /* util.m */; };
+		558F18CF117B03DD009863B2 /* util.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18CD117B03DD009863B2 /* util.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		558F18F7117B043C009863B2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18DA117B043B009863B2 /* AppDelegate.m */; };
 		558F18F9117B043C009863B2 /* EdgeControlLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18DE117B043B009863B2 /* EdgeControlLayer.m */; };
 		558F18FA117B043C009863B2 /* GraphicsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F18E0117B043B009863B2 /* GraphicsView.m */; };
@@ -99,12 +97,12 @@
 		559EFA4811C7D49800D020F4 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 559EFA4711C7D49800D020F4 /* Sparkle.framework */; };
 		559EFA4E11C7D4BD00D020F4 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 559EFA4711C7D49800D020F4 /* Sparkle.framework */; };
 		559EFA5711C7D95F00D020F4 /* tikzit_dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 559EFA5611C7D95F00D020F4 /* tikzit_dsa_pub.pem */; };
-		559EFB6811CB88E300D020F4 /* ColorRGB.m in Sources */ = {isa = PBXBuildFile; fileRef = 559EFB6711CB88E300D020F4 /* ColorRGB.m */; };
+		559EFB6811CB88E300D020F4 /* ColorRGB.m in Sources */ = {isa = PBXBuildFile; fileRef = 559EFB6711CB88E300D020F4 /* ColorRGB.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		55CA98D512EF8FCE008F0368 /* SFBInspectors.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
 		55CA98DA12EF9098008F0368 /* SFBInspectors.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
 		55CA98DD12EF910F008F0368 /* SFBInspectors.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
 		55CA997212F08281008F0368 /* TikzWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CA997112F08281008F0368 /* TikzWindowController.m */; };
-		55CA9AC912F831E5008F0368 /* RColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CA9AC812F831E5008F0368 /* RColor.m */; };
+		55CA9AC912F831E5008F0368 /* RColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CA9AC812F831E5008F0368 /* RColor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		55CA9ACA12F831E5008F0368 /* RColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CA9AC812F831E5008F0368 /* RColor.m */; };
 		55D2E0B21186ED950060B4EC /* Graph+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2E0B11186ED950060B4EC /* Graph+Coder.m */; };
 		55D945721165904F0044178C /* tikzitdoc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55D945701165904F0044178C /* tikzitdoc.icns */; };
@@ -113,9 +111,9 @@
 		55D949151165D8870044178C /* draw-path.png in Resources */ = {isa = PBXBuildFile; fileRef = 55D949121165D8870044178C /* draw-path.png */; };
 		55D949161165D8870044178C /* select-rectangular.png in Resources */ = {isa = PBXBuildFile; fileRef = 55D949131165D8870044178C /* select-rectangular.png */; };
 		55E5E99E1215C8E300256F69 /* transform-crop-and-resize.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E5E99D1215C8E300256F69 /* transform-crop-and-resize.png */; };
-		55F9585C1181B09600F99434 /* PickSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F958591181B09600F99434 /* PickSupport.m */; };
-		55F9585D1181B09600F99434 /* Transformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F9585B1181B09600F99434 /* Transformer.m */; };
-		55F9E04511FF54F000F5659E /* NSString+LatexConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F9E04411FF54F000F5659E /* NSString+LatexConstants.m */; };
+		55F9585C1181B09600F99434 /* PickSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F958591181B09600F99434 /* PickSupport.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		55F9585D1181B09600F99434 /* Transformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F9585B1181B09600F99434 /* Transformer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		55F9E04511FF54F000F5659E /* NSString+LatexConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F9E04411FF54F000F5659E /* NSString+LatexConstants.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		7F18A321184C577000BC3081 /* UpdatePreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F18A320184C577000BC3081 /* UpdatePreferenceController.m */; };
 		7F18A323184C599100BC3081 /* UpdatePreferencePanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7F18A322184C599100BC3081 /* UpdatePreferencePanel.xib */; };
 		7F6E2C7D16B007F000BFE20D /* EdgeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 55397C7814498C22006942FB /* EdgeStyle.m */; };
@@ -133,7 +131,11 @@
 		7F6E2C8C16B00ABA00BFE20D /* SFBInspectors.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
 		7F73438A184AC559002897D0 /* DraggablePDFView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F734389184AC559002897D0 /* DraggablePDFView.m */; };
 		7F781C1A16B5DE1400239826 /* ParseErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F781C1916B5DE1400239826 /* ParseErrorView.m */; };
-		7F90E88616DD29600069EBCD /* NSString+Tikz.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F90E88516DD29600069EBCD /* NSString+Tikz.m */; };
+		7F7B6DED18DE0C9E004F6CA8 /* tikzlexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DEA18DE0C9E004F6CA8 /* tikzlexer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		7F7B6DEE18DE0C9E004F6CA8 /* tikzparser.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DEC18DE0C9E004F6CA8 /* tikzparser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		7F7B6DF418DE0D7A004F6CA8 /* CustomNodeCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DF118DE0D7A004F6CA8 /* CustomNodeCellView.m */; };
+		7F7B6DF518DE0D7A004F6CA8 /* CustomNodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DF318DE0D7A004F6CA8 /* CustomNodeController.m */; };
+		7F90E88616DD29600069EBCD /* NSString+Tikz.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F90E88516DD29600069EBCD /* NSString+Tikz.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		7F90E88D16DD47540069EBCD /* PreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F90E88B16DD47540069EBCD /* PreferenceController.m */; };
 		7F90E88E16DD47540069EBCD /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7F90E88C16DD47540069EBCD /* Preferences.xib */; };
 		7F90E89116DD54440069EBCD /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7F90E88F16DD54440069EBCD /* UserDefaults.plist */; };
@@ -141,36 +143,11 @@
 		7F938530184D178B00FAED38 /* engine.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F93852F184D178B00FAED38 /* engine.png */; };
 		7F938532184D184700FAED38 /* preamble.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F938531184D184700FAED38 /* preamble.png */; };
 		7FB9BFEE16B57C2E00773146 /* TikzFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9BFED16B57C2E00773146 /* TikzFormatter.m */; };
-		7FEED45716B1A7C500B056CB /* StyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FEED45616B1A7C500B056CB /* StyleManager.m */; };
+		7FEED45716B1A7C500B056CB /* StyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FEED45616B1A7C500B056CB /* StyleManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXBuildRule section */
-		74112B2117CE36C500B9CF16 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			fileType = sourcecode.lex;
-			isEditable = 1;
-			outputFiles = (
-				tikzlexer.m,
-				tikzlexer.h,
-			);
-			script = "cd src\nflex -o common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.lm\ncp common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.h ${DERIVED_SOURCES_DIR}";
-		};
-		74E535F317CE329A0040610D /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			fileType = sourcecode.yacc;
-			isEditable = 1;
-			outputFiles = (
-				tikzparser.h,
-				tikzparser.m,
-			);
-			script = "cd src\nbison --defines=common/${INPUT_FILE_BASE}.h --output=common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.ym\ncp common/${INPUT_FILE_BASE}.h common/${INPUT_FILE_BASE}.m ${DERIVED_SOURCES_DIR}\n";
-		};
-/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		5504C91A11D36CD5002A1478 /* PBXContainerItemProxy */ = {
@@ -383,6 +360,14 @@
 		7F734389184AC559002897D0 /* DraggablePDFView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DraggablePDFView.m; path = src/osx/DraggablePDFView.m; sourceTree = "<group>"; };
 		7F781C1816B5DE1400239826 /* ParseErrorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParseErrorView.h; path = src/osx/ParseErrorView.h; sourceTree = "<group>"; };
 		7F781C1916B5DE1400239826 /* ParseErrorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParseErrorView.m; path = src/osx/ParseErrorView.m; sourceTree = "<group>"; };
+		7F7B6DE918DE0C9E004F6CA8 /* tikzlexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tikzlexer.h; path = xbuild/TikZiT.build/Debug/TikZiT.build/DerivedSources/tikzlexer.h; sourceTree = "<group>"; };
+		7F7B6DEA18DE0C9E004F6CA8 /* tikzlexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = tikzlexer.m; path = xbuild/TikZiT.build/Debug/TikZiT.build/DerivedSources/tikzlexer.m; sourceTree = "<group>"; };
+		7F7B6DEB18DE0C9E004F6CA8 /* tikzparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tikzparser.h; path = xbuild/TikZiT.build/Debug/TikZiT.build/DerivedSources/tikzparser.h; sourceTree = "<group>"; };
+		7F7B6DEC18DE0C9E004F6CA8 /* tikzparser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = tikzparser.m; path = xbuild/TikZiT.build/Debug/TikZiT.build/DerivedSources/tikzparser.m; sourceTree = "<group>"; };
+		7F7B6DF018DE0D7A004F6CA8 /* CustomNodeCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomNodeCellView.h; path = src/osx/CustomNodeCellView.h; sourceTree = "<group>"; };
+		7F7B6DF118DE0D7A004F6CA8 /* CustomNodeCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomNodeCellView.m; path = src/osx/CustomNodeCellView.m; sourceTree = "<group>"; };
+		7F7B6DF218DE0D7A004F6CA8 /* CustomNodeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomNodeController.h; path = src/osx/CustomNodeController.h; sourceTree = "<group>"; };
+		7F7B6DF318DE0D7A004F6CA8 /* CustomNodeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomNodeController.m; path = src/osx/CustomNodeController.m; sourceTree = "<group>"; };
 		7F90E88416DD29600069EBCD /* NSString+Tikz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Tikz.h"; path = "src/common/NSString+Tikz.h"; sourceTree = "<group>"; };
 		7F90E88516DD29600069EBCD /* NSString+Tikz.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Tikz.m"; path = "src/common/NSString+Tikz.m"; sourceTree = "<group>"; };
 		7F90E88A16DD47540069EBCD /* PreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferenceController.h; path = src/osx/PreferenceController.h; sourceTree = "<group>"; };
@@ -631,6 +616,7 @@
 		55D946071165922F0044178C /* Parser */ = {
 			isa = PBXGroup;
 			children = (
+				7F7B6DE218DE0BE1004F6CA8 /* Generated sources */,
 				5589A9AA11C500060064D310 /* tikzlexer.lm */,
 				5589A9AB11C500060064D310 /* tikzparser.ym */,
 				5589A9FD11C51E780064D310 /* TikzGraphAssembler.h */,
@@ -744,6 +730,7 @@
 		7F18A31E184C563800BC3081 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				7F7B6DEF18DE0D70004F6CA8 /* CustomNode */,
 				5573B90D11DA231A00B5DC5D /* PreambleController.h */,
 				5573B90E11DA231A00B5DC5D /* PreambleController.m */,
 				7F90E88A16DD47540069EBCD /* PreferenceController.h */,
@@ -752,6 +739,28 @@
 				7F18A320184C577000BC3081 /* UpdatePreferenceController.m */,
 			);
 			name = Preferences;
+			sourceTree = "<group>";
+		};
+		7F7B6DE218DE0BE1004F6CA8 /* Generated sources */ = {
+			isa = PBXGroup;
+			children = (
+				7F7B6DE918DE0C9E004F6CA8 /* tikzlexer.h */,
+				7F7B6DEA18DE0C9E004F6CA8 /* tikzlexer.m */,
+				7F7B6DEB18DE0C9E004F6CA8 /* tikzparser.h */,
+				7F7B6DEC18DE0C9E004F6CA8 /* tikzparser.m */,
+			);
+			name = "Generated sources";
+			sourceTree = "<group>";
+		};
+		7F7B6DEF18DE0D70004F6CA8 /* CustomNode */ = {
+			isa = PBXGroup;
+			children = (
+				7F7B6DF018DE0D7A004F6CA8 /* CustomNodeCellView.h */,
+				7F7B6DF118DE0D7A004F6CA8 /* CustomNodeCellView.m */,
+				7F7B6DF218DE0D7A004F6CA8 /* CustomNodeController.h */,
+				7F7B6DF318DE0D7A004F6CA8 /* CustomNodeController.m */,
+			);
+			name = CustomNode;
 			sourceTree = "<group>";
 		};
 		7F93852C184D175400FAED38 /* Icons */ = {
@@ -801,12 +810,12 @@
 				559EFA5511C7D4DD00D020F4 /* Copy Frameworks */,
 				8D15AC2B0486D014006FF6A4 /* Resources */,
 				55652E6613E1FD080023F4C6 /* Copy Shapes */,
+				7F7B6DE018DE02AC004F6CA8 /* Run Flex */,
+				7F7B6DE118DE0A6E004F6CA8 /* Run Bison */,
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
 			);
 			buildRules = (
-				74112B2117CE36C500B9CF16 /* PBXBuildRule */,
-				74E535F317CE329A0040610D /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -889,6 +898,41 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7F7B6DE018DE02AC004F6CA8 /* Run Flex */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/src/common/tikzlexer.lm",
+			);
+			name = "Run Flex";
+			outputPaths = (
+				"$(SRCROOT)/src/common/tikzlexer.m",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd ${SRCROOT}/src/\nINPUT_FILE_BASE=`basename \"${SCRIPT_INPUT_FILE_0}\" .lm`\nflex -o common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.lm\nmv common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.h ${DERIVED_SOURCES_DIR}\n";
+		};
+		7F7B6DE118DE0A6E004F6CA8 /* Run Bison */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/src/common/tikzparser.ym",
+			);
+			name = "Run Bison";
+			outputPaths = (
+				"$(SRCROOT)/src/common/tikzparser.m",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd ${SRCROOT}/src/\nINPUT_FILE_BASE=`basename \"${SCRIPT_INPUT_FILE_0}\" .ym`\nflex -o common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.lm\nbison --defines=common/${INPUT_FILE_BASE}.h --output=common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.ym\nmv common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.h ${DERIVED_SOURCES_DIR}";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5589AA6211C5429C0064D310 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -936,8 +980,10 @@
 				558F18C5117B031C009863B2 /* Edge.m in Sources */,
 				558F18C6117B031C009863B2 /* Graph.m in Sources */,
 				558F18C7117B031C009863B2 /* GraphChange.m in Sources */,
+				7F7B6DF418DE0D7A004F6CA8 /* CustomNodeCellView.m in Sources */,
 				558F18C8117B031C009863B2 /* GraphElementData.m in Sources */,
 				558F18C9117B031C009863B2 /* Node.m in Sources */,
+				7F7B6DEE18DE0C9E004F6CA8 /* tikzparser.m in Sources */,
 				558F18CA117B031C009863B2 /* NodeStyle.m in Sources */,
 				558F18CE117B03DD009863B2 /* main.m in Sources */,
 				558F18CF117B03DD009863B2 /* util.m in Sources */,
@@ -957,10 +1003,10 @@
 				5585E5C2117F681800124513 /* NodeStyle+Coder.m in Sources */,
 				55F9585C1181B09600F99434 /* PickSupport.m in Sources */,
 				55F9585D1181B09600F99434 /* Transformer.m in Sources */,
+				7F7B6DED18DE0C9E004F6CA8 /* tikzlexer.m in Sources */,
 				55D2E0B21186ED950060B4EC /* Graph+Coder.m in Sources */,
-				5589A9AF11C500060064D310 /* tikzlexer.lm in Sources */,
-				5589A9B011C500060064D310 /* tikzparser.ym in Sources */,
 				5589A9FF11C51E780064D310 /* TikzGraphAssembler.m in Sources */,
+				7F7B6DF518DE0D7A004F6CA8 /* CustomNodeController.m in Sources */,
 				5589AD4411C633EE0064D310 /* SelectBoxLayer.m in Sources */,
 				559EFB6811CB88E300D020F4 /* ColorRGB.m in Sources */,
 				5573B8C211D9FD3200B5DC5D /* PreviewController.m in Sources */,
@@ -1137,6 +1183,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1162,6 +1210,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1186,7 +1236,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1206,7 +1255,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";

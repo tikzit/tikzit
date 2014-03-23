@@ -32,7 +32,7 @@
 }
 
 @property (assign) BOOL selected;
-@property (retain) NodeStyle *nodeStyle;
+@property (strong) NodeStyle *nodeStyle;
 
 
 @end
