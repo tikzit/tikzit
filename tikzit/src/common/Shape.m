@@ -88,7 +88,8 @@ NSDictionary *shapeDictionary = nil;
 
 + (void)addShapesInDir:(NSString*)shapeDir to:(NSMutableDictionary*)shapeDict {
 	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSArray *files = [fileManager directoryContentsAtPath:shapeDir];
+    NSError *err = nil;
+	NSArray *files = [fileManager contentsOfDirectoryAtPath:shapeDir error:&err];
 
 	if (files != nil) {
 		NSString *nm;
