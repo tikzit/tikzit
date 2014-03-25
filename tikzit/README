@@ -5,4 +5,3 @@ For more info, see http://tikzit.sf.net
 On OS/X, the Cocoa framework is used.
 
 On other platforms, GTK+ and GNUstep are used.
-
