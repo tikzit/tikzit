@@ -104,9 +104,9 @@
     [[[self window] contentView] replaceSubview:customNodeView with:[customNodeController view]];
     customNodeView = [customNodeController view];
     
-    [[self window] setContentSize:[preambleView frame].size];
-    [[[self window] contentView] addSubview:preambleView];
-    currentViewTag = 3;
+    [[self window] setContentSize:[engineView frame].size];
+    [[[self window] contentView] addSubview:engineView];
+    currentViewTag = 1;
 }
 
 - (IBAction)switchView:(id)sender {

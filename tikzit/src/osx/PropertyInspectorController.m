@@ -56,7 +56,12 @@
     [self setTargetAnchorNames: [[NSMutableArray alloc] initWithArray:[@"north south west east" componentsSeparatedByString:@" "]]];
 
     
-    [[self window] setLevel:NSNormalWindowLevel];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"net.sourceforge.tikzit.inspectorsontop"] == YES) {
+        [[self window] setLevel:NSFloatingWindowLevel];
+    } else {
+        [[self window] setLevel:NSNormalWindowLevel];
+    }
+
     [self showWindow:self];
 	return self;
 }
