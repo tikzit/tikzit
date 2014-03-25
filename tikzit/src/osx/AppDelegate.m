@@ -110,7 +110,7 @@
 }
 
 - (IBAction)togglePreamble:(id)sender {
-	[self toggleController:preambleController];
+	[self toggleController:(NSWindowController *) preambleController];
 }
 
 - (IBAction)togglePreferences:(id)sender {

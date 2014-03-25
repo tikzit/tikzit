@@ -45,13 +45,13 @@
 
 @property (strong) NSMutableArray *nodeStyles;
 @property (strong) NSMutableArray *edgeStyles;
-@property BOOL documentActive;
+@property (readonly) BOOL documentActive;
 @property (strong) NodeStyle *activeNodeStyle;
 @property (strong) EdgeStyle *activeEdgeStyle;
 @property (copy) NSString *displayedNodeStyleCategory;
 @property (copy) NSString *displayedEdgeStyleCategory;
-@property (weak) NSPredicate *displayedNodeStylePredicate;
-@property (weak) NSPredicate *displayedEdgeStylePredicate;
+@property (readonly) NSPredicate *displayedNodeStylePredicate;
+@property (readonly) NSPredicate *displayedEdgeStylePredicate;
 
 //@property NSString *nodeLabel;
 

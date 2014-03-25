@@ -28,7 +28,7 @@
 #import "PreambleController.h"
 #import "PreviewController.h"
 #import "GraphicsView.h"
-#import "PreferenceController.h";
+#import "PreferenceController.h"
 
 @interface AppDelegate : NSObject {
 	NSMapTable *table;
