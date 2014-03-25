@@ -26,6 +26,8 @@
 
 @implementation TikzShape
 
+@synthesize tikzSrc;
+
 - (id)initWithTikzFile:(NSString*)file {
 	self = [super init];
 	if (self) {
@@ -33,6 +35,8 @@
 												   encoding:NSUTF8StringEncoding
 													  error:NULL];
 		if (tikz == nil) return nil;
+        
+        tikzSrc = [tikz copy];
 		
 		Graph *graph = [Graph graphFromTikz:tikz];
 		if (graph == nil) return nil;

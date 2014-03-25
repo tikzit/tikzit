@@ -143,6 +143,8 @@
 		7F938530184D178B00FAED38 /* engine.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F93852F184D178B00FAED38 /* engine.png */; };
 		7F938532184D184700FAED38 /* preamble.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F938531184D184700FAED38 /* preamble.png */; };
 		7FB9BFEE16B57C2E00773146 /* TikzFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB9BFED16B57C2E00773146 /* TikzFormatter.m */; };
+		7FD5D44B18E1CB5300E2A930 /* CustomNodes.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7FD5D44918E1CB5300E2A930 /* CustomNodes.xib */; };
+		7FD5D44D18E1CC0B00E2A930 /* customshape.png in Resources */ = {isa = PBXBuildFile; fileRef = 7FD5D44C18E1CC0B00E2A930 /* customshape.png */; };
 		7FEED45716B1A7C500B056CB /* StyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FEED45616B1A7C500B056CB /* StyleManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
@@ -379,6 +381,8 @@
 		7F938531184D184700FAED38 /* preamble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = preamble.png; sourceTree = "<group>"; };
 		7FB9BFEC16B57C2E00773146 /* TikzFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TikzFormatter.h; path = src/osx/TikzFormatter.h; sourceTree = "<group>"; };
 		7FB9BFED16B57C2E00773146 /* TikzFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TikzFormatter.m; path = src/osx/TikzFormatter.m; sourceTree = "<group>"; };
+		7FD5D44A18E1CB5300E2A930 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CustomNodes.xib; sourceTree = "<group>"; };
+		7FD5D44C18E1CC0B00E2A930 /* customshape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = customshape.png; sourceTree = "<group>"; };
 		7FEED45516B1A7C400B056CB /* StyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StyleManager.h; path = src/common/StyleManager.h; sourceTree = "<group>"; };
 		7FEED45616B1A7C500B056CB /* StyleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StyleManager.m; path = src/common/StyleManager.m; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* TikZiT-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "TikZiT-Info.plist"; sourceTree = "<group>"; };
@@ -511,6 +515,7 @@
 				55D945701165904F0044178C /* tikzitdoc.icns */,
 				55D945711165904F0044178C /* tikzit.icns */,
 				7F90E88C16DD47540069EBCD /* Preferences.xib */,
+				7FD5D44918E1CB5300E2A930 /* CustomNodes.xib */,
 				7F18A322184C599100BC3081 /* UpdatePreferencePanel.xib */,
 				55391AF713D3250F007DBE71 /* Preamble.xib */,
 				55391AF513D324FE007DBE71 /* Preview.xib */,
@@ -768,6 +773,7 @@
 			children = (
 				7F93852F184D178B00FAED38 /* engine.png */,
 				7F938531184D184700FAED38 /* preamble.png */,
+				7FD5D44C18E1CC0B00E2A930 /* customshape.png */,
 				7F93852D184D176E00FAED38 /* updates.png */,
 			);
 			name = Icons;
@@ -865,6 +871,7 @@
 				1DDD582C0DA1D0D100B32029 /* TikzDocument.xib in Resources */,
 				7F938530184D178B00FAED38 /* engine.png in Resources */,
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
+				7FD5D44D18E1CC0B00E2A930 /* customshape.png in Resources */,
 				55D945721165904F0044178C /* tikzitdoc.icns in Resources */,
 				55D945731165904F0044178C /* tikzit.icns in Resources */,
 				556979431168747B007E5703 /* StylePalette.xib in Resources */,
@@ -888,6 +895,7 @@
 				55397C8A1449AB91006942FB /* AH_none.png in Resources */,
 				55397C8B1449AB91006942FB /* AH_plain_tail.png in Resources */,
 				55397C8D1449ABFC006942FB /* AH_latex_tail.png in Resources */,
+				7FD5D44B18E1CB5300E2A930 /* CustomNodes.xib in Resources */,
 				55397C901449AC7C006942FB /* AH_latex_head.png in Resources */,
 				55397C911449AC7C006942FB /* AH_plain_head.png in Resources */,
 				7F18A323184C599100BC3081 /* UpdatePreferencePanel.xib in Resources */,
@@ -909,11 +917,12 @@
 			);
 			name = "Run Flex";
 			outputPaths = (
-				"$(SRCROOT)/src/common/tikzlexer.m",
+				"$(DERIVED_SOURCES_DIR)/tikzlexer.m",
+				"$(DERIVED_SOURCES_DIR)/tikzlexer.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ${SRCROOT}/src/\nINPUT_FILE_BASE=`basename \"${SCRIPT_INPUT_FILE_0}\" .lm`\nflex -o common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.lm\nmv common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.h ${DERIVED_SOURCES_DIR}\n";
+			shellScript = "cd ${SRCROOT}/src/\nexport INPUT_FILE_BASE=`basename \"${SCRIPT_INPUT_FILE_0}\" .lm`\nflex -o common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.lm\nmv common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.h ${DERIVED_SOURCES_DIR}\n";
 		};
 		7F7B6DE118DE0A6E004F6CA8 /* Run Bison */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -925,11 +934,12 @@
 			);
 			name = "Run Bison";
 			outputPaths = (
-				"$(SRCROOT)/src/common/tikzparser.m",
+				"$(DERIVED_SOURCES_DIR)/tikzparser.m",
+				"$(DERIVED_SOURCES_DIR)/tikzparser.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ${SRCROOT}/src/\nINPUT_FILE_BASE=`basename \"${SCRIPT_INPUT_FILE_0}\" .ym`\nflex -o common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.lm\nbison --defines=common/${INPUT_FILE_BASE}.h --output=common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.ym\nmv common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.h ${DERIVED_SOURCES_DIR}";
+			shellScript = "cd ${SRCROOT}/src/\nexport INPUT_FILE_BASE=`basename \"${SCRIPT_INPUT_FILE_0}\" .ym`\nbison --defines=common/${INPUT_FILE_BASE}.h --output=common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.ym\nmv common/${INPUT_FILE_BASE}.m common/${INPUT_FILE_BASE}.h ${DERIVED_SOURCES_DIR}";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1122,6 +1132,14 @@
 				7F90E89016DD54440069EBCD /* English */,
 			);
 			name = UserDefaults.plist;
+			sourceTree = "<group>";
+		};
+		7FD5D44918E1CB5300E2A930 /* CustomNodes.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7FD5D44A18E1CB5300E2A930 /* English */,
+			);
+			name = CustomNodes.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

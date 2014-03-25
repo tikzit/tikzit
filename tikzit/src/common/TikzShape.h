@@ -25,7 +25,10 @@
 #import "Shape.h"
 
 @interface TikzShape : Shape {
+    NSString *tikzSrc;
 }
+
+@property (copy) NSString *tikzSrc;
 
 - (id)initWithTikzFile:(NSString*)file;
 

@@ -18,14 +18,16 @@
 @interface CustomNodeController : NSViewController <NSTableViewDelegate>{
     NSDictionary* __weak nodeStyles;
     NSMutableArray* customNodeStyles;
-    NSMutableArray* __weak onodeStyles;
     
 	GraphicsView *__weak graphicsView;
 	TikzSourceController *__weak tikzSourceController;
+    NSTableView *customNodeTable;
 }
 
 @property (weak, readonly) NSDictionary *nodeStyles;
-@property (weak, readonly) NSMutableArray* onodeStyles;
+@property NSMutableArray* customNodeStyles;
+
+@property IBOutlet NSTableView *customNodeTable;
 
 @property (weak) IBOutlet GraphicsView *graphicsView;
 @property (weak) IBOutlet TikzSourceController *tikzSourceController;

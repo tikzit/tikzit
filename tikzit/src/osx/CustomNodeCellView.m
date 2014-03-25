@@ -31,8 +31,6 @@
 }
 
 -(void)drawLayer:(CALayer *)layer inContext:(CGContextRef)context {
-    NSLog(@"drawing layer ^^");
-    
     if (nodeLayer!=nil) {
 		if (![[[self layer] sublayers] containsObject:nodeLayer]) {
 			[[self layer] addSublayer:nodeLayer];
@@ -56,17 +54,23 @@
 }
 
 - (void) setObjectValue:(id)objectValue{
-    [[self textField] setStringValue:[(NodeStyle *)objectValue shapeName]];
+    if(objectValue == nil)
+        return;
+    
     nodeStyle = (NodeStyle *)objectValue;
+    [[self textField] setStringValue:[nodeStyle shapeName]];
     
 	if (nodeLayer == nil) {
 		nodeLayer = [[NodeLayer alloc] initWithNode:[Node node]
 										transformer:[Transformer defaultTransformer]];
 		[nodeLayer setRescale:NO];
 	}
+    [nodeStyle setName:[nodeStyle shapeName]];
 	
 	[[nodeLayer node] setStyle:nodeStyle];
 	[nodeLayer updateFrame];
+    
+    NSLog(@"asd");
 }
 
 - (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle {
