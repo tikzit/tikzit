@@ -92,12 +92,12 @@ typedef enum {
 	NSUndoManager *documentUndoManager;
 	NSPoint startPoint;
     
-    TikzSourceController *__weak tikzSourceController;
+    TikzSourceController *tikzSourceController;
 }
 
 @property BOOL enabled;
 @property (weak) Graph *graph;
-@property (weak) IBOutlet TikzSourceController *tikzSourceController;
+@property IBOutlet TikzSourceController *tikzSourceController;
 @property (readonly) Transformer *transformer;
 @property (readonly) PickSupport *pickSupport;
 

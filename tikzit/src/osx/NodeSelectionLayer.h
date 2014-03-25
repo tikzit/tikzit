@@ -31,10 +31,10 @@
 	BOOL selected;
 	CGMutablePathRef path;
     NSLock *drawLock;
-    NodeLayer *__weak nodeLayer;
+    NodeLayer *nodeLayer;
 }
 
-@property (weak) NodeLayer *nodeLayer;
+@property NodeLayer *nodeLayer;
 
 - (id)init;
 - (void)select;

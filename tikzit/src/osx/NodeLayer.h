@@ -30,7 +30,7 @@
 #import "NodeSelectionLayer.h"
 
 @interface NodeLayer : CALayer {
-	Node *__weak node;
+	Node *node;
 	Shape *shape;
     CGMutablePathRef path;
 	float textwidth;
@@ -42,7 +42,7 @@
     BOOL dirty; // need to rebuild CGBezierPath of the shape
 }
 
-@property (weak) Node *node;
+@property (strong) Node *node;
 @property (assign) NSPoint center;
 @property (assign) BOOL rescale;
 @property (strong) NodeSelectionLayer *selection;

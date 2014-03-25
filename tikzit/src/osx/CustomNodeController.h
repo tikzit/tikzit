@@ -16,7 +16,7 @@
 #import "SupportDir.h"
 
 @interface CustomNodeController : NSViewController <NSTableViewDelegate>{
-    NSDictionary* __weak nodeStyles;
+    NSDictionary *nodeStyles;
     NSMutableArray* customNodeStyles;
     
 	GraphicsView *__weak graphicsView;
@@ -24,7 +24,7 @@
     NSTableView *customNodeTable;
 }
 
-@property (weak, readonly) NSDictionary *nodeStyles;
+@property NSDictionary *nodeStyles;
 @property NSMutableArray* customNodeStyles;
 
 @property IBOutlet NSTableView *customNodeTable;

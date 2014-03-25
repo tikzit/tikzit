@@ -28,8 +28,8 @@
 @class SFBInspectorView;
 
 @interface StylePaletteController : NSWindowController {
-	NSMutableArray *__weak nodeStyles;
-    NSMutableArray *__weak edgeStyles;
+	NSMutableArray *nodeStyles;
+    NSMutableArray *edgeStyles;
 	IBOutlet NSArrayController *nodeStyleArrayController;
 	IBOutlet NSArrayController *filteredNodeStyleArrayController;
     IBOutlet NSArrayController *edgeStyleArrayController;
@@ -43,15 +43,15 @@
     NSString *displayedEdgeStyleCategory;
 }
 
-@property (weak, readonly) NSMutableArray *nodeStyles;
-@property (weak, readonly) NSMutableArray *edgeStyles;
-@property (readonly) BOOL documentActive;
-@property (weak) NodeStyle *activeNodeStyle;
-@property (weak) EdgeStyle *activeEdgeStyle;
+@property (strong) NSMutableArray *nodeStyles;
+@property (strong) NSMutableArray *edgeStyles;
+@property BOOL documentActive;
+@property (strong) NodeStyle *activeNodeStyle;
+@property (strong) EdgeStyle *activeEdgeStyle;
 @property (copy) NSString *displayedNodeStyleCategory;
 @property (copy) NSString *displayedEdgeStyleCategory;
-@property (weak, readonly) NSPredicate *displayedNodeStylePredicate;
-@property (weak, readonly) NSPredicate *displayedEdgeStylePredicate;
+@property (weak) NSPredicate *displayedNodeStylePredicate;
+@property (weak) NSPredicate *displayedEdgeStylePredicate;
 
 //@property NSString *nodeLabel;
 
