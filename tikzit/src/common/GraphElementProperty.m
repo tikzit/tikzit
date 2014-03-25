@@ -66,7 +66,8 @@
 
 - (void) dealloc {
 	[key release];
-	[value release];
+//  the below line causes a exc_bad_access. Uncommenting it gains a memory leak but at least no crashing.
+//	[value release];
 	[super dealloc];
 }
 
