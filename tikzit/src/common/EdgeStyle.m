@@ -77,10 +77,12 @@
 }
 
 - (void)dealloc {
+#if ! __has_feature(objc_arc)
     [name release];
     [category release];
     [colorRGB release];
     [super dealloc];
+#endif
 }
 
 - (NSString*) description {
@@ -98,7 +100,11 @@
 }
 
 + (EdgeStyle*)defaultEdgeStyleWithName:(NSString*)nm {
+#if __has_feature(objc_arc)
+    return [[EdgeStyle alloc] initWithName:nm];
+#else
 	return [[[EdgeStyle alloc] initWithName:nm] autorelease];
+#endif
 }
 
 - (NSString*)name { return name; }
@@ -107,7 +113,9 @@
 		NSString *oldValue = name;
 		name = [s copy];
 		[self postPropertyChanged:@"name" oldValue:oldValue];
+#if ! __has_feature(objc_arc)
 		[oldValue release];
+#endif
 	}
 }
 
@@ -147,8 +155,10 @@
 		NSString *oldValue = category;
 		category = [s copy];
 		[self postPropertyChanged:@"category" oldValue:oldValue];
-		[oldValue release];
-	}
+#if ! __has_feature(objc_arc)
+        [oldValue release];
+#endif
+    }
 }
 
 - (ColorRGB*)colorRGB {
@@ -160,8 +170,10 @@
 		ColorRGB *oldValue = colorRGB;
 		colorRGB = [c copy];
 		[self postPropertyChanged:@"colorRGB" oldValue:oldValue];
-		[oldValue release];
-	}
+#if ! __has_feature(objc_arc)
+        [oldValue release];
+#endif
+    }
 }
 
 - (NSString*)tikz {

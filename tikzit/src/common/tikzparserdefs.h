@@ -37,8 +37,13 @@
 @class Node;
 
 struct noderef {
-	Node *node;
-	NSString *anchor;
+#if __has_feature(objc_arc)
+    __unsafe_unretained Node *node;
+    __unsafe_unretained NSString *anchor;
+#else
+    Node *node;
+    NSString *anchor;
+#endif
 };
 
 // vi:ft=objc:noet:ts=4:sts=4:sw=4

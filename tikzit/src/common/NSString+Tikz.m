@@ -23,12 +23,21 @@
 - (NSString*) tikzEscapedString {
 	static NSCharacterSet *avoid = nil;
 	if (avoid == nil)
-		avoid = [[[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<>-'0123456789. "] invertedSet] retain];
+#if __has_feature(objc_arc)
+        avoid = [[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<>-'0123456789. "] invertedSet];
+#else
+    avoid = [[[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<>-'0123456789. "] invertedSet] retain];
+#endif
+
 
 	if ([self rangeOfCharacterFromSet:avoid].length > 0) {
 		return [NSString stringWithFormat:@"{%@}", self];
 	} else {
+#if __has_feature(objc_arc)
+        return self;
+#else
 		return [[self retain] autorelease];
+#endif
 	}
 }
 

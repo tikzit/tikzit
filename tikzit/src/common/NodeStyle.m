@@ -87,12 +87,14 @@
 }
 
 - (void)dealloc {
+#if ! __has_feature(objc_arc)
 	[name release];
 	[category release];
 	[shapeName release];
 	[strokeColorRGB release];
 	[fillColorRGB release];
 	[super dealloc];
+#endif
 }
 
 - (NSString*) description {
@@ -110,7 +112,11 @@
 }
 
 + (NodeStyle*)defaultNodeStyleWithName:(NSString*)nm {
-	return [[[NodeStyle alloc] initWithName:nm] autorelease];
+#if __has_feature(objc_arc)
+    return [[NodeStyle alloc] initWithName:nm];
+#else
+    return [[[NodeStyle alloc] initWithName:nm] autorelease];
+#endif
 }
 
 - (NSString*)name {
@@ -122,7 +128,9 @@
 		NSString *oldValue = name;
 		name = [s copy];
 		[self postPropertyChanged:@"name" oldValue:oldValue];
+#if ! __has_feature(objc_arc)
 		[oldValue release];
+#endif
 	}
 }
 
@@ -135,7 +143,9 @@
 		NSString *oldValue = shapeName;
 		shapeName = [s copy];
 		[self postPropertyChanged:@"shapeName" oldValue:oldValue];
+#if ! __has_feature(objc_arc)
 		[oldValue release];
+#endif
 	}
 }
 
@@ -148,8 +158,10 @@
 		NSString *oldValue = category;
 		category = [s copy];
 		[self postPropertyChanged:@"category" oldValue:oldValue];
+#if ! __has_feature(objc_arc)
 		[oldValue release];
-	}
+#endif
+    }
 }
 
 - (int)strokeThickness { return strokeThickness; }
@@ -175,8 +187,10 @@
 		ColorRGB *oldValue = strokeColorRGB;
 		strokeColorRGB = [c copy];
 		[self postPropertyChanged:@"strokeColorRGB" oldValue:oldValue];
+#if ! __has_feature(objc_arc)
 		[oldValue release];
-	}
+#endif
+    }
 }
 
 - (ColorRGB*)fillColorRGB {
@@ -188,8 +202,10 @@
 		ColorRGB *oldValue = fillColorRGB;
 		fillColorRGB = [c copy];
 		[self postPropertyChanged:@"fillColorRGB" oldValue:oldValue];
+#if ! __has_feature(objc_arc)
 		[oldValue release];
-	}
+#endif
+    }
 }
 
 - (NSString*)tikz {

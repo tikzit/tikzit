@@ -6,22 +6,18 @@
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>26857C1F-E0FE-4FFB-BDAC-44158C649772</string>
-	<key>IDESourceControlProjectName</key>
-	<string>TikZiT</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>F6FA2C351D428A0F1026539971510A626DEEFF59</key>
-		<string>https://git.code.sf.net/p/tikzit/code</string>
+		<string>https://github.com/tikzit/tikzit.git</string>
 	</dict>
-	<key>IDESourceControlProjectPath</key>
-	<string>tikzit/TikZiT.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>F6FA2C351D428A0F1026539971510A626DEEFF59</key>
-		<string>../../..</string>
+		<string>TikZiT/</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://git.code.sf.net/p/tikzit/code</string>
+	<string>https://github.com/tikzit/tikzit.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
@@ -34,7 +30,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>F6FA2C351D428A0F1026539971510A626DEEFF59</string>
 			<key>IDESourceControlWCCName</key>
-			<string>tikzit-code</string>
+			<string>TikZiT</string>
 		</dict>
 	</array>
 </dict>

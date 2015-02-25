@@ -31,14 +31,20 @@
 @implementation TikzGraphAssembler
 
 - (id)init {
+#if ! __has_feature(objc_arc)
 	[self release];
+#endif
 	return nil;
 }
 
 - (id)initWithGraph:(Graph*)g {
 	self = [super init];
 	if (self) {
+#if __has_feature(objc_arc)
+        graph = g;
+#else
 		graph = [g retain];
+#endif
 		nodeMap = [[NSMutableDictionary alloc] init];
 		yylex_init (&scanner);
 		yyset_extra(self, scanner);
@@ -47,29 +53,39 @@
 }
 
 - (void)dealloc {
+#if ! __has_feature(objc_arc)
 	[graph release];
 	[nodeMap release];
 	[lastError release];
 	yylex_destroy (scanner);
 	[super dealloc];
+#endif
 }
 
 - (BOOL) parseTikz:(NSString*)t error:(NSError**)error {
+#if ! __has_feature(objc_arc)
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#endif
 
 	tikzStr = [t UTF8String];
 	yy_scan_string(tikzStr, scanner);
 	int result = yyparse(scanner);
 	tikzStr = NULL;
 
+#if ! __has_feature(objc_arc)
 	[pool drain];
+#endif
 
 	if (result == 0) {
 		return YES;
 	} else {
 		if (error) {
 			if (lastError) {
+#if __has_feature(objc_arc)
+                *error = lastError;
+#else
 				*error = [[lastError retain] autorelease];
+#endif
 			} else if (result == 1) {
 				*error = [NSError errorWithMessage:@"Syntax error"
 											  code:TZ_ERR_PARSE];
@@ -91,10 +107,16 @@
 + (Graph*) parseTikz:(NSString*)tikz error:(NSError**)e {
 	Graph *gr = [[Graph alloc] init];
 	if ([self parseTikz:tikz forGraph:gr error:e]) {
+#if __has_feature(objc_arc)
+        return gr;
+#else
 		return [gr autorelease];
+#endif
 	} else {
+#if ! __has_feature(objc_arc)
 		[gr release];
-		return nil;
+#endif
+        return nil;
 	}
 }
 + (Graph*) parseTikz:(NSString*)tikz {
@@ -109,8 +131,10 @@
 
 	TikzGraphAssembler *assembler = [[self alloc] initWithGraph:gr];
 	BOOL success = [assembler parseTikz:tikz error:error];
+#if ! __has_feature(objc_arc)
 	[assembler release];
-	return success;
+#endif
+    return success;
 }
 
 + (BOOL)validateTikzPropertyNameOrValue:(NSString*)tikz {
@@ -171,8 +195,10 @@
 }
 
 - (void) setLastError:(NSError*)error {
+#if ! __has_feature(objc_arc)
 	[error retain];
 	[lastError release];
+#endif
 	lastError = error;
 }
 

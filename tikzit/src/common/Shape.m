@@ -61,8 +61,12 @@
 - (NSSet*)paths {return paths;}
 - (void)setPaths:(NSSet *)p {
 	if (paths != p) {
+#if __has_feature(objc_arc)
+        paths = p;
+#else
 		[paths release];
 		paths = [p retain];
+#endif
 		[self calcBoundingRect];
 	}
 }
@@ -79,9 +83,11 @@
 }
 
 - (void)dealloc {
+#if ! __has_feature(objc_arc)
 	[paths release];
 	[styleTikz release];
 	[super dealloc];
+#endif
 }
 
 NSDictionary *shapeDictionary = nil;
@@ -101,7 +107,9 @@ NSDictionary *shapeDictionary = nil;
                    [shapeDir stringByAppendingPathComponent:f]];
 				if (sh != nil) {
 					[shapeDict setObject:sh forKey:nm];
+#if ! __has_feature(objc_arc)
                     [sh release];
+#endif
 				}
 			}
 		}
@@ -122,7 +130,9 @@ NSDictionary *shapeDictionary = nil;
 									  shapes[3], SHAPE_UP_TRIANGLE,
 									  shapes[4], SHAPE_DOWN_TRIANGLE,
 									  nil];
+#if ! __has_feature(objc_arc)
 	for (int i = 0; i<5; ++i) [shapes[i] release];
+#endif
     
 	NSString *systemShapeDir = [[SupportDir systemSupportDir] stringByAppendingPathComponent:@"shapes"];
 	NSString *userShapeDir = [[SupportDir userSupportDir] stringByAppendingPathComponent:@"shapes"];
@@ -137,7 +147,9 @@ NSDictionary *shapeDictionary = nil;
 		postNotificationName:@"ShapeDictionaryReplaced"
 		object:self];
 
+#if ! __has_feature(objc_arc)
 	[oldShapeDictionary release];
+#endif
 }
 
 + (NSDictionary*)shapeDictionary {
@@ -147,7 +159,11 @@ NSDictionary *shapeDictionary = nil;
 
 + (Shape*)shapeForName:(NSString*)shapeName {
 	Shape *s = [[[self shapeDictionary] objectForKey:shapeName] copy];
+#if __has_feature(objc_arc)
+    return s;
+#else
 	return [s autorelease];
+#endif
 }
 
 @end

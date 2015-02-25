@@ -63,8 +63,10 @@
 }
 
 - (void)dealloc {
+#if ! __has_feature(objc_arc)
     [notificationName release];
     [super dealloc];
+#endif
 }
 
 @end

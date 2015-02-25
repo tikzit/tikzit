@@ -36,6 +36,7 @@
 }
 
 - (void)dealloc {
+#if ! __has_feature(objc_arc)
 	[affectedNodes release];
 	[affectedEdges release];
 	[nodeRef release];
@@ -56,6 +57,7 @@
 	[nwEdgeOrder release];
 	
 	[super dealloc];
+#endif
 }
 
 @synthesize changeType;
@@ -77,65 +79,128 @@
 	switch ([self changeType]) {
 		case GraphAddition:
 			[inverse setChangeType:GraphDeletion];
-			inverse->affectedNodes = [affectedNodes retain];
-			inverse->affectedEdges = [affectedEdges retain];
+#if __has_feature(objc_arc)
+            inverse->affectedNodes = affectedNodes;
+            inverse->affectedEdges = affectedEdges;
+#else
+            inverse->affectedNodes = [affectedNodes retain];
+            inverse->affectedEdges = [affectedEdges retain];
+#endif
 			break;
 		case GraphDeletion:
 			[inverse setChangeType:GraphAddition];
-			inverse->affectedNodes = [affectedNodes retain];
-			inverse->affectedEdges = [affectedEdges retain];
+#if __has_feature(objc_arc)
+            inverse->affectedNodes = affectedNodes;
+            inverse->affectedEdges = affectedEdges;
+#else
+            inverse->affectedNodes = [affectedNodes retain];
+            inverse->affectedEdges = [affectedEdges retain];
+#endif
 			break;
 		case NodePropertyChange:
-			inverse->nodeRef = [nodeRef retain];
-			inverse->oldNode = [nwNode retain];
-			inverse->nwNode = [oldNode retain];
+#if __has_feature(objc_arc)
+            inverse->nodeRef = nodeRef;
+            inverse->oldNode = nwNode;
+            inverse->nwNode = oldNode;
+#else
+            inverse->nodeRef = [nodeRef retain];
+            inverse->oldNode = [nwNode retain];
+            inverse->nwNode = [oldNode retain];
+#endif
 			break;
 		case NodesPropertyChange:
-			inverse->oldNodeTable = [nwNodeTable retain];
-			inverse->nwNodeTable = [oldNodeTable retain];
+#if __has_feature(objc_arc)
+            
+#else
+            inverse->oldNodeTable = [nwNodeTable retain];
+            inverse->nwNodeTable = [oldNodeTable retain];
+#endif
 			break;
 		case EdgePropertyChange:
-			inverse->edgeRef = [edgeRef retain];
-			inverse->oldEdge = [nwEdge retain];
-			inverse->nwEdge = [oldEdge retain];
+#if __has_feature(objc_arc)
+            inverse->edgeRef = edgeRef;
+            inverse->oldEdge = nwEdge;
+            inverse->nwEdge = oldEdge;
+#else
+            inverse->edgeRef = [edgeRef retain];
+            inverse->oldEdge = [nwEdge retain];
+            inverse->nwEdge = [oldEdge retain];
+#endif
 			break;
 		case EdgesPropertyChange:
-			inverse->oldEdgeTable = [nwEdgeTable retain];
-			inverse->nwEdgeTable = [oldEdgeTable retain];
+#if __has_feature(objc_arc)
+            inverse->oldEdgeTable = nwEdgeTable;
+            inverse->nwEdgeTable = oldEdgeTable;
+#else
+            inverse->oldEdgeTable = [nwEdgeTable retain];
+            inverse->nwEdgeTable = [oldEdgeTable retain];
+#endif
 			break;
 		case NodesShift:
-			inverse->affectedNodes = [affectedNodes retain];
-			[inverse setShiftPoint:NSMakePoint(-[self shiftPoint].x,
-											   -[self shiftPoint].y)];
+#if __has_feature(objc_arc)
+            inverse->affectedNodes = affectedNodes;
+#else
+            inverse->affectedNodes = [affectedNodes retain];
+#endif
+            [inverse setShiftPoint:NSMakePoint(-[self shiftPoint].x,
+                                               -[self shiftPoint].y)];
 			break;
 		case NodesFlip:
-			inverse->affectedNodes = [affectedNodes retain];
-			[inverse setHorizontal:[self horizontal]];
+#if __has_feature(objc_arc)
+            inverse->affectedNodes = affectedNodes;
+#else
+            inverse->affectedNodes = [affectedNodes retain];
+#endif
+            [inverse setHorizontal:[self horizontal]];
 			break;
 		case EdgesReverse:
-			inverse->affectedEdges = [affectedEdges retain];
+#if __has_feature(objc_arc)
+            inverse->affectedEdges = affectedEdges;
+#else
+            inverse->affectedEdges = [affectedEdges retain];
+#endif
 			break;
 		case BoundingBoxChange:
 			inverse->oldBoundingBox = nwBoundingBox;
 			inverse->nwBoundingBox = oldBoundingBox;
 			break;
 		case GraphPropertyChange:
-			inverse->oldGraphData = [nwGraphData retain];
-			inverse->nwGraphData = [oldGraphData retain];
+#if __has_feature(objc_arc)
+            inverse->oldGraphData = nwGraphData;
+            inverse->nwGraphData = oldGraphData;
+#else
+            inverse->oldGraphData = [nwGraphData retain];
+            inverse->nwGraphData = [oldGraphData retain];
+#endif
 			break;
 		case NodeOrderChange:
-			inverse->affectedNodes = [affectedNodes retain];
-			inverse->oldNodeOrder = [nwNodeOrder retain];
-			inverse->nwNodeOrder = [oldNodeOrder retain];
+#if __has_feature(objc_arc)
+            inverse->affectedNodes = affectedNodes;
+            inverse->oldNodeOrder = nwNodeOrder;
+            inverse->nwNodeOrder = oldNodeOrder;
+#else
+            inverse->affectedNodes = [affectedNodes retain];
+            inverse->oldNodeOrder = [nwNodeOrder retain];
+            inverse->nwNodeOrder = [oldNodeOrder retain];
+#endif
 			break;
 		case EdgeOrderChange:
-			inverse->affectedEdges = [affectedEdges retain];
-			inverse->oldEdgeOrder = [nwEdgeOrder retain];
-			inverse->nwEdgeOrder = [oldEdgeOrder retain];
+#if __has_feature(objc_arc)
+            inverse->affectedEdges = affectedEdges;
+            inverse->oldEdgeOrder = nwEdgeOrder;
+            inverse->nwEdgeOrder = oldEdgeOrder;
+#else
+            inverse->affectedEdges = [affectedEdges retain];
+            inverse->oldEdgeOrder = [nwEdgeOrder retain];
+            inverse->nwEdgeOrder = [oldEdgeOrder retain];
+#endif
 			break;
 	}
-
+#if __has_feature(objc_arc)
+    return inverse;
+#else
 	return [inverse autorelease];
+#endif
 }
 
 + (GraphChange*)graphAdditionWithNodes:(NSSet *)ns edges:(NSSet *)es {
@@ -143,7 +208,11 @@
 	[gc setChangeType:GraphAddition];
 	[gc setAffectedNodes:ns];
 	[gc setAffectedEdges:es];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)graphDeletionWithNodes:(NSSet *)ns edges:(NSSet *)es {
@@ -151,7 +220,11 @@
 	[gc setChangeType:GraphDeletion];
 	[gc setAffectedNodes:ns];
 	[gc setAffectedEdges:es];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)propertyChangeOfNode:(Node*)nd fromOld:(Node*)old toNew:(Node*)nw {
@@ -160,7 +233,11 @@
 	[gc setNodeRef:nd];
 	[gc setOldNode:old];
 	[gc setNwNode:nw];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)propertyChangeOfNodesFromOldCopies:(NSMapTable*)oldC
@@ -169,7 +246,11 @@
 	[gc setChangeType:NodesPropertyChange];
 	[gc setOldNodeTable:oldC];
 	[gc setNwNodeTable:newC];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)propertyChangeOfEdge:(Edge*)e fromOld:(Edge *)old toNew:(Edge *)nw {
@@ -178,7 +259,11 @@
 	[gc setEdgeRef:e];
 	[gc setOldEdge:old];
 	[gc setNwEdge:nw];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)propertyChangeOfEdgesFromOldCopies:(NSMapTable*)oldC
@@ -187,7 +272,11 @@
 	[gc setChangeType:EdgesPropertyChange];
 	[gc setOldEdgeTable:oldC];
 	[gc setNwEdgeTable:newC];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)shiftNodes:(NSSet*)ns byPoint:(NSPoint)p {
@@ -195,7 +284,11 @@
 	[gc setChangeType:NodesShift];
 	[gc setAffectedNodes:ns];
 	[gc setShiftPoint:p];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)flipNodes:(NSSet*)ns horizontal:(BOOL)b {
@@ -203,14 +296,22 @@
 	[gc setChangeType:NodesFlip];
 	[gc setAffectedNodes:ns];
 	[gc setHorizontal:b];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)reverseEdges:(NSSet*)es {
 	GraphChange *gc = [[GraphChange alloc] init];
 	[gc setChangeType:EdgesReverse];
 	[gc setAffectedEdges:es];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)changeBoundingBoxFrom:(NSRect)oldBB to:(NSRect)newBB {
@@ -218,7 +319,11 @@
 	[gc setChangeType:BoundingBoxChange];
 	[gc setOldBoundingBox:oldBB];
 	[gc setNwBoundingBox:newBB];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)propertyChangeOfGraphFrom:(GraphElementData*)oldData to:(GraphElementData*)newData {
@@ -226,7 +331,11 @@
 	[gc setChangeType:GraphPropertyChange];
 	[gc setOldGraphData:oldData];
 	[gc setNwGraphData:newData];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)nodeOrderChangeFrom:(NSArray*)old to:(NSArray*)new moved:(NSSet*)affected {
@@ -235,7 +344,11 @@
 	[gc setAffectedNodes:affected];
 	[gc setOldNodeOrder:old];
 	[gc setNwNodeOrder:new];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 + (GraphChange*)edgeOrderChangeFrom:(NSArray*)old to:(NSArray*)new moved:(NSSet*)affected {
@@ -244,7 +357,11 @@
 	[gc setAffectedEdges:affected];
 	[gc setOldEdgeOrder:old];
 	[gc setNwEdgeOrder:new];
-	return [gc autorelease];
+#if __has_feature(objc_arc)
+    return gc;
+#else
+    return [gc autorelease];
+#endif
 }
 
 @end

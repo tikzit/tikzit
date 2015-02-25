@@ -28,13 +28,25 @@
 @implementation GraphElementProperty
 
 + (id)atom:(NSString*)n {
-	return [[[self alloc] initWithAtomName:n] autorelease];
+#if __has_feature(objc_arc)
+    return [[self alloc] initWithAtomName:n];
+#else
+    return [[[self alloc] initWithAtomName:n] autorelease];
+#endif
 }
 + (id)property:(NSString*)k withValue:(NSString*)v {
+#if __has_feature(objc_arc)
+    return [[self alloc] initWithPropertyValue:v forKey:k];
+#else
 	return [[[self alloc] initWithPropertyValue:v forKey:k] autorelease];
+#endif
 }
 + (id)keyMatching:(NSString*)k {
+#if __has_feature(objc_arc)
+    return [[self alloc] initWithKeyMatching:k];
+#else
 	return [[[self alloc] initWithKeyMatching:k] autorelease];
+#endif
 }
 
 - (id)initWithAtomName:(NSString*)n {
@@ -65,15 +77,18 @@
 }
 
 - (void) dealloc {
+#if ! __has_feature(objc_arc)
 	[key release];
-//  the below line causes a exc_bad_access. Uncommenting it gains a memory leak but at least no crashing.
-//	[value release];
+	[value release];
 	[super dealloc];
+#endif
 }
 
 - (void)setValue:(NSString *)v {
 	if (value != v) {
+#if ! __has_feature(objc_arc)
 		[value release];
+#endif
 		value = [v copy];
 	}
 }
@@ -89,7 +104,9 @@
 
 - (void)setKey:(NSString *)k {
 	if (key != k) {
+#if ! __has_feature(objc_arc)
 		[key release];
+#endif
 		key = [k copy];
 	}
     if (key == nil)

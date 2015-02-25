@@ -55,7 +55,11 @@
 									-NSMidY(bds));
 		[t setOrigin:shift];
 		[graph applyTransformer:t];
+#if __has_feature(objc_arc)
+        paths = [graph pathCover];
+#else
 		paths = [[graph pathCover] retain];
+#endif
 	}
 	return self;
 }
