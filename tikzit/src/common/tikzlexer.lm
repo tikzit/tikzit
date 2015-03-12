@@ -37,6 +37,7 @@
 %option header-file="common/tikzlexer.h"
 %option extra-type="TikzGraphAssembler *"
 
+
 %s props
 %s xcoord
 %s ycoord

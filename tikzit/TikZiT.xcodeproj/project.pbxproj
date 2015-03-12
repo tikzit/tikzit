@@ -59,7 +59,7 @@
 		5573B98811DA377C00B5DC5D /* text-x-script.png in Resources */ = {isa = PBXBuildFile; fileRef = 5573B98711DA377C00B5DC5D /* text-x-script.png */; };
 		5573BDCB11DB4D2600B5DC5D /* Preambles+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5573BDCA11DB4D2600B5DC5D /* Preambles+Coder.m */; };
 		5585E5C2117F681800124513 /* NodeStyle+Coder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5585E5C1117F681800124513 /* NodeStyle+Coder.m */; };
-		5589A9FF11C51E780064D310 /* TikzGraphAssembler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */; };
+		5589A9FF11C51E780064D310 /* TikzGraphAssembler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		5589AA6C11C542D30064D310 /* TikzGraphAssembler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9FE11C51E780064D310 /* TikzGraphAssembler.m */; };
 		5589AA6D11C542D30064D310 /* tikzlexer.lm in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AA11C500060064D310 /* tikzlexer.lm */; };
 		5589AA6E11C542D30064D310 /* tikzparser.ym in Sources */ = {isa = PBXBuildFile; fileRef = 5589A9AB11C500060064D310 /* tikzparser.ym */; };
@@ -131,8 +131,8 @@
 		7F6E2C8C16B00ABA00BFE20D /* SFBInspectors.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 55CA98D412EF8FCE008F0368 /* SFBInspectors.framework */; };
 		7F73438A184AC559002897D0 /* DraggablePDFView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F734389184AC559002897D0 /* DraggablePDFView.m */; };
 		7F781C1A16B5DE1400239826 /* ParseErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F781C1916B5DE1400239826 /* ParseErrorView.m */; };
-		7F7B6DED18DE0C9E004F6CA8 /* tikzlexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DEA18DE0C9E004F6CA8 /* tikzlexer.m */; };
-		7F7B6DEE18DE0C9E004F6CA8 /* tikzparser.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DEC18DE0C9E004F6CA8 /* tikzparser.m */; };
+		7F7B6DED18DE0C9E004F6CA8 /* tikzlexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DEA18DE0C9E004F6CA8 /* tikzlexer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		7F7B6DEE18DE0C9E004F6CA8 /* tikzparser.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DEC18DE0C9E004F6CA8 /* tikzparser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		7F7B6DF418DE0D7A004F6CA8 /* CustomNodeCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DF118DE0D7A004F6CA8 /* CustomNodeCellView.m */; };
 		7F7B6DF518DE0D7A004F6CA8 /* CustomNodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7B6DF318DE0D7A004F6CA8 /* CustomNodeController.m */; };
 		7F90E88616DD29600069EBCD /* NSString+Tikz.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F90E88516DD29600069EBCD /* NSString+Tikz.m */; };
@@ -645,9 +645,9 @@
 				55D2E0B11186ED950060B4EC /* Graph+Coder.m */,
 				558F18BD117B031C009863B2 /* GraphChange.h */,
 				558F18BE117B031C009863B2 /* GraphChange.m */,
-				558F18BF117B031C009863B2 /* GraphElementData.h */,
 				7FEED45516B1A7C400B056CB /* StyleManager.h */,
 				7FEED45616B1A7C500B056CB /* StyleManager.m */,
+				558F18BF117B031C009863B2 /* GraphElementData.h */,
 				558F18C0117B031C009863B2 /* GraphElementData.m */,
 				558F18C1117B031C009863B2 /* Node.h */,
 				558F18C2117B031C009863B2 /* Node.m */,
@@ -987,13 +987,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F7B6DEE18DE0C9E004F6CA8 /* tikzparser.m in Sources */,
+				7F7B6DED18DE0C9E004F6CA8 /* tikzlexer.m in Sources */,
 				558F18C5117B031C009863B2 /* Edge.m in Sources */,
 				558F18C6117B031C009863B2 /* Graph.m in Sources */,
 				558F18C7117B031C009863B2 /* GraphChange.m in Sources */,
 				7F7B6DF418DE0D7A004F6CA8 /* CustomNodeCellView.m in Sources */,
 				558F18C8117B031C009863B2 /* GraphElementData.m in Sources */,
 				558F18C9117B031C009863B2 /* Node.m in Sources */,
-				7F7B6DEE18DE0C9E004F6CA8 /* tikzparser.m in Sources */,
 				558F18CA117B031C009863B2 /* NodeStyle.m in Sources */,
 				558F18CE117B03DD009863B2 /* main.m in Sources */,
 				558F18CF117B03DD009863B2 /* util.m in Sources */,
@@ -1013,7 +1014,6 @@
 				5585E5C2117F681800124513 /* NodeStyle+Coder.m in Sources */,
 				55F9585C1181B09600F99434 /* PickSupport.m in Sources */,
 				55F9585D1181B09600F99434 /* Transformer.m in Sources */,
-				7F7B6DED18DE0C9E004F6CA8 /* tikzlexer.m in Sources */,
 				55D2E0B21186ED950060B4EC /* Graph+Coder.m in Sources */,
 				5589A9FF11C51E780064D310 /* TikzGraphAssembler.m in Sources */,
 				7F7B6DF518DE0D7A004F6CA8 /* CustomNodeController.m in Sources */,

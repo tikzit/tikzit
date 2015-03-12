@@ -41,11 +41,11 @@
 
 /* possible data types for semantic values */
 %union {
-	NSPoint pt;
-	NSString *nsstr;
-	GraphElementProperty *prop;
-	GraphElementData *data;
-	Node *node;
+    NSString *nsstr;
+    GraphElementProperty *prop;
+    GraphElementData *data;
+    Node *node;
+    NSPoint pt;
 	struct noderef noderef;
 }
 
@@ -166,7 +166,9 @@ node: "\\node" optproperties nodename "at" COORD DELIMITEDSTRING ";"
 		[node setLabel:$6];
 		[assembler addNodeToMap:node];
 		[[assembler graph] addNode:node];
+#if ! __has_feature(objc_arc)
 		[node release];
+#endif
 	};
 
 optanchor:  { $$ = nil; } | "." REFSTRING { $$ = $2; };
@@ -204,7 +206,9 @@ edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
 		}
 		[edge setAttributesFromData];
 		[[assembler graph] addEdge:edge];
+#if ! __has_feature(objc_arc)
 		[edge release];
+#endif
 	};
 
 ignoreprop: val | val "=" val;
