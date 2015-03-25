@@ -692,6 +692,7 @@
 - (void)reverse {
     Node *n;
     float f;
+    NSString *a;
     
     n = source;
     source = target;
@@ -700,6 +701,10 @@
     f = inAngle;
     inAngle = outAngle;
     outAngle = f;
+    
+    a = sourceAnchor;
+    sourceAnchor = targetAnchor;
+    targetAnchor = a;
     
     [self setBend:-bend];
     
