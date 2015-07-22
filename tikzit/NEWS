@@ -1,4 +1,4 @@
-tikzit 1.1 (?) :
+tikzit 1.1 (2015-07-22) :
 	* Fix bug where copy-and-paste would lose edge anchors
 	* Allow tikzit-specific preview code to be omitted from preambles
 	* Holding down CTRL allows you to drag the graph
