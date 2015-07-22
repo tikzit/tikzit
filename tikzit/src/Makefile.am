@@ -130,7 +130,7 @@ common/tikzlexer.m common/tikzlexer.h: common/tikzlexer.lm
 common/tikzlexer.h: common/tikzlexer.m
 
 common/tikzparser.m common/tikzparser.h: common/tikzparser.ym
-	$(AM_V_GEN)$(YACC) --defines=common/tikzparser.h --output-file=common/tikzparser.m $^
+	$(AM_V_GEN)$(YACC) --defines=common/tikzparser.h --output=common/tikzparser.m $^
 # ordering hack for parallel builds
 common/tikzparser.h: common/tikzparser.m
 
