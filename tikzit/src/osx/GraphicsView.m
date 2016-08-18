@@ -314,7 +314,7 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 //	float radius = 5.0f; // tolerence for clicks
 //	return (dx*dx + dy*dy) <= radius*radius;
 	
-	CGContextRef ctx = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+	/*CGContextRef ctx = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
 	
     // Save the graphics state before doing the hit detection.
     CGContextSaveGState(ctx);
@@ -335,7 +335,24 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 	
 	CGContextStrokePath(ctx);
 	//CGContextFlush(ctx);
-    CGContextRestoreGState(ctx);
+    CGContextRestoreGState(ctx);*/
+    
+    NSPoint src = [transformer toScreen:[edge tail]];
+    NSPoint targ = [transformer toScreen:[edge head]];
+    NSPoint cp1 = [transformer toScreen:[edge cp1]];
+    NSPoint cp2 = [transformer toScreen:[edge cp2]];
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, src.x, src.y);
+    CGPathAddCurveToPoint(path, NULL, cp1.x, cp1.y, cp2.x, cp2.y, targ.x, targ.y);
+    //NSBezierPath *path = [NSBezierPath bezierPath];
+    //path.lineWidth = 8.0f;
+    //[path moveToPoint:src];
+    //[path curveToPoint:targ controlPoint1:cp1 controlPoint2:cp2];
+    CGPathRef path1 = CGPathCreateCopyByStrokingPath(path, NULL, 8.0f, 0, 0, 0);
+    
+    
+    BOOL containsPoint = CGPathContainsPoint(path1, NULL, p, NO);
 	
 	return containsPoint;
 }
@@ -450,8 +467,9 @@ static CGColorRef cgGrayColor, cgWhiteColor, cgClearColor = nil;
 				}
 				
 				for (Edge* e in [graph edges]) {
-					// find the first node under the pointer, select it, show its controls
+					// find the first edge under the pointer, select it, show its controls
 					//  and deselect all others if shift isn't down
+                    NSLog(@"querying edge: (%@) -- (%@)", [[e source] name], [[e target] name]);
 					if ([self edge:e containsPoint:dragOrigin]) {
 						for (Node *n in [pickSupport selectedNodes]) [[[nodeLayers objectForKey:n] selection] deselect];
 						
