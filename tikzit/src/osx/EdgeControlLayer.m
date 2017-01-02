@@ -29,7 +29,7 @@
 
 
 - (id)initWithEdge:(Edge*)e andTransformer:(Transformer*)t {
-	[super init];
+	if (!(self = [super init])) return nil;
 	transformer = t;
 	edge = e;
 	self.opacity = 0.0f;

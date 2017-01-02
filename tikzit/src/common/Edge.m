@@ -72,7 +72,11 @@
 	}
 	
 	// if we didn't find a style, fill in a default one
+#if __has_feature(objc_arc)
+    style = [EdgeStyle defaultEdgeStyleWithName:style_name];
+#else
 	style = [[EdgeStyle defaultEdgeStyleWithName:style_name] retain];
+#endif
 	return NO;
 }
 
@@ -318,8 +322,12 @@
 - (EdgeStyle*)style {return style;}
 - (void)setStyle:(EdgeStyle*)s {
 	if (style != s) {
+#if __has_feature(objc_arc)
+        style = s;
+#else
 		[style release];
 		style = [s retain];
+#endif
 	}
 }
 
@@ -335,9 +343,13 @@
 			[self setSourceAnchor:@""];
 		}
 
+#if __has_feature(objc_arc)
+        source = s;
+#else
 		[source release];
 		source = [s retain];
-		
+#endif
+        
 		if (source==target) {
 			bendMode = EdgeBendModeInOut;
 			weight = 1.0f;
@@ -365,9 +377,13 @@
 			[self setTargetAnchor:@""];
 		}
 
+#if __has_feature(objc_arc)
+        target = t;
+#else
 		[target release];
 		target = [t retain];
-		
+#endif
+        
 		if (source==target) {
 			bendMode = EdgeBendModeInOut;
 			weight = 1.0f;
@@ -422,8 +438,12 @@
     [self willChangeValueForKey:@"hasEdgeNode"];
 	if (edgeNode != n) {
         hasEdgeNode = (n != nil);
+#if __has_feature(objc_arc)
+        edgeNode = n;
+#else
 		[edgeNode release];
 		edgeNode = [n retain];
+#endif
 		// don't set dirty bit, because control points don't need update
 	}
     [self didChangeValueForKey:@"edgeNode"];
@@ -450,7 +470,9 @@
     }else{
         sourceAnchor = @"";
     }
+#if ! __has_feature(objc_arc)
 	[oldSourceAnchor release];
+#endif
 }
 
 - (NSString*) targetAnchor { return targetAnchor; }
@@ -461,7 +483,9 @@
     }else{
         targetAnchor = @"";
     }
+#if ! __has_feature(objc_arc)
 	[oldTargetAnchor release];
+#endif
 }
 
 @synthesize data;
@@ -558,11 +582,15 @@
 - (void)setPropertiesFromEdge:(Edge*)e {
     Node *en = [[e edgeNode] copy];
 	[self setEdgeNode:en];
+#if ! __has_feature(objc_arc)
     [en release];
+#endif
     
     GraphElementData *d = [[e data] copy];
 	[self setData:d];
+#if ! __has_feature(objc_arc)
     [d release];
+#endif
     
     [self setStyle:[e style]];
 	[self setBend:[e bend]];
@@ -664,6 +692,7 @@
 - (void)reverse {
     Node *n;
     float f;
+    NSString *a;
     
     n = source;
     source = target;
@@ -672,6 +701,10 @@
     f = inAngle;
     inAngle = outAngle;
     outAngle = f;
+    
+    a = sourceAnchor;
+    sourceAnchor = targetAnchor;
+    targetAnchor = a;
     
     [self setBend:-bend];
     
@@ -683,12 +716,14 @@
 				forKeyPath:@"style"];
 	[target removeObserver:self
 				forKeyPath:@"style"];
+#if ! __has_feature(objc_arc)
 	[source release];
 	[target release];
 	[data release];
     [sourceAnchor release];
     [targetAnchor release];
 	[super dealloc];
+#endif
 }
 
 - (id)copyWithZone:(NSZone*)zone {
@@ -702,11 +737,19 @@
 }
 
 + (Edge*)edge {
+#if __has_feature(objc_arc)
+    return [[Edge alloc] init];
+#else
 	return [[[Edge alloc] init] autorelease];
+#endif
 }
 
 + (Edge*)edgeWithSource:(Node*)s andTarget:(Node*)t {
-	return [[[Edge alloc] initWithSource:s andTarget:t] autorelease];
+#if __has_feature(objc_arc)
+    return [[Edge alloc] initWithSource:s andTarget:t];
+#else
+    return [[[Edge alloc] initWithSource:s andTarget:t] autorelease];
+#endif
 }
 
 @end

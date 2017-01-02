@@ -51,8 +51,12 @@
 }
 
 - (id)initFromTikz:(NSString*)tikz error:(NSError**)e {
-	[self release];
-	return [[TikzGraphAssembler parseTikz:tikz error:e] retain];
+#if __has_feature(objc_arc)
+    return [TikzGraphAssembler parseTikz:tikz error:e];
+#else
+    [self release];
+    return [[TikzGraphAssembler parseTikz:tikz error:e] retain];
+#endif
 }
 
 - (id)initFromTikz:(NSString*)tikz {
@@ -69,7 +73,8 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[graphLock lock];
-	[inEdges release];
+#if ! __has_feature(objc_arc)
+    [inEdges release];
 	[outEdges release];
 	[edges release];
 	[nodes release];
@@ -78,18 +83,23 @@
 	[graphLock release];
 	
 	[super dealloc];
+#endif
 }
 
 - (void)sync {
 	[graphLock lock];
 	if (dirty) {
-		[inEdges release];
-		[outEdges release];
+#if ! __has_feature(objc_arc)
+        [inEdges release];
+        [outEdges release];
+#endif
 		inEdges = [[NSMapTable alloc] initWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableStrongMemory capacity:10];
 		outEdges = [[NSMapTable alloc] initWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableStrongMemory capacity:10];
 		
+#if ! __has_feature(objc_arc)
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		
+#endif
+        
 		for (Edge *e in edges) {
 			NSMutableSet *ie = [inEdges objectForKey:[e target]];
 			NSMutableSet *oe = [outEdges objectForKey:[e source]];
@@ -108,8 +118,9 @@
 			[oe addObject:e];
 		}
 		
+#if ! __has_feature(objc_arc)
 		[pool drain];
-		
+#endif
 		
 		dirty = NO;
 	}
@@ -150,12 +161,20 @@
 
 - (NSSet*)inEdgesForNode:(Node*)nd {
 	[self sync];
-	return [[[inEdges objectForKey:nd] retain] autorelease];
+#if __has_feature(objc_arc)
+    return [inEdges objectForKey:nd];
+#else
+    return [[[inEdges objectForKey:nd] retain] autorelease];
+#endif
 }
 
 - (NSSet*)outEdgesForNode:(Node*)nd {
 	[self sync];
-	return [[[outEdges objectForKey:nd] retain] autorelease];
+#if __has_feature(objc_arc)
+    return [outEdges objectForKey:nd];
+#else
+    return [[[outEdges objectForKey:nd] retain] autorelease];
+#endif
 }
 
 - (NSSet*)incidentEdgesForNodes:(NSSet*)nds {
@@ -347,7 +366,10 @@
     }
 	GraphChange *change = [GraphChange nodeOrderChangeFrom:oldOrder to:nodes moved:nodeSet];
     [graphLock unlock];
-	[oldOrder release];
+
+#if ! __has_feature(objc_arc)
+    [oldOrder release];
+#endif
     
     return change;
 }
@@ -365,8 +387,11 @@
         }
     }
 	GraphChange *change = [GraphChange nodeOrderChangeFrom:oldOrder to:nodes moved:nodeSet];
-	[oldOrder release];
-    
+
+#if ! __has_feature(objc_arc)
+    [oldOrder release];
+#endif
+
     return change;
 }
 
@@ -383,7 +408,10 @@
     }
 	GraphChange *change = [GraphChange edgeOrderChangeFrom:oldOrder to:edges moved:edgeSet];
     [graphLock unlock];
-	[oldOrder release];
+
+#if ! __has_feature(objc_arc)
+    [oldOrder release];
+#endif
     
     return change;
 }
@@ -401,8 +429,11 @@
         }
     }
 	GraphChange *change = [GraphChange edgeOrderChangeFrom:oldOrder to:edges moved:edgeSet];
-	[oldOrder release];
-    
+
+#if ! __has_feature(objc_arc)
+    [oldOrder release];
+#endif
+
     return change;
 }
 
@@ -419,7 +450,10 @@
     }
 	GraphChange *change = [GraphChange nodeOrderChangeFrom:oldOrder to:nodes moved:nodeSet];
     [graphLock unlock];
-	[oldOrder release];
+    
+#if ! __has_feature(objc_arc)
+    [oldOrder release];
+#endif
     
     return change;
 }
@@ -437,7 +471,10 @@
     }
 	GraphChange *change = [GraphChange edgeOrderChangeFrom:oldOrder to:edges moved:edgeSet];
     [graphLock unlock];
-	[oldOrder release];
+    
+#if ! __has_feature(objc_arc)
+    [oldOrder release];
+#endif
     
     return change;
 }
@@ -455,8 +492,11 @@
         }
     }
 	GraphChange *change = [GraphChange nodeOrderChangeFrom:oldOrder to:nodes moved:nodeSet];
-	[oldOrder release];
-    
+
+#if ! __has_feature(objc_arc)
+    [oldOrder release];
+#endif
+
     return change;
 }
 
@@ -473,8 +513,11 @@
         }
     }
 	GraphChange *change = [GraphChange edgeOrderChangeFrom:oldOrder to:edges moved:edgeSet];
-	[oldOrder release];
-    
+
+#if ! __has_feature(objc_arc)
+    [oldOrder release];
+#endif
+
     return change;
 }
 
@@ -571,7 +614,9 @@
 			[e1 setSource:[newNds objectForKey:[e source]]];
 			[e1 setTarget:[newNds objectForKey:[e target]]];
 			[newGraph addEdge:e1];
-			[e1 release]; // e1 belongs to newGraph
+#if ! __has_feature(objc_arc)
+            [e1 release]; // e1 belongs to newGraph
+#endif
 		}
 	}
 
@@ -584,8 +629,9 @@
 	[self sync];
 	
 	NSMutableSet *cover = [NSMutableSet set];
+#if ! __has_feature(objc_arc)
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
+#endif
 	NSMutableSet *remainingEdges = [NSMutableSet setWithArray:edges];
 	
 	while ([remainingEdges count] != 0) {
@@ -610,10 +656,14 @@
 		}
 		
 		[cover addObject:path];
+#if ! __has_feature(objc_arc)
 		[path release];
+#endif
 	}
-	
+
+#if ! __has_feature(objc_arc)
 	[pool drain];
+#endif
 	return cover;
 }
 
@@ -780,7 +830,11 @@
 }
 
 + (Graph*)graph {
+#if __has_feature(objc_arc)
+    return [[self alloc] init];
+#else
 	return [[[self alloc] init] autorelease];
+#endif
 }
 
 + (Graph*)graphFromTikz:(NSString*)tikz error:(NSError**)e {
@@ -803,9 +857,15 @@
 	for (Node *n in nds) {
 		Node *ncopy = [n copyWithZone:zone];
 		[tab setObject:ncopy forKey:n];
+#if ! __has_feature(objc_arc)
 		[ncopy release]; // tab should still retain ncopy.
+#endif
 	}
-	return [tab autorelease];
+#if __has_feature(objc_arc)
+    return tab;
+#else
+    return [tab autorelease];
+#endif
 }
 
 + (NSMapTable*)edgeTableForEdges:(NSSet*)es {
@@ -820,7 +880,9 @@
 	for (Edge *e in es) {
 		Edge *ecopy = [e copyWithZone:zone];
 		[tab setObject:ecopy forKey:e];
+#if ! __has_feature(objc_arc)
 		[ecopy release]; // tab should still retain ecopy.
+#endif
 	}
 	return tab;
 }

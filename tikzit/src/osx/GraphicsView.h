@@ -96,7 +96,7 @@ typedef enum {
 }
 
 @property BOOL enabled;
-@property Graph *graph;
+@property (weak) Graph *graph;
 @property IBOutlet TikzSourceController *tikzSourceController;
 @property (readonly) Transformer *transformer;
 @property (readonly) PickSupport *pickSupport;

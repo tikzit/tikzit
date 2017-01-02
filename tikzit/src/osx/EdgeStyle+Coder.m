@@ -26,7 +26,7 @@
 @implementation EdgeStyle (Coder)
 
 - (id)initWithCoder:(NSCoder*)coder {
-	[super init];
+	if (!(self = [super init])) return nil;
 	
     name = [coder decodeObjectForKey:@"name"];
     category = [coder decodeObjectForKey:@"category"];

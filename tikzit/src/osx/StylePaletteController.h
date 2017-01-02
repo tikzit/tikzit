@@ -43,11 +43,11 @@
     NSString *displayedEdgeStyleCategory;
 }
 
-@property (readonly) NSMutableArray *nodeStyles;
-@property (readonly) NSMutableArray *edgeStyles;
+@property (strong) NSMutableArray *nodeStyles;
+@property (strong) NSMutableArray *edgeStyles;
 @property (readonly) BOOL documentActive;
-@property (assign) NodeStyle *activeNodeStyle;
-@property (assign) EdgeStyle *activeEdgeStyle;
+@property (strong) NodeStyle *activeNodeStyle;
+@property (strong) EdgeStyle *activeEdgeStyle;
 @property (copy) NSString *displayedNodeStyleCategory;
 @property (copy) NSString *displayedEdgeStyleCategory;
 @property (readonly) NSPredicate *displayedNodeStylePredicate;

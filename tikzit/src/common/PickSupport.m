@@ -42,15 +42,24 @@
 	self = [super init];
 
 	if (self) {
-		selectedNodes = [[NSMutableSet set] retain];
-		selectedEdges = [[NSMutableSet set] retain];
+#if __has_feature(objc_arc)
+        selectedNodes = [NSMutableSet set];
+        selectedEdges = [NSMutableSet set];
+#else
+        selectedNodes = [[NSMutableSet set] retain];
+        selectedEdges = [[NSMutableSet set] retain];
+#endif
 	}
 
 	return self;
 }
 
 + (PickSupport*)pickSupport {
-	return [[[PickSupport alloc] init] autorelease];
+#if __has_feature(objc_arc)
+    return [[PickSupport alloc] init];
+#else
+    return [[[PickSupport alloc] init] autorelease];
+#endif
 }
 
 @synthesize selectedNodes;
@@ -176,7 +185,9 @@
 	}
 
 	if (replace) {
+#if ! __has_feature(objc_arc)
 		[selectedNodes release];
+#endif
 		selectedNodes = [nodes mutableCopy];
 	} else {
 		[selectedNodes unionSet:nodes];
@@ -208,10 +219,12 @@
 }
 
 - (void)dealloc {
+#if ! __has_feature(objc_arc)
 	[selectedNodes release];
 	[selectedEdges release];
 	
 	[super dealloc];
+#endif
 }
 
 @end

@@ -25,7 +25,7 @@
 @synthesize sourceAnchorNames, targetAnchorNames;
 
 - (id)initWithWindowNibName:(NSString *)windowNibName {
-	[super initWithWindowNibName:windowNibName];
+	if (!(self = [super initWithWindowNibName:windowNibName])) return nil;
     
     noSelection = [[GraphElementData alloc] init];
     [noSelection setProperty:@"" forKey:@"No Selection"];
@@ -56,7 +56,12 @@
     [self setTargetAnchorNames: [[NSMutableArray alloc] initWithArray:[@"north south west east" componentsSeparatedByString:@" "]]];
 
     
-    [[self window] setLevel:NSNormalWindowLevel];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"net.sourceforge.tikzit.inspectorsontop"] == YES) {
+        [[self window] setLevel:NSFloatingWindowLevel];
+    } else {
+        [[self window] setLevel:NSNormalWindowLevel];
+    }
+
     [self showWindow:self];
 	return self;
 }

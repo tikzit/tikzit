@@ -26,7 +26,7 @@
 @implementation NilToEmptyStringTransformer
 
 - (id)init {
-    [super init];
+    if (!(self = [super init])) return nil;
     return self;
 }
 

@@ -16,7 +16,7 @@
 @synthesize graphicsView, tikzSourceController;
 
 - (id)initWithDocument:(TikzDocument*)doc {
-	[super initWithWindowNibName:@"TikzDocument"];
+	if (!(self = [super initWithWindowNibName:@"TikzDocument"])) return nil;
 	document = doc;
 	return self;
 }

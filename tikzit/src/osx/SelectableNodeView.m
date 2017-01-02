@@ -30,7 +30,7 @@
 @synthesize selected;
 
 - (id)initWithFrame:(NSRect)frameRect {
-	[super initWithFrame:frameRect];
+	if (!(self = [super initWithFrame:frameRect])) return nil;
 	nodeLayer = nil;
 	return self;
 }

@@ -30,7 +30,7 @@
 @synthesize nodeLayer;
 
 - (id)init {
-	[super init];
+	if (!(self = [super init])) return nil;
 	selected = NO;
     drawLock = [[NSLock alloc] init];
     nodeLayer = nil;

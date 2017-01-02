@@ -28,7 +28,11 @@
 @implementation GraphElementData
 
 + (id)data {
+#if __has_feature(objc_arc)
+    return [[self alloc] init];
+#else
 	return [[[self alloc] init] autorelease];
+#endif
 }
 
 - (id)init {
@@ -48,9 +52,15 @@
 - (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
 	return [properties objectsAtIndexes:indexes];
 }
+
+#if __has_feature(objc_arc)
+- (void) getObjects:(__unsafe_unretained id*)buffer range:(NSRange)range {
+#else
 - (void) getObjects:(id*)buffer range:(NSRange)range {
+#endif
 	[properties getObjects:buffer range:range];
 }
+
 - (void)insertObject:(id)anObject atIndex:(NSUInteger)index {
 	[properties insertObject:anObject atIndex:index];
 }
@@ -66,22 +76,33 @@
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject {
 	[properties replaceObjectAtIndex:index withObject:anObject];
 }
+    
+#if __has_feature(objc_arc)
+- (NSUInteger) countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                   objects:(__unsafe_unretained id [])stackbuf
+                                     count:(NSUInteger)len {
+#else
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
 								  objects:(id *)stackbuf
 									count:(NSUInteger)len {
-	return [properties countByEnumeratingWithState:state objects:stackbuf count:len];
+#endif
+    return [properties countByEnumeratingWithState:state objects:stackbuf count:len];
 }
 
 - (void)setProperty:(NSString*)val forKey:(NSString*)key {
 	GraphElementProperty *m = [[GraphElementProperty alloc] initWithKeyMatching:key];
 	NSInteger idx = [properties indexOfObject:m];
-	[m release];
+#if !__has_feature(objc_arc)
+    [m release];
+#endif
 	
 	GraphElementProperty *p;
 	if (idx == NSNotFound) {
 		p = [[GraphElementProperty alloc] initWithPropertyValue:val forKey:key];
 		[properties addObject:p];
-		[p release];
+#if !__has_feature(objc_arc)
+        [p release];
+#endif
 	} else {
 		p = [properties objectAtIndex:idx];
 		[p setValue:val];
@@ -91,13 +112,19 @@
 - (void)unsetProperty:(NSString*)key {
 	GraphElementProperty *m = [[GraphElementProperty alloc] initWithKeyMatching:key];
 	[properties removeObject:m];
-	[m release];
+#if !__has_feature(objc_arc)
+    [m release];
+#endif
+
 }
 
 - (NSString*)propertyForKey:(NSString*)key {
 	GraphElementProperty *m = [[GraphElementProperty alloc] initWithKeyMatching:key];
 	NSInteger idx = [properties indexOfObject:m];
-	[m release];
+#if !__has_feature(objc_arc)
+    [m release];
+#endif
+
 	
 	if (idx == NSNotFound) {
 		return nil;
@@ -110,19 +137,25 @@
 - (void)setAtom:(NSString*)atom {
 	GraphElementProperty *a = [[GraphElementProperty alloc] initWithAtomName:atom];
 	if (![properties containsObject:a]) [properties addObject:a];
-	[a release];
+#if !__has_feature(objc_arc)
+    [a release];
+#endif
 }
 
 - (void)unsetAtom:(NSString*)atom {
 	GraphElementProperty *a = [[GraphElementProperty alloc] initWithAtomName:atom];
 	[properties removeObject:a];
-	[a release];
+#if !__has_feature(objc_arc)
+    [a release];
+#endif
 }
 
 - (BOOL)isAtomSet:(NSString*)atom {
 	GraphElementProperty *a = [[GraphElementProperty alloc] initWithAtomName:atom];
 	BOOL set = [properties containsObject:a];
-	[a release];
+#if !__has_feature(objc_arc)
+    [a release];
+#endif
 	return set;
 }
 
@@ -136,14 +169,18 @@
 	for (GraphElementProperty *p in properties) {
 		GraphElementProperty *p2 = [p copy];
 		[cp addObject:p2];
-		[p2 release];
+#if !__has_feature(objc_arc)
+        [p2 release];
+#endif
 	}
 	return cp;
 }
 
 - (void)dealloc {
-	[properties release];
-	[super dealloc];
+#if !__has_feature(objc_arc)
+    [properties release];
+    [super dealloc];
+#endif
 }
 
 @end

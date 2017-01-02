@@ -50,11 +50,13 @@
 }
 
 - (void)dealloc {
+#if ! __has_feature(objc_arc)
 	[name release];
 	[style release];
 	[data release];
 	[label release];
 	[super dealloc];
+#endif
 }
 
 - (Shape*) shape {
@@ -67,7 +69,11 @@
 
 - (Transformer*) shapeTransformerFromTransformer:(Transformer*)t {
 	// we take a copy to keep the reflection attributes
+#if ! __has_feature(objc_arc)
     Transformer *transformer = [[t copy] autorelease];
+#else
+    Transformer *transformer = [t copy];
+#endif
     NSPoint screenPos = [t toScreen:point];
     [transformer setOrigin:screenPos];
     float scale = [t scale];
@@ -101,7 +107,11 @@
 }
 
 - (BOOL)attachStyleFromTable:(NSArray*)styles {
-	NSString *style_name = [[[data propertyForKey:@"style"] retain] autorelease];
+#if __has_feature(objc_arc)
+    NSString *style_name = [data propertyForKey:@"style"];
+#else
+    NSString *style_name = [[[data propertyForKey:@"style"] retain] autorelease];
+#endif
 	
 	[self setStyle:nil];
 	
@@ -137,11 +147,19 @@
 }
 
 + (Node*)nodeWithPoint:(NSPoint)p {
-	return [[[Node alloc] initWithPoint:p] autorelease];
+#if __has_feature(objc_arc)
+    return [[Node alloc] initWithPoint:p];
+#else
+    return [[[Node alloc] initWithPoint:p] autorelease];
+#endif
 }
 
 + (Node*)node {
-	return [[[Node alloc] init] autorelease];
+#if __has_feature(objc_arc)
+    return [[Node alloc] init];
+#else
+    return [[[Node alloc] init] autorelease];
+#endif
 }
 
 
@@ -180,9 +198,13 @@
 
 - (void)setStyle:(NodeStyle *)st {
 	if (style != st) {
-		NodeStyle *oldStyle = style;
-		style = [st retain];
-		[oldStyle release];
+#if __has_feature(objc_arc)
+        style = st;
+#else
+        NodeStyle *oldStyle = style;
+        style = [st retain];
+        [oldStyle release];
+#endif
 	}
 	[self updateData];
 }

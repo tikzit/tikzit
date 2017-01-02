@@ -55,7 +55,11 @@ static NSString *POSTAMBLE =
 @implementation Preambles
 
 + (Preambles*)preambles {
+#if __has_feature(objc_arc)
+    return [[self alloc] init];
+#else
 	return [[[self alloc] init] autorelease];
+#endif
 }
 
 - (id)init {
@@ -72,10 +76,12 @@ static NSString *POSTAMBLE =
 }
 
 - (void)dealloc {
+#if ! __has_feature(objc_arc)
 	[selectedPreambleName release];
 	[styles release];
 	[styleManager release];
 	[super dealloc];
+#endif
 }
 
 - (NSString*)preambleForName:(NSString*)name {
@@ -101,14 +107,18 @@ static NSString *POSTAMBLE =
 }
 
 - (void)setStyles:(NSArray*)sty {
+#if ! __has_feature(objc_arc)
 	[sty retain];
 	[styles release];
+#endif
 	styles = sty;
 }
 
 - (void)setEdges:(NSArray*)edg {
+#if ! __has_feature(objc_arc)
 	[edg retain];
 	[edges release];
+#endif
 	edges = edg;
 }
 
@@ -116,7 +126,9 @@ static NSString *POSTAMBLE =
 	if (styleManager != nil) {
 		[self setStyles:[styleManager nodeStyles]];
 	}
+#if ! __has_feature(objc_arc)
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#endif
 	NSMutableString *buf = [NSMutableString string];
 	NSMutableString *colbuf = [NSMutableString string];
 	NSMutableSet *colors = [NSMutableSet setWithCapacity:2*[styles count]];
@@ -154,8 +166,12 @@ static NSString *POSTAMBLE =
 	
 	NSString *defs = [[NSString alloc] initWithFormat:@"%@\n%@", colbuf, buf];
 	
+#if __has_feature(objc_arc)
+    return defs;
+#else
 	[pool drain];
 	return [defs autorelease];
+#endif
 }
 
 - (NSString*)defaultPreamble {
@@ -170,7 +186,9 @@ static NSString *POSTAMBLE =
 - (NSString*)selectedPreambleName { return selectedPreambleName; }
 - (void)setSelectedPreambleName:(NSString *)sel {
 	if (sel != selectedPreambleName) {
+#if ! __has_feature(objc_arc)
 		[selectedPreambleName release];
+#endif
 		selectedPreambleName = [sel copy];
 	}
 }
@@ -190,8 +208,10 @@ static NSString *POSTAMBLE =
 }
 
 - (void)setStyleManager:(StyleManager *)manager {
+#if ! __has_feature(objc_arc)
 	[manager retain];
 	[styleManager release];
+#endif
 	styleManager = manager;
 }
 
@@ -240,10 +260,14 @@ static NSString *POSTAMBLE =
 		isSelected = YES;
 	}
 	NSString *preamble = [preambleDict objectForKey:old];
+#if ! __has_feature(objc_arc)
 	[preamble retain];
+#endif
 	[preambleDict removeObjectForKey:old];
 	[preambleDict setObject:preamble forKey:new];
+#if ! __has_feature(objc_arc)
 	[preamble release];
+#endif
 	if (isSelected) {
 		[self setSelectedPreambleName:new];
 	}
@@ -254,11 +278,15 @@ static NSString *POSTAMBLE =
 	if ([name isEqualToString:@"default"])
 		return NO;
 	// "name" may be held only by being the selected preamble...
+#if ! __has_feature(objc_arc)
 	[name retain];
+#endif
 	if ([name isEqualToString:selectedPreambleName])
 		[self setSelectedPreambleName:nil];
 	[preambleDict removeObjectForKey:name];
+#if ! __has_feature(objc_arc)
 	[name release];
+#endif
 	return YES;
 }
 

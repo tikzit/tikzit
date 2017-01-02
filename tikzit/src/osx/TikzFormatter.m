@@ -50,6 +50,10 @@
     NSRange addedRange;
     NSString *addedString;
     
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"net.sourceforge.tikzit.autocomplete"]){
+        return YES;
+    }
+    
     addedRange = NSMakeRange(origSelRange.location, proposedSelRangePtr->location - origSelRange.location);
     addedString = [*partialStringPtr substringWithRange: addedRange];
     
@@ -75,10 +79,6 @@
                 [scanner setScanLocation:([scanner scanLocation] + 1)];
             }
         }
-        
-        [cs autorelease];
-        [scanner autorelease];
-        [strippedString autorelease];
         
         if([strippedString length] % 2 == 1){
             return NO;

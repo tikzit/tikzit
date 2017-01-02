@@ -30,8 +30,8 @@
 
 @implementation PreferenceController
 
-- (id)initWithWindowNibName:(NSString *)windowNibName preambleController:(PreambleController*)pc{
-    [super initWithWindowNibName:windowNibName];
+- (id)initWithWindowNibName:(NSString *)windowNibName preambleController:(PreambleController *)pc{
+    if (!(self = [super initWithWindowNibName:windowNibName])) return nil;
     
     preambleController = pc;
     
@@ -69,6 +69,9 @@
         case 3:
             view = preambleView;
         break;
+        case 4:
+            view = customNodeView;
+        break;
     }
     
     return  view;
@@ -96,9 +99,14 @@
     [[[self window] contentView] replaceSubview:preambleView with:[preambleController view]];
     preambleView = [preambleController view];
     
-    [[self window] setContentSize:[preambleView frame].size];
-    [[[self window] contentView] addSubview:preambleView];
-    currentViewTag = 3;
+    customNodeController = [[CustomNodeController alloc] initWithNibName:@"CustomNodes" bundle:nil];
+    [[customNodeController view] setFrame:[customNodeView frame]];
+    [[[self window] contentView] replaceSubview:customNodeView with:[customNodeController view]];
+    customNodeView = [customNodeController view];
+    
+    [[self window] setContentSize:[engineView frame].size];
+    [[[self window] contentView] addSubview:engineView];
+    currentViewTag = 1;
 }
 
 - (IBAction)switchView:(id)sender {

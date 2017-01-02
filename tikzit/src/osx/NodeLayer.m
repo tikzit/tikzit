@@ -34,7 +34,7 @@
 @synthesize node, selection, rescale;
 
 - (id)initWithNode:(Node *)n transformer:(Transformer*)t {
-	[super init];
+	if (!(self = [super init])) return nil;
 	node = n;
 	selection = [[NodeSelectionLayer alloc] init];
     [selection setNodeLayer:self];
@@ -233,7 +233,6 @@
 
 - (void)dealloc {
     if (path != NULL) CFRelease(path);
-    [super dealloc];
 }
 
 @end

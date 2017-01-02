@@ -32,7 +32,7 @@
 		 subdivisions:(int)subs
 		  transformer:(Transformer*)t
 {
-	[super init];
+	if (!(self = [super init])) return nil;
 	gridX = spacing;
 	gridY = spacing;
 	subdivisions = subs;

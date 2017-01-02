@@ -27,17 +27,17 @@
 #import "ParseErrorView.h"
 
 @interface TikzSourceController : NSObject {
-	GraphicsView *graphicsView;
-	NSTextView *sourceView;
+	GraphicsView *__weak graphicsView;
+	NSTextView *__unsafe_unretained sourceView;
 	NSAttributedString *source;
-	NSTextField *status;
+	NSTextField *__weak status;
 	NSDictionary *textAttrs;
 	NSColor *successColor;
 	NSColor *failedColor;
-	NSTextField *errorMessage;
-	ParseErrorView *errorNotification;
+	NSTextField *__weak errorMessage;
+	ParseErrorView *__weak errorNotification;
     
-	NSUndoManager *documentUndoManager;
+	NSUndoManager *__weak documentUndoManager;
 	
 	BOOL tikzChanged;
 	BOOL justUndid;
@@ -46,14 +46,14 @@
 }
 
 @property BOOL tikzChanged;
-@property IBOutlet GraphicsView *graphicsView;
-@property IBOutlet NSTextView *sourceView;
-@property IBOutlet NSTextField *status;
-@property NSUndoManager *documentUndoManager;
+@property (weak) IBOutlet GraphicsView *graphicsView;
+@property (unsafe_unretained) IBOutlet NSTextView *sourceView;
+@property (weak) IBOutlet NSTextField *status;
+@property (weak) NSUndoManager *documentUndoManager;
 @property (copy) NSAttributedString *source;
 @property (copy) NSString *tikz;
-@property IBOutlet ParseErrorView *errorNotification;
-@property IBOutlet NSTextField *errorMessage;
+@property (weak) IBOutlet ParseErrorView *errorNotification;
+@property (weak) IBOutlet NSTextField *errorMessage;
 
 - (void)updateTikzFromGraph;
 - (void)graphChanged:(NSNotification*)n;

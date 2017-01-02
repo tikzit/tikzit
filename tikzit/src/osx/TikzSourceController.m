@@ -142,8 +142,12 @@
 }
 
 - (BOOL)tryParseTikz {
+    NSError *thisError;
+    
     Graph *g = [TikzGraphAssembler parseTikz:[self tikz]
-                                       error:&lastError];
+                                       error:&thisError];
+    
+    lastError = thisError;
     
     if (g) {
         [graphicsView deselectAll:self];
@@ -230,9 +234,8 @@
 	}
 }
 
-- (void)finalize {
+- (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super finalize];
 }
 
 @end

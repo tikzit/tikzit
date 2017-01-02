@@ -29,7 +29,7 @@
 @synthesize preambleText, preambles;
 
 - (id)initWithNibName:(NSString *)nibName plist:(NSString*)plist styles:(NSArray*)sty edges:(NSArray*)edg {
-	[super initWithNibName:nibName bundle:Nil];
+	if (!(self = [super initWithNibName:nibName bundle:Nil])) return nil;
 	
 	preambles = (Preambles*)[NSKeyedUnarchiver unarchiveObjectWithFile:plist];
 	[preambles setStyles:sty];

@@ -28,11 +28,19 @@ float const PIXELS_PER_UNIT = 50;
 @implementation Transformer
 
 + (Transformer*)transformer {
-	return [[[Transformer alloc] init] autorelease];
+#if __has_feature(objc_arc)
+    return [[Transformer alloc] init];
+#else
+    return [[[Transformer alloc] init] autorelease];
+#endif
 }
 
 + (Transformer*)transformerWithTransformer:(Transformer*)t {
-	return [[t copy] autorelease];
+#if __has_feature(objc_arc)
+    return [t copy];
+#else
+    return [[t copy] autorelease];
+#endif
 }
 
 + (Transformer*)transformerWithOrigin:(NSPoint)o andScale:(float)scale {

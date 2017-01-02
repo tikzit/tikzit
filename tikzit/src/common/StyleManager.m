@@ -90,7 +90,11 @@
 }
 
 + (StyleManager*) manager {
+#if __has_feature(objc_arc)
+    return [[self alloc] init];
+#else
     return [[[self alloc] init] autorelease];
+#endif
 }
 
 - (id) init {
@@ -107,15 +111,18 @@
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
+#if ! __has_feature(objc_arc)
 	[nodeStyles release];
 	[edgeStyles release];
 
 	[super dealloc];
+#endif
 }
 
 - (void) loadDefaultEdgeStyles {
+#if ! __has_feature(objc_arc)
 	[edgeStyles release];
+#endif
 	edgeStyles = [[NSMutableArray alloc] initWithCapacity:3];
 
 	EdgeStyle *simple = [EdgeStyle defaultEdgeStyleWithName:@"simple"];
@@ -138,7 +145,9 @@
 }
 
 - (void) loadDefaultNodeStyles {
+#if ! __has_feature(objc_arc)
 	[nodeStyles release];
+#endif
     nodeStyles = [[NSMutableArray alloc] initWithCapacity:3];
 
     NodeStyle *rn = [NodeStyle defaultNodeStyleWithName:@"rn"];
@@ -212,8 +221,10 @@
 
 - (void) _setNodeStyles:(NSMutableArray*)styles {
 	[self ignoreAllNodeStyles];
+#if ! __has_feature(objc_arc)
     [nodeStyles release];
     [styles retain];
+#endif
     nodeStyles = styles;
 	for (NodeStyle *style in styles) {
 		[self listenToNodeStyle:style];
@@ -223,8 +234,10 @@
 
 - (void) _setEdgeStyles:(NSMutableArray*)styles {
 	[self ignoreAllEdgeStyles];
+#if ! __has_feature(objc_arc)
     [edgeStyles release];
     [styles retain];
+#endif
     edgeStyles = styles;
 	for (EdgeStyle *style in styles) {
 		[self listenToEdgeStyle:style];
@@ -257,10 +270,14 @@
     }
 
 	[self ignoreNodeStyle:style];
+#if ! __has_feature(objc_arc)
     [style retain];
+#endif
     [nodeStyles removeObject:style];
     [self postNodeStyleRemoved:style];
+#if ! __has_feature(objc_arc)
     [style release];
+#endif
 }
 
 - (EdgeStyle*) edgeStyleForName:(NSString*)name {
@@ -288,10 +305,14 @@
     }
 
 	[self ignoreEdgeStyle:style];
+#if ! __has_feature(objc_arc)
     [style retain];
+#endif
     [edgeStyles removeObject:style];
     [self postEdgeStyleRemoved:style];
+#if ! __has_feature(objc_arc)
     [style release];
+#endif
 }
 
 - (void) updateFromManager:(StyleManager*)m {
@@ -302,7 +323,11 @@
 			[currentStyle updateFromStyle:style];
 			[ns addObject:currentStyle];
 		} else {
+#if __has_feature(objc_arc)
+            [ns addObject:[style copy]];
+#else
 			[ns addObject:[[style copy] autorelease]];
+#endif
 		}
 	}
 	NSMutableArray *es = [NSMutableArray arrayWithCapacity:[[m edgeStyles] count]];
@@ -312,8 +337,12 @@
 			[currentStyle updateFromStyle:style];
 			[es addObject:currentStyle];
 		} else {
-			[es addObject:[[style copy] autorelease]];
-		}
+#if __has_feature(objc_arc)
+            [es addObject:[style copy]];
+#else
+            [es addObject:[[style copy] autorelease]];
+#endif		
+        }
 	}
 	[self _setNodeStyles:ns];
 	[self _setEdgeStyles:es];
@@ -324,11 +353,19 @@
 
 	NSMutableArray *ns = [NSMutableArray arrayWithCapacity:[nodeStyles count]];
 	for (NodeStyle *style in nodeStyles) {
-		[ns addObject:[[style copyWithZone:zone] autorelease]];
+#if __has_feature(objc_arc)
+        [ns addObject:[style copyWithZone:zone]];
+#else
+        [ns addObject:[[style copyWithZone:zone] autorelease]];
+#endif
 	}
 	NSMutableArray *es = [NSMutableArray arrayWithCapacity:[edgeStyles count]];
 	for (EdgeStyle *style in edgeStyles) {
-		[es addObject:[[style copyWithZone:zone] autorelease]];
+#if __has_feature(objc_arc)
+        [es addObject:[style copyWithZone:zone]];
+#else
+        [es addObject:[[style copyWithZone:zone] autorelease]];
+#endif
 	}
 	[m _setNodeStyles:ns];
 	[m _setEdgeStyles:es];

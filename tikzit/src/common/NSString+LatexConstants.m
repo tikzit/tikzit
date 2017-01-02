@@ -197,10 +197,14 @@ static NSSet *texModifiers = nil;
 	}
 	
 	NSString *ret = [buf copy];
+#if __has_feature(objc_arc)
+    return ret;
+#else
 	[buf release];
 	[wordBuf release];
 
 	return [ret autorelease];
+#endif
 }
 
 @end

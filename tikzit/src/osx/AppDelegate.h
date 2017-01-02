@@ -28,7 +28,7 @@
 #import "PreambleController.h"
 #import "PreviewController.h"
 #import "GraphicsView.h"
-#import "PreferenceController.h";
+#import "PreferenceController.h"
 
 @interface AppDelegate : NSObject {
 	NSMapTable *table;
@@ -43,7 +43,7 @@
 }
 
 @property IBOutlet StylePaletteController *stylePaletteController;
-@property IBOutlet ToolPaletteController *toolPaletteController;
+@property (strong) IBOutlet ToolPaletteController *toolPaletteController;
 
 - (void)awakeFromNib;
 + (void)setDefaults;

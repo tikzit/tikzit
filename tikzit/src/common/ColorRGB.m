@@ -25,7 +25,11 @@
 #import "util.h"
 
 typedef struct {
-	NSString *name;
+#if __has_feature(objc_arc)
+    __unsafe_unretained NSString *name;
+#else
+    NSString *name;
+#endif
 	unsigned short r, g, b;
 } ColorRGBEntry;
 
@@ -278,17 +282,29 @@ static NSMapTable *colorHash = nil;
 
 + (ColorRGB*)colorWithRed:(unsigned short)r green:(unsigned short)g blue:(unsigned short)b {
 	ColorRGB *col = [[ColorRGB alloc] initWithRed:r green:g blue:b];
-	return [col autorelease];
+#if __has_feature(objc_arc)
+    return col;
+#else
+    return [col autorelease];
+#endif
 }
 
 
 + (ColorRGB*)colorWithFloatRed:(float)r green:(float)g blue:(float)b {
 	ColorRGB *col = [[ColorRGB alloc] initWithFloatRed:r green:g blue:b];
-	return [col autorelease];
+#if __has_feature(objc_arc)
+    return col;
+#else
+    return [col autorelease];
+#endif
 }
 
 + (ColorRGB*) colorWithRColor:(RColor)color {
+#if __has_feature(objc_arc)
+    return [[self alloc] initWithRColor:color];
+#else
     return [[[self alloc] initWithRColor:color] autorelease];
+#endif
 }
 
 + (void)makeColorHash {
@@ -300,13 +316,17 @@ static NSMapTable *colorHash = nil;
 												 blue:kColors[i].b];
 		[h setObject:kColors[i].name forKey:col];
 		//NSLog(@"adding color %@ (%d)", kColors[i].name, [col hash]);
+#if ! __has_feature(objc_arc)
 		[col release];
+#endif
 	}
 	colorHash = h;
 }
 
 + (void)releaseColorHash {
+#if ! __has_feature(objc_arc)
 	[colorHash release];
+#endif
 }
 
 - (void)setToClosestHashed {
