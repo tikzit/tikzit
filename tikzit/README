@@ -1,7 +1,12 @@
-TikZit is a cross-platform application that allows the creation and modification of TeX diagrams written using the pgf/TikZ macro library. It is especially geared toward rapidly creating "dot"-diagrams for use in academic papers.
+Building on OSX:
 
-For more info, see http://tikzit.sf.net
+You'll need QT5 and poppler with QT5 bindings. QT5 can be installed with Homebrew:
 
-On OS/X, the Cocoa framework is used.
+$ brew install qt5
 
-On other platforms, GTK+ and GNUstep are used.
+whereas poppler should be built from source to get the QT5 bindings. To compile, clang needs to have C++11 features enabled. I built using:
+
+$ CXXFLAGS="-std=c++11" ./configure
+$ CXXFLAGS="-std=c++11" make
+
+
