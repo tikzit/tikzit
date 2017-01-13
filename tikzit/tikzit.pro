@@ -24,8 +24,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    toolpalette.cpp \
+    tikzscene.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    toolpalette.h \
+    tikzscene.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES +=
+
+RESOURCES += \
+    tikzit.qrc

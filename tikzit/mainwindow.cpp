@@ -1,14 +1,17 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+#include <QDebug>
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-    ui->setupUi(this);
+    setAttribute(Qt::WA_DeleteOnClose);
+    tikzScene = new TikzScene(this);
+    tikzView = new QGraphicsView(tikzScene);
+    setCentralWidget(tikzView);
+    resize(700, 500);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    qDebug() << "~MainWindow";
 }

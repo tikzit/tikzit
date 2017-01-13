@@ -1,11 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
+#include "tikzscene.h"
 
-namespace Ui {
-class MainWindow;
-}
+#include <QMainWindow>
+#include <QGraphicsView>
 
 class MainWindow : public QMainWindow
 {
@@ -14,9 +13,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
 private:
-    Ui::MainWindow *ui;
+    TikzScene *tikzScene;
+    QGraphicsView *tikzView;
 };
 
 #endif // MAINWINDOW_H

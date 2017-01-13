@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/draw-ellipse.png</file>
+        <file>images/draw-path.png</file>
+        <file>images/select-rectangular.png</file>
+        <file>images/transform-crop-and-resize.png</file>
+    </qresource>
+</RCC>
