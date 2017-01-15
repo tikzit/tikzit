@@ -6,6 +6,10 @@
 #include <QMainWindow>
 #include <QGraphicsView>
 
+namespace Ui {
+class MainWindow;
+}
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -15,7 +19,7 @@ public:
     ~MainWindow();
 private:
     TikzScene *tikzScene;
-    QGraphicsView *tikzView;
+    Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H

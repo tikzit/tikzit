@@ -26,11 +26,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     toolpalette.cpp \
-    tikzscene.cpp
+    tikzscene.cpp \
+    graph.cpp \
+    node.cpp \
+    edge.cpp \
+    tikzgraphassembler.cpp \
+    graphelementdata.cpp \
+    graphelementproperty.cpp
 
 HEADERS  += mainwindow.h \
     toolpalette.h \
-    tikzscene.h
+    tikzscene.h \
+    graph.h \
+    node.h \
+    edge.h \
+    tikzgraphassembler.h \
+    graphelementdata.h \
+    graphelementproperty.h
 
 FORMS    += mainwindow.ui
 

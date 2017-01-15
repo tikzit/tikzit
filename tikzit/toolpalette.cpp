@@ -4,12 +4,13 @@
 #include <QLayout>
 #include <QVBoxLayout>
 
-ToolPalette::ToolPalette()
+ToolPalette::ToolPalette(QWidget *parent) :
+    QToolBar(parent)
 {
     setWindowFlags(Qt::Window
-                   | Qt::WindowTitleHint
                    | Qt::WindowStaysOnTopHint
-                   | Qt::CustomizeWindowHint);
+                   | Qt::CustomizeWindowHint
+                   | Qt::WindowDoesNotAcceptFocus);
     setOrientation(Qt::Vertical);
     setFocusPolicy(Qt::NoFocus);
 

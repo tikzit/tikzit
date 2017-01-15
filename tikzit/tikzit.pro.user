@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.2.0, 2017-01-13T23:09:58. -->
+<!-- Written by QtCreator 4.2.0, 2017-01-15T13:42:00. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -19,7 +19,7 @@
    <valuemap type="QVariantMap" key="EditorConfiguration.CodeStyle.0">
     <value type="QString" key="language">Cpp</value>
     <valuemap type="QVariantMap" key="value">
-     <value type="QByteArray" key="CurrentPreferences">CppGlobal</value>
+     <value type="QByteArray" key="CurrentPreferences">qt</value>
     </valuemap>
    </valuemap>
    <valuemap type="QVariantMap" key="EditorConfiguration.CodeStyle.1">

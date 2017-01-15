@@ -10,7 +10,7 @@ class ToolPalette : public QToolBar
 {
     Q_OBJECT
 public:
-    ToolPalette();
+    ToolPalette(QWidget *parent = 0);
 private:
     QActionGroup *tools;
     QAction *select;
