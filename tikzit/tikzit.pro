@@ -23,31 +23,33 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    toolpalette.cpp \
-    tikzscene.cpp \
-    graph.cpp \
-    node.cpp \
-    edge.cpp \
-    tikzgraphassembler.cpp \
-    graphelementdata.cpp \
-    graphelementproperty.cpp \
-    propertypalette.cpp
+SOURCES += src/main.cpp\
+        src/gui/mainwindow.cpp \
+    src/gui/toolpalette.cpp \
+    src/gui/tikzscene.cpp \
+    src/data/graph.cpp \
+    src/data/node.cpp \
+    src/data/edge.cpp \
+    src/data/tikzgraphassembler.cpp \
+    src/data/graphelementdata.cpp \
+    src/data/graphelementproperty.cpp \
+    src/gui/propertypalette.cpp
 
-HEADERS  += mainwindow.h \
-    toolpalette.h \
-    tikzscene.h \
-    graph.h \
-    node.h \
-    edge.h \
-    tikzgraphassembler.h \
-    graphelementdata.h \
-    graphelementproperty.h \
-    propertypalette.h
+HEADERS  += src/gui/mainwindow.h \
+    src/gui/toolpalette.h \
+    src/gui/tikzscene.h \
+    src/data/graph.h \
+    src/data/node.h \
+    src/data/edge.h \
+    src/data/tikzgraphassembler.h \
+    src/data/graphelementdata.h \
+    src/data/graphelementproperty.h \
+    src/gui/propertypalette.h
 
-FORMS    += mainwindow.ui \
-    propertypalette.ui
+FORMS    += src/gui/mainwindow.ui \
+    src/gui/propertypalette.ui
+
+INCLUDEPATH += src src/gui src/data
 
 DISTFILES +=
 

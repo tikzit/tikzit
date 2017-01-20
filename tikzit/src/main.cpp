@@ -1,3 +1,4 @@
+
 #include "mainwindow.h"
 #include "toolpalette.h"
 #include "propertypalette.h"
