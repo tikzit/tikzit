@@ -52,7 +52,7 @@
 %{
 #include "node.h"
 #include "edge.h"
-	#include "graphelementdata.h"
+#include "graphelementdata.h"
 #include "graphelementproperty.h"
 
 #include "tikzlexer.h"
@@ -139,21 +139,21 @@ optproperties:
 	| { $$ = 0; };
 properties: extraproperties property
 	{
-		[$1 addObject:$2];
+        $1 << $2;
 		$$ = $1;
 	};
 extraproperties:
 	extraproperties property ","
 	{
-		[$1 addObject:$2];
+        $1 << $2;
 		$$ = $1;
 	}
-	| { $$ = [GraphElementData data]; };
+    | { $$ = GraphElementData(); };
 property:
 	val "=" val
-	{ $$ = [GraphElementProperty property:$1 withValue:$3]; }
+    { $$ = GraphElementProperty($1,$3); }
 	| val
-	{ $$ = [GraphElementProperty atom:$1]; };
+    { $$ = GraphElementProperty($1); };
 val: PROPSTRING { $$ = $1; } | DELIMITEDSTRING { $$ = $1; };
 
 nodename: "(" REFSTRING ")" { $$ = $2; };

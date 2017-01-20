@@ -49,6 +49,7 @@ public:
 //    bool removeRows(int position, int rows,
 //                    const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
 
+    void operator <<(GraphElementProperty p);
 signals:
 
 public slots:

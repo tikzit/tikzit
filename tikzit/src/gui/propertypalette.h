@@ -15,6 +15,8 @@ public:
     explicit PropertyPalette(QWidget *parent = 0);
     ~PropertyPalette();
 
+protected:
+    void closeEvent(QCloseEvent *event);
 private:
     Ui::PropertyPalette *ui;
 };

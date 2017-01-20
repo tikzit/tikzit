@@ -4,6 +4,8 @@
 
 #include <QModelIndex>
 #include <QDebug>
+#include <QCloseEvent>
+#include <QSettings>
 
 PropertyPalette::PropertyPalette(QWidget *parent) :
     QDockWidget(parent),
@@ -18,9 +20,18 @@ PropertyPalette::PropertyPalette(QWidget *parent) :
     QModelIndex i = d->index(0,0);
     qDebug() << "data: " << i.data();
     ui->treeView->setModel(d);
+
+    QSettings settings("tikzit", "tikzit");
+    restoreGeometry(settings.value("property-palette-geometry").toByteArray());
 }
 
 PropertyPalette::~PropertyPalette()
 {
     delete ui;
+}
+
+void PropertyPalette::closeEvent(QCloseEvent *event) {
+    QSettings settings("tikzit", "tikzit");
+    settings.setValue("property-palette-geometry", saveGeometry());
+    QDockWidget::closeEvent(event);
 }

@@ -44,7 +44,10 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/tikzgraphassembler.h \
     src/data/graphelementdata.h \
     src/data/graphelementproperty.h \
-    src/gui/propertypalette.h
+    src/gui/propertypalette.h \
+    src/data/tikzlexer.lpp \
+    src/data/tikzparser.ypp \
+    src/data/tikzparserdefs.h
 
 FORMS    += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui

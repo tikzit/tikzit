@@ -23,6 +23,7 @@
 #include "tikzparser.h"
 
 #include <QString>
+#include <stringstream>
 
 #define YY_USER_ACTION \
 	yylloc->first_line = yylloc->last_line; \
@@ -120,7 +121,7 @@ to                             {  return TO; }
  /* we assume node names (and anchor names) never contain
 	newlines */
 <noderef>[^\.\{\)\n]+ {
-	yylval->nsstr=[NSString stringWithUTF8String:yytext];
+    yylval->qstr=QString(yytext);
 	return REFSTRING;
 }
 <noderef>\) {
@@ -129,7 +130,7 @@ to                             {  return TO; }
 }
 
 <INITIAL,props>\{ {
-	NSMutableString *buf = [NSMutableString string];
+    std::stringstream buf;
 	unsigned int brace_depth = 1;
 	unsigned int escape = 0;
 	while (1) {
@@ -154,10 +155,10 @@ to                             {  return TO; }
 			yylloc->last_line += 1;
 			yylloc->last_column = 0;
 		}
-		[buf appendFormat:@"%c", c];
+        buf << c;
 	}
 	
-	yylval->nsstr = buf;
+    yylval->qstr = QString(buf.str());
 	return DELIMITEDSTRING;
 }
 

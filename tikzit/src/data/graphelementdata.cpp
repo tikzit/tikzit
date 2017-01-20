@@ -32,6 +32,11 @@ void GraphElementData::unsetProperty(QString key)
         _properties.remove(i);
 }
 
+void GraphElementData::operator <<(GraphElementProperty p)
+{
+    _properties << p;
+}
+
 void GraphElementData::setAtom(QString atom)
 {
     GraphElementProperty a(atom);
