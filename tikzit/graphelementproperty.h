@@ -3,24 +3,27 @@
 
 #include <QObject>
 
-class GraphElementProperty : public QObject
+class GraphElementProperty
 {
-    Q_OBJECT
 public:
-    GraphElementProperty(QString key, QString value, bool atom, bool keyMatch, QObject *parent = 0);
+    GraphElementProperty();
+    GraphElementProperty(QString key, QString value, bool atom, bool keyMatch);
 
     // construct a property
-    GraphElementProperty(QString key, QString value, QObject *parent = 0);
+    GraphElementProperty(QString key, QString value);
 
-    // construct an atom
-    GraphElementProperty(QString key, QObject *parent = 0);
+    // construct an atom or keymatch
+    GraphElementProperty(QString key, bool keyMatch = false);
 
     QString key() const;
     QString value() const;
+    void setValue(const QString &value);
     bool atom() const;
     bool keyMatch() const;
 
-    bool matches(GraphElementProperty *p);
+    bool matches(const GraphElementProperty &p);
+    bool operator==(const GraphElementProperty &p);
+
 signals:
 
 public slots:

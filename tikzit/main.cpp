@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "toolpalette.h"
+#include "propertypalette.h"
 #include "graph.h"
 
 #include <QApplication>
@@ -14,9 +15,8 @@ int main(int argc, char *argv[])
     tp->show();
     //w->addToolBar(Qt::LeftToolBarArea, tp);
 
-    Graph *g = new Graph;
-    Node *n = g->addNode();
-    delete g;
+    PropertyPalette *pp = new PropertyPalette;
+    pp->show();
 
     return a.exec();
 }

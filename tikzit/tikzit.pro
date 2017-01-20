@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     edge.cpp \
     tikzgraphassembler.cpp \
     graphelementdata.cpp \
-    graphelementproperty.cpp
+    graphelementproperty.cpp \
+    propertypalette.cpp
 
 HEADERS  += mainwindow.h \
     toolpalette.h \
@@ -42,9 +43,11 @@ HEADERS  += mainwindow.h \
     edge.h \
     tikzgraphassembler.h \
     graphelementdata.h \
-    graphelementproperty.h
+    graphelementproperty.h \
+    propertypalette.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    propertypalette.ui
 
 DISTFILES +=
 
