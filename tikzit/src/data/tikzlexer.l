@@ -36,7 +36,7 @@
 %option nounput
 %option yylineno
 %option noyywrap
-%option header-file="common/tikzlexer.h"
+%option header-file="tikzlexer.h"
 %option extra-type="TikzGraphAssembler *"
 
 
