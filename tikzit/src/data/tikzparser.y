@@ -41,12 +41,12 @@
 
 /* possible data types for semantic values */
 %union {
-    QString qstr;
+    QString *qstr;
     GraphElementProperty *prop;
     GraphElementData *data;
     Node *node;
-    QPointF pt;
-	struct noderef noderef;
+    QPointF *pt;
+    struct noderef noderef;
 }
 
 %{
@@ -123,7 +123,7 @@ void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 tikzpicture: "\\begin{tikzpicture}" optproperties tikzcmds "\\end{tikzpicture}"
 	{
 		if ($2) {
-			assembler->graph()->setData($2);
+            assembler->graph()->setData($2);
 		}
 	};
 tikzcmds: tikzcmds tikzcmd | ;
@@ -139,40 +139,53 @@ optproperties:
 	| { $$ = 0; };
 properties: extraproperties property
 	{
-        $1 << $2;
+        $1->add(*$2);
+        delete $2;
 		$$ = $1;
 	};
 extraproperties:
 	extraproperties property ","
 	{
-        $1 << $2;
+        $1->add(*$2);
+        delete $2;
 		$$ = $1;
 	}
-    | { $$ = GraphElementData(); };
+    | { $$ = new GraphElementData(); };
 property:
 	val "=" val
-    { $$ = GraphElementProperty($1,$3); }
+    {
+        GraphElementProperty *p = new GraphElementProperty(*$1,*$3);
+        delete $1, $3;
+        $$ = p;
+    }
 	| val
-    { $$ = GraphElementProperty($1); };
+    {
+        GraphElementProperty *a = new GraphElementProperty(*$1);
+        delete $1;
+        $$ = a;
+    };
 val: PROPSTRING { $$ = $1; } | DELIMITEDSTRING { $$ = $1; };
 
 nodename: "(" REFSTRING ")" { $$ = $2; };
 node: "\\node" optproperties nodename "at" COORD DELIMITEDSTRING ";"
 	{
 		Node *node = assembler->graph()->addNode();
-		if ($2)
-			node->setData($2);
-		node->setName($3);
-		node->setPoint($5);
-		node->setLabel($6);
+        if ($2) {
+            node->setData($2);
+        }
+        node->setName(*$3);
+        node->setPoint(*$5);
+        node->setLabel(*$6);
+        delete $3, $5, $6;
 		assembler->addNodeToMap(node);
 	};
 
 optanchor:  { $$ = 0; } | "." REFSTRING { $$ = $2; };
 noderef: "(" REFSTRING optanchor ")"
 	{
-		$$.node = assembler->nodeWithName($2);
-		$$.anchor = $3;
+        $$.node = assembler->nodeWithName(*$2);
+        delete $2;
+        $$.anchor = $3;
 	};
 optnoderef:
 	noderef { $$ = $1; }
@@ -193,25 +206,29 @@ edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
 		Node *t;
 		Node *en;
 
+        QString sa;
+        QString ta;
+
 		// TODO: anchors and edge nodes
 		
 		s = $3.node;
+        sa = *$3.anchor;
+        delete $3.anchor;
 		if ($6.node) {
 			t = $6.node;
-			//[edge setTargetAnchor:$6.anchor];
+            ta = *$6.anchor;
+            delete $6.anchor;
 		} else {
-			t = $3.node;
-			//[edge setTargetAnchor:$3.anchor];
+            t = s;
+            ta = sa;
 		}
 
 		Edge *edge = assembler->graph()->addEdge(s, t);
 		if ($2)
 			edge->setData($2);
 
-		// [edge setSourceAnchor:$3.anchor];
-		// [edge setEdgeNode:$5];
-		
-		// [edge setAttributesFromData];
+        edge->setSourceAnchor(sa);
+        edge->setTargetAnchor(ta);
 	};
 
 ignoreprop: val | val "=" val;

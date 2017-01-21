@@ -4,22 +4,22 @@
 
 Node::Node(QObject *parent) : QObject(parent)
 {
-    qDebug() << "Node()";
+    _data = new GraphElementData();
 }
 
 Node::~Node()
 {
-    qDebug() << "~Node()";
+    delete _data;
 }
 
-QPointF Node::pos() const
+QPointF Node::point() const
 {
-    return _pos;
+    return _point;
 }
 
-void Node::setPos(const QPointF &pos)
+void Node::setPoint(const QPointF &point)
 {
-    _pos = pos;
+    _point = point;
 }
 
 QString Node::name() const
@@ -41,3 +41,15 @@ void Node::setLabel(const QString &label)
 {
     _label = label;
 }
+
+GraphElementData *Node::data() const
+{
+    return _data;
+}
+
+void Node::setData(GraphElementData *data)
+{
+    delete _data;
+    _data = data;
+}
+

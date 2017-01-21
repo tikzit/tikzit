@@ -20,10 +20,10 @@
  */
 
 #include "tikzparserdefs.h"
-#include "tikzparser.h"
+#include "tikzparser.parser.hpp"
 
-#include <QString>
-#include <stringstream>
+#include <sstream>
+
 
 #define YY_USER_ACTION \
 	yylloc->first_line = yylloc->last_line; \
@@ -80,12 +80,12 @@ to                             {  return TO; }
 	BEGIN(xcoord);
 }
 <xcoord>{FLOAT} {
-	yylval->pt.x=(float)strtod(yytext,NULL);
+    yylval->pt->setX(strtod(yytext,NULL));
 	BEGIN(ycoord);
 }
 <ycoord>, {  }
 <ycoord>{FLOAT} {
-	yylval->pt.y=(float)strtod(yytext,NULL);
+    yylval->pt->setY(strtod(yytext,NULL));
 }
 <ycoord>\) {
 	BEGIN(INITIAL);
@@ -103,7 +103,7 @@ to                             {  return TO; }
 	property names or values, but in practice this is unlikely and
 	screws up our line counting */
 <props>[^=,\{\] \t\n]([^=,\{\]\n]*[^=,\{\] \t\n])? {
-	yylval->nsstr=[NSString stringWithUTF8String:yytext];
+    yylval->qstr= new QString(yytext);
 	return PROPSTRING;
 }
 <props>\] {
@@ -121,7 +121,7 @@ to                             {  return TO; }
  /* we assume node names (and anchor names) never contain
 	newlines */
 <noderef>[^\.\{\)\n]+ {
-    yylval->qstr=QString(yytext);
+    yylval->qstr = new QString(yytext);
 	return REFSTRING;
 }
 <noderef>\) {
@@ -134,7 +134,7 @@ to                             {  return TO; }
 	unsigned int brace_depth = 1;
 	unsigned int escape = 0;
 	while (1) {
-		char c = input(yyscanner);
+        char c = yyinput(yyscanner);
 		// eof reached before closing brace
 		if (c == '\0' || c == EOF) {
 			return UNCLOSED_DELIM_STR;
@@ -157,8 +157,10 @@ to                             {  return TO; }
 		}
         buf << c;
 	}
+
+
 	
-    yylval->qstr = QString(buf.str());
+    yylval->qstr = new QString(QString::fromStdString(buf.str()));
 	return DELIMITEDSTRING;
 }
 

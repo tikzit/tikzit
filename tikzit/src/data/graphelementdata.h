@@ -50,6 +50,7 @@ public:
 //                    const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
 
     void operator <<(GraphElementProperty p);
+    void add(GraphElementProperty p);
 signals:
 
 public slots:

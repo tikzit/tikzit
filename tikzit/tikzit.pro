@@ -7,11 +7,12 @@
 include(flex.pri)
 include(bison.pri)
 
-QT       += core gui
+QT       += core gui testlib
+CONFIG   += testcase
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = tikzit
+TARGET   = tikzit
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -29,7 +30,7 @@ FLEXSOURCES = src/data/tikzlexer.l
 BISONSOURCES = src/data/tikzparser.y
 
 SOURCES += src/main.cpp\
-        src/gui/mainwindow.cpp \
+    src/gui/mainwindow.cpp \
     src/gui/toolpalette.cpp \
     src/gui/tikzscene.cpp \
     src/data/graph.cpp \
@@ -38,7 +39,8 @@ SOURCES += src/main.cpp\
     src/data/tikzgraphassembler.cpp \
     src/data/graphelementdata.cpp \
     src/data/graphelementproperty.cpp \
-    src/gui/propertypalette.cpp
+    src/gui/propertypalette.cpp \
+    src/test/testtest.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -50,8 +52,6 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/graphelementdata.h \
     src/data/graphelementproperty.h \
     src/gui/propertypalette.h \
-    src/data/tikzlexer.lpp \
-    src/data/tikzparser.ypp \
     src/data/tikzparserdefs.h
 
 FORMS    += src/gui/mainwindow.ui \
