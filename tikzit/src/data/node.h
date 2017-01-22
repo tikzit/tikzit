@@ -23,8 +23,6 @@ public:
     QString label() const;
     void setLabel(const QString &label);
 
-
-
     GraphElementData *data() const;
     void setData(GraphElementData *data);
 

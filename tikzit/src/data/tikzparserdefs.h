@@ -7,6 +7,7 @@
 #include "tikzgraphassembler.h"
 
 #include <QString>
+#include <QRectF>
 #include <QDebug>
 
 struct noderef {

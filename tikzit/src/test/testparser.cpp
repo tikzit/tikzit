@@ -54,19 +54,78 @@ void TestParser::parseEdgeGraph()
     bool res = ga.parse(
     "\\begin{tikzpicture}\n"
     "  \\begin{pgfonlayer}{nodelayer}\n"
-    "    \\node [style=none] (0) at (-1, -1) {};\n"
-    "    \\node [style=none] (1) at (0, 1) {};\n"
-    "    \\node [style=none] (2) at (1, -1) {};\n"
+    "    \\node [style=x, {foo++}] (0) at (-1, -1) {};\n"
+    "    \\node [style=y] (1) at (0, 1) {};\n"
+    "    \\node [style=z] (2) at (1, -1) {};\n"
     "  \\end{pgfonlayer}\n"
     "  \\begin{pgfonlayer}{edgelayer}\n"
-    "    \\draw [style=diredge] (1.center) to (2.center);\n"
-    "    \\draw [style=diredge] (2.center) to (0.center);\n"
-    "    \\draw [style=diredge] (0.center) to (1.center);\n"
+    "    \\draw [style=a] (1.center) to (2);\n"
+    "    \\draw [style=b, foo] (2) to (0.west);\n"
+    "    \\draw [style=c] (0) to (1);\n"
     "  \\end{pgfonlayer}\n"
     "\\end{tikzpicture}\n");
     QVERIFY(res);
     QVERIFY(g->nodes().size() == 3);
     QVERIFY(g->edges().size() == 3);
+    QVERIFY(g->nodes()[0]->data()->atom("foo++"));
+    QVERIFY(g->edges()[0]->data()->property("style") == "a");
+    QVERIFY(!g->edges()[0]->data()->atom("foo"));
+    QVERIFY(g->edges()[1]->data()->property("style") == "b");
+    QVERIFY(g->edges()[1]->data()->atom("foo"));
+    QVERIFY(g->edges()[2]->data()->property("style") == "c");
+    Node *en = g->edges()[0]->edgeNode();
+    QVERIFY(en == 0);
+    delete g;
+}
+
+void TestParser::parseEdgeNode()
+{
+    Graph *g = new Graph();
+    TikzGraphAssembler ga(g);
+    bool res = ga.parse(
+    "\\begin{tikzpicture}\n"
+    "  \\begin{pgfonlayer}{nodelayer}\n"
+    "    \\node [style=none] (0) at (-1, 0) {};\n"
+    "    \\node [style=none] (1) at (1, 0) {};\n"
+    "  \\end{pgfonlayer}\n"
+    "  \\begin{pgfonlayer}{edgelayer}\n"
+    "    \\draw [style=diredge] (0.center) to node[foo, bar=baz baz]{test} (1.center);\n"
+    "  \\end{pgfonlayer}\n"
+    "\\end{tikzpicture}\n");
+    QVERIFY(res);
+    QVERIFY(g->nodes().size() == 2);
+    QVERIFY(g->edges().size() == 1);
+    Node *en = g->edges()[0]->edgeNode();
+    QVERIFY(en != 0);
+    QVERIFY(en->label() == "test");
+    QVERIFY(en->data()->atom("foo"));
+    QVERIFY(en->data()->property("bar") == "baz baz");
+    delete g;
+}
+
+void TestParser::parseBbox()
+{
+    Graph *g = new Graph();
+    TikzGraphAssembler ga(g);
+    bool res = ga.parse(
+    "\\begin{tikzpicture}\n"
+    "  \\path [use as bounding box] (-1.5,-1.5) rectangle (1.5,1.5);\n"
+    "  \\begin{pgfonlayer}{nodelayer}\n"
+    "    \\node [style=white dot] (0) at (-1, -1) {};\n"
+    "    \\node [style=white dot] (1) at (0, 1) {};\n"
+    "    \\node [style=white dot] (2) at (1, -1) {};\n"
+    "  \\end{pgfonlayer}\n"
+    "  \\begin{pgfonlayer}{edgelayer}\n"
+    "    \\draw [style=diredge] (1) to (2);\n"
+    "    \\draw [style=diredge] (2) to (0);\n"
+    "    \\draw [style=diredge] (0) to (1);\n"
+    "  \\end{pgfonlayer}\n"
+    "\\end{tikzpicture}\n");
+    QVERIFY(g->nodes().size() == 3);
+    QVERIFY(g->edges().size() == 3);
+    QVERIFY(g->hasBbox());
+    QVERIFY(g->bbox() == QRectF(QPointF(-1.5,-1.5), QPointF(1.5,1.5)));
+
     delete g;
 }
 

@@ -51,6 +51,8 @@ public:
 
     void operator <<(GraphElementProperty p);
     void add(GraphElementProperty p);
+
+    QString tikz();
 signals:
 
 public slots:

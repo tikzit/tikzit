@@ -1,6 +1,7 @@
 #include "graphelementdata.h"
 
 #include <QDebug>
+#include <QTextStream>
 
 GraphElementData::GraphElementData(QObject *parent) : QAbstractItemModel(parent)
 {
@@ -143,3 +144,22 @@ Qt::ItemFlags GraphElementData::flags(const QModelIndex &index) const
 
 //}
 
+QString GraphElementData::tikz() {
+    if (_properties.length() == 0) return "";
+    QString str;
+    QTextStream code(&str);
+    code << "[";
+
+    GraphElementProperty p;
+    bool first = true;
+    foreach(p, _properties) {
+        if (!first) code << ", ";
+        code << p.tikz();
+        first = false;
+    }
+
+    code << "]";
+
+    code.flush();
+    return str;
+}

@@ -67,10 +67,12 @@ test {
     TARGET = UnitTests
     SOURCES -= src/main.cpp
     HEADERS += src/test/testtest.h \
-        src/test/testparser.h
+        src/test/testparser.h \
+        src/test/testtikzoutput.h
     SOURCES += src/test/testmain.cpp \
         src/test/testtest.cpp \
-        src/test/testparser.cpp
+        src/test/testparser.cpp \
+        src/test/testtikzoutput.cpp
 } else {
     SOURCES += src/main.cpp
 }

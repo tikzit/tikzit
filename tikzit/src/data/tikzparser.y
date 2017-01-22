@@ -246,8 +246,9 @@ optignoreprops: "[" ignoreprops "]";
 boundingbox:
 	"\\path" optignoreprops COORD "rectangle" COORD ";"
 	{
-		// TODO: bounding box
-		//[[assembler graph] setBoundingBox:NSRectAroundPoints($3, $5)];
+        assembler->graph()->setBbox(QRectF(*$3, *$5));
+        delete $3;
+        delete $5;
 	};
 
 /* vi:ft=yacc:noet:ts=4:sts=4:sw=4

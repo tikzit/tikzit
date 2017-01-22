@@ -8,6 +8,8 @@
 #include <QObject>
 #include <QVector>
 #include <QMultiHash>
+#include <QRectF>
+#include <QString>
 
 class Graph : public QObject
 {
@@ -26,6 +28,12 @@ public:
     const QVector<Node *> &nodes();
     const QVector<Edge*> &edges();
 
+    QRectF bbox() const;
+    void setBbox(const QRectF &bbox);
+    bool hasBbox();
+    void clearBbox();
+
+    QString tikz();
 signals:
 
 public slots:
@@ -36,6 +44,7 @@ private:
     QMultiHash<Node*,Edge*> inEdges;
     QMultiHash<Node*,Edge*> outEdges;
     GraphElementData *_data;
+    QRectF _bbox;
 };
 
 #endif // GRAPH_H

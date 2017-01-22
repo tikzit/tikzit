@@ -2,10 +2,9 @@
 #define EDGE_H
 
 #include "graphelementdata.h"
+#include "node.h"
 
 #include <QObject>
-
-class Node;
 
 class Edge : public QObject
 {

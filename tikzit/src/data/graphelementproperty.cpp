@@ -1,5 +1,7 @@
 #include "graphelementproperty.h"
 
+#include <QRegExp>
+
 GraphElementProperty::GraphElementProperty ():
     _key(""), _value(""), _atom(false), _keyMatch(false)
 {}
@@ -42,4 +44,16 @@ bool GraphElementProperty::matches(const GraphElementProperty &p)
 bool GraphElementProperty::operator==(const GraphElementProperty &p)
 {
     return matches(p);
+}
+
+QString GraphElementProperty::tikzEscape(QString str)
+{
+    QRegExp re("[0-9a-zA-Z<> \\-'.]*");
+    if (re.exactMatch(str)) return str;
+    else return "{" + str + "}";
+}
+
+QString GraphElementProperty::tikz() {
+    if (_atom) return tikzEscape(_key);
+    return tikzEscape(_key) + "=" + tikzEscape(_value);
 }

@@ -24,6 +24,8 @@ public:
     bool matches(const GraphElementProperty &p);
     bool operator==(const GraphElementProperty &p);
 
+    static QString tikzEscape(QString str);
+    QString tikz();
 signals:
 
 public slots:

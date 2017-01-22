@@ -7,11 +7,11 @@ class TestParser : public QObject
 {
     Q_OBJECT
 private slots:
-    //void initTestCase();
     void parseEmptyGraph();
     void parseNodeGraph();
     void parseEdgeGraph();
-    //void cleanupTestCase();
+    void parseEdgeNode();
+    void parseBbox();
 };
 
 #endif // TESTPARSER_H
