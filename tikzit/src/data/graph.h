@@ -23,13 +23,16 @@ public:
     GraphElementData *data() const;
     void setData(GraphElementData *data);
 
+    const QVector<Node *> &nodes();
+    const QVector<Edge*> &edges();
+
 signals:
 
 public slots:
 
 private:
-    QVector<Node*> nodes;
-    QVector<Edge*> edges;
+    QVector<Node*> _nodes;
+    QVector<Edge*> _edges;
     QMultiHash<Node*,Edge*> inEdges;
     QMultiHash<Node*,Edge*> outEdges;
     GraphElementData *_data;

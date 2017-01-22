@@ -14,6 +14,7 @@ public:
     explicit TikzGraphAssembler(Graph *graph, QObject *parent = 0);
     void addNodeToMap(Node *n);
     Node *nodeWithName(QString name);
+    bool parse(const QString &tikz);
 
     Graph *graph() const;
 
@@ -24,6 +25,7 @@ public slots:
 private:
     QHash<QString,Node*> _nodeMap;
     Graph *_graph;
+    void *scanner;
 };
 
 #endif // TIKZGRAPHASSEMBLER_H

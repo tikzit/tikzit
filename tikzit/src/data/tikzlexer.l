@@ -39,7 +39,6 @@
 %option header-file="tikzlexer.h"
 %option extra-type="TikzGraphAssembler *"
 
-
 %s props
 %s xcoord
 %s ycoord
@@ -80,6 +79,7 @@ to                             {  return TO; }
 	BEGIN(xcoord);
 }
 <xcoord>{FLOAT} {
+    yylval->pt = new QPointF();
     yylval->pt->setX(strtod(yytext,NULL));
 	BEGIN(ycoord);
 }
@@ -103,7 +103,9 @@ to                             {  return TO; }
 	property names or values, but in practice this is unlikely and
 	screws up our line counting */
 <props>[^=,\{\] \t\n]([^=,\{\]\n]*[^=,\{\] \t\n])? {
-    yylval->qstr= new QString(yytext);
+    char *str = (char*)malloc(sizeof(char)*yyleng + 1);
+    strncpy(str, yytext, yyleng + 1);
+    yylval->str = str;
 	return PROPSTRING;
 }
 <props>\] {
@@ -121,7 +123,10 @@ to                             {  return TO; }
  /* we assume node names (and anchor names) never contain
 	newlines */
 <noderef>[^\.\{\)\n]+ {
-    yylval->qstr = new QString(yytext);
+    //qDebug() << "nodename: " << yytext << "  size: " << strlen(yytext);
+    char *str = (char*)malloc(sizeof(char)*yyleng + 1);
+    strncpy(str, yytext, yyleng+1);
+    yylval->str = str;
 	return REFSTRING;
 }
 <noderef>\) {
@@ -132,7 +137,7 @@ to                             {  return TO; }
 <INITIAL,props>\{ {
     std::stringstream buf;
 	unsigned int brace_depth = 1;
-	unsigned int escape = 0;
+    unsigned int escape = 0;
 	while (1) {
         char c = yyinput(yyscanner);
 		// eof reached before closing brace
@@ -158,9 +163,11 @@ to                             {  return TO; }
         buf << c;
 	}
 
-
-	
-    yylval->qstr = new QString(QString::fromStdString(buf.str()));
+    char *str = (char*)malloc(sizeof(char) * yyleng + 1);
+    strncpy(str, buf.str().c_str(), yyleng + 1);
+    //str[len] = 0;
+    yylval->str = str;
+    //qDebug() << "got delim string: " << str;
 	return DELIMITEDSTRING;
 }
 

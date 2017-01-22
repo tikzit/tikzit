@@ -41,7 +41,7 @@
 
 /* possible data types for semantic values */
 %union {
-    QString *qstr;
+    char *str;
     GraphElementProperty *prop;
     GraphElementData *data;
     Node *node;
@@ -65,6 +65,7 @@
 void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 	// TODO: implement reportError()
 	//assembler->reportError(str, yylloc);
+    qDebug() << "parse error: " << str;
 }
 %}
 
@@ -97,9 +98,9 @@ void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 %token FULLSTOP "."
 %token EQUALS "="
 %token <pt> COORD "co-ordinate"
-%token <qstr> PROPSTRING "key/value string"
-%token <qstr> REFSTRING "string"
-%token <qstr> DELIMITEDSTRING "{-delimited string"
+%token <str> PROPSTRING "key/value string"
+%token <str> REFSTRING "string"
+%token <str> DELIMITEDSTRING "{-delimited string"
 
 %token UNKNOWN_BEGIN_CMD "unknown \\begin command"
 %token UNKNOWN_END_CMD "unknown \\end command"
@@ -107,9 +108,9 @@ void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 %token UNKNOWN_STR "unknown string"
 %token UNCLOSED_DELIM_STR "unclosed {-delimited string"
 
-%type<qstr>   nodename
-%type<qstr>   optanchor
-%type<qstr>   val
+%type<str>   nodename
+%type<str>   optanchor
+%type<str>   val
 %type<prop>    property
 %type<data>    extraproperties
 %type<data>    properties
@@ -121,8 +122,8 @@ void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 %%
 
 tikzpicture: "\\begin{tikzpicture}" optproperties tikzcmds "\\end{tikzpicture}"
-	{
-		if ($2) {
+    {
+        if ($2) {
             assembler->graph()->setData($2);
 		}
 	};
@@ -141,27 +142,28 @@ properties: extraproperties property
 	{
         $1->add(*$2);
         delete $2;
-		$$ = $1;
+        $$ = $1;
 	};
 extraproperties:
 	extraproperties property ","
 	{
         $1->add(*$2);
         delete $2;
-		$$ = $1;
+        $$ = $1;
 	}
     | { $$ = new GraphElementData(); };
 property:
 	val "=" val
     {
-        GraphElementProperty *p = new GraphElementProperty(*$1,*$3);
-        delete $1, $3;
+        GraphElementProperty *p = new GraphElementProperty(QString($1),QString($3));
+        free($1);
+        free($3);
         $$ = p;
     }
 	| val
     {
-        GraphElementProperty *a = new GraphElementProperty(*$1);
-        delete $1;
+        GraphElementProperty *a = new GraphElementProperty(QString($1));
+        free($1);
         $$ = a;
     };
 val: PROPSTRING { $$ = $1; } | DELIMITEDSTRING { $$ = $1; };
@@ -173,18 +175,23 @@ node: "\\node" optproperties nodename "at" COORD DELIMITEDSTRING ";"
         if ($2) {
             node->setData($2);
         }
-        node->setName(*$3);
+        //qDebug() << "node name: " << $3;
+        node->setName(QString($3));
+        node->setLabel(QString($6));
+        free($3);
+        free($6);
+
         node->setPoint(*$5);
-        node->setLabel(*$6);
-        delete $3, $5, $6;
-		assembler->addNodeToMap(node);
+        delete $5;
+
+        assembler->addNodeToMap(node);
 	};
 
 optanchor:  { $$ = 0; } | "." REFSTRING { $$ = $2; };
 noderef: "(" REFSTRING optanchor ")"
 	{
-        $$.node = assembler->nodeWithName(*$2);
-        delete $2;
+        $$.node = assembler->nodeWithName(QString($2));
+        free($2);
         $$.anchor = $3;
 	};
 optnoderef:
@@ -193,42 +200,44 @@ optnoderef:
 optedgenode:
 	{ $$ = 0; }
 	| "node" optproperties DELIMITEDSTRING
-	{
-		// TODO: implement edge-nodes
-		// $$ = [Node node];
-		// if ($2)
-		// 	[$$ setData:$2];
-		// [$$ setLabel:$3];
+    {
+        $$ = new Node();
+        if ($2)
+            $$->setData($2);
+        $$->setLabel(QString($3));
+        free($3);
 	}
 edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
 	{
-		Node *s;
-		Node *t;
-		Node *en;
-
-        QString sa;
-        QString ta;
-
-		// TODO: anchors and edge nodes
+        Node *s;
+        Node *t;
 		
-		s = $3.node;
-        sa = *$3.anchor;
-        delete $3.anchor;
-		if ($6.node) {
-			t = $6.node;
-            ta = *$6.anchor;
-            delete $6.anchor;
-		} else {
+        s = $3.node;
+
+        if ($6.node) {
+            t = $6.node;
+        } else {
             t = s;
-            ta = sa;
-		}
+        }
 
-		Edge *edge = assembler->graph()->addEdge(s, t);
-		if ($2)
-			edge->setData($2);
+        Edge *edge = assembler->graph()->addEdge(s, t);
+        if ($2)
+            edge->setData($2);
+        if ($5)
+            edge->setEdgeNode($5);
+        if ($3.anchor) {
+            edge->setSourceAnchor(QString($3.anchor));
+            free($3.anchor);
+        }
 
-        edge->setSourceAnchor(sa);
-        edge->setTargetAnchor(ta);
+        if ($6.node) {
+            if ($6.anchor) {
+                edge->setTargetAnchor(QString($6.anchor));
+                free($6.anchor);
+            }
+        } else {
+            edge->setTargetAnchor(edge->sourceAnchor());
+        }
 	};
 
 ignoreprop: val | val "=" val;

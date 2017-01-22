@@ -4,10 +4,7 @@
 #
 #-------------------------------------------------
 
-include(flex.pri)
-include(bison.pri)
-
-QT       += core gui testlib
+QT       += core gui
 CONFIG   += testcase
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -29,8 +26,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 FLEXSOURCES = src/data/tikzlexer.l
 BISONSOURCES = src/data/tikzparser.y
 
-SOURCES += src/main.cpp\
-    src/gui/mainwindow.cpp \
+include(flex.pri)
+include(bison.pri)
+
+SOURCES += src/gui/mainwindow.cpp \
     src/gui/toolpalette.cpp \
     src/gui/tikzscene.cpp \
     src/data/graph.cpp \
@@ -39,8 +38,7 @@ SOURCES += src/main.cpp\
     src/data/tikzgraphassembler.cpp \
     src/data/graphelementdata.cpp \
     src/data/graphelementproperty.cpp \
-    src/gui/propertypalette.cpp \
-    src/test/testtest.cpp
+    src/gui/propertypalette.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -63,3 +61,16 @@ DISTFILES +=
 
 RESOURCES += \
     tikzit.qrc
+
+test {
+    QT += testlib
+    TARGET = UnitTests
+    SOURCES -= src/main.cpp
+    HEADERS += src/test/testtest.h \
+        src/test/testparser.h
+    SOURCES += src/test/testmain.cpp \
+        src/test/testtest.cpp \
+        src/test/testparser.cpp
+} else {
+    SOURCES += src/main.cpp
+}

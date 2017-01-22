@@ -7,10 +7,11 @@
 #include "tikzgraphassembler.h"
 
 #include <QString>
+#include <QDebug>
 
 struct noderef {
     Node *node;
-    QString *anchor;
+    char *anchor;
 };
 
 #endif // TIKZPARSERDEFS_H

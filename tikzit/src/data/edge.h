@@ -26,16 +26,24 @@ public:
     QString targetAnchor() const;
     void setTargetAnchor(const QString &targetAnchor);
 
+    Node *edgeNode() const;
+    void setEdgeNode(Node *edgeNode);
+
 signals:
 
 public slots:
 
 private:
-    Node *_source;
-    Node *_target;
-    GraphElementData *_data;
     QString _sourceAnchor;
     QString _targetAnchor;
+
+    // owned
+    Node *_edgeNode;
+    GraphElementData *_data;
+
+    // referenced
+    Node *_source;
+    Node *_target;
 };
 
 #endif // EDGE_H
