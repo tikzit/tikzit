@@ -27,6 +27,7 @@ public:
 
     Node *edgeNode() const;
     void setEdgeNode(Node *edgeNode);
+    bool hasEdgeNode();
 
 signals:
 

@@ -67,4 +67,9 @@ void Edge::setEdgeNode(Node *edgeNode)
     _edgeNode = edgeNode;
 }
 
+bool Edge::hasEdgeNode()
+{
+    return _edgeNode != 0;
+}
+
 

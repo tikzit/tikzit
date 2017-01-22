@@ -53,6 +53,7 @@ public:
     void add(GraphElementProperty p);
 
     QString tikz();
+    bool isEmpty();
 signals:
 
 public slots:

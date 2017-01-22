@@ -163,3 +163,8 @@ QString GraphElementData::tikz() {
     code.flush();
     return str;
 }
+
+bool GraphElementData::isEmpty()
+{
+    return _properties.isEmpty();
+}

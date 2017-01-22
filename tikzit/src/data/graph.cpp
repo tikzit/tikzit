@@ -73,88 +73,75 @@ QString Graph::tikz()
 {
     QString str;
     QTextStream code(&str);
-//    [NSMutableString
-//                                 stringWithFormat:@"\\begin{tikzpicture}%@\n",
-//                                 [[self data] tikzList]];
 
-//        if ([self hasBoundingBox]) {
-//            [code appendFormat:@"\t\\path [use as bounding box] (%@,%@) rectangle (%@,%@);\n",
-//                [NSNumber numberWithFloat:boundingBox.origin.x],
-//                [NSNumber numberWithFloat:boundingBox.origin.y],
-//                [NSNumber numberWithFloat:boundingBox.origin.x + boundingBox.size.width],
-//                [NSNumber numberWithFloat:boundingBox.origin.y + boundingBox.size.height]];
-//        }
+    code << "\\begin{tikzpicture}" << _data->tikz() << "\n";
+    if (hasBbox()) {
+        code << "\t\\path [use as bounding box] ("
+             << _bbox.topLeft().x() << "," << _bbox.topLeft().y()
+             << ") rectangle ("
+             << _bbox.bottomRight().x() << "," << _bbox.bottomRight().y()
+             << ");\n";
+    }
 
-//    //	NSArray *sortedNodeList = [[nodes allObjects]
-//    //				     sortedArrayUsingSelector:@selector(compareTo:)];
-//        //NSMutableDictionary *nodeNames = [NSMutableDictionary dictionary];
+    if (!_nodes.isEmpty())
+        code << "\t\\begin{pgfonlayer}{nodelayer}\n";
 
-//        if ([nodes count] > 0) [code appendFormat:@"\t\\begin{pgfonlayer}{nodelayer}\n"];
+    Node *n;
+    foreach (n, _nodes) {
+        code << "\t\t\\node ";
 
-//        int i = 0;
-//        for (Node *n in nodes) {
-//            [n updateData];
-//            [n setName:[NSString stringWithFormat:@"%d", i]];
-//            [code appendFormat:@"\t\t\\node %@ (%d) at (%@, %@) {%@};\n",
-//                [[n data] tikzList],
-//                i,
-//                formatFloat([n point].x, 4),
-//                formatFloat([n point].y, 4),
-//                [n label]
-//            ];
-//            i++;
-//        }
+        if (!n->data()->isEmpty())
+            code << n->data()->tikz() << " ";
 
-//        if ([nodes count] > 0) [code appendFormat:@"\t\\end{pgfonlayer}\n"];
-//        if ([edges count] > 0) [code appendFormat:@"\t\\begin{pgfonlayer}{edgelayer}\n"];
+        code << "(" << n->name() << ") at ("
+             << n->point().x() << ", " << n->point().y()
+             << ") {" << n->label() << "};\n";
+    }
 
-//        NSString *nodeStr;
-//        for (Edge *e in edges) {
-//            [e updateData];
+    if (!_nodes.isEmpty())
+        code << "\t\\end{pgfonlayer}\n";
 
-//            if ([e hasEdgeNode]) {
-//                nodeStr = [NSString stringWithFormat:@"node%@{%@} ",
-//                           [[[e edgeNode] data] tikzList],
-//                           [[e edgeNode] label]
-//                           ];
-//            } else {
-//                nodeStr = @"";
-//            }
+    if (!_edges.isEmpty())
+        code << "\t\\begin{pgfonlayer}{edgelayer}\n";
 
-//            NSString *edata = [[e data] tikzList];
 
-//            NSString *srcAnchor;
-//            NSString *tgtAnchor;
+    Edge *e;
+    foreach (e, _edges) {
+        code << "\t\t\\draw ";
 
-//            if ([[e sourceAnchor] isEqual:@""]) {
-//                srcAnchor = @"";
-//            } else {
-//                srcAnchor = [NSString stringWithFormat:@".%@", [e sourceAnchor]];
-//            }
+        if (!e->data()->isEmpty())
+            code << e->data()->tikz() << " ";
 
-//            if ([[e targetAnchor] isEqual:@""]) {
-//                tgtAnchor = @"";
-//            } else {
-//                tgtAnchor = [NSString stringWithFormat:@".%@", [e targetAnchor]];
-//            }
+        code << "(" << e->source()->name();
+        if (e->sourceAnchor() != "")
+            code << "." << e->sourceAnchor();
+        code << ") to ";
 
-//            [code appendFormat:@"\t\t\\draw%@ (%@%@) to %@(%@%@);\n",
-//                ([edata isEqual:@""]) ? @"" : [NSString stringWithFormat:@" %@", edata],
-//                [[e source] name],
-//                srcAnchor,
-//                nodeStr,
-//                ([e source] == [e target]) ? @"" : [[e target] name],
-//                tgtAnchor
-//            ];
-//        }
+        if (e->hasEdgeNode()) {
+            code << "node ";
+            if (!e->edgeNode()->data()->isEmpty())
+                code << e->edgeNode()->data()->tikz() << " ";
+            code << "{" << e->edgeNode()->label() << "} ";
+        }
 
-//        if ([edges count] > 0) [code appendFormat:@"\t\\end{pgfonlayer}\n"];
+        if (e->source() == e->target()) {
+            code << "()";
+        } else {
+            code << "(" << e->target()->name();
+            if (e->targetAnchor() != "")
+                code << "." << e->targetAnchor();
+            code << ")";
+        }
 
-//        [code appendString:@"\\end{tikzpicture}"];
+        code << ";\n";
+    }
 
-//        [graphLock unlock];
+    if (!_edges.isEmpty())
+        code << "\t\\end{pgfonlayer}\n";
 
-//        return code;
+    code << "\\end{tikzpicture}\n";
+
+    code.flush();
     return str;
 }
 
