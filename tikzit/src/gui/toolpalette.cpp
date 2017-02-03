@@ -3,6 +3,7 @@
 #include <QVector>
 #include <QLayout>
 #include <QVBoxLayout>
+#include <QDebug>
 
 ToolPalette::ToolPalette(QWidget *parent) :
     QToolBar(parent)
@@ -38,3 +39,4 @@ ToolPalette::ToolPalette(QWidget *parent) :
     addAction(edge);
     addAction(crop);
 }
+

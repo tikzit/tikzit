@@ -6,11 +6,10 @@
 
 #include <QApplication>
 
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow *w = new MainWindow();
-    w->show();
 
     ToolPalette *tp = new ToolPalette(new QMainWindow());
     tp->show();
@@ -18,6 +17,9 @@ int main(int argc, char *argv[])
 
     PropertyPalette *pp = new PropertyPalette;
     pp->show();
+
+    MainWindow *w = new MainWindow();
+    w->show();
 
     return a.exec();
 }

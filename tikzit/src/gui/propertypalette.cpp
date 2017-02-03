@@ -11,6 +11,11 @@ PropertyPalette::PropertyPalette(QWidget *parent) :
     QDockWidget(parent),
     ui(new Ui::PropertyPalette)
 {
+    setWindowFlags(Qt::Window
+                   | Qt::WindowStaysOnTopHint
+                   | Qt::CustomizeWindowHint
+                   | Qt::WindowTitleHint);
+    //setFocusPolicy(Qt::NoFocus);
     ui->setupUi(this);
     GraphElementData *d = new GraphElementData();
     d->setProperty("key 1", "value 1");
@@ -22,7 +27,10 @@ PropertyPalette::PropertyPalette(QWidget *parent) :
     ui->treeView->setModel(d);
 
     QSettings settings("tikzit", "tikzit");
-    restoreGeometry(settings.value("property-palette-geometry").toByteArray());
+    QVariant geom = settings.value("property-palette-geometry");
+    if (geom != QVariant()) {
+        restoreGeometry(geom.toByteArray());
+    }
 }
 
 PropertyPalette::~PropertyPalette()

@@ -38,7 +38,9 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/tikzgraphassembler.cpp \
     src/data/graphelementdata.cpp \
     src/data/graphelementproperty.cpp \
-    src/gui/propertypalette.cpp
+    src/gui/propertypalette.cpp \
+    src/gui/tikzview.cpp \
+    src/gui/nodeitem.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -50,7 +52,9 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/graphelementdata.h \
     src/data/graphelementproperty.h \
     src/gui/propertypalette.h \
-    src/data/tikzparserdefs.h
+    src/data/tikzparserdefs.h \
+    src/gui/tikzview.h \
+    src/gui/nodeitem.h
 
 FORMS    += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui
