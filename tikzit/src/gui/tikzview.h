@@ -8,6 +8,7 @@
 #include <QGraphicsItem>
 #include <QStyleOptionGraphicsItem>
 #include <QRectF>
+#include <QMouseEvent>
 
 class TikzView : public QGraphicsView
 {
@@ -17,6 +18,10 @@ public:
 public slots:
     void zoomIn();
     void zoomOut();
+protected:
+    void drawBackground(QPainter *painter, const QRectF &rect);
+private:
+    float _scale;
 };
 
 #endif // TIKZVIEW_H

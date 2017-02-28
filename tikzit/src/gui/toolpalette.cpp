@@ -9,7 +9,6 @@ ToolPalette::ToolPalette(QWidget *parent) :
     QToolBar(parent)
 {
     setWindowFlags(Qt::Window
-                   | Qt::WindowStaysOnTopHint
                    | Qt::CustomizeWindowHint
                    | Qt::WindowDoesNotAcceptFocus);
     setOrientation(Qt::Vertical);

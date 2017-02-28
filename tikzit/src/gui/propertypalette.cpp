@@ -23,7 +23,6 @@ PropertyPalette::PropertyPalette(QWidget *parent) :
     d->setProperty("key 2", "value 2");
 
     QModelIndex i = d->index(0,0);
-    qDebug() << "data: " << i.data();
     ui->treeView->setModel(d);
 
     QSettings settings("tikzit", "tikzit");

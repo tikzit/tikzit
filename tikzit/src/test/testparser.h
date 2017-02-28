@@ -11,6 +11,7 @@ private slots:
     void parseNodeGraph();
     void parseEdgeGraph();
     void parseEdgeNode();
+    void parseEdgeBends();
     void parseBbox();
 };
 

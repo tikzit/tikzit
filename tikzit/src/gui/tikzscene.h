@@ -3,6 +3,7 @@
 
 #include "graph.h"
 #include "nodeitem.h"
+#include "edgeitem.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
@@ -10,6 +11,7 @@
 #include <QRectF>
 #include <QVector>
 #include <QGraphicsEllipseItem>
+#include <QGraphicsSceneMouseEvent>
 
 class TikzScene : public QGraphicsScene
 {
@@ -20,13 +22,15 @@ public:
     void setGraph(Graph *graph);
 public slots:
     void graphReplaced();
-
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 private:
     Graph *_graph;
     QVector<NodeItem*> nodeItems;
+    QVector<EdgeItem*> edgeItems;
 
-protected:
-    void drawBackground(QPainter *painter, const QRectF &rect);
 };
 
 #endif // TIKZSCENE_H

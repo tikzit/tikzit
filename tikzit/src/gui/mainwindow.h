@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "tikzscene.h"
+#include "tikzview.h"
 #include "graph.h"
 
 #include <QMainWindow>
@@ -20,18 +21,22 @@ public:
     ~MainWindow();
 
     void open(QString fileName);
+    bool pristine() const;
+    int windowId() const;
+    TikzView *tikzView() const;
+    TikzScene *tikzScene() const;
 
 protected:
     void closeEvent(QCloseEvent *event);
+    void changeEvent(QEvent *event);
 private:
-    TikzScene *tikzScene;
+    TikzScene *_tikzScene;
     Ui::MainWindow *ui;
     Graph *_graph;
     QString _fileName;
     bool _pristine;
+    int _windowId;
     static int _numWindows;
-public slots:
-    void on_actionOpen_triggered();
 };
 
 #endif // MAINWINDOW_H

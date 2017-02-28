@@ -103,6 +103,36 @@ void TestParser::parseEdgeNode()
     delete g;
 }
 
+void TestParser::parseEdgeBends()
+{
+    Graph *g = new Graph();
+    TikzGraphAssembler ga(g);
+    bool res = ga.parse(
+    "\\begin{tikzpicture}\n"
+    "  \\begin{pgfonlayer}{nodelayer}\n"
+    "    \\node [style=white] (0) at (-1, 0) {};\n"
+    "    \\node [style=black] (1) at (1, 0) {};\n"
+    "  \\end{pgfonlayer}\n"
+    "  \\begin{pgfonlayer}{edgelayer}\n"
+    "    \\draw [style=diredge,bend left] (0) to (1);\n"
+    "    \\draw [style=diredge,bend right] (0) to (1);\n"
+    "    \\draw [style=diredge,bend left=20] (0) to (1);\n"
+    "    \\draw [style=diredge,bend right=80] (0) to (1);\n"
+    "    \\draw [style=diredge,in=10,out=150,looseness=2] (0) to (1);\n"
+    "  \\end{pgfonlayer}\n"
+    "\\end{tikzpicture}\n");
+    QVERIFY(res);
+    QVERIFY(g->nodes().size() == 2);
+    QVERIFY(g->edges().size() == 5);
+    QVERIFY(g->edges()[0]->bend() == -30);
+    QVERIFY(g->edges()[1]->bend() == 30);
+    QVERIFY(g->edges()[2]->bend() == -20);
+    QVERIFY(g->edges()[3]->bend() == 80);
+    QVERIFY(g->edges()[4]->inAngle() == 10);
+    QVERIFY(g->edges()[4]->outAngle() == 150);
+    QVERIFY(g->edges()[4]->weight() == 2.0f/2.5f);
+}
+
 void TestParser::parseBbox()
 {
     Graph *g = new Graph();
@@ -121,6 +151,7 @@ void TestParser::parseBbox()
     "    \\draw [style=diredge] (0) to (1);\n"
     "  \\end{pgfonlayer}\n"
     "\\end{tikzpicture}\n");
+    QVERIFY(res);
     QVERIFY(g->nodes().size() == 3);
     QVERIFY(g->edges().size() == 3);
     QVERIFY(g->hasBbox());

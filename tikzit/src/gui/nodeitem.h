@@ -4,13 +4,18 @@
 #include "node.h"
 
 #include <QObject>
-#include <QGraphicsEllipseItem>
+#include <QGraphicsItem>
+#include <QPainterPath>
+#include <QRectF>
 
-class NodeItem : public QGraphicsEllipseItem
+class NodeItem : public QGraphicsItem
 {
 public:
     NodeItem(Node *node);
     void syncPos();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QPainterPath shape() const;
+    QRectF boundingRect() const;
 private:
     Node *_node;
 };

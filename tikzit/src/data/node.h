@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include "graphelementdata.h"
+#include "nodestyle.h"
 
 #include <QObject>
 #include <QPointF>
@@ -26,6 +27,12 @@ public:
     GraphElementData *data() const;
     void setData(GraphElementData *data);
 
+    QString styleName() const;
+    void setStyleName(const QString &styleName);
+
+    void attachStyle();
+    NodeStyle style() const;
+
 signals:
 
 public slots:
@@ -34,6 +41,8 @@ private:
     QPointF _point;
     QString _name;
     QString _label;
+    QString _styleName;
+    NodeStyle _style;
     GraphElementData *_data;
 };
 

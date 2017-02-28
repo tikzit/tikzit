@@ -1,7 +1,10 @@
+#include "tikzit.h"
 #include "tikzscene.h"
 
 #include <QPen>
 #include <QBrush>
+#include <QDebug>
+
 
 TikzScene::TikzScene(Graph *graph, QObject *parent) :
     QGraphicsScene(parent), _graph(graph)
@@ -28,8 +31,17 @@ void TikzScene::graphReplaced()
     }
     nodeItems.clear();
 
-    QPen blackPen(Qt::black);
-    QBrush redBrush(Qt::red);
+    foreach (EdgeItem *ei, edgeItems) {
+        removeItem(ei);
+        delete ei;
+    }
+    edgeItems.clear();
+
+    foreach (Edge *e, _graph->edges()) {
+        EdgeItem *ei = new EdgeItem(e);
+        edgeItems << ei;
+        addItem(ei);
+    }
 
     foreach (Node *n, _graph->nodes()) {
         NodeItem *ni = new NodeItem(n);
@@ -38,45 +50,19 @@ void TikzScene::graphReplaced()
     }
 }
 
-void TikzScene::drawBackground(QPainter *painter, const QRectF &rect)
+void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    // draw the grid
-    int step = 10;
+    // TODO: check if we grabbed a control point
 
-    QPen pen;
-    pen.setWidth(2);
-    pen.setCosmetic(true);
-    pen.setColor(QColor(245,245,255));
+    QGraphicsScene::mousePressEvent(event);
+}
 
-    painter->setPen(pen);
-    for (int x = step; x < rect.right(); x += step) {
-        if (x % (step * 8) != 0) {
-            painter->drawLine(x, rect.top(), x, rect.bottom());
-            painter->drawLine(-x, rect.top(), -x, rect.bottom());
-        }
-    }
+void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene::mouseMoveEvent(event);
+}
 
-    for (int y = step; y < rect.bottom(); y += step) {
-        if (y % (step * 8) != 0) {
-            painter->drawLine(rect.left(), y, rect.right(), y);
-            painter->drawLine(rect.left(), -y, rect.right(), -y);
-        }
-    }
-
-    pen.setColor(QColor(240,240,245));
-    painter->setPen(pen);
-    for (int x = step*8; x < rect.right(); x += step*8) {
-        painter->drawLine(x, rect.top(), x, rect.bottom());
-        painter->drawLine(-x, rect.top(), -x, rect.bottom());
-    }
-
-    for (int y = step*8; y < rect.bottom(); y += step*8) {
-        painter->drawLine(rect.left(), y, rect.right(), y);
-        painter->drawLine(rect.left(), -y, rect.right(), -y);
-    }
-
-    pen.setColor(QColor(230,230,240));
-    painter->setPen(pen);
-    painter->drawLine(rect.left(), 0, rect.right(), 0);
-    painter->drawLine(0, rect.top(), 0, rect.bottom());
+void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene::mouseReleaseEvent(event);
 }

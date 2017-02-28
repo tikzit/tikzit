@@ -40,7 +40,10 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/graphelementproperty.cpp \
     src/gui/propertypalette.cpp \
     src/gui/tikzview.cpp \
-    src/gui/nodeitem.cpp
+    src/gui/nodeitem.cpp \
+    src/gui/edgeitem.cpp \
+    src/tikzit.cpp \
+    src/data/nodestyle.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -54,17 +57,20 @@ HEADERS  += src/gui/mainwindow.h \
     src/gui/propertypalette.h \
     src/data/tikzparserdefs.h \
     src/gui/tikzview.h \
-    src/gui/nodeitem.h
+    src/gui/nodeitem.h \
+    src/tikzit.h \
+    src/gui/edgeitem.h \
+    src/data/nodestyle.h
 
 FORMS    += src/gui/mainwindow.ui \
-    src/gui/propertypalette.ui
+            src/gui/propertypalette.ui \
+            src/gui/mainmenu.ui
 
 INCLUDEPATH += src src/gui src/data
 
 DISTFILES +=
 
-RESOURCES += \
-    tikzit.qrc
+RESOURCES += tikzit.qrc
 
 test {
     QT += testlib

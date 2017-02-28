@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "tikzgraphassembler.h"
+#include "toolpalette.h"
+#include "tikzit.h"
 
 #include <QDebug>
 #include <QFile>
@@ -15,12 +17,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    _windowId = _numWindows;
     _numWindows++;
     ui->setupUi(this);
-    setAttribute(Qt::WA_DeleteOnClose);
+    setAttribute(Qt::WA_DeleteOnClose, true);
     _graph = new Graph(this);
-    tikzScene = new TikzScene(_graph, this);
-    ui->tikzView->setScene(tikzScene);
+    _tikzScene = new TikzScene(_graph, this);
+    ui->tikzView->setScene(_tikzScene);
     _fileName = "";
     _pristine = true;
 
@@ -33,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    //qDebug() << "~MainWindow";
+    tikzit->removeWindow(this);
 }
 
 void MainWindow::open(QString fileName)
@@ -44,6 +47,8 @@ void MainWindow::open(QString fileName)
     QFileInfo fi(file);
     QSettings settings("tikzit", "tikzit");
     settings.setValue("previous-file-path", fi.absolutePath());
+
+    setWindowTitle("TiKZiT - " + fi.fileName());
 
     if (!file.open(QIODevice::ReadOnly)) {
         QMessageBox::critical(this, tr("Error"),
@@ -61,9 +66,11 @@ void MainWindow::open(QString fileName)
     TikzGraphAssembler ass(newGraph);
     if (ass.parse(tikz)) {
         statusBar()->showMessage("TiKZ parsed successfully", 2000);
-        tikzScene->setGraph(newGraph);
         delete _graph;
         _graph = newGraph;
+        foreach (Node *n, _graph->nodes()) n->attachStyle();
+        foreach (Edge *e, _graph->edges()) e->updateControls();
+        _tikzScene->setGraph(_graph);
     } else {
         statusBar()->showMessage("Cannot read TiKZ source");
         delete newGraph;
@@ -77,24 +84,32 @@ void MainWindow::closeEvent(QCloseEvent *event)
     QMainWindow::closeEvent(event);
 }
 
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::changeEvent(QEvent *event)
 {
-    QSettings settings("tikzit", "tikzit");
-    QString fileName = QFileDialog::getOpenFileName(
-                this,
-                tr("Open File"),
-                settings.value("previous-file-path").toString(),
-                tr("TiKZ Files (*.tikz)"));
-
-    if (!fileName.isEmpty()) {
-        if (_pristine) {
-            open(fileName);
-        } else {
-            MainWindow *w = new MainWindow();
-            w->show();
-            w->open(fileName);
-        }
+    if (event->type() == QEvent::ActivationChange && isActiveWindow()) {
+        tikzit->setActiveWindow(this);
     }
+    QMainWindow::changeEvent(event);
+}
+
+TikzScene *MainWindow::tikzScene() const
+{
+    return _tikzScene;
+}
+
+int MainWindow::windowId() const
+{
+    return _windowId;
+}
+
+TikzView *MainWindow::tikzView() const
+{
+    return ui->tikzView;
+}
+
+bool MainWindow::pristine() const
+{
+    return _pristine;
 }
 
 

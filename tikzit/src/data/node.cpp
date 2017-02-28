@@ -1,10 +1,13 @@
 #include "node.h"
+#include "tikzit.h"
 
 #include <QDebug>
 
 Node::Node(QObject *parent) : QObject(parent)
 {
     _data = new GraphElementData();
+    _style = NodeStyle();
+    _styleName = "none";
 }
 
 Node::~Node()
@@ -51,5 +54,27 @@ void Node::setData(GraphElementData *data)
 {
     delete _data;
     _data = data;
+    if (_data->property("style") != 0) _styleName = _data->property("style");
+}
+
+QString Node::styleName() const
+{
+    return _styleName;
+}
+
+void Node::setStyleName(const QString &styleName)
+{
+    _styleName = styleName;
+}
+
+void Node::attachStyle()
+{
+    if (_styleName == "none") _style = NodeStyle();
+    else _style = tikzit->nodeStyle(_styleName);
+}
+
+NodeStyle Node::style() const
+{
+    return _style;
 }
 
