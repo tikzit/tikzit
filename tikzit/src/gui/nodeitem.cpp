@@ -1,7 +1,10 @@
 #include "tikzit.h"
 #include "nodeitem.h"
+#include "tikzscene.h"
+#include <cmath>
 
 #include <QPen>
+#include <QApplication>
 #include <QBrush>
 #include <QDebug>
 #include <QFont>
@@ -13,6 +16,7 @@ NodeItem::NodeItem(Node *node)
     _node = node;
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemSendsGeometryChanges);
     syncPos();
 }
 
@@ -90,4 +94,18 @@ QPainterPath NodeItem::shape() const
 QRectF NodeItem::boundingRect() const
 {
     return shape().boundingRect().adjusted(-4,-4,4,4);
+}
+
+QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    if (change == ItemPositionChange) {
+        QPointF newPos = value.toPointF();
+        int gridSize = GLOBAL_SCALE / 8;
+        QPointF gridPos(round(newPos.x()/gridSize)*gridSize, round(newPos.y()/gridSize)*gridSize);
+        _node->setPoint(fromScreen(gridPos));
+
+        return gridPos;
+    } else {
+        return QGraphicsItem::itemChange(change, value);
+    }
 }

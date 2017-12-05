@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     _numWindows++;
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose, true);
-    _graph = new Graph(this);
-    _tikzScene = new TikzScene(_graph, this);
+    _tikzDocument = new TikzDocument(this);
+    _tikzScene = new TikzScene(_tikzDocument->graph(), this);
     ui->tikzView->setScene(_tikzScene);
     _fileName = "";
     _pristine = true;
@@ -41,39 +41,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::open(QString fileName)
 {
-    _fileName = fileName;
     _pristine = false;
-    QFile file(fileName);
-    QFileInfo fi(file);
-    QSettings settings("tikzit", "tikzit");
-    settings.setValue("previous-file-path", fi.absolutePath());
+    _tikzDocument->open(fileName);
+    ui->tikzSource->setText(_tikzDocument->tikz());
 
-    setWindowTitle("TiKZiT - " + fi.fileName());
 
-    if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::critical(this, tr("Error"),
-        tr("Could not open file"));
-        return;
-    }
-
-    QTextStream in(&file);
-    QString tikz = in.readAll();
-    file.close();
-
-    ui->tikzSource->setText(tikz);
-
-    Graph *newGraph = new Graph(this);
-    TikzGraphAssembler ass(newGraph);
-    if (ass.parse(tikz)) {
+    if (_tikzDocument->parseSuccess()) {
         statusBar()->showMessage("TiKZ parsed successfully", 2000);
-        delete _graph;
-        _graph = newGraph;
-        foreach (Node *n, _graph->nodes()) n->attachStyle();
-        foreach (Edge *e, _graph->edges()) e->updateControls();
-        _tikzScene->setGraph(_graph);
+        setWindowTitle("TiKZiT - " + _tikzDocument->shortName());
+        _tikzScene->setGraph(_tikzDocument->graph());
     } else {
         statusBar()->showMessage("Cannot read TiKZ source");
-        delete newGraph;
     }
 
 }

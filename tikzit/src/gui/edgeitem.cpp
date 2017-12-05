@@ -14,8 +14,16 @@ EdgeItem::EdgeItem(Edge *edge)
     setPen(pen);
     _cp1Item = new QGraphicsEllipseItem(this);
     _cp1Item->setParentItem(this);
+    _cp1Item->setRect(GLOBAL_SCALEF * (-0.05), GLOBAL_SCALEF * (-0.05),
+                      GLOBAL_SCALEF * 0.1, GLOBAL_SCALEF * 0.1);
+    _cp1Item->setVisible(false);
+
     _cp2Item = new QGraphicsEllipseItem(this);
     _cp2Item->setParentItem(this);
+    _cp2Item->setRect(GLOBAL_SCALEF * (-0.05), GLOBAL_SCALEF * (-0.05),
+                      GLOBAL_SCALEF * 0.1, GLOBAL_SCALEF * 0.1);
+    _cp2Item->setVisible(false);
+
     syncPos();
 }
 
@@ -31,9 +39,8 @@ void EdgeItem::syncPos()
                  toScreen(_edge->head()));
     setPath(path);
 
-    float r = GLOBAL_SCALEF * 0.05;
-    //painter->drawEllipse(toScreen(_edge->cp1()), r, r);
-    //painter->drawEllipse(toScreen(_edge->cp2()), r, r);
+    _cp1Item->setPos(toScreen(_edge->cp1()));
+    _cp2Item->setPos(toScreen(_edge->cp2()));
 }
 
 void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -42,8 +49,6 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setPen(pen());
     painter->setBrush(Qt::NoBrush);
     painter->drawPath(path());
-
-
 
     if (isSelected()) {
         QColor draw;
@@ -72,18 +77,34 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         painter->drawLine(toScreen(_edge->tail()), toScreen(_edge->cp1()));
         painter->drawLine(toScreen(_edge->head()), toScreen(_edge->cp2()));
 
-        r = GLOBAL_SCALEF * 0.05;
-        painter->drawEllipse(toScreen(_edge->cp1()), r, r);
-        painter->drawEllipse(toScreen(_edge->cp2()), r, r);
+        //painter->drawEllipse(toScreen(_edge->cp1()), r, r);
+        //painter->drawEllipse(toScreen(_edge->cp2()), r, r);
 
+        _cp1Item->setPen(QPen(draw));
+        _cp1Item->setBrush(QBrush(fill));
+        _cp1Item->setVisible(true);
+
+        _cp2Item->setPen(QPen(draw));
+        _cp2Item->setBrush(QBrush(fill));
+        _cp2Item->setVisible(true);
+
+        r = GLOBAL_SCALEF * 0.05;
         painter->setPen(QPen(Qt::black));
         painter->setBrush(QBrush(QColor(255,255,255,200)));
         painter->drawEllipse(toScreen(_edge->mid()), r, r);
+    } else {
+        _cp1Item->setVisible(false);
+        _cp2Item->setVisible(false);
     }
 }
 
 QRectF EdgeItem::boundingRect() const
 {
     float r = GLOBAL_SCALEF * (_edge->cpDist() + 0.2);
-    return QGraphicsPathItem::boundingRect().adjusted(-r,-r,r,r);
+    return shape().boundingRect().adjusted(-r,-r,r,r);
+}
+
+Edge *EdgeItem::edge() const
+{
+    return _edge;
 }

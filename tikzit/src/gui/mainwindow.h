@@ -4,6 +4,7 @@
 #include "tikzscene.h"
 #include "tikzview.h"
 #include "graph.h"
+#include "tikzdocument.h"
 
 #include <QMainWindow>
 #include <QGraphicsView>
@@ -31,8 +32,8 @@ protected:
     void changeEvent(QEvent *event);
 private:
     TikzScene *_tikzScene;
+    TikzDocument *_tikzDocument;
     Ui::MainWindow *ui;
-    Graph *_graph;
     QString _fileName;
     bool _pristine;
     int _windowId;

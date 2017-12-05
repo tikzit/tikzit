@@ -12,7 +12,6 @@ PropertyPalette::PropertyPalette(QWidget *parent) :
     ui(new Ui::PropertyPalette)
 {
     setWindowFlags(Qt::Window
-                   | Qt::WindowStaysOnTopHint
                    | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint);
     //setFocusPolicy(Qt::NoFocus);

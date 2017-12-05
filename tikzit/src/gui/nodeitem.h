@@ -14,6 +14,7 @@ public:
     NodeItem(Node *node);
     void syncPos();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     QPainterPath shape() const;
     QRectF boundingRect() const;
 private:

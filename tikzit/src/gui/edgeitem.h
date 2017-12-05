@@ -18,6 +18,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
     QRectF boundingRect() const;
+    Edge *edge() const;
 
 private:
     Edge *_edge;

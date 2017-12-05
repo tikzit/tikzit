@@ -59,6 +59,12 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    //foreach (Edge *e, _graph->edges()) { e->updateControls(); }
+    foreach (EdgeItem *ei, edgeItems) {
+        ei->edge()->updateControls();
+        ei->syncPos();
+    }
+
     QGraphicsScene::mouseMoveEvent(event);
 }
 
