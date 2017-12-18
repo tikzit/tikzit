@@ -1,8 +1,3 @@
-/**
-  * Manage the scene, which contains a single Graph, and respond to user input. This serves as
-  * the controller for the MVC (Graph, TikzView, TikzScene).
-  */
-
 #include "tikzit.h"
 #include "tikzscene.h"
 
@@ -32,27 +27,27 @@ void TikzScene::setGraph(Graph *graph)
 
 void TikzScene::graphReplaced()
 {
-    foreach (NodeItem *ni, nodeItems) {
+    foreach (NodeItem *ni, _nodeItems) {
         removeItem(ni);
         delete ni;
     }
-    nodeItems.clear();
+    _nodeItems.clear();
 
-    foreach (EdgeItem *ei, edgeItems) {
+    foreach (EdgeItem *ei, _edgeItems) {
         removeItem(ei);
         delete ei;
     }
-    edgeItems.clear();
+    _edgeItems.clear();
 
     foreach (Edge *e, _graph->edges()) {
         EdgeItem *ei = new EdgeItem(e);
-        edgeItems << ei;
+        _edgeItems << ei;
         addItem(ei);
     }
 
     foreach (Node *n, _graph->nodes()) {
         NodeItem *ni = new NodeItem(n);
-        nodeItems << ni;
+        _nodeItems << ni;
         addItem(ni);
     }
 }
@@ -68,10 +63,10 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         // TODO: check if we grabbed a control point
         QGraphicsScene::mousePressEvent(event);
         if (!selectedItems().empty() && !items(mousePos).empty()) {
-            _oldNodePositions = new QHash<NodeItem*,QPointF>();
-            for (QGraphicsItem *gi : selectedItems()) {
+            _oldNodePositions.clear();
+            foreach (QGraphicsItem *gi, selectedItems()) {
                 if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) {
-                    _oldNodePositions->
+                    _oldNodePositions.insert(ni->node(), ni->node()->point());
                 }
             }
             qDebug() << "I am dragging";
@@ -101,7 +96,7 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 
     // TODO: only sync edges that change
-    foreach (EdgeItem *ei, edgeItems) {
+    foreach (EdgeItem *ei, _edgeItems) {
         ei->edge()->updateControls();
         ei->syncPos();
     }
@@ -112,6 +107,23 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     switch (tikzit->toolPalette()->currentTool()) {
     case ToolPalette::SELECT:
         QGraphicsScene::mouseReleaseEvent(event);
+
+        if (!_oldNodePositions.empty()) {
+            QMap<Node*,QPointF> newNodePositions;
+
+            foreach (QGraphicsItem *gi, selectedItems()) {
+                if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) {
+                    ni->writePos();
+                    newNodePositions.insert(ni->node(), ni->node()->point());
+                }
+            }
+
+            qDebug() << _oldNodePositions;
+            qDebug() << newNodePositions;
+
+            _oldNodePositions.clear();
+        }
+
         break;
     case ToolPalette::VERTEX:
         break;
@@ -120,4 +132,14 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::CROP:
         break;
     }
+}
+
+QVector<EdgeItem *> TikzScene::edgeItems() const
+{
+    return _edgeItems;
+}
+
+QVector<NodeItem *> TikzScene::nodeItems() const
+{
+    return _nodeItems;
 }

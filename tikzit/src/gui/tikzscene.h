@@ -1,3 +1,8 @@
+/**
+  * Manage the scene, which contains a single Graph, and respond to user input. This serves as
+  * the controller for the MVC (Graph, TikzView, TikzScene).
+  */
+
 #ifndef TIKZSCENE_H
 #define TIKZSCENE_H
 
@@ -21,6 +26,10 @@ public:
     ~TikzScene();
     Graph *graph() const;
     void setGraph(Graph *graph);
+    QVector<NodeItem *> nodeItems() const;
+
+    QVector<EdgeItem *> edgeItems() const;
+
 public slots:
     void graphReplaced();
 protected:
@@ -29,9 +38,9 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 private:
     Graph *_graph;
-    QVector<NodeItem*> nodeItems;
-    QVector<EdgeItem*> edgeItems;
-    QHash<Node*,QPointF> *_oldNodePositions;
+    QVector<NodeItem*> _nodeItems;
+    QVector<EdgeItem*> _edgeItems;
+    QMap<Node*,QPointF> _oldNodePositions;
 };
 
 #endif // TIKZSCENE_H

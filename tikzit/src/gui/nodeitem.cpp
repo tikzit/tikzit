@@ -17,12 +17,17 @@ NodeItem::NodeItem(Node *node)
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
-    syncPos();
+    readPos();
 }
 
-void NodeItem::syncPos()
+void NodeItem::readPos()
 {
     setPos(toScreen(_node->point()));
+}
+
+void NodeItem::writePos()
+{
+    _node->setPoint(fromScreen(pos()));
 }
 
 QRectF NodeItem::labelRect() const {
@@ -97,6 +102,11 @@ QRectF NodeItem::boundingRect() const
 {
     QRectF r = labelRect();
     return r.united(shape().boundingRect()).adjusted(-4,-4,4,4);
+}
+
+Node *NodeItem::node() const
+{
+    return _node;
 }
 
 QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value)

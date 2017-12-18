@@ -16,11 +16,14 @@ class NodeItem : public QGraphicsItem
 {
 public:
     NodeItem(Node *node);
-    void syncPos();
+    void readPos();
+    void writePos();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     QPainterPath shape() const;
     QRectF boundingRect() const;
+    Node *node() const;
+
 private:
     Node *_node;
     QRectF labelRect() const;

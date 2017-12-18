@@ -12,11 +12,16 @@
 class MoveCommand : public QUndoCommand
 {
 public:
-    explicit MoveCommand(TikzScene *scene, QUndoCommand *parent = 0);
+    explicit MoveCommand(TikzScene *scene,
+                         QMap<Node*,QPointF> oldNodePositions,
+                         QMap<Node*,QPointF> newNodePositions,
+                         QUndoCommand *parent = 0);
     void undo() override;
     void redo() override;
 private:
     TikzScene *_scene;
+    QMap<Node*,QPointF> _oldNodePositions;
+    QMap<Node*,QPointF> _newNodePositions;
 };
 
 #endif // UNDOCOMMANDS_H
