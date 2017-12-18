@@ -1,5 +1,6 @@
 /**
-  * Contains a tikz Graph, source code, file info, and undo stack.
+  * This class contains a tikz Graph, source code, file info, and undo stack.  It serves as the model
+  * in the MVC triple (TikzDocument, TikzView, TikzScene).
   */
 
 #ifndef TIKZDOCUMENT_H

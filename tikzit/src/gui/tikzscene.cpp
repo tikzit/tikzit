@@ -6,8 +6,8 @@
 #include <QDebug>
 
 
-TikzScene::TikzScene(Graph *graph, QObject *parent) :
-    QGraphicsScene(parent), _graph(graph)
+TikzScene::TikzScene(TikzDocument *tikzDocument, QObject *parent) :
+    QGraphicsScene(parent), _tikzDocument(tikzDocument)
 {
 }
 
@@ -16,13 +16,7 @@ TikzScene::~TikzScene() {
 
 Graph *TikzScene::graph() const
 {
-    return _graph;
-}
-
-void TikzScene::setGraph(Graph *graph)
-{
-    _graph = graph;
-    graphReplaced();
+    return _tikzDocument->graph();
 }
 
 void TikzScene::graphReplaced()
@@ -39,13 +33,13 @@ void TikzScene::graphReplaced()
     }
     _edgeItems.clear();
 
-    foreach (Edge *e, _graph->edges()) {
+    foreach (Edge *e, graph()->edges()) {
         EdgeItem *ei = new EdgeItem(e);
         _edgeItems << ei;
         addItem(ei);
     }
 
-    foreach (Node *n, _graph->nodes()) {
+    foreach (Node *n, graph()->nodes()) {
         NodeItem *ni = new NodeItem(n);
         _nodeItems << ni;
         addItem(ni);
@@ -132,6 +126,17 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::CROP:
         break;
     }
+}
+
+TikzDocument *TikzScene::tikzDocument() const
+{
+    return _tikzDocument;
+}
+
+void TikzScene::setTikzDocument(TikzDocument *tikzDocument)
+{
+    _tikzDocument = tikzDocument;
+    graphReplaced();
 }
 
 QVector<EdgeItem *> TikzScene::edgeItems() const

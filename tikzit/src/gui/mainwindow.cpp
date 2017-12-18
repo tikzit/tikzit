@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose, true);
     _tikzDocument = new TikzDocument(this);
-    _tikzScene = new TikzScene(_tikzDocument->graph(), this);
+    _tikzScene = new TikzScene(_tikzDocument, this);
     ui->tikzView->setScene(_tikzScene);
     _fileName = "";
     _pristine = true;
@@ -49,7 +49,7 @@ void MainWindow::open(QString fileName)
     if (_tikzDocument->parseSuccess()) {
         statusBar()->showMessage("TiKZ parsed successfully", 2000);
         setWindowTitle("TiKZiT - " + _tikzDocument->shortName());
-        _tikzScene->setGraph(_tikzDocument->graph());
+        _tikzScene->setTikzDocument(_tikzDocument);
     } else {
         statusBar()->showMessage("Cannot read TiKZ source");
     }

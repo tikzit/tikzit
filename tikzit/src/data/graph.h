@@ -1,5 +1,5 @@
 /**
-  * A tikz graph. This serves as the model in the MVC (Graph, TikzView, TikzScene).
+  * A graph defined by tikz code.
   */
 
 #ifndef GRAPH_H

@@ -1,6 +1,6 @@
 /**
   * Manage the scene, which contains a single Graph, and respond to user input. This serves as
-  * the controller for the MVC (Graph, TikzView, TikzScene).
+  * the controller for the MVC (TikzDocument, TikzView, TikzScene).
   */
 
 #ifndef TIKZSCENE_H
@@ -9,6 +9,7 @@
 #include "graph.h"
 #include "nodeitem.h"
 #include "edgeitem.h"
+#include "tikzdocument.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
@@ -22,13 +23,15 @@ class TikzScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    TikzScene(Graph *graph, QObject *parent);
+    TikzScene(TikzDocument *tikzDocument, QObject *parent);
     ~TikzScene();
     Graph *graph() const;
-    void setGraph(Graph *graph);
     QVector<NodeItem *> nodeItems() const;
 
     QVector<EdgeItem *> edgeItems() const;
+
+    TikzDocument *tikzDocument() const;
+    void setTikzDocument(TikzDocument *tikzDocument);
 
 public slots:
     void graphReplaced();
@@ -37,7 +40,7 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 private:
-    Graph *_graph;
+    TikzDocument *_tikzDocument;
     QVector<NodeItem*> _nodeItems;
     QVector<EdgeItem*> _edgeItems;
     QMap<Node*,QPointF> _oldNodePositions;
