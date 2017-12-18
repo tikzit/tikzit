@@ -46,7 +46,8 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/nodestyle.cpp \
     src/gui/commands.cpp \
     src/data/tikzdocument.cpp \
-    src/gui/undocommands.cpp
+    src/gui/undocommands.cpp \
+    src/gui/mainmenu.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -66,7 +67,8 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/nodestyle.h \
     src/gui/commands.h \
     src/data/tikzdocument.h \
-    src/gui/undocommands.h
+    src/gui/undocommands.h \
+    src/gui/mainmenu.h
 
 FORMS    += src/gui/mainwindow.ui \
             src/gui/propertypalette.ui \

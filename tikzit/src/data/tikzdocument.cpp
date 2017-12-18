@@ -13,6 +13,13 @@ TikzDocument::TikzDocument(QObject *parent) : QObject(parent)
     _parseSuccess = true;
     _fileName = "";
     _shortName = "";
+    _undoStack = new QUndoStack();
+}
+
+TikzDocument::~TikzDocument()
+{
+    delete _graph;
+    delete _undoStack;
 }
 
 QUndoStack *TikzDocument::undoStack() const

@@ -1,7 +1,15 @@
+/**
+  * Tikzit is the top-level class which maintains the global application state. For convenience,
+  * it also inherits the main menu.
+  */
+
 #ifndef TIKZIT_H
 #define TIKZIT_H
 
 #include "mainwindow.h"
+#include "mainmenu.h"
+#include "ui_mainmenu.h"
+
 #include "toolpalette.h"
 #include "propertypalette.h"
 #include "nodestyle.h"
@@ -38,11 +46,11 @@ inline QPointF bezierInterpolateFull (float dist, QPointF c0, QPointF c1, QPoint
                    bezierInterpolate (dist, c0.y(), c1.y(), c2.y(), c3.y()));
 }
 
+
 class Tikzit : public QObject {
     Q_OBJECT
 public:
     Tikzit();
-    QMenuBar *mainMenu() const;
     ToolPalette *toolPalette() const;
     PropertyPalette *propertyPalette() const;
 
@@ -52,23 +60,23 @@ public:
     NodeStyle nodeStyle(QString name);
 
     static QFont LABEL_FONT;
+//    Ui::MainMenu *_mainMenuUi;
+//    QMenuBar *_mainMenu;
+
+    void newDoc();
+    void open();
 
 private:
-    void createMenu();
+//    void createMenu();
     void loadStyles();
 
-    QMenuBar *_mainMenu;
+    MainMenu *_mainMenu;
     ToolPalette *_toolPalette;
     PropertyPalette *_propertyPalette;
     QVector<MainWindow*> _windows;
     MainWindow *_activeWindow;
     QVector<NodeStyle> _nodeStyles;
 
-public slots:
-    void newDoc();
-    void open();
-    void zoomIn();
-    void zoomOut();
 };
 
 extern Tikzit *tikzit;

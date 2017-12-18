@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     tikzit->removeWindow(this);
+    delete ui;
 }
 
 void MainWindow::open(QString fileName)

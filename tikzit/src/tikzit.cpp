@@ -11,13 +11,14 @@ QFont Tikzit::LABEL_FONT("Courrier", 9);
 
 Tikzit::Tikzit()
 {
+    _mainMenu = new MainMenu();
+
     _activeWindow = 0;
     QMainWindow *dummy = new QMainWindow();
 
     _toolPalette = new ToolPalette(dummy);
     _propertyPalette = new PropertyPalette(dummy);
 
-    createMenu();
     loadStyles();
 
     _toolPalette->show();
@@ -27,10 +28,10 @@ Tikzit::Tikzit()
     _windows[0]->show();
 }
 
-QMenuBar *Tikzit::mainMenu() const
-{
-    return _mainMenu;
-}
+//QMenuBar *Tikzit::mainMenu() const
+//{
+//    return _mainMenu;
+//}
 
 ToolPalette *Tikzit::toolPalette() const
 {
@@ -42,26 +43,26 @@ PropertyPalette *Tikzit::propertyPalette() const
     return _propertyPalette;
 }
 
-void Tikzit::createMenu()
-{
-    _mainMenu = new QMenuBar(0);
-    QMenu *file = _mainMenu->addMenu(tr("&File"));
-    QAction *aNew = file->addAction(tr("&New"));
-    aNew->setShortcut(QKeySequence::New);
-    QAction *aOpen = file->addAction(tr("&Open"));
-    aOpen->setShortcut(QKeySequence::Open);
+//void Tikzit::createMenu()
+//{
+//    _mainMenu = new QMenuBar(0);
+//    QMenu *file = _mainMenu->addMenu(tr("&File"));
+//    QAction *aNew = file->addAction(tr("&New"));
+//    aNew->setShortcut(QKeySequence::New);
+//    QAction *aOpen = file->addAction(tr("&Open"));
+//    aOpen->setShortcut(QKeySequence::Open);
 
-    QMenu *view = _mainMenu->addMenu(tr("&View"));
-    QAction *aZoomIn = view->addAction(tr("Zoom &In"));
-    aZoomIn->setShortcut(QKeySequence::ZoomIn);
-    QAction *aZoomOut = view->addAction(tr("Zoom &Out"));
-    aZoomOut->setShortcut(QKeySequence::ZoomOut);
+//    QMenu *view = _mainMenu->addMenu(tr("&View"));
+//    QAction *aZoomIn = view->addAction(tr("Zoom &In"));
+//    aZoomIn->setShortcut(QKeySequence::ZoomIn);
+//    QAction *aZoomOut = view->addAction(tr("Zoom &Out"));
+//    aZoomOut->setShortcut(QKeySequence::ZoomOut);
 
-    connect(aNew, SIGNAL(triggered()), this, SLOT(newDoc()));
-    connect(aOpen, SIGNAL(triggered()), this, SLOT(open()));
-    connect(aZoomIn, SIGNAL(triggered()), this, SLOT(zoomIn()));
-    connect(aZoomOut, SIGNAL(triggered()), this, SLOT(zoomOut()));
-}
+//    connect(aNew, SIGNAL(triggered()), this, SLOT(newDoc()));
+//    connect(aOpen, SIGNAL(triggered()), this, SLOT(open()));
+//    connect(aZoomIn, SIGNAL(triggered()), this, SLOT(zoomIn()));
+//    connect(aZoomOut, SIGNAL(triggered()), this, SLOT(zoomOut()));
+//}
 
 void Tikzit::loadStyles()
 {
@@ -122,14 +123,4 @@ void Tikzit::open()
             _windows << w;
         }
     }
-}
-
-void Tikzit::zoomIn()
-{
-    if (_activeWindow != 0) _activeWindow->tikzView()->zoomIn();
-}
-
-void Tikzit::zoomOut()
-{
-    if (_activeWindow != 0) _activeWindow->tikzView()->zoomOut();
 }

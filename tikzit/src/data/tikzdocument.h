@@ -16,6 +16,8 @@ class TikzDocument : public QObject
     Q_OBJECT
 public:
     explicit TikzDocument(QObject *parent = 0);
+    ~TikzDocument();
+
     Graph *graph() const;
     QString tikz() const;
     QUndoStack *undoStack() const;
