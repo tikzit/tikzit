@@ -1,3 +1,7 @@
+/**
+  * Contains a tikz Graph, source code, file info, and undo stack.
+  */
+
 #ifndef TIKZDOCUMENT_H
 #define TIKZDOCUMENT_H
 

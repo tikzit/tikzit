@@ -25,6 +25,16 @@ void NodeItem::syncPos()
     setPos(toScreen(_node->point()));
 }
 
+QRectF NodeItem::labelRect() const {
+    QString label = _node->label();
+    //QFont f("Courier", 9);
+    QFontMetrics fm(Tikzit::LABEL_FONT);
+
+    QRectF rect = fm.boundingRect(label);
+    //rect.adjust(-2,-2,2,2);
+    rect.moveCenter(QPointF(0,0));
+    return rect;
+}
 
 void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
@@ -50,15 +60,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     }
 
     if (_node->label() != "") {
-        QString label = _node->label();
-        QFont f("Monaco", 9);
-        QFontMetrics fm(f);
-        int w = fm.width(label) + 4;
-        int h = fm.height() + 2;
-
-        QRectF rect = fm.boundingRect(label);
-        rect.adjust(-2,-2,2,2);
-        rect.moveCenter(QPointF(0,0));
+        QRectF rect = labelRect();
         QPen pen(QColor(200,0,0,120));
         QVector<qreal> d;
         d << 2.0 << 2.0;
@@ -68,7 +70,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         painter->drawRect(rect);
 
         painter->setPen(QPen(Qt::black));
-        painter->setFont(f);
+        painter->setFont(Tikzit::LABEL_FONT);
         painter->drawText(rect, Qt::AlignCenter, _node->label());
     }
 
@@ -93,7 +95,8 @@ QPainterPath NodeItem::shape() const
 
 QRectF NodeItem::boundingRect() const
 {
-    return shape().boundingRect().adjusted(-4,-4,4,4);
+    QRectF r = labelRect();
+    return r.united(shape().boundingRect()).adjusted(-4,-4,4,4);
 }
 
 QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value)

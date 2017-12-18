@@ -1,3 +1,7 @@
+/**
+  * A small window that lets the user select the current editing tool.
+  */
+
 #ifndef TOOLPALETTE_H
 #define TOOLPALETTE_H
 
@@ -11,6 +15,14 @@ class ToolPalette : public QToolBar
     Q_OBJECT
 public:
     ToolPalette(QWidget *parent = 0);
+    enum Tool {
+        SELECT,
+        VERTEX,
+        EDGE,
+        CROP
+    };
+
+    Tool currentTool() const;
 private:
     QActionGroup *tools;
     QAction *select;

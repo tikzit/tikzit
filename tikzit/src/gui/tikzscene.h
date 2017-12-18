@@ -18,6 +18,7 @@ class TikzScene : public QGraphicsScene
     Q_OBJECT
 public:
     TikzScene(Graph *graph, QObject *parent);
+    ~TikzScene();
     Graph *graph() const;
     void setGraph(Graph *graph);
 public slots:
@@ -30,7 +31,7 @@ private:
     Graph *_graph;
     QVector<NodeItem*> nodeItems;
     QVector<EdgeItem*> edgeItems;
-
+    QHash<Node*,QPointF> *_oldNodePositions;
 };
 
 #endif // TIKZSCENE_H

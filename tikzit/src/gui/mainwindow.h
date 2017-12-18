@@ -1,3 +1,7 @@
+/**
+  * A top-level window, which contains a single TikzDocument.
+  */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 

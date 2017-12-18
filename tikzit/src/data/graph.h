@@ -1,3 +1,7 @@
+/**
+  * A tikz graph. This serves as the model in the MVC (Graph, TikzView, TikzScene).
+  */
+
 #ifndef GRAPH_H
 #define GRAPH_H
 

@@ -1,3 +1,7 @@
+/**
+  * A QGraphicsItem that handles drawing a single edge.
+  */
+
 #ifndef EDGEITEM_H
 #define EDGEITEM_H
 

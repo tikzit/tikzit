@@ -1,3 +1,8 @@
+/**
+  * Display a Graph, and manage any user input that purely changes the view (e.g. Zoom). This
+  * serves as the view in the MVC (Graph, TikzView, TikzScene).
+  */
+
 #ifndef TIKZVIEW_H
 #define TIKZVIEW_H
 

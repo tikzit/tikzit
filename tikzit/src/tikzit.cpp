@@ -6,6 +6,9 @@
 // application-level instance of Tikzit
 Tikzit *tikzit;
 
+// font to use for node labels
+QFont Tikzit::LABEL_FONT("Courrier", 9);
+
 Tikzit::Tikzit()
 {
     _activeWindow = 0;

@@ -11,6 +11,7 @@
 #include <QPointF>
 #include <QMenuBar>
 #include <QMainWindow>
+#include <QFont>
 
 // Number of pixels between (0,0) and (1,0) at 100% zoom level. This should be
 // divisible by 8 to avoid rounding errors with e.g. grid-snapping.
@@ -49,6 +50,8 @@ public:
     void setActiveWindow(MainWindow *activeWindow);
     void removeWindow(MainWindow *w);
     NodeStyle nodeStyle(QString name);
+
+    static QFont LABEL_FONT;
 
 private:
     void createMenu();

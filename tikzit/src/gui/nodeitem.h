@@ -1,3 +1,7 @@
+/**
+  * A QGraphicsItem that handles drawing a single node.
+  */
+
 #ifndef NODEITEM_H
 #define NODEITEM_H
 
@@ -19,6 +23,7 @@ public:
     QRectF boundingRect() const;
 private:
     Node *_node;
+    QRectF labelRect() const;
 };
 
 #endif // NODEITEM_H

@@ -39,3 +39,12 @@ ToolPalette::ToolPalette(QWidget *parent) :
     addAction(crop);
 }
 
+ToolPalette::Tool ToolPalette::currentTool() const
+{
+    QAction *a = tools->checkedAction();
+    if (a == vertex) return VERTEX;
+    else if (a == edge) return EDGE;
+    else if (a == crop) return CROP;
+    else return SELECT;
+}
+
