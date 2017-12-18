@@ -1,5 +1,6 @@
 #include "tikzit.h"
 #include "tikzscene.h"
+#include "undocommands.h"
 
 #include <QPen>
 #include <QBrush>
@@ -112,9 +113,10 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 }
             }
 
-            qDebug() << _oldNodePositions;
-            qDebug() << newNodePositions;
+            //qDebug() << _oldNodePositions;
+            //qDebug() << newNodePositions;
 
+            _tikzDocument->undoStack()->push(new MoveCommand(this, _oldNodePositions, newNodePositions));
             _oldNodePositions.clear();
         }
 
