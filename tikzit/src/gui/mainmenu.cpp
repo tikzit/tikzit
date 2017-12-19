@@ -36,12 +36,14 @@ void MainMenu::on_actionSave_As_triggered()
 // Edit
 void MainMenu::on_actionUndo_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzDocument()->undoStack()->undo();
 }
 
 void MainMenu::on_actionRedo_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzDocument()->undoStack()->redo();
 }
 
 void MainMenu::on_actionCut_triggered()

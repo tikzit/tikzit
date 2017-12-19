@@ -30,6 +30,7 @@ public:
     int windowId() const;
     TikzView *tikzView() const;
     TikzScene *tikzScene() const;
+    TikzDocument *tikzDocument() const;
 
 protected:
     void closeEvent(QCloseEvent *event);

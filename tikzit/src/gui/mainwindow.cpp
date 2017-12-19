@@ -71,6 +71,11 @@ void MainWindow::changeEvent(QEvent *event)
     QMainWindow::changeEvent(event);
 }
 
+TikzDocument *MainWindow::tikzDocument() const
+{
+    return _tikzDocument;
+}
+
 TikzScene *MainWindow::tikzScene() const
 {
     return _tikzScene;
