@@ -18,11 +18,14 @@ class EdgeItem : public QGraphicsPathItem
 {
 public:
     EdgeItem(Edge *edge);
-    void syncPos();
+    void readPos();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
     QRectF boundingRect() const;
+    QPainterPath shape() const;
     Edge *edge() const;
+    QGraphicsEllipseItem *cp1Item() const;
+    QGraphicsEllipseItem *cp2Item() const;
 
 private:
     Edge *_edge;

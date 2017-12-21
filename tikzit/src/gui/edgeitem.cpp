@@ -24,12 +24,12 @@ EdgeItem::EdgeItem(Edge *edge)
                       GLOBAL_SCALEF * 0.1, GLOBAL_SCALEF * 0.1);
     _cp2Item->setVisible(false);
 
-    syncPos();
+    readPos();
 }
 
-void EdgeItem::syncPos()
+void EdgeItem::readPos()
 {
-    _edge->setAttributesFromData();
+    //_edge->setAttributesFromData();
     _edge->updateControls();
     QPainterPath path;
 
@@ -104,7 +104,28 @@ QRectF EdgeItem::boundingRect() const
     return shape().boundingRect().adjusted(-r,-r,r,r);
 }
 
+QPainterPath EdgeItem::shape() const
+{
+    // get the shape of the edge, and expand a bit to make selection easier
+    QPainterPath oldShape = QGraphicsPathItem::shape();
+    QPainterPathStroker stroker;
+    stroker.setWidth(5);
+    stroker.setJoinStyle(Qt::MiterJoin);
+    QPainterPath newShape = (stroker.createStroke(oldShape) + oldShape).simplified();
+    return newShape;
+}
+
 Edge *EdgeItem::edge() const
 {
     return _edge;
+}
+
+QGraphicsEllipseItem *EdgeItem::cp1Item() const
+{
+    return _cp1Item;
+}
+
+QGraphicsEllipseItem *EdgeItem::cp2Item() const
+{
+    return _cp2Item;
 }

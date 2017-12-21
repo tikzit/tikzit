@@ -50,6 +50,11 @@ public:
     bool basicBendMode() const;
     float cpDist() const;
 
+    void setBend(int bend);
+    void setInAngle(int inAngle);
+    void setOutAngle(int outAngle);
+    void setWeight(float weight);
+
 signals:
 
 public slots:

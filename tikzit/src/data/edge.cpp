@@ -1,9 +1,9 @@
 #include "edge.h"
 #include "tikzit.h"
+#include "util.h"
 
 #include <QDebug>
 #include <QPointF>
-#include <cmath>
 
 Edge::Edge(Node *s, Node *t, QObject *parent) :
     QObject(parent), _source(s), _target(t)
@@ -276,6 +276,26 @@ bool Edge::basicBendMode() const
 float Edge::cpDist() const
 {
     return _cpDist;
+}
+
+void Edge::setBend(int bend)
+{
+    _bend = bend;
+}
+
+void Edge::setInAngle(int inAngle)
+{
+    _inAngle = inAngle;
+}
+
+void Edge::setOutAngle(int outAngle)
+{
+    _outAngle = outAngle;
+}
+
+void Edge::setWeight(float weight)
+{
+    _weight = weight;
 }
 
 QPointF Edge::mid() const

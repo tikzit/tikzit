@@ -21,10 +21,7 @@ void MoveCommand::undo()
         }
     }
 
-    foreach (EdgeItem *ei, _scene->edgeItems()) {
-        ei->edge()->updateControls();
-        ei->syncPos();
-    }
+    _scene->refreshAdjacentEdges(_oldNodePositions.keys());
 }
 
 void MoveCommand::redo()
@@ -36,8 +33,5 @@ void MoveCommand::redo()
         }
     }
 
-    foreach (EdgeItem *ei, _scene->edgeItems()) {
-        ei->edge()->updateControls();
-        ei->syncPos();
-    }
+    _scene->refreshAdjacentEdges(_newNodePositions.keys());
 }

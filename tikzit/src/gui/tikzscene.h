@@ -27,8 +27,8 @@ public:
     ~TikzScene();
     Graph *graph() const;
     QVector<NodeItem *> nodeItems() const;
-
     QVector<EdgeItem *> edgeItems() const;
+    void refreshAdjacentEdges(QList<Node*> nodes);
 
     TikzDocument *tikzDocument() const;
     void setTikzDocument(TikzDocument *tikzDocument);
@@ -43,6 +43,8 @@ private:
     TikzDocument *_tikzDocument;
     QVector<NodeItem*> _nodeItems;
     QVector<EdgeItem*> _edgeItems;
+    EdgeItem *_modifyEdgeItem;
+    bool _firstControlPoint;
     QMap<Node*,QPointF> _oldNodePositions;
 };
 

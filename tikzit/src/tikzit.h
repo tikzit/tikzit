@@ -32,20 +32,6 @@ inline QPointF toScreen(QPointF src)
 inline QPointF fromScreen(QPointF src)
 { src.setY(-src.y()); src /= GLOBAL_SCALEF; return src; }
 
-// interpolate on a cubic bezier curve
-inline float bezierInterpolate(float dist, float c0, float c1, float c2, float c3) {
-    float distp = 1 - dist;
-    return	(distp*distp*distp) * c0 +
-            3 * (distp*distp) * dist * c1 +
-            3 * (dist*dist) * distp * c2 +
-            (dist*dist*dist) * c3;
-}
-
-inline QPointF bezierInterpolateFull (float dist, QPointF c0, QPointF c1, QPointF c2, QPointF c3) {
-    return QPointF(bezierInterpolate (dist, c0.x(), c1.x(), c2.x(), c3.x()),
-                   bezierInterpolate (dist, c0.y(), c1.y(), c2.y(), c3.y()));
-}
-
 
 class Tikzit : public QObject {
     Q_OBJECT

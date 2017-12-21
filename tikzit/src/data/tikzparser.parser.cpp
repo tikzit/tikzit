@@ -532,7 +532,7 @@ static const yytype_uint8 yyrline[] =
        0,   124,   124,   130,   130,   131,   131,   131,   131,   133,
      133,   136,   138,   140,   141,   148,   154,   156,   163,   169,
      169,   171,   172,   190,   190,   191,   198,   199,   201,   202,
-     210,   243,   243,   244,   244,   245,   247
+     210,   246,   246,   247,   247,   248,   250
 };
 #endif
 
@@ -1677,8 +1677,11 @@ yyreduce:
         }
 
         Edge *edge = assembler->graph()->addEdge(s, t);
-        if ((yyvsp[(2) - (7)].data))
+        if ((yyvsp[(2) - (7)].data)) {
             edge->setData((yyvsp[(2) - (7)].data));
+            edge->setAttributesFromData();
+        }
+
         if ((yyvsp[(5) - (7)].node))
             edge->setEdgeNode((yyvsp[(5) - (7)].node));
         if ((yyvsp[(3) - (7)].noderef).anchor) {
@@ -1698,7 +1701,7 @@ yyreduce:
     break;
 
   case 36:
-#line 248 "../tikzit/src/data/tikzparser.y"
+#line 251 "../tikzit/src/data/tikzparser.y"
     {
         assembler->graph()->setBbox(QRectF(*(yyvsp[(3) - (6)].pt), *(yyvsp[(5) - (6)].pt)));
         delete (yyvsp[(3) - (6)].pt);
@@ -1708,7 +1711,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1712 "../tikzit/src/data/tikzparser.parser.cpp"
+#line 1715 "../tikzit/src/data/tikzparser.parser.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);

@@ -221,8 +221,11 @@ edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
         }
 
         Edge *edge = assembler->graph()->addEdge(s, t);
-        if ($2)
+        if ($2) {
             edge->setData($2);
+            edge->setAttributesFromData();
+        }
+
         if ($5)
             edge->setEdgeNode($5);
         if ($3.anchor) {
