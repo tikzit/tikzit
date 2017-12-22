@@ -24,4 +24,25 @@ private:
     QMap<Node*,QPointF> _newNodePositions;
 };
 
+class EdgeBendCommand : public QUndoCommand
+{
+public:
+    explicit EdgeBendCommand(TikzScene *scene, Edge *edge,
+                             float oldWeight, int oldBend,
+                             int oldInAngle, int oldOutAngle);
+    void undo() override;
+    void redo() override;
+private:
+    TikzScene *_scene;
+    Edge *_edge;
+    float _oldWeight;
+    int _oldBend;
+    int _oldInAngle;
+    int _oldOutAngle;
+    float _newWeight;
+    int _newBend;
+    int _newInAngle;
+    int _newOutAngle;
+};
+
 #endif // UNDOCOMMANDS_H

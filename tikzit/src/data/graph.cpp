@@ -4,16 +4,17 @@
 
 Graph::Graph(QObject *parent) : QObject(parent)
 {
-    _data = new GraphElementData();
+    _data = new GraphElementData(this);
     _bbox = QRectF(0,0,0,0);
 }
 
 Graph::~Graph()
 {
-    delete _data;
 }
 
 void Graph::removeNode(Node *n) {
+    // the node itself is not deleted, as it may still be referenced in an undo command. It will
+    // be deleted when graph is, via QObject memory management.
     _nodes.removeAll(n);
     inEdges.remove(n);
     outEdges.remove(n);

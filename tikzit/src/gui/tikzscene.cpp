@@ -89,7 +89,13 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if (_modifyEdgeItem != 0) {
             // disable rubber band drag, which will clear the selection
             views()[0]->setDragMode(QGraphicsView::NoDrag);
-            qDebug() << "Got a control point";
+
+            // store for undo purposes
+            Edge *e = _modifyEdgeItem->edge();
+            _oldBend = e->bend();
+            _oldInAngle = e->inAngle();
+            _oldOutAngle = e->outAngle();
+            _oldWeight = e->weight();
         } else {
             // since we are not dragging a control point, process the click normally
             views()[0]->setDragMode(QGraphicsView::RubberBandDrag);
@@ -124,6 +130,7 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::SELECT:
         if (_modifyEdgeItem != 0) {
             Edge *e = _modifyEdgeItem->edge();
+
             // dragging a control point
             QPointF src = toScreen(e->source()->point());
             QPointF targ = toScreen(e->target()->point());
@@ -222,7 +229,16 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::SELECT:
         if (_modifyEdgeItem != 0) {
             // finished dragging a control point
-            // TODO
+            Edge *e = _modifyEdgeItem->edge();
+
+            if (_oldWeight != e->weight() ||
+                _oldBend != e->bend() ||
+                _oldInAngle != e->inAngle() ||
+                _oldOutAngle != e->outAngle())
+            {
+                EdgeBendCommand *cmd = new EdgeBendCommand(this, e, _oldWeight, _oldBend, _oldInAngle, _oldOutAngle);
+                _tikzDocument->undoStack()->push(cmd);
+            }
 
             _modifyEdgeItem = 0;
         } else {

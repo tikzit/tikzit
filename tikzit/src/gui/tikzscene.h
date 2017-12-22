@@ -45,7 +45,12 @@ private:
     QVector<EdgeItem*> _edgeItems;
     EdgeItem *_modifyEdgeItem;
     bool _firstControlPoint;
+
     QMap<Node*,QPointF> _oldNodePositions;
+    float _oldWeight;
+    int _oldBend;
+    int _oldInAngle;
+    int _oldOutAngle;
 };
 
 #endif // TIKZSCENE_H
