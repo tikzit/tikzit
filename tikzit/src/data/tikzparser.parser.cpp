@@ -531,8 +531,8 @@ static const yytype_uint8 yyrline[] =
 {
        0,   124,   124,   130,   130,   131,   131,   131,   131,   133,
      133,   136,   138,   140,   141,   148,   154,   156,   163,   169,
-     169,   171,   172,   190,   190,   191,   198,   199,   201,   202,
-     210,   246,   246,   247,   247,   248,   250
+     169,   171,   172,   192,   192,   193,   200,   201,   203,   204,
+     212,   250,   250,   251,   251,   252,   254
 };
 #endif
 
@@ -1600,7 +1600,8 @@ yyreduce:
   case 22:
 #line 173 "../tikzit/src/data/tikzparser.y"
     {
-		Node *node = assembler->graph()->addNode();
+        Node *node = new Node();
+
         if ((yyvsp[(2) - (7)].data)) {
             node->setData((yyvsp[(2) - (7)].data));
         }
@@ -1613,22 +1614,23 @@ yyreduce:
         node->setPoint(*(yyvsp[(5) - (7)].pt));
         delete (yyvsp[(5) - (7)].pt);
 
+        assembler->graph()->addNode(node);
         assembler->addNodeToMap(node);
 	;}
     break;
 
   case 23:
-#line 190 "../tikzit/src/data/tikzparser.y"
+#line 192 "../tikzit/src/data/tikzparser.y"
     { (yyval.str) = 0; ;}
     break;
 
   case 24:
-#line 190 "../tikzit/src/data/tikzparser.y"
+#line 192 "../tikzit/src/data/tikzparser.y"
     { (yyval.str) = (yyvsp[(2) - (2)].str); ;}
     break;
 
   case 25:
-#line 192 "../tikzit/src/data/tikzparser.y"
+#line 194 "../tikzit/src/data/tikzparser.y"
     {
         (yyval.noderef).node = assembler->nodeWithName(QString((yyvsp[(2) - (4)].str)));
         free((yyvsp[(2) - (4)].str));
@@ -1637,22 +1639,22 @@ yyreduce:
     break;
 
   case 26:
-#line 198 "../tikzit/src/data/tikzparser.y"
+#line 200 "../tikzit/src/data/tikzparser.y"
     { (yyval.noderef) = (yyvsp[(1) - (1)].noderef); ;}
     break;
 
   case 27:
-#line 199 "../tikzit/src/data/tikzparser.y"
+#line 201 "../tikzit/src/data/tikzparser.y"
     { (yyval.noderef).node = 0; (yyval.noderef).anchor = 0; ;}
     break;
 
   case 28:
-#line 201 "../tikzit/src/data/tikzparser.y"
+#line 203 "../tikzit/src/data/tikzparser.y"
     { (yyval.node) = 0; ;}
     break;
 
   case 29:
-#line 203 "../tikzit/src/data/tikzparser.y"
+#line 205 "../tikzit/src/data/tikzparser.y"
     {
         (yyval.node) = new Node();
         if ((yyvsp[(2) - (3)].data))
@@ -1663,7 +1665,7 @@ yyreduce:
     break;
 
   case 30:
-#line 211 "../tikzit/src/data/tikzparser.y"
+#line 213 "../tikzit/src/data/tikzparser.y"
     {
         Node *s;
         Node *t;
@@ -1676,7 +1678,7 @@ yyreduce:
             t = s;
         }
 
-        Edge *edge = assembler->graph()->addEdge(s, t);
+        Edge *edge = new Edge(s, t);
         if ((yyvsp[(2) - (7)].data)) {
             edge->setData((yyvsp[(2) - (7)].data));
             edge->setAttributesFromData();
@@ -1697,11 +1699,13 @@ yyreduce:
         } else {
             edge->setTargetAnchor(edge->sourceAnchor());
         }
+
+        assembler->graph()->addEdge(edge);
 	;}
     break;
 
   case 36:
-#line 251 "../tikzit/src/data/tikzparser.y"
+#line 255 "../tikzit/src/data/tikzparser.y"
     {
         assembler->graph()->setBbox(QRectF(*(yyvsp[(3) - (6)].pt), *(yyvsp[(5) - (6)].pt)));
         delete (yyvsp[(3) - (6)].pt);
@@ -1711,7 +1715,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1715 "../tikzit/src/data/tikzparser.parser.cpp"
+#line 1719 "../tikzit/src/data/tikzparser.parser.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);

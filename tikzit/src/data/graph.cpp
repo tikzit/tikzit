@@ -20,17 +20,19 @@ void Graph::removeNode(Node *n) {
     outEdges.remove(n);
 }
 
-Edge *Graph::addEdge(Node *s, Node *t)
+Edge *Graph::addEdge(Edge *e)
 {
-    Edge *e = new Edge(s, t, this);
+    e->setParent(this);
     _edges << e;
-    outEdges.insert(s, e);
-    inEdges.insert(t, e);
+    outEdges.insert(e->source(), e);
+    inEdges.insert(e->target(), e);
     return e;
 }
 
 void Graph::removeEdge(Edge *e)
 {
+    // the edge itself is not deleted, as it may still be referenced in an undo command. It will
+    // be deleted when graph is, via QObject memory management.
     _edges.removeAll(e);
     outEdges.remove(e->source(), e);
     inEdges.remove(e->target(), e);
@@ -151,8 +153,9 @@ void Graph::setBbox(const QRectF &bbox)
     _bbox = bbox;
 }
 
-Node *Graph::addNode() {
-    Node *n = new Node(this);
+// add a node. The graph claims ownership.
+Node *Graph::addNode(Node *n) {
+    n->setParent(this);
     _nodes << n;
     return n;
 }

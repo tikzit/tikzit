@@ -52,8 +52,11 @@ void TikzScene::graphReplaced()
 void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     // current mouse position, in scene coordinates
-    QPointF mousePos(event->buttonDownScenePos(Qt::LeftButton).x(),
-                     event->buttonDownScenePos(Qt::LeftButton).y());
+    QPointF mousePos = event->scenePos();
+
+    // disable rubber band drag, which will clear the selection. Only re-enable it
+    // for the SELECT tool, and when no control point has been clicked.
+    views()[0]->setDragMode(QGraphicsView::NoDrag);
 
     // radius of a control point for bezier edges, in scene coordinates
     qreal cpR = GLOBAL_SCALEF * (0.05);
@@ -87,9 +90,6 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
 
         if (_modifyEdgeItem != 0) {
-            // disable rubber band drag, which will clear the selection
-            views()[0]->setDragMode(QGraphicsView::NoDrag);
-
             // store for undo purposes
             Edge *e = _modifyEdgeItem->edge();
             _oldBend = e->bend();
@@ -123,7 +123,6 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     // current mouse position, in scene coordinates
-
     QPointF mousePos = event->scenePos();
 
     switch (tikzit->toolPalette()->currentTool()) {
@@ -225,6 +224,9 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    // current mouse position, in scene coordinates
+    QPointF mousePos = event->scenePos();
+
     switch (tikzit->toolPalette()->currentTool()) {
     case ToolPalette::SELECT:
         if (_modifyEdgeItem != 0) {
@@ -265,6 +267,7 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
         break;
     case ToolPalette::VERTEX:
+        // TODO
         break;
     case ToolPalette::EDGE:
         break;

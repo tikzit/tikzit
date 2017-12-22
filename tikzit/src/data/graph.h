@@ -21,9 +21,9 @@ class Graph : public QObject
 public:
     explicit Graph(QObject *parent = 0);
     ~Graph();
-    Node *addNode();
+    Node *addNode(Node *n);
     void removeNode(Node *n);
-    Edge *addEdge(Node *s, Node*t);
+    Edge *addEdge(Edge *e);
     void removeEdge(Edge *e);
 
     GraphElementData *data() const;

@@ -171,7 +171,8 @@ val: PROPSTRING { $$ = $1; } | DELIMITEDSTRING { $$ = $1; };
 nodename: "(" REFSTRING ")" { $$ = $2; };
 node: "\\node" optproperties nodename "at" COORD DELIMITEDSTRING ";"
 	{
-		Node *node = assembler->graph()->addNode();
+        Node *node = new Node();
+
         if ($2) {
             node->setData($2);
         }
@@ -184,6 +185,7 @@ node: "\\node" optproperties nodename "at" COORD DELIMITEDSTRING ";"
         node->setPoint(*$5);
         delete $5;
 
+        assembler->graph()->addNode(node);
         assembler->addNodeToMap(node);
 	};
 
@@ -220,7 +222,7 @@ edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
             t = s;
         }
 
-        Edge *edge = assembler->graph()->addEdge(s, t);
+        Edge *edge = new Edge(s, t);
         if ($2) {
             edge->setData($2);
             edge->setAttributesFromData();
@@ -241,6 +243,8 @@ edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
         } else {
             edge->setTargetAnchor(edge->sourceAnchor());
         }
+
+        assembler->graph()->addEdge(edge);
 	};
 
 ignoreprop: val | val "=" val;
