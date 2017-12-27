@@ -18,7 +18,7 @@ public:
     NodeItem(Node *node);
     void readPos();
     void writePos();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     QPainterPath shape() const;
     QRectF boundingRect() const;

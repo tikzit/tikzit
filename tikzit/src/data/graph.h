@@ -21,9 +21,11 @@ class Graph : public QObject
 public:
     explicit Graph(QObject *parent = 0);
     ~Graph();
-    Node *addNode(Node *n);
+    void addNode(Node *n);
+    void addNode(Node *n, int index);
     void removeNode(Node *n);
-    Edge *addEdge(Edge *e);
+    void addEdge(Edge *e);
+    void addEdge(Edge *e, int index);
     void removeEdge(Edge *e);
 
     GraphElementData *data() const;
@@ -45,8 +47,8 @@ public slots:
 private:
     QVector<Node*> _nodes;
     QVector<Edge*> _edges;
-    QMultiHash<Node*,Edge*> inEdges;
-    QMultiHash<Node*,Edge*> outEdges;
+    //QMultiHash<Node*,Edge*> inEdges;
+    //QMultiHash<Node*,Edge*> outEdges;
     GraphElementData *_data;
     QRectF _bbox;
 };

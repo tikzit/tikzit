@@ -117,14 +117,14 @@ void Edge::updateControls() {
     }
 
     // TODO: calculate head and tail properly, not just for circles
-    if (_source->style().isNone()) {
+    if (_source->style()->isNone()) {
         _tail = src;
     } else {
         _tail = QPointF(src.x() + std::cos(outAngleR) * 0.1,
                         src.y() + std::sin(outAngleR) * 0.1);
     }
 
-    if (_target->style().isNone()) {
+    if (_target->style()->isNone()) {
         _head = targ;
     } else {
         _head = QPointF(targ.x() + std::cos(inAngleR) * 0.1,

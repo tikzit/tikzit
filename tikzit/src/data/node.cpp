@@ -6,7 +6,7 @@
 Node::Node(QObject *parent) : QObject(parent)
 {
     _data = new GraphElementData();
-    _style = NodeStyle();
+    _style = noneStyle;
     _styleName = "none";
 }
 
@@ -69,12 +69,11 @@ void Node::setStyleName(const QString &styleName)
 
 void Node::attachStyle()
 {
-    if (_styleName == "none") _style = NodeStyle();
+    if (_styleName == "none") _style = noneStyle;
     else _style = tikzit->nodeStyle(_styleName);
 }
 
-NodeStyle Node::style() const
+NodeStyle *Node::style() const
 {
     return _style;
 }
-

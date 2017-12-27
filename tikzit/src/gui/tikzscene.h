@@ -25,9 +25,9 @@ class TikzScene : public QGraphicsScene
 public:
     TikzScene(TikzDocument *tikzDocument, QObject *parent);
     ~TikzScene();
-    Graph *graph() const;
-    QVector<NodeItem *> nodeItems() const;
-    QVector<EdgeItem *> edgeItems() const;
+    Graph *graph();
+    QMap<Node*,NodeItem*> &nodeItems();
+    QMap<Edge*,EdgeItem*> &edgeItems();
     void refreshAdjacentEdges(QList<Node*> nodes);
 
     TikzDocument *tikzDocument() const;
@@ -35,14 +35,16 @@ public:
 
 public slots:
     void graphReplaced();
+
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 private:
     TikzDocument *_tikzDocument;
-    QVector<NodeItem*> _nodeItems;
-    QVector<EdgeItem*> _edgeItems;
+    QMap<Node*,NodeItem*> _nodeItems;
+    QMap<Edge*,EdgeItem*> _edgeItems;
     EdgeItem *_modifyEdgeItem;
     bool _firstControlPoint;
 
@@ -51,6 +53,8 @@ private:
     int _oldBend;
     int _oldInAngle;
     int _oldOutAngle;
+
+    void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges);
 };
 
 #endif // TIKZSCENE_H

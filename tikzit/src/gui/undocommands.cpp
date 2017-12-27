@@ -1,4 +1,6 @@
 #include "undocommands.h"
+#include "nodeitem.h"
+#include "edgeitem.h"
 
 MoveCommand::MoveCommand(TikzScene *scene,
                          QMap<Node*, QPointF> oldNodePositions,
@@ -8,8 +10,7 @@ MoveCommand::MoveCommand(TikzScene *scene,
     _scene(scene),
     _oldNodePositions(oldNodePositions),
     _newNodePositions(newNodePositions)
-{
-}
+{}
 
 
 void MoveCommand::undo()
@@ -77,4 +78,78 @@ void EdgeBendCommand::redo()
             break;
         }
     }
+}
+
+DeleteCommand::DeleteCommand(TikzScene *scene,
+                             QMap<int, Node *> deleteNodes,
+                             QMap<int, Edge *> deleteEdges,
+                             QSet<Edge *> selEdges) :
+    _scene(scene), _deleteNodes(deleteNodes),
+    _deleteEdges(deleteEdges), _selEdges(selEdges)
+{}
+
+void DeleteCommand::undo()
+{
+    for (auto it = _deleteNodes.begin(); it != _deleteNodes.end(); ++it) {
+        Node *n = it.value();
+        _scene->graph()->addNode(n, it.key());
+        NodeItem *ni = new NodeItem(n);
+        _scene->nodeItems().insert(n, ni);
+        _scene->addItem(ni);
+        ni->setSelected(true);
+    }
+
+    for (auto it = _deleteEdges.begin(); it != _deleteEdges.end(); ++it) {
+        Edge *e = it.value();
+        _scene->graph()->addEdge(e, it.key());
+        EdgeItem *ei = new EdgeItem(e);
+        _scene->edgeItems().insert(e, ei);
+        _scene->addItem(ei);
+
+        if (_selEdges.contains(e)) ei->setSelected(true);
+    }
+}
+
+void DeleteCommand::redo()
+{
+    foreach (Edge *e, _deleteEdges.values()) {
+        EdgeItem *ei = _scene->edgeItems()[e];
+        _scene->edgeItems().remove(e);
+        _scene->removeItem(ei);
+        delete ei;
+
+        _scene->graph()->removeEdge(e);
+    }
+
+    foreach (Node *n, _deleteNodes.values()) {
+        NodeItem *ni = _scene->nodeItems()[n];
+        _scene->nodeItems().remove(n);
+        _scene->removeItem(ni);
+        delete ni;
+
+        _scene->graph()->removeNode(n);
+    }
+}
+
+AddNodeCommand::AddNodeCommand(TikzScene *scene, Node *node) :
+    _scene(scene), _node(node)
+{}
+
+void AddNodeCommand::undo()
+{
+    NodeItem *ni = _scene->nodeItems()[_node];
+    _scene->removeItem(ni);
+    _scene->nodeItems().remove(_node);
+    delete ni;
+
+    _scene->graph()->removeNode(_node);
+}
+
+void AddNodeCommand::redo()
+{
+    // TODO: get the current style
+    _scene->graph()->addNode(_node);
+    NodeItem *ni = new NodeItem(_node);
+    _scene->nodeItems().insert(_node, ni);
+    _scene->addItem(ni);
 }

@@ -43,7 +43,7 @@ public:
     MainWindow *activeWindow() const;
     void setActiveWindow(MainWindow *activeWindow);
     void removeWindow(MainWindow *w);
-    NodeStyle nodeStyle(QString name);
+    NodeStyle *nodeStyle(QString name);
 
     static QFont LABEL_FONT;
 //    Ui::MainMenu *_mainMenuUi;
@@ -61,7 +61,7 @@ private:
     PropertyPalette *_propertyPalette;
     QVector<MainWindow*> _windows;
     MainWindow *_activeWindow;
-    QVector<NodeStyle> _nodeStyles;
+    QVector<NodeStyle*> _nodeStyles;
 
 };
 

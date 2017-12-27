@@ -1,5 +1,8 @@
 /**
-  * These classes store the data required to undo/redo a single UI action.
+  * All changes to a TikzDocument are done via subclasses of QUndoCommand. When a controller
+  * (e.g. TikzScene) gets input from the user to change the document, it will push one of
+  * these commands onto the TikzDocument's undo stack, which automatically calls the redo()
+  * method of the command.
   */
 
 #ifndef UNDOCOMMANDS_H
@@ -43,6 +46,33 @@ private:
     int _newBend;
     int _newInAngle;
     int _newOutAngle;
+};
+
+class DeleteCommand : public QUndoCommand
+{
+public:
+    explicit DeleteCommand(TikzScene *scene,
+                           QMap<int,Node*> deleteNodes,
+                           QMap<int,Edge*> deleteEdges,
+                           QSet<Edge*> selEdges);
+    void undo() override;
+    void redo() override;
+private:
+    TikzScene *_scene;
+    QMap<int,Node*> _deleteNodes;
+    QMap<int,Edge*> _deleteEdges;
+    QSet<Edge*> _selEdges;
+};
+
+class AddNodeCommand : public QUndoCommand
+{
+public:
+    explicit AddNodeCommand(TikzScene *scene, Node *node);
+    void undo() override;
+    void redo() override;
+private:
+    TikzScene *_scene;
+    Node *_node;
 };
 
 #endif // UNDOCOMMANDS_H

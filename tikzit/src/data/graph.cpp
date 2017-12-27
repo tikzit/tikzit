@@ -1,6 +1,10 @@
 #include "graph.h"
 
 #include <QTextStream>
+#include <QSet>
+#include <QtAlgorithms>
+#include <QDebug>
+#include <algorithm>
 
 Graph::Graph(QObject *parent) : QObject(parent)
 {
@@ -12,30 +16,42 @@ Graph::~Graph()
 {
 }
 
+// add a node. The graph claims ownership.
+void Graph::addNode(Node *n) {
+    n->setParent(this);
+    _nodes << n;
+}
+
+void Graph::addNode(Node *n, int index)
+{
+    n->setParent(this);
+    _nodes.insert(index, n);
+}
+
 void Graph::removeNode(Node *n) {
     // the node itself is not deleted, as it may still be referenced in an undo command. It will
     // be deleted when graph is, via QObject memory management.
-    _nodes.removeAll(n);
-    inEdges.remove(n);
-    outEdges.remove(n);
+    _nodes.removeOne(n);
 }
 
-Edge *Graph::addEdge(Edge *e)
+
+void Graph::addEdge(Edge *e)
 {
     e->setParent(this);
     _edges << e;
-    outEdges.insert(e->source(), e);
-    inEdges.insert(e->target(), e);
-    return e;
+}
+
+void Graph::addEdge(Edge *e, int index)
+{
+    e->setParent(this);
+    _edges.insert(index, e);
 }
 
 void Graph::removeEdge(Edge *e)
 {
     // the edge itself is not deleted, as it may still be referenced in an undo command. It will
     // be deleted when graph is, via QObject memory management.
-    _edges.removeAll(e);
-    outEdges.remove(e->source(), e);
-    inEdges.remove(e->target(), e);
+    _edges.removeOne(e);
 }
 
 GraphElementData *Graph::data() const
@@ -151,13 +167,6 @@ QString Graph::tikz()
 void Graph::setBbox(const QRectF &bbox)
 {
     _bbox = bbox;
-}
-
-// add a node. The graph claims ownership.
-Node *Graph::addNode(Node *n) {
-    n->setParent(this);
-    _nodes << n;
-    return n;
 }
 
 

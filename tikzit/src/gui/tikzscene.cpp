@@ -17,7 +17,7 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, QObject *parent) :
 TikzScene::~TikzScene() {
 }
 
-Graph *TikzScene::graph() const
+Graph *TikzScene::graph()
 {
     return _tikzDocument->graph();
 }
@@ -38,13 +38,13 @@ void TikzScene::graphReplaced()
 
     foreach (Edge *e, graph()->edges()) {
         EdgeItem *ei = new EdgeItem(e);
-        _edgeItems << ei;
+        _edgeItems.insert(e, ei);
         addItem(ei);
     }
 
     foreach (Node *n, graph()->nodes()) {
         NodeItem *ni = new NodeItem(n);
-        _nodeItems << ni;
+        _nodeItems.insert(n, ni);
         addItem(ni);
     }
 }
@@ -267,7 +267,14 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
         break;
     case ToolPalette::VERTEX:
-        // TODO
+        {
+            int gridSize = GLOBAL_SCALE / 8;
+            QPointF gridPos(round(mousePos.x()/gridSize)*gridSize, round(mousePos.y()/gridSize)*gridSize);
+            Node *n = new Node();
+            n->setPoint(fromScreen(gridPos));
+            AddNodeCommand *cmd = new AddNodeCommand(this, n);
+            _tikzDocument->undoStack()->push(cmd);
+        }
         break;
     case ToolPalette::EDGE:
         break;
@@ -275,6 +282,44 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         break;
     }
 }
+
+void TikzScene::keyReleaseEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
+        QSet<Node*> selNodes;
+        QSet<Edge*> selEdges;
+        getSelection(selNodes, selEdges);
+
+        QMap<int,Node*> deleteNodes;
+        QMap<int,Edge*> deleteEdges;
+
+        for (int i = 0; i < _tikzDocument->graph()->nodes().length(); ++i) {
+            Node *n = _tikzDocument->graph()->nodes()[i];
+            if (selNodes.contains(n)) deleteNodes.insert(i, n);
+        }
+
+        for (int i = 0; i < _tikzDocument->graph()->edges().length(); ++i) {
+            Edge *e = _tikzDocument->graph()->edges()[i];
+            if (selEdges.contains(e) ||
+                selNodes.contains(e->source()) ||
+                selNodes.contains(e->target())) deleteEdges.insert(i, e);
+        }
+
+        //qDebug() << "nodes:" << deleteNodes;
+        //qDebug() << "edges:" << deleteEdges;
+        DeleteCommand *cmd = new DeleteCommand(this, deleteNodes, deleteEdges, selEdges);
+        _tikzDocument->undoStack()->push(cmd);
+    }
+}
+
+void TikzScene::getSelection(QSet<Node *> &selNodes, QSet<Edge *> &selEdges)
+{
+    foreach (QGraphicsItem *gi, selectedItems()) {
+        if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) selNodes << ni->node();
+        if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) selEdges << ei->edge();
+    }
+}
+
 
 TikzDocument *TikzScene::tikzDocument() const
 {
@@ -285,11 +330,6 @@ void TikzScene::setTikzDocument(TikzDocument *tikzDocument)
 {
     _tikzDocument = tikzDocument;
     graphReplaced();
-}
-
-QVector<EdgeItem *> TikzScene::edgeItems() const
-{
-    return _edgeItems;
 }
 
 void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
@@ -303,7 +343,12 @@ void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
     }
 }
 
-QVector<NodeItem *> TikzScene::nodeItems() const
+QMap<Node*,NodeItem *> &TikzScene::nodeItems()
 {
     return _nodeItems;
+}
+
+QMap<Edge*,EdgeItem*> &TikzScene::edgeItems()
+{
+    return _edgeItems;
 }

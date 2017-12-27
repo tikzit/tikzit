@@ -21,6 +21,6 @@ public:
     int strokeThickness;
 };
 
-extern NodeStyle noneStyle;
+extern NodeStyle *noneStyle;
 
 #endif // NODESTYLE_H

@@ -31,7 +31,7 @@ public:
     void setStyleName(const QString &styleName);
 
     void attachStyle();
-    NodeStyle style() const;
+    NodeStyle *style() const;
 
 signals:
 
@@ -42,7 +42,7 @@ private:
     QString _name;
     QString _label;
     QString _styleName;
-    NodeStyle _style;
+    NodeStyle *_style;
     GraphElementData *_data;
 };
 

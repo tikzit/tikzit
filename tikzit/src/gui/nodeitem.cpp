@@ -41,9 +41,9 @@ QRectF NodeItem::labelRect() const {
     return rect;
 }
 
-void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    if (_node->style().isNone()) {
+    if (_node->style()->isNone()) {
         QColor c(180,180,200);
         painter->setPen(QPen(c));
         painter->setBrush(QBrush(c));
@@ -57,10 +57,10 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         painter->setBrush(Qt::NoBrush);
         painter->drawPath(shape());
     } else {
-        QPen pen(_node->style().strokeColor);
-        pen.setWidth(_node->style().strokeThickness);
+        QPen pen(_node->style()->strokeColor);
+        pen.setWidth(_node->style()->strokeThickness);
         painter->setPen(pen);
-        painter->setBrush(QBrush(_node->style().fillColor));
+        painter->setBrush(QBrush(_node->style()->fillColor));
         painter->drawPath(shape());
     }
 

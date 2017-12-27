@@ -1,5 +1,7 @@
 #include "nodestyle.h"
 
+NodeStyle *noneStyle = new NodeStyle();
+
 NodeStyle::NodeStyle()
 {
     name = "none";

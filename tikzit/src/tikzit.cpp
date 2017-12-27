@@ -43,32 +43,11 @@ PropertyPalette *Tikzit::propertyPalette() const
     return _propertyPalette;
 }
 
-//void Tikzit::createMenu()
-//{
-//    _mainMenu = new QMenuBar(0);
-//    QMenu *file = _mainMenu->addMenu(tr("&File"));
-//    QAction *aNew = file->addAction(tr("&New"));
-//    aNew->setShortcut(QKeySequence::New);
-//    QAction *aOpen = file->addAction(tr("&Open"));
-//    aOpen->setShortcut(QKeySequence::Open);
-
-//    QMenu *view = _mainMenu->addMenu(tr("&View"));
-//    QAction *aZoomIn = view->addAction(tr("Zoom &In"));
-//    aZoomIn->setShortcut(QKeySequence::ZoomIn);
-//    QAction *aZoomOut = view->addAction(tr("Zoom &Out"));
-//    aZoomOut->setShortcut(QKeySequence::ZoomOut);
-
-//    connect(aNew, SIGNAL(triggered()), this, SLOT(newDoc()));
-//    connect(aOpen, SIGNAL(triggered()), this, SLOT(open()));
-//    connect(aZoomIn, SIGNAL(triggered()), this, SLOT(zoomIn()));
-//    connect(aZoomOut, SIGNAL(triggered()), this, SLOT(zoomOut()));
-//}
-
 void Tikzit::loadStyles()
 {
-    _nodeStyles << NodeStyle("black dot", NodeShape::Circle, Qt::black, Qt::black, 1);
-    _nodeStyles << NodeStyle("white dot", NodeShape::Circle, Qt::white, Qt::black, 1);
-    _nodeStyles << NodeStyle("gray dot", NodeShape::Circle, Qt::gray, Qt::black, 1);
+    _nodeStyles << new NodeStyle("black dot", NodeShape::Circle, Qt::black, Qt::black, 1);
+    _nodeStyles << new NodeStyle("white dot", NodeShape::Circle, Qt::white, Qt::black, 1);
+    _nodeStyles << new NodeStyle("gray dot", NodeShape::Circle, Qt::gray, Qt::black, 1);
 }
 
 void Tikzit::newDoc()
@@ -97,11 +76,11 @@ void Tikzit::removeWindow(MainWindow *w)
     }
 }
 
-NodeStyle Tikzit::nodeStyle(QString name)
+NodeStyle *Tikzit::nodeStyle(QString name)
 {
-    foreach (NodeStyle s , _nodeStyles)
-        if (s.name == name) return s;
-    return NodeStyle(name, NodeShape::Circle, Qt::white);
+    foreach (NodeStyle *s , _nodeStyles)
+        if (s->name == name) return s;
+    return noneStyle; //NodeStyle(name, NodeShape::Circle, Qt::white);
 }
 
 void Tikzit::open()
