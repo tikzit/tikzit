@@ -7,6 +7,7 @@ TikzView::TikzView(QWidget *parent) : QGraphicsView(parent)
 {
     setRenderHint(QPainter::Antialiasing);
     setDragMode(QGraphicsView::RubberBandDrag);
+
     _scale = 1.0f;
 }
 

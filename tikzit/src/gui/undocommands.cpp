@@ -2,6 +2,8 @@
 #include "nodeitem.h"
 #include "edgeitem.h"
 
+#include <QGraphicsView>
+
 MoveCommand::MoveCommand(TikzScene *scene,
                          QMap<Node*, QPointF> oldNodePositions,
                          QMap<Node*, QPointF> newNodePositions,
@@ -131,9 +133,10 @@ void DeleteCommand::redo()
     }
 }
 
-AddNodeCommand::AddNodeCommand(TikzScene *scene, Node *node) :
-    _scene(scene), _node(node)
-{}
+AddNodeCommand::AddNodeCommand(TikzScene *scene, Node *node, QRectF newBounds) :
+    _scene(scene), _node(node), _oldBounds(_scene->sceneRect()), _newBounds(newBounds)
+{
+}
 
 void AddNodeCommand::undo()
 {
@@ -143,6 +146,8 @@ void AddNodeCommand::undo()
     delete ni;
 
     _scene->graph()->removeNode(_node);
+
+    _scene->setBounds(_oldBounds);
 }
 
 void AddNodeCommand::redo()
@@ -152,4 +157,6 @@ void AddNodeCommand::redo()
     NodeItem *ni = new NodeItem(_node);
     _scene->nodeItems().insert(_node, ni);
     _scene->addItem(ni);
+
+    _scene->setBounds(_newBounds);
 }

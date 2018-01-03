@@ -29,6 +29,7 @@ public:
     QMap<Node*,NodeItem*> &nodeItems();
     QMap<Edge*,EdgeItem*> &edgeItems();
     void refreshAdjacentEdges(QList<Node*> nodes);
+    void setBounds(QRectF bounds);
 
     TikzDocument *tikzDocument() const;
     void setTikzDocument(TikzDocument *tikzDocument);
@@ -45,6 +46,7 @@ private:
     TikzDocument *_tikzDocument;
     QMap<Node*,NodeItem*> _nodeItems;
     QMap<Edge*,EdgeItem*> _edgeItems;
+    QGraphicsLineItem *_drawEdgeItem;
     EdgeItem *_modifyEdgeItem;
     bool _firstControlPoint;
 

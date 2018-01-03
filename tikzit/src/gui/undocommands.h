@@ -67,12 +67,14 @@ private:
 class AddNodeCommand : public QUndoCommand
 {
 public:
-    explicit AddNodeCommand(TikzScene *scene, Node *node);
+    explicit AddNodeCommand(TikzScene *scene, Node *node, QRectF newBounds);
     void undo() override;
     void redo() override;
 private:
     TikzScene *_scene;
     Node *_node;
+    QRectF _oldBounds;
+    QRectF _newBounds;
 };
 
 #endif // UNDOCOMMANDS_H

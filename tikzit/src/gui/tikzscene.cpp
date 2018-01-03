@@ -12,6 +12,16 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, QObject *parent) :
     QGraphicsScene(parent), _tikzDocument(tikzDocument)
 {
     _modifyEdgeItem = 0;
+    _drawEdgeItem = new QGraphicsLineItem();
+    setSceneRect(-310,-230,620,450);
+
+    QPen pen;
+    pen.setColor(QColor::fromRgbF(0.5f, 0.0f, 0.5f));
+    pen.setWidth(3);
+    _drawEdgeItem->setPen(pen);
+    _drawEdgeItem->setLine(0,0,0,0);
+    _drawEdgeItem->setVisible(false);
+    addItem(_drawEdgeItem);
 }
 
 TikzScene::~TikzScene() {
@@ -272,7 +282,13 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             QPointF gridPos(round(mousePos.x()/gridSize)*gridSize, round(mousePos.y()/gridSize)*gridSize);
             Node *n = new Node();
             n->setPoint(fromScreen(gridPos));
-            AddNodeCommand *cmd = new AddNodeCommand(this, n);
+
+            QRectF grow(gridPos.x() - GLOBAL_SCALEF, gridPos.y() - GLOBAL_SCALEF, 2 * GLOBAL_SCALEF, 2 * GLOBAL_SCALEF);
+            QRectF newBounds = sceneRect().united(grow);
+            qDebug() << grow;
+            qDebug() << newBounds;
+
+            AddNodeCommand *cmd = new AddNodeCommand(this, n, newBounds);
             _tikzDocument->undoStack()->push(cmd);
         }
         break;
@@ -339,6 +355,20 @@ void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
         if (nodes.contains(ei->edge()->source()) || nodes.contains(ei->edge()->target())) {
             ei->edge()->updateControls();
             ei->readPos();
+        }
+    }
+}
+
+void TikzScene::setBounds(QRectF bounds)
+{
+    if (bounds != sceneRect()) {
+        if (!views().empty()) {
+            QGraphicsView *v = views().first();
+            QPointF c = v->mapToScene(v->viewport()->rect().center());
+            setSceneRect(bounds);
+            v->centerOn(c);
+        } else {
+            setSceneRect(bounds);
         }
     }
 }
