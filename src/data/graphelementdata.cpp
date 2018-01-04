@@ -86,6 +86,8 @@ QVariant GraphElementData::data(const QModelIndex &index, int role) const
         QString s = (index.column() == 0) ? p.key() : p.value();
         return QVariant(s);
     }
+
+    return QVariant();
 }
 
 QVariant GraphElementData::headerData(int section, Qt::Orientation orientation, int role) const

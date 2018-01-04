@@ -19,8 +19,7 @@ class EdgeItem : public QGraphicsPathItem
 public:
     EdgeItem(Edge *edge);
     void readPos();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-               QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     QRectF boundingRect() const;
     QPainterPath shape() const;
     Edge *edge() const;

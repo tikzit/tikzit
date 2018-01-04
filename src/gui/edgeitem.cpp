@@ -43,7 +43,7 @@ void EdgeItem::readPos()
     _cp2Item->setPos(toScreen(_edge->cp2()));
 }
 
-void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     //QGraphicsPathItem::paint(painter, option, widget);
     painter->setPen(pen());
