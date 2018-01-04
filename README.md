@@ -15,11 +15,11 @@ TODO
 
 You'll need Qt5 and poppler with Qt5 bindings. Qt5 can be installed using e.g. Homebrew, as follows:
 
-  $ brew install qt5
+    $ brew install qt5
 
 Poppler should be built from source to get the Qt5 bindings. If Qt is setup correctly, the configure script included with Poppler should enable these automatically. Also, note that clang needs to have C++11 features enabled to build successfully. TikZiT has been tested on MacOS with poppler-0.50.0 (available <a href="https://poppler.freedesktop.org/releases.html">here</a>), built with the following commands:
 
-  $ CXXFLAGS="-std=c++11" ./configure
-  $ CXXFLAGS="-std=c++11" make
+    $ CXXFLAGS="-std=c++11" ./configure
+    $ CXXFLAGS="-std=c++11" make
 
 
