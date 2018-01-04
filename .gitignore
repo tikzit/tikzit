@@ -1,2 +1,5 @@
+.qmake.stash
 build-tikzit-*
 *.pro.user
+Makefile
+tikzit.app
