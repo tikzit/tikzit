@@ -1,1 +1,25 @@
-TikZiT is a graphical tool for rapidly creating an editing node-and-edge style graphs. It was originally created to aid in the typesetting of "dot" diagrams of interacting quantum observables (see <a href="http://arxiv.org/abs/0906.4725">arXiv:0906.4725</a>), but can be used as a general graph editing program. Click one of the above icons to download. To comment or contribute, email me at <b>gmail.com</b> preceded by <b>aleks0</b> and an at-sign.
+
+# TikZiT
+
+TikZiT is a graphical tool for rapidly creating graphs and diagrams using PGF/TikZ. It was used, for example, to make all of the 2500+ diagrams in <a href="http://cambridge.org/pqp">this book</a>. It is currently undergoing a port to Qt5 for better cross-platform support. As such, the code on this branch, and the README is a work in progress.
+
+## Building on Windows
+
+TODO
+
+## Building on Linux
+
+TODO
+
+## Building on MacOS
+
+You'll need Qt5 and poppler with Qt5 bindings. Qt5 can be installed using e.g. Homebrew, as follows:
+
+  $ brew install qt5
+
+Poppler should be built from source to get the Qt5 bindings. If Qt is setup correctly, the configure script included with Poppler should enable these automatically. Also, note that clang needs to have C++11 features enabled to build successfully. TikZiT has been tested on MacOS with poppler-0.50.0 (available <a href="https://poppler.freedesktop.org/releases.html">here</a>), built with the following commands:
+
+  $ CXXFLAGS="-std=c++11" ./configure
+  $ CXXFLAGS="-std=c++11" make
+
+
