@@ -4,3 +4,6 @@ build-tikzit-*
 Makefile
 tikzit.app
 target_wrapper.sh
+src/data/tikzlexer.lexer.cpp
+src/data/tikzparser.parser.cpp
+src/data/tikzparser.parser.hpp
