@@ -124,6 +124,11 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::VERTEX:
         break;
     case ToolPalette::EDGE:
+        {
+            QLineF line(mousePos,mousePos);
+            _drawEdgeItem->setLine(line);
+            _drawEdgeItem->setVisible(true);
+        }
         break;
     case ToolPalette::CROP:
         break;
@@ -226,6 +231,11 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::VERTEX:
         break;
     case ToolPalette::EDGE:
+        if (_drawEdgeItem->isVisible()) {
+            QPointF p1 = _drawEdgeItem->line().p1();
+            QLineF line(p1, mousePos);
+            _drawEdgeItem->setLine(line);
+        }
         break;
     case ToolPalette::CROP:
         break;
@@ -293,6 +303,7 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
         break;
     case ToolPalette::EDGE:
+        _drawEdgeItem->setVisible(false);
         break;
     case ToolPalette::CROP:
         break;
