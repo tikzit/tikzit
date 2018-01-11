@@ -1,4 +1,4 @@
-/**
+/*!
   * Enables the user to edit properties of the graph, as well as the selected node/edge.
   */
 

@@ -1,3 +1,9 @@
+/**
+  * \file main.cpp
+  *
+  * The main entry point for the TikZiT executable.
+  */
+
 #include "tikzit.h"
 
 #include <QApplication>

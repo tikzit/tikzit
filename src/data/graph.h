@@ -1,4 +1,4 @@
-/**
+/*!
   * A graph defined by tikz code.
   */
 

@@ -1,4 +1,4 @@
-/**
+/*!
   * A small window that lets the user select the current editing tool.
   */
 

@@ -1,4 +1,4 @@
-/**
+/*!
   * A QGraphicsItem that handles drawing a single node.
   */
 

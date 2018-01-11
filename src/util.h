@@ -1,4 +1,4 @@
-/**
+/*!
   * Various utility functions, mostly for mathematical calculation.
   */
 

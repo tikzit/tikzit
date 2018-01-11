@@ -1,4 +1,4 @@
-/**
+/*!
   * Manage the scene, which contains a single Graph, and respond to user input. This serves as
   * the controller for the MVC (TikzDocument, TikzView, TikzScene).
   */

@@ -1,4 +1,6 @@
-/**
+/*!
+  * \file undocommands.h
+  *
   * All changes to a TikzDocument are done via subclasses of QUndoCommand. When a controller
   * (e.g. TikzScene) gets input from the user to change the document, it will push one of
   * these commands onto the TikzDocument's undo stack, which automatically calls the redo()

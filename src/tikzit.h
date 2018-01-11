@@ -1,7 +1,28 @@
-/**
-  * Tikzit is the top-level class which maintains the global application state. For convenience,
-  * it also inherits the main menu.
-  */
+/*!
+ *
+ * \mainpage TikZiT Documentation
+ *
+ * This is the source code documentation for TikZiT. The global entry point
+ * for the TikZiT executable is in main.cpp, whereas the class Tikzit maintains
+ * the global application state.
+ *
+ * The TikZ parser is implemented in flex/bison in the files tikzlexer.l and tikzparser.y.
+ *
+ * Most of the interesting code for handling user input is in the class TikzScene. Anything
+ * that makes a change to the tikz file should be implemented as a QUndoCommand. Currently,
+ * these are all in undocommands.h.
+ *
+ */
+
+/*!
+ *
+ * \class Tikzit
+ *
+ * Tikzit is the top-level class which maintains the global application state. For convenience,
+ * it also holds an instance of the main menu for macOS (or Ubuntu unity) style GUIs which only
+ * have one, application-level menu.
+ *
+ */
 
 #ifndef TIKZIT_H
 #define TIKZIT_H

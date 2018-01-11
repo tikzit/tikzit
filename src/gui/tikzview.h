@@ -1,4 +1,4 @@
-/**
+/*!
   * Display a Graph, and manage any user input that purely changes the view (e.g. Zoom). This
   * serves as the view in the MVC (TikzDocument, TikzView, TikzScene).
   */

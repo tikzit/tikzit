@@ -1,4 +1,10 @@
 %{
+/*!
+ * \file tikzparser.y
+ *
+ * The parser for tikz input.
+ */
+
 /*
  * Copyright 2010       Chris Heunen
  * Copyright 2010-2013  Aleks Kissinger
