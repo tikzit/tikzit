@@ -12,6 +12,9 @@
  * that makes a change to the tikz file should be implemented as a QUndoCommand. Currently,
  * these are all in undocommands.h.
  *
+ * I've basically been adding documentation as I go. Other bits and pieces can be accessed
+ * by searching, or via the class list/class hierarchy links in the menu above.
+ *
  */
 
 /*!
