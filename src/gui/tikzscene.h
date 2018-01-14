@@ -48,6 +48,8 @@ private:
     QMap<Edge*,EdgeItem*> _edgeItems;
     QGraphicsLineItem *_drawEdgeItem;
     EdgeItem *_modifyEdgeItem;
+    NodeItem *_edgeStartNodeItem;
+    NodeItem *_edgeEndNodeItem;
     bool _firstControlPoint;
 
     QMap<Node*,QPointF> _oldNodePositions;

@@ -12,6 +12,7 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, QObject *parent) :
     QGraphicsScene(parent), _tikzDocument(tikzDocument)
 {
     _modifyEdgeItem = 0;
+    _edgeStartNodeItem = 0;
     _drawEdgeItem = new QGraphicsLineItem();
     setSceneRect(-310,-230,620,450);
 
@@ -124,10 +125,15 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::VERTEX:
         break;
     case ToolPalette::EDGE:
-        {
-            QLineF line(mousePos,mousePos);
-            _drawEdgeItem->setLine(line);
-            _drawEdgeItem->setVisible(true);
+        foreach (QGraphicsItem *gi, items(mousePos)) {
+            if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)){
+                _edgeStartNodeItem = ni;
+                _edgeEndNodeItem = ni;
+                QLineF line(toScreen(ni->node()->point()), mousePos);
+                _drawEdgeItem->setLine(line);
+                _drawEdgeItem->setVisible(true);
+                break;
+            }
         }
         break;
     case ToolPalette::CROP:
@@ -232,8 +238,17 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         break;
     case ToolPalette::EDGE:
         if (_drawEdgeItem->isVisible()) {
+            _edgeEndNodeItem = 0;
+            foreach (QGraphicsItem *gi, items(mousePos)) {
+                if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)){
+                    _edgeEndNodeItem = ni;
+                    break;
+                }
+            }
             QPointF p1 = _drawEdgeItem->line().p1();
-            QLineF line(p1, mousePos);
+            QPointF p2 = (_edgeEndNodeItem != 0) ? toScreen(_edgeEndNodeItem->node()->point()) : mousePos;
+            QLineF line(p1, p2);
+
             _drawEdgeItem->setLine(line);
         }
         break;
@@ -295,8 +310,8 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
             QRectF grow(gridPos.x() - GLOBAL_SCALEF, gridPos.y() - GLOBAL_SCALEF, 2 * GLOBAL_SCALEF, 2 * GLOBAL_SCALEF);
             QRectF newBounds = sceneRect().united(grow);
-            qDebug() << grow;
-            qDebug() << newBounds;
+            //qDebug() << grow;
+            //qDebug() << newBounds;
 
             AddNodeCommand *cmd = new AddNodeCommand(this, n, newBounds);
             _tikzDocument->undoStack()->push(cmd);
