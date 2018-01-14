@@ -305,7 +305,7 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         {
             int gridSize = GLOBAL_SCALE / 8;
             QPointF gridPos(round(mousePos.x()/gridSize)*gridSize, round(mousePos.y()/gridSize)*gridSize);
-            Node *n = new Node();
+            Node *n = new Node(_tikzDocument);
             n->setPoint(fromScreen(gridPos));
 
             QRectF grow(gridPos.x() - GLOBAL_SCALEF, gridPos.y() - GLOBAL_SCALEF, 2 * GLOBAL_SCALEF, 2 * GLOBAL_SCALEF);
@@ -318,6 +318,13 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
         break;
     case ToolPalette::EDGE:
+        if (_edgeStartNodeItem != 0 && _edgeEndNodeItem != 0) {
+            Edge *e = new Edge(_edgeStartNodeItem->node(), _edgeEndNodeItem->node(), _tikzDocument);
+            AddEdgeCommand *cmd = new AddEdgeCommand(this, e);
+            _tikzDocument->undoStack()->push(cmd);
+        }
+        _edgeStartNodeItem = 0;
+        _edgeEndNodeItem = 0;
         _drawEdgeItem->setVisible(false);
         break;
     case ToolPalette::CROP:

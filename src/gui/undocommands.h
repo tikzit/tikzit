@@ -79,4 +79,15 @@ private:
     QRectF _newBounds;
 };
 
+class AddEdgeCommand : public QUndoCommand
+{
+public:
+    explicit AddEdgeCommand(TikzScene *scene, Edge *edge);
+    void undo() override;
+    void redo() override;
+private:
+    TikzScene *_scene;
+    Edge *_edge;
+};
+
 #endif // UNDOCOMMANDS_H

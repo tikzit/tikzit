@@ -160,3 +160,27 @@ void AddNodeCommand::redo()
 
     _scene->setBounds(_newBounds);
 }
+
+AddEdgeCommand::AddEdgeCommand(TikzScene *scene, Edge *edge) :
+    _scene(scene), _edge(edge)
+{
+}
+
+void AddEdgeCommand::undo()
+{
+    EdgeItem *ei = _scene->edgeItems()[_edge];
+    _scene->removeItem(ei);
+    _scene->edgeItems().remove(_edge);
+    delete ei;
+
+    _scene->graph()->removeEdge(_edge);
+}
+
+void AddEdgeCommand::redo()
+{
+    // TODO: get the current style
+    _scene->graph()->addEdge(_edge);
+    EdgeItem *ei = new EdgeItem(_edge);
+    _scene->edgeItems().insert(_edge, ei);
+    _scene->addItem(ei);
+}
