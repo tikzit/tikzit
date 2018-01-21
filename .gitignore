@@ -1,6 +1,7 @@
 .qmake.stash
 build-tikzit-*
 *.pro.user
+*.autosave
 Makefile
 tikzit.app
 target_wrapper.sh
