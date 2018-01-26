@@ -4,7 +4,7 @@
 #include "graphelementproperty.h"
 #include "graphelementdata.h"
 #include "node.h"
-#include "tikzgraphassembler.h"
+#include "tikzassembler.h"
 
 #include <QString>
 #include <QRectF>

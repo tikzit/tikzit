@@ -10,6 +10,9 @@
     <height>341</height>
    </rect>
   </property>
+  <property name="floating">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
    <string>Properties</string>
   </property>

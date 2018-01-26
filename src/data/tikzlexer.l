@@ -38,11 +38,12 @@
 %}
 
 %option reentrant bison-bridge bison-locations 8bit
+%option bison-locations 8bit
 %option nounput
 %option yylineno
 %option noyywrap
 %option header-file="tikzlexer.h"
-%option extra-type="TikzGraphAssembler *"
+%option extra-type="TikzAssembler *"
 
 %s props
 %s xcoord

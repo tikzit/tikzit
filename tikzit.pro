@@ -35,7 +35,6 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/graph.cpp \
     src/data/node.cpp \
     src/data/edge.cpp \
-    src/data/tikzgraphassembler.cpp \
     src/data/graphelementdata.cpp \
     src/data/graphelementproperty.cpp \
     src/gui/propertypalette.cpp \
@@ -49,7 +48,9 @@ SOURCES += src/gui/mainwindow.cpp \
     src/gui/undocommands.cpp \
     src/gui/mainmenu.cpp \
     src/util.cpp \
-    stylepalette.cpp
+    stylepalette.cpp \
+    src/data/project.cpp \
+    src/data/tikzassembler.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -57,7 +58,6 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/graph.h \
     src/data/node.h \
     src/data/edge.h \
-    src/data/tikzgraphassembler.h \
     src/data/graphelementdata.h \
     src/data/graphelementproperty.h \
     src/gui/propertypalette.h \
@@ -72,11 +72,13 @@ HEADERS  += src/gui/mainwindow.h \
     src/gui/undocommands.h \
     src/gui/mainmenu.h \
     src/util.h \
-    stylepalette.h
+    stylepalette.h \
+    src/data/project.h \
+    src/data/tikzassembler.h
 
-FORMS    += src/gui/mainwindow.ui \
-            src/gui/propertypalette.ui \
-            src/gui/mainmenu.ui \
+FORMS += src/gui/mainwindow.ui \
+    src/gui/propertypalette.ui \
+    src/gui/mainmenu.ui \
     stylepalette.ui
 
 INCLUDEPATH += src src/gui src/data

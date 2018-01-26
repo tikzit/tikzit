@@ -1,6 +1,6 @@
 #include "testparser.h"
 #include "graph.h"
-#include "tikzgraphassembler.h"
+#include "tikzassembler.h"
 
 #include <QTest>
 #include <QVector>
@@ -18,7 +18,7 @@
 void TestParser::parseEmptyGraph()
 {
     Graph *g = new Graph();
-    TikzGraphAssembler ga(g);
+    TikzAssembler ga(g);
     bool res = ga.parse("\\begin{tikzpicture}\n\\end{tikzpicture}");
     QVERIFY(res);
     QVERIFY(g->nodes().size() == 0);
@@ -29,7 +29,7 @@ void TestParser::parseEmptyGraph()
 void TestParser::parseNodeGraph()
 {
     Graph *g = new Graph();
-    TikzGraphAssembler ga(g);
+    TikzAssembler ga(g);
     bool res = ga.parse(
     "\\begin{tikzpicture}\n"
     "  \\node (node0) at (1.1, -2.2) {};\n"
@@ -50,7 +50,7 @@ void TestParser::parseNodeGraph()
 void TestParser::parseEdgeGraph()
 {
     Graph *g = new Graph();
-    TikzGraphAssembler ga(g);
+    TikzAssembler ga(g);
     bool res = ga.parse(
     "\\begin{tikzpicture}\n"
     "  \\begin{pgfonlayer}{nodelayer}\n"
@@ -81,7 +81,7 @@ void TestParser::parseEdgeGraph()
 void TestParser::parseEdgeNode()
 {
     Graph *g = new Graph();
-    TikzGraphAssembler ga(g);
+    TikzAssembler ga(g);
     bool res = ga.parse(
     "\\begin{tikzpicture}\n"
     "  \\begin{pgfonlayer}{nodelayer}\n"
@@ -106,7 +106,7 @@ void TestParser::parseEdgeNode()
 void TestParser::parseEdgeBends()
 {
     Graph *g = new Graph();
-    TikzGraphAssembler ga(g);
+    TikzAssembler ga(g);
     bool res = ga.parse(
     "\\begin{tikzpicture}\n"
     "  \\begin{pgfonlayer}{nodelayer}\n"
@@ -136,7 +136,7 @@ void TestParser::parseEdgeBends()
 void TestParser::parseBbox()
 {
     Graph *g = new Graph();
-    TikzGraphAssembler ga(g);
+    TikzAssembler ga(g);
     bool res = ga.parse(
     "\\begin{tikzpicture}\n"
     "  \\path [use as bounding box] (-1.5,-1.5) rectangle (1.5,1.5);\n"

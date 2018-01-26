@@ -234,7 +234,7 @@ void yyfree (void * ,yyscan_t yyscanner );
 #include <unistd.h>
 #endif
 
-#define YY_EXTRA_TYPE TikzGraphAssembler *
+#define YY_EXTRA_TYPE TikzAssembler *
 
 int yylex_init (yyscan_t* scanner);
 
@@ -338,7 +338,7 @@ extern int yylex \
 #undef YY_DECL
 #endif
 
-#line 174 "src/data/tikzlexer.l"
+#line 188 "src/data/tikzlexer.l"
 
 #line 344 "tikzlexer.h"
 #undef yyIN_HEADER

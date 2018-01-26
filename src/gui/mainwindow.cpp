@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "tikzgraphassembler.h"
+#include "tikzassembler.h"
 #include "toolpalette.h"
 #include "tikzit.h"
 

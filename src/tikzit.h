@@ -36,6 +36,7 @@
 
 #include "toolpalette.h"
 #include "propertypalette.h"
+#include "stylepalette.h"
 #include "nodestyle.h"
 
 #include <QObject>
@@ -83,6 +84,7 @@ private:
     MainMenu *_mainMenu;
     ToolPalette *_toolPalette;
     PropertyPalette *_propertyPalette;
+    StylePalette *_stylePalette;
     QVector<MainWindow*> _windows;
     MainWindow *_activeWindow;
     QVector<NodeStyle*> _nodeStyles;

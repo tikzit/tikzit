@@ -5,7 +5,7 @@
 #include <QMessageBox>
 
 #include "tikzdocument.h"
-#include "tikzgraphassembler.h"
+#include "tikzassembler.h"
 
 TikzDocument::TikzDocument(QObject *parent) : QObject(parent)
 {
@@ -58,7 +58,7 @@ void TikzDocument::open(QString fileName)
     file.close();
 
     Graph *newGraph = new Graph(this);
-    TikzGraphAssembler ass(newGraph);
+    TikzAssembler ass(newGraph);
     if (ass.parse(_tikz)) {
         delete _graph;
         _graph = newGraph;

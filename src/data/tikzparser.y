@@ -62,7 +62,7 @@
 #include "graphelementproperty.h"
 
 #include "tikzlexer.h"
-#import "tikzgraphassembler.h"
+#import "tikzassembler.h"
 /* the assembler (used by this parser) is stored in the lexer
    state as "extra" data */
 #define assembler yyget_extra(scanner)
@@ -127,9 +127,20 @@ void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 
 %%
 
+
+tikz: tikzstyles | tikzpicture;
+
+tikzstyles: tikzstyles tikzstyle | ;
+tikzstyle: "\\tikzstyle" DELIMITEDSTRING "=" "[" properties "]"
+    {
+        if (assembler->isProject()) {
+            assembler->project()->addStyle(QString($2), $5);
+        }
+    }
+
 tikzpicture: "\\begin{tikzpicture}" optproperties tikzcmds "\\end{tikzpicture}"
     {
-        if ($2) {
+        if (assembler->isGraph() && $2) {
             assembler->graph()->setData($2);
 		}
 	};

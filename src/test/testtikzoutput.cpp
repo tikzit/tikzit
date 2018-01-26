@@ -2,7 +2,7 @@
 #include "graphelementproperty.h"
 #include "graphelementdata.h"
 #include "graph.h"
-#include "tikzgraphassembler.h"
+#include "tikzassembler.h"
 
 #include <QTest>
 #include <QRectF>
@@ -58,7 +58,7 @@ void TestTikzOutput::graphEmpty()
 void TestTikzOutput::graphFromTikz()
 {
     Graph *g = new Graph();
-    TikzGraphAssembler ga(g);
+    TikzAssembler ga(g);
 
     QString tikz =
     "\\begin{tikzpicture}\n"

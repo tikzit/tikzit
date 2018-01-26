@@ -1,18 +1,102 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>StylePalette</class>
- <widget name="StylePalette" class="QDockWidget">
+ <widget class="QDockWidget" name="StylePalette">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>250</width>
+    <height>350</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>DockWidget</string>
+  <property name="minimumSize">
+   <size>
+    <width>250</width>
+    <height>350</height>
+   </size>
   </property>
-  <widget name="dockWidgetContents" class="QWidget"/>
+  <property name="windowTitle">
+   <string>Styles</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>12</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Project:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>13</y>
+      <width>131</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Courier</family>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>[default]</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="newProjectButton">
+    <property name="geometry">
+     <rect>
+      <x>195</x>
+      <y>10</y>
+      <width>22</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>New Project</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="tikzit.qrc">
+      <normaloff>:/images/document-new.png</normaloff>:/images/document-new.png</iconset>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="openProjectButton">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>10</y>
+      <width>22</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>New Project</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="tikzit.qrc">
+      <normaloff>:/images/document-open.png</normaloff>:/images/document-open.png</iconset>
+    </property>
+   </widget>
+  </widget>
  </widget>
+ <resources>
+  <include location="tikzit.qrc"/>
+ </resources>
+ <connections/>
 </ui>

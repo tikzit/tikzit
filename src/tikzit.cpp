@@ -18,11 +18,13 @@ Tikzit::Tikzit()
 
     _toolPalette = new ToolPalette(dummy);
     _propertyPalette = new PropertyPalette(dummy);
+    _stylePalette = new StylePalette(dummy);
 
     loadStyles();
 
     _toolPalette->show();
     _propertyPalette->show();
+    _stylePalette->show();
 
     _windows << new MainWindow();
     _windows[0]->show();
