@@ -50,6 +50,7 @@ public:
     bool basicBendMode() const;
     float cpDist() const;
 
+    void setBasicBendMode(bool mode);
     void setBend(int bend);
     void setInAngle(int inAngle);
     void setOutAngle(int outAngle);

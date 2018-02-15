@@ -13,14 +13,14 @@ ToolPalette::ToolPalette(QWidget *parent) :
                    | Qt::WindowDoesNotAcceptFocus);
     setOrientation(Qt::Vertical);
     setFocusPolicy(Qt::NoFocus);
-    setGeometry(100,200,30,195);
+    //setGeometry(100,200,30,195);
 
     tools  = new QActionGroup(this);
 
-    select = new QAction(QIcon(":/images/select-rectangular.png"), "Select");
-    vertex = new QAction(QIcon(":/images/draw-ellipse.png"), "Add Vertex");
-    edge   = new QAction(QIcon(":/images/draw-path.png"), "Add Edge");
-    crop   = new QAction(QIcon(":/images/transform-crop-and-resize.png"), "Bounding Box");
+    select = new QAction(QIcon(":/images/Inkscape_icons_edit_select_all.svg"), "Select");
+    vertex = new QAction(QIcon(":/images/Inkscape_icons_draw_ellipse.svg"), "Add Vertex");
+    edge   = new QAction(QIcon(":/images/Inkscape_icons_draw_path.svg"), "Add Edge");
+    crop   = new QAction(QIcon(":/images/Inkscape_icons_draw_rectangle.svg"), "Bounding Box");
 
     tools->addAction(select);
     tools->addAction(vertex);

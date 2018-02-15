@@ -278,6 +278,11 @@ float Edge::cpDist() const
     return _cpDist;
 }
 
+void Edge::setBasicBendMode(bool mode)
+{
+    _basicBendMode = mode;
+}
+
 void Edge::setBend(int bend)
 {
     _bend = bend;

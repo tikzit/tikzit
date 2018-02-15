@@ -16,6 +16,9 @@
     <height>350</height>
    </size>
   </property>
+  <property name="floating">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>Styles</string>
   </property>
@@ -70,7 +73,7 @@
     </property>
     <property name="icon">
      <iconset resource="tikzit.qrc">
-      <normaloff>:/images/document-new.png</normaloff>:/images/document-new.png</iconset>
+      <normaloff>:/images/document-new.svg</normaloff>:/images/document-new.svg</iconset>
     </property>
    </widget>
    <widget class="QToolButton" name="openProjectButton">
@@ -90,7 +93,7 @@
     </property>
     <property name="icon">
      <iconset resource="tikzit.qrc">
-      <normaloff>:/images/document-open.png</normaloff>:/images/document-open.png</iconset>
+      <normaloff>:/images/document-open.svg</normaloff>:/images/document-open.svg</iconset>
     </property>
    </widget>
   </widget>

@@ -20,6 +20,9 @@ public slots:
 
 private:
     Ui::StylePalette *ui;
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // STYLEPALETTE_H

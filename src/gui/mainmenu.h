@@ -21,6 +21,7 @@ public slots:
     void on_actionClose_triggered();
     void on_actionSave_triggered();
     void on_actionSave_As_triggered();
+    void on_actionExit_triggered();
 
     // Edit
     void on_actionUndo_triggered();

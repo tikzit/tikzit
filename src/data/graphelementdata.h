@@ -22,6 +22,7 @@ public:
     QString property(QString key);
     bool atom(QString atom);
 
+
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

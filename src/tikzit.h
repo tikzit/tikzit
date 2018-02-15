@@ -76,6 +76,7 @@ public:
 
     void newDoc();
     void open();
+    void quit();
 
 private:
 //    void createMenu();

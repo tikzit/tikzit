@@ -6,5 +6,20 @@
         <file>images/transform-crop-and-resize.png</file>
         <file>images/document-new.png</file>
         <file>images/document-open.png</file>
+        <file>images/document-new.svg</file>
+        <file>images/document-open.svg</file>
+        <file>images/Inkscape_icons_draw_calligraphic.svg</file>
+        <file>images/Inkscape_icons_draw_ellipse.svg</file>
+        <file>images/Inkscape_icons_draw_path.svg</file>
+        <file>images/Inkscape_icons_draw_rectangle.svg</file>
+        <file>images/Inkscape_icons_node_segment_curve.svg</file>
+        <file>images/Inkscape_icons_edit_select_all.svg</file>
+        <file>images/crop.svg</file>
+        <file>images/edge.svg</file>
+        <file>images/node.svg</file>
+        <file>images/select.svg</file>
+    </qresource>
+    <qresource prefix="/qt/etc">
+        <file>qt.conf</file>
     </qresource>
 </RCC>

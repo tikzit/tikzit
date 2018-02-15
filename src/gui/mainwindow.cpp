@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+#include "mainmenu.h"
 #include "tikzassembler.h"
 #include "toolpalette.h"
 #include "tikzit.h"
@@ -22,10 +24,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose, true);
     _tikzDocument = new TikzDocument(this);
-    _tikzScene = new TikzScene(_tikzDocument, this);
+
+    _tools = new ToolPalette(this);
+    addToolBar(_tools);
+
+    _tikzScene = new TikzScene(_tikzDocument, _tools, this);
     ui->tikzView->setScene(_tikzScene);
     _fileName = "";
     _pristine = true;
+
+
+    // TODO: check if each window should have a menu
+    _menu = new MainMenu();
+    _menu->setParent(this);
+
+    setMenuBar(_menu);
 
     // initially, the source view should be collapsed
     QList<int> sz = ui->splitter->sizes();
@@ -59,7 +72,7 @@ void MainWindow::open(QString fileName)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    //qDebug() << "got close event";
+    qDebug() << "got close event";
     QMainWindow::closeEvent(event);
 }
 

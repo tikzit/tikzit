@@ -32,6 +32,11 @@ void MainMenu::on_actionSave_As_triggered()
     // TODO
 }
 
+void MainMenu::on_actionExit_triggered()
+{
+    tikzit->quit();
+}
+
 
 // Edit
 void MainMenu::on_actionUndo_triggered()

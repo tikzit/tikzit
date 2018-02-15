@@ -10,6 +10,7 @@
 #include "nodeitem.h"
 #include "edgeitem.h"
 #include "tikzdocument.h"
+#include "toolpalette.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
@@ -23,7 +24,7 @@ class TikzScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    TikzScene(TikzDocument *tikzDocument, QObject *parent);
+   TikzScene(TikzDocument *tikzDocument, ToolPalette *tools, QObject *parent);
     ~TikzScene();
     Graph *graph();
     QMap<Node*,NodeItem*> &nodeItems();
@@ -42,8 +43,10 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 private:
     TikzDocument *_tikzDocument;
+    ToolPalette *_tools;
     QMap<Node*,NodeItem*> _nodeItems;
     QMap<Edge*,EdgeItem*> _edgeItems;
     QGraphicsLineItem *_drawEdgeItem;

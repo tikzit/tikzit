@@ -22,7 +22,7 @@ PropertyPalette::PropertyPalette(QWidget *parent) :
     d->setProperty("key 2", "value 2");
 
     //QModelIndex i = d->index(0,0);
-    ui->treeView->setModel(d);
+    //ui->treeView->setModel(d);
 
     QSettings settings("tikzit", "tikzit");
     QVariant geom = settings.value("property-palette-geometry");

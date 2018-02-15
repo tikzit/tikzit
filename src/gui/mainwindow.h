@@ -9,6 +9,8 @@
 #include "tikzview.h"
 #include "graph.h"
 #include "tikzdocument.h"
+#include "mainmenu.h"
+#include "toolpalette.h"
 
 #include <QMainWindow>
 #include <QGraphicsView>
@@ -38,6 +40,8 @@ protected:
 private:
     TikzScene *_tikzScene;
     TikzDocument *_tikzDocument;
+    MainMenu *_menu;
+    ToolPalette *_tools;
     Ui::MainWindow *ui;
     QString _fileName;
     bool _pristine;

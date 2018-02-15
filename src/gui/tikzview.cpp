@@ -2,6 +2,7 @@
 #include "tikzit.h"
 
 #include <QDebug>
+#include <QScrollBar>
 
 TikzView::TikzView(QWidget *parent) : QGraphicsView(parent)
 {

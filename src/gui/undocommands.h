@@ -90,4 +90,15 @@ private:
     Edge *_edge;
 };
 
+class ChangeEdgeModeCommand : public QUndoCommand
+{
+public:
+    explicit ChangeEdgeModeCommand(TikzScene *scene, Edge *edge);
+    void undo() override;
+    void redo() override;
+private:
+    TikzScene *_scene;
+    Edge *_edge;
+};
+
 #endif // UNDOCOMMANDS_H

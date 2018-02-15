@@ -183,4 +183,26 @@ void AddEdgeCommand::redo()
     EdgeItem *ei = new EdgeItem(_edge);
     _scene->edgeItems().insert(_edge, ei);
     _scene->addItem(ei);
+
+    // edges should always be stacked below nodes
+    if (!_scene->graph()->nodes().isEmpty()) {
+        ei->stackBefore(_scene->nodeItems()[_scene->graph()->nodes().first()]);
+    }
+}
+
+ChangeEdgeModeCommand::ChangeEdgeModeCommand(TikzScene *scene, Edge *edge) :
+    _scene(scene), _edge(edge)
+{
+}
+
+void ChangeEdgeModeCommand::undo()
+{
+    _edge->setBasicBendMode(!_edge->basicBendMode());
+    _scene->edgeItems()[_edge]->readPos();
+}
+
+void ChangeEdgeModeCommand::redo()
+{
+    _edge->setBasicBendMode(!_edge->basicBendMode());
+    _scene->edgeItems()[_edge]->readPos();
 }

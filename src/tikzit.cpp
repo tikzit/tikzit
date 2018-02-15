@@ -22,8 +22,8 @@ Tikzit::Tikzit()
 
     loadStyles();
 
-    _toolPalette->show();
-    _propertyPalette->show();
+    //_toolPalette->show();
+    //_propertyPalette->show();
     _stylePalette->show();
 
     _windows << new MainWindow();
@@ -73,8 +73,11 @@ void Tikzit::removeWindow(MainWindow *w)
 {
     _windows.removeAll(w);
     if (_activeWindow == w) {
-        if (_windows.isEmpty()) _activeWindow = 0;
-        else _activeWindow = _windows[0];
+        if (_windows.isEmpty()) {
+            _activeWindow = 0;
+            // TODO: check if we should quit when last window closed
+            quit();
+        } else _activeWindow = _windows[0];
     }
 }
 
@@ -104,4 +107,10 @@ void Tikzit::open()
             _windows << w;
         }
     }
+}
+
+void Tikzit::quit()
+{
+    _stylePalette->close();
+    QApplication::quit();
 }

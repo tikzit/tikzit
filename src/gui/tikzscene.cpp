@@ -8,8 +8,8 @@
 #include <QDebug>
 
 
-TikzScene::TikzScene(TikzDocument *tikzDocument, QObject *parent) :
-    QGraphicsScene(parent), _tikzDocument(tikzDocument)
+TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools, QObject *parent) :
+    QGraphicsScene(parent), _tikzDocument(tikzDocument), _tools(tools)
 {
     _modifyEdgeItem = 0;
     _edgeStartNodeItem = 0;
@@ -73,7 +73,7 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     qreal cpR = GLOBAL_SCALEF * (0.05);
     qreal cpR2 = cpR * cpR;
 
-    switch (tikzit->toolPalette()->currentTool()) {
+    switch (_tools->currentTool()) {
     case ToolPalette::SELECT:
         // check if we grabbed a control point of an edge
         foreach (QGraphicsItem *gi, selectedItems()) {
@@ -145,8 +145,10 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     // current mouse position, in scene coordinates
     QPointF mousePos = event->scenePos();
+    QRectF rb = views()[0]->rubberBandRect();
+    invalidate(-800,-800,1600,1600);
 
-    switch (tikzit->toolPalette()->currentTool()) {
+    switch (_tools->currentTool()) {
     case ToolPalette::SELECT:
         if (_modifyEdgeItem != 0) {
             Edge *e = _modifyEdgeItem->edge();
@@ -262,7 +264,7 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     // current mouse position, in scene coordinates
     QPointF mousePos = event->scenePos();
 
-    switch (tikzit->toolPalette()->currentTool()) {
+    switch (_tools->currentTool()) {
     case ToolPalette::SELECT:
         if (_modifyEdgeItem != 0) {
             // finished dragging a control point
@@ -358,6 +360,18 @@ void TikzScene::keyReleaseEvent(QKeyEvent *event)
         //qDebug() << "edges:" << deleteEdges;
         DeleteCommand *cmd = new DeleteCommand(this, deleteNodes, deleteEdges, selEdges);
         _tikzDocument->undoStack()->push(cmd);
+    }
+}
+
+void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    QPointF mousePos = event->scenePos();
+    foreach (QGraphicsItem *gi, items(mousePos)) {
+        if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) {
+            ChangeEdgeModeCommand *cmd = new ChangeEdgeModeCommand(this, ei->edge());
+            _tikzDocument->undoStack()->push(cmd);
+            break;
+        }
     }
 }
 
