@@ -18,6 +18,7 @@
         <file>images/edge.svg</file>
         <file>images/node.svg</file>
         <file>images/select.svg</file>
+        <file>images/refresh.svg</file>
     </qresource>
     <qresource prefix="/qt/etc">
         <file>qt.conf</file>

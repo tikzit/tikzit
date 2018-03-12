@@ -66,7 +66,7 @@ QString GraphElementData::property(QString key)
     if (i != -1) {
         return _properties[i].value();
     } else {
-        return 0;
+        return QString(); // null QString
     }
 }
 

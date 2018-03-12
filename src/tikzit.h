@@ -38,6 +38,7 @@
 #include "propertypalette.h"
 #include "stylepalette.h"
 #include "nodestyle.h"
+#include "tikzstyles.h"
 
 #include <QObject>
 #include <QVector>
@@ -68,7 +69,6 @@ public:
     MainWindow *activeWindow() const;
     void setActiveWindow(MainWindow *activeWindow);
     void removeWindow(MainWindow *w);
-    NodeStyle *nodeStyle(QString name);
 
     static QFont LABEL_FONT;
 //    Ui::MainMenu *_mainMenuUi;
@@ -77,10 +77,15 @@ public:
     void newDoc();
     void open();
     void quit();
+    void init();
+
+    void openTikzStyles();
+    TikzStyles *styles() const;
+    QString styleFile() const;
 
 private:
-//    void createMenu();
-    void loadStyles();
+    //    void createMenu();
+    void loadStyles(QString fileName);
 
     MainMenu *_mainMenu;
     ToolPalette *_toolPalette;
@@ -88,7 +93,8 @@ private:
     StylePalette *_stylePalette;
     QVector<MainWindow*> _windows;
     MainWindow *_activeWindow;
-    QVector<NodeStyle*> _nodeStyles;
+    TikzStyles *_styles;
+    QString _styleFile;
 
 };
 

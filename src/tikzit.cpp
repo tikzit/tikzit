@@ -1,7 +1,12 @@
 #include "tikzit.h"
+#include "tikzassembler.h"
+#include "tikzstyles.h"
 
+#include <QFile>
 #include <QFileDialog>
 #include <QSettings>
+#include <QDebug>
+#include <QMessageBox>
 
 // application-level instance of Tikzit
 Tikzit *tikzit;
@@ -9,25 +14,27 @@ Tikzit *tikzit;
 // font to use for node labels
 QFont Tikzit::LABEL_FONT("Courrier", 9);
 
-Tikzit::Tikzit()
+Tikzit::Tikzit() : _styleFile("[default]"), _activeWindow(0)
 {
-    _mainMenu = new MainMenu();
+}
 
-    _activeWindow = 0;
+void Tikzit::init()
+{
+    QSettings settings("tikzit", "tikzit");
+    _mainMenu = new MainMenu();
     QMainWindow *dummy = new QMainWindow();
 
     _toolPalette = new ToolPalette(dummy);
     _propertyPalette = new PropertyPalette(dummy);
     _stylePalette = new StylePalette(dummy);
+    _styles = new TikzStyles(this);
 
-    loadStyles();
-
-    //_toolPalette->show();
-    //_propertyPalette->show();
     _stylePalette->show();
-
     _windows << new MainWindow();
     _windows[0]->show();
+
+    QString styleFile = settings.value("previous-tikzstyles-file").toString();
+    if (!styleFile.isEmpty()) loadStyles(styleFile);
 }
 
 //QMenuBar *Tikzit::mainMenu() const
@@ -43,13 +50,6 @@ ToolPalette *Tikzit::toolPalette() const
 PropertyPalette *Tikzit::propertyPalette() const
 {
     return _propertyPalette;
-}
-
-void Tikzit::loadStyles()
-{
-    _nodeStyles << new NodeStyle("black dot", NodeShape::Circle, Qt::black, Qt::black, 1);
-    _nodeStyles << new NodeStyle("white dot", NodeShape::Circle, Qt::white, Qt::black, 1);
-    _nodeStyles << new NodeStyle("gray dot", NodeShape::Circle, Qt::gray, Qt::black, 1);
 }
 
 void Tikzit::newDoc()
@@ -81,13 +81,6 @@ void Tikzit::removeWindow(MainWindow *w)
     }
 }
 
-NodeStyle *Tikzit::nodeStyle(QString name)
-{
-    foreach (NodeStyle *s , _nodeStyles)
-        if (s->name == name) return s;
-    return noneStyle; //NodeStyle(name, NodeShape::Circle, Qt::white);
-}
-
 void Tikzit::open()
 {
     QSettings settings("tikzit", "tikzit");
@@ -109,8 +102,62 @@ void Tikzit::open()
     }
 }
 
+void Tikzit::openTikzStyles() {
+    QSettings settings("tikzit", "tikzit");
+    QString fileName = QFileDialog::getOpenFileName(0,
+                tr("Open File"),
+                settings.value("previous-tikzstyles-path").toString(),
+                tr("TiKZ Style Files (*.tikzstyles)"));
+
+    if (!fileName.isEmpty()) {
+        loadStyles(fileName);
+    }
+}
+
+void Tikzit::loadStyles(QString fileName)
+{
+    QSettings settings("tikzit", "tikzit");
+    QFile file(fileName);
+    if (file.open(QIODevice::ReadOnly)) {
+        QFileInfo fi(file);
+        settings.setValue("previous-tikzstyles-path", fi.absolutePath());
+        settings.setValue("previous-tikzstyles-file", fileName);
+        _styleFile = fi.fileName();
+        QTextStream in(&file);
+        QString styleTikz = in.readAll();
+        file.close();
+
+        _styles->clear();
+        TikzAssembler ass(_styles);
+        bool parseSuccess = ass.parse(styleTikz);
+        if (parseSuccess) {
+            qDebug() << "parse successful";
+        } else {
+            qDebug() << "parse failed";
+        }
+        _stylePalette->reloadStyles();
+
+    } else {
+        settings.setValue("previous-tikzstyles-file", "");
+        QMessageBox::warning(0, "Style file not found.", "Could not open style file, reverting to default.");
+    }
+}
+
+QString Tikzit::styleFile() const
+{
+    return _styleFile;
+}
+
+
+TikzStyles *Tikzit::styles() const
+{
+    return _styles;
+}
+
 void Tikzit::quit()
 {
     _stylePalette->close();
     QApplication::quit();
 }
+
+

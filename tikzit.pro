@@ -49,8 +49,8 @@ SOURCES += src/gui/mainwindow.cpp \
     src/gui/mainmenu.cpp \
     src/util.cpp \
     stylepalette.cpp \
-    src/data/project.cpp \
-    src/data/tikzassembler.cpp
+    src/data/tikzassembler.cpp \
+    src/data/tikzstyles.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -73,8 +73,8 @@ HEADERS  += src/gui/mainwindow.h \
     src/gui/mainmenu.h \
     src/util.h \
     stylepalette.h \
-    src/data/project.h \
-    src/data/tikzassembler.h
+    src/data/tikzassembler.h \
+    src/data/tikzstyles.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \

@@ -20,7 +20,7 @@ ToolPalette::ToolPalette(QWidget *parent) :
     select = new QAction(QIcon(":/images/Inkscape_icons_edit_select_all.svg"), "Select");
     vertex = new QAction(QIcon(":/images/Inkscape_icons_draw_ellipse.svg"), "Add Vertex");
     edge   = new QAction(QIcon(":/images/Inkscape_icons_draw_path.svg"), "Add Edge");
-    crop   = new QAction(QIcon(":/images/Inkscape_icons_draw_rectangle.svg"), "Bounding Box");
+    crop   = new QAction(QIcon(":/images/crop.svg"), "Bounding Box");
 
     tools->addAction(select);
     tools->addAction(vertex);

@@ -57,10 +57,10 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
         painter->setBrush(Qt::NoBrush);
         painter->drawPath(shape());
     } else {
-        QPen pen(_node->style()->strokeColor);
-        pen.setWidth(_node->style()->strokeThickness);
+        QPen pen(_node->style()->strokeColor());
+        pen.setWidth(_node->style()->strokeThickness());
         painter->setPen(pen);
-        painter->setBrush(QBrush(_node->style()->fillColor));
+        painter->setBrush(QBrush(_node->style()->fillColor()));
         painter->drawPath(shape());
     }
 

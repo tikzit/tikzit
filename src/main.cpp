@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
     tikzit = new Tikzit();
+    tikzit->init();
 
     return a.exec();
 }

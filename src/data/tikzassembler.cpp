@@ -7,14 +7,14 @@
 int yyparse(void *scanner);
 
 TikzAssembler::TikzAssembler(Graph *graph, QObject *parent) :
-    QObject(parent), _graph(graph), _project(0)
+    QObject(parent), _graph(graph), _tikzStyles(0)
 {
     yylex_init(&scanner);
     yyset_extra(this, scanner);
 }
 
-TikzAssembler::TikzAssembler(Project *project, QObject *parent) :
-    QObject(parent), _graph(0), _project(project)
+TikzAssembler::TikzAssembler(TikzStyles *tikzStyles, QObject *parent) :
+    QObject(parent), _graph(0), _tikzStyles(tikzStyles)
 {
     yylex_init(&scanner);
     yyset_extra(this, scanner);
@@ -37,9 +37,9 @@ Graph *TikzAssembler::graph() const
     return _graph;
 }
 
-Project *TikzAssembler::project() const
+TikzStyles *TikzAssembler::tikzStyles() const
 {
-    return _project;
+    return _tikzStyles;
 }
 
 bool TikzAssembler::isGraph() const
@@ -47,8 +47,8 @@ bool TikzAssembler::isGraph() const
     return _graph != 0;
 }
 
-bool TikzAssembler::isProject() const
+bool TikzAssembler::isTikzStyles() const
 {
-    return _project != 0;
+    return _tikzStyles != 0;
 }
 

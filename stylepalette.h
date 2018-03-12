@@ -2,6 +2,7 @@
 #define STYLEPALETTE_H
 
 #include <QDockWidget>
+#include <QStandardItemModel>
 
 namespace Ui {
 class StylePalette;
@@ -14,12 +15,14 @@ class StylePalette : public QDockWidget
 public:
     explicit StylePalette(QWidget *parent = 0);
     ~StylePalette();
+    void reloadStyles();
 
 public slots:
-    void on_buttonOpenProject_clicked();
+    void on_buttonOpenTikzstyles_clicked();
 
 private:
     Ui::StylePalette *ui;
+    QStandardItemModel *_model;
 
 protected:
     void closeEvent(QCloseEvent *event) override;

@@ -7,7 +7,7 @@
 
 /*
  * Copyright 2010       Chris Heunen
- * Copyright 2010-2013  Aleks Kissinger
+ * Copyright 2010-2017  Aleks Kissinger
  * Copyright 2013       K. Johan Paulsson
  * Copyright 2013       Alex Merry <dev@randomguy3.me.uk>
  *
@@ -85,6 +85,7 @@ void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 
 %token BEGIN_TIKZPICTURE_CMD "\\begin{tikzpicture}"
 %token END_TIKZPICTURE_CMD "\\end{tikzpicture}"
+%token TIKZSTYLE_CMD "\\tikzstyle"
 %token BEGIN_PGFONLAYER_CMD "\\begin{pgfonlayer}"
 %token END_PGFONLAYER_CMD "\\end{pgfonlayer}"
 %token DRAW_CMD "\\draw"
@@ -133,8 +134,8 @@ tikz: tikzstyles | tikzpicture;
 tikzstyles: tikzstyles tikzstyle | ;
 tikzstyle: "\\tikzstyle" DELIMITEDSTRING "=" "[" properties "]"
     {
-        if (assembler->isProject()) {
-            assembler->project()->addStyle(QString($2), $5);
+        if (assembler->isTikzStyles()) {
+            assembler->tikzStyles()->addStyle(QString($2), $5);
         }
     }
 

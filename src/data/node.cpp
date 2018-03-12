@@ -70,7 +70,7 @@ void Node::setStyleName(const QString &styleName)
 void Node::attachStyle()
 {
     if (_styleName == "none") _style = noneStyle;
-    else _style = tikzit->nodeStyle(_styleName);
+    else _style = tikzit->styles()->nodeStyle(_styleName);
 }
 
 NodeStyle *Node::style() const
