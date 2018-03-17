@@ -54,6 +54,32 @@ void Graph::removeEdge(Edge *e)
     _edges.removeOne(e);
 }
 
+int Graph::maxIntName()
+{
+    int max = -1;
+    int i;
+    bool ok;
+    foreach (Node *n, _nodes) {
+        i = n->name().toInt(&ok);
+        if (ok && i > max) max = i;
+    }
+    return max;
+}
+
+QString Graph::freshNodeName()
+{
+    return QString::number(maxIntName() + 1);
+}
+
+void Graph::renameApart(Graph *graph)
+{
+    int i = graph->maxIntName() + 1;
+    foreach (Node *n, _nodes) {
+        n->setName(QString::number(i));
+        i++;
+    }
+}
+
 GraphElementData *Graph::data() const
 {
     return _data;
@@ -92,21 +118,27 @@ QString Graph::tikz()
 {
     QString str;
     QTextStream code(&str);
+    int line = 0;
 
     code << "\\begin{tikzpicture}" << _data->tikz() << "\n";
+    line++;
     if (hasBbox()) {
         code << "\t\\path [use as bounding box] ("
              << _bbox.topLeft().x() << "," << _bbox.topLeft().y()
              << ") rectangle ("
              << _bbox.bottomRight().x() << "," << _bbox.bottomRight().y()
              << ");\n";
+        line++;
     }
 
-    if (!_nodes.isEmpty())
+    if (!_nodes.isEmpty()) {
         code << "\t\\begin{pgfonlayer}{nodelayer}\n";
+        line++;
+    }
 
     Node *n;
     foreach (n, _nodes) {
+        n->setTikzLine(line);
         code << "\t\t\\node ";
 
         if (!n->data()->isEmpty())
@@ -115,17 +147,23 @@ QString Graph::tikz()
         code << "(" << n->name() << ") at ("
              << n->point().x() << ", " << n->point().y()
              << ") {" << n->label() << "};\n";
+        line++;
     }
 
-    if (!_nodes.isEmpty())
+    if (!_nodes.isEmpty()) {
         code << "\t\\end{pgfonlayer}\n";
+        line++;
+    }
 
-    if (!_edges.isEmpty())
+    if (!_edges.isEmpty()) {
         code << "\t\\begin{pgfonlayer}{edgelayer}\n";
+        line++;
+    }
 
 
     Edge *e;
     foreach (e, _edges) {
+        e->updateData();
         code << "\t\t\\draw ";
 
         if (!e->data()->isEmpty())
@@ -153,15 +191,51 @@ QString Graph::tikz()
         }
 
         code << ";\n";
+        line++;
     }
 
-    if (!_edges.isEmpty())
+    if (!_edges.isEmpty()) {
         code << "\t\\end{pgfonlayer}\n";
+        line++;
+    }
 
     code << "\\end{tikzpicture}\n";
+    line++;
 
     code.flush();
     return str;
+}
+
+Graph *Graph::copyOfSubgraphWithNodes(QSet<Node *> nds)
+{
+    Graph *g = new Graph();
+    g->setData(_data->copy());
+    QMap<Node*,Node*> nodeTable;
+    foreach (Node *n, nds) {
+        Node *n1 = n->copy();
+        nodeTable.insert(n, n1);
+        g->addNode(n1);
+    }
+    foreach (Edge *e, edges()) {
+        if (nds.contains(e->source()) || nds.contains(e->target())) {
+            g->addEdge(e->copy(&nodeTable));
+        }
+    }
+
+    return g;
+}
+
+void Graph::insertGraph(Graph *graph)
+{
+    QMap<Node*,Node*> nodeTable;
+    foreach (Node *n, graph->nodes()) {
+        Node *n1 = n->copy();
+        nodeTable.insert(n, n1);
+        addNode(n1);
+    }
+    foreach (Edge *e, graph->edges()) {
+        addEdge(e->copy(&nodeTable));
+    }
 }
 
 void Graph::setBbox(const QRectF &bbox)

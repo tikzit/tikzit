@@ -25,12 +25,11 @@ MainWindow::MainWindow(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose, true);
     _tikzDocument = new TikzDocument(this);
 
-    _tools = new ToolPalette(this);
-    addToolBar(_tools);
+    _toolPalette = new ToolPalette(this);
+    addToolBar(_toolPalette);
 
-    _tikzScene = new TikzScene(_tikzDocument, _tools, this);
+    _tikzScene = new TikzScene(_tikzDocument, _toolPalette, this);
     ui->tikzView->setScene(_tikzScene);
-    _fileName = "";
     _pristine = true;
 
 
@@ -80,8 +79,24 @@ void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::ActivationChange && isActiveWindow()) {
         tikzit->setActiveWindow(this);
+        tikzit->stylePalette()->raise();
     }
     QMainWindow::changeEvent(event);
+}
+
+void MainWindow::updateFileName()
+{
+    setWindowTitle("TiKZiT - " + _tikzDocument->shortName());
+}
+
+void MainWindow::refreshTikz()
+{
+    ui->tikzSource->setText(_tikzDocument->tikz());
+}
+
+ToolPalette *MainWindow::toolPalette() const
+{
+    return _toolPalette;
 }
 
 TikzDocument *MainWindow::tikzDocument() const

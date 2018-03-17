@@ -15,6 +15,8 @@ public:
     explicit Node(QObject *parent = 0);
     ~Node();
 
+    Node *copy();
+
     QPointF point() const;
     void setPoint(const QPointF &point);
 
@@ -33,6 +35,9 @@ public:
     void attachStyle();
     NodeStyle *style() const;
 
+    int tikzLine() const;
+    void setTikzLine(int tikzLine);
+
 signals:
 
 public slots:
@@ -41,9 +46,9 @@ private:
     QPointF _point;
     QString _name;
     QString _label;
-    QString _styleName;
     NodeStyle *_style;
     GraphElementData *_data;
+    int _tikzLine;
 };
 
 #endif // NODE_H

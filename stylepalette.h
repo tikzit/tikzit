@@ -16,9 +16,13 @@ public:
     explicit StylePalette(QWidget *parent = 0);
     ~StylePalette();
     void reloadStyles();
+    QString activeNodeStyleName();
+
 
 public slots:
     void on_buttonOpenTikzstyles_clicked();
+    void on_buttonRefreshTikzstyles_clicked();
+    void on_buttonApplyNodeStyle_clicked();
 
 private:
     Ui::StylePalette *ui;

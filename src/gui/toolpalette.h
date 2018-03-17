@@ -23,6 +23,7 @@ public:
     };
 
     Tool currentTool() const;
+    void setCurrentTool(Tool tool);
 private:
     QActionGroup *tools;
     QAction *select;

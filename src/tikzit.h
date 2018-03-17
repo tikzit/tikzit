@@ -77,15 +77,18 @@ public:
     void newDoc();
     void open();
     void quit();
-    void init();
+    void init(QApplication *app);
 
     void openTikzStyles();
+    void loadStyles(QString fileName);
     TikzStyles *styles() const;
     QString styleFile() const;
+    StylePalette *stylePalette() const;
 
+public slots:
+    void focusChanged(QWidget *old, QWidget *nw);
 private:
     //    void createMenu();
-    void loadStyles(QString fileName);
 
     MainMenu *_mainMenu;
     ToolPalette *_toolPalette;

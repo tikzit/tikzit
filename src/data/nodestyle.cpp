@@ -24,13 +24,13 @@ QString NodeStyle::name() const
     return _name;
 }
 
-NodeShape NodeStyle::shape() const
+NodeStyle::Shape NodeStyle::shape() const
 {
     QString sh = _data->property("shape");
-    if (sh.isNull()) return NodeShape::Circle;
-    else if (sh == "circle") return NodeShape::Circle;
-    else if (sh == "rectangle") return NodeShape::Rectangle;
-    else return NodeShape::Circle;
+    if (sh.isNull()) return NodeStyle::Circle;
+    else if (sh == "circle") return NodeStyle::Circle;
+    else if (sh == "rectangle") return NodeStyle::Rectangle;
+    else return NodeStyle::Circle;
 }
 
 QColor NodeStyle::fillColor() const

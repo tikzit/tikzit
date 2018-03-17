@@ -26,8 +26,7 @@ StylePalette::StylePalette(QWidget *parent) :
     ui->styleListView->setModel(_model);
     ui->styleListView->setViewMode(QListView::IconMode);
     ui->styleListView->setMovement(QListView::Static);
-
-    ui->styleListView->setGridSize(QSize(75,60));
+    ui->styleListView->setGridSize(QSize(70,60));
 }
 
 StylePalette::~StylePalette()
@@ -47,13 +46,37 @@ void StylePalette::reloadStyles()
 
     foreach(NodeStyle *ns, tikzit->styles()->nodeStyles()) {
         it = new QStandardItem(ns->icon(), ns->name());
+        it->setData(ns->name());
         _model->appendRow(it);
+    }
+}
+
+QString StylePalette::activeNodeStyleName()
+{
+    const QModelIndexList i = ui->styleListView->selectionModel()->selectedIndexes();
+
+    if (i.isEmpty()) {
+        return "none";
+    } else {
+        return i[0].data().toString();
     }
 }
 
 void StylePalette::on_buttonOpenTikzstyles_clicked()
 {
     tikzit->openTikzStyles();
+}
+
+void StylePalette::on_buttonRefreshTikzstyles_clicked()
+{
+    QSettings settings("tikzit", "tikzit");
+    QString path = settings.value("previous-tikzstyles-file").toString();
+    if (!path.isEmpty()) tikzit->loadStyles(path);
+}
+
+void StylePalette::on_buttonApplyNodeStyle_clicked()
+{
+    if (tikzit->activeWindow() != 0) tikzit->activeWindow()->tikzScene()->applyActiveStyleToNodes();
 }
 
 void StylePalette::closeEvent(QCloseEvent *event)

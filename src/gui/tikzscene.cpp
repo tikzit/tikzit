@@ -2,10 +2,12 @@
 #include "util.h"
 #include "tikzscene.h"
 #include "undocommands.h"
+#include "tikzassembler.h"
 
 #include <QPen>
 #include <QBrush>
 #include <QDebug>
+#include <QClipboard>
 
 
 TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools, QObject *parent) :
@@ -63,7 +65,9 @@ void TikzScene::graphReplaced()
 void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     // current mouse position, in scene coordinates
-    QPointF mousePos = event->scenePos();
+    _mouseDownPos = event->scenePos();
+
+    _draggingNodes = false;
 
     // disable rubber band drag, which will clear the selection. Only re-enable it
     // for the SELECT tool, and when no control point has been clicked.
@@ -80,8 +84,8 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) {
                 qreal dx, dy;
 
-                dx = ei->cp1Item()->pos().x() - mousePos.x();
-                dy = ei->cp1Item()->pos().y() - mousePos.y();
+                dx = ei->cp1Item()->pos().x() - _mouseDownPos.x();
+                dy = ei->cp1Item()->pos().y() - _mouseDownPos.y();
 
                 if (dx*dx + dy*dy <= cpR2) {
                     _modifyEdgeItem = ei;
@@ -89,8 +93,8 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                     break;
                 }
 
-                dx = ei->cp2Item()->pos().x() - mousePos.x();
-                dy = ei->cp2Item()->pos().y() - mousePos.y();
+                dx = ei->cp2Item()->pos().x() - _mouseDownPos.x();
+                dy = ei->cp2Item()->pos().y() - _mouseDownPos.y();
 
                 if (dx*dx + dy*dy <= cpR2) {
                     _modifyEdgeItem = ei;
@@ -119,17 +123,21 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                     _oldNodePositions.insert(ni->node(), ni->node()->point());
                 }
             }
+
+            auto its = items(_mouseDownPos);
+            if (!its.isEmpty() && dynamic_cast<NodeItem*>(its[0]))
+                _draggingNodes = true;
         }
 
         break;
     case ToolPalette::VERTEX:
         break;
     case ToolPalette::EDGE:
-        foreach (QGraphicsItem *gi, items(mousePos)) {
+        foreach (QGraphicsItem *gi, items(_mouseDownPos)) {
             if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)){
                 _edgeStartNodeItem = ni;
                 _edgeEndNodeItem = ni;
-                QLineF line(toScreen(ni->node()->point()), mousePos);
+                QLineF line(toScreen(ni->node()->point()), _mouseDownPos);
                 _drawEdgeItem->setLine(line);
                 _drawEdgeItem->setVisible(true);
                 break;
@@ -145,8 +153,9 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     // current mouse position, in scene coordinates
     QPointF mousePos = event->scenePos();
-    QRectF rb = views()[0]->rubberBandRect();
-    invalidate(-800,-800,1600,1600);
+    //QRectF rb = views()[0]->rubberBandRect();
+    //invalidate(-800,-800,1600,1600);
+    invalidate(QRectF(), QGraphicsScene::BackgroundLayer);
 
     switch (_tools->currentTool()) {
     case ToolPalette::SELECT:
@@ -229,10 +238,25 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
             _modifyEdgeItem->readPos();
 
+        } else if (_draggingNodes) { // nodes being dragged
+            QGraphicsScene::mouseMoveEvent(event);
+
+            // apply the same offset to all nodes, otherwise we get odd rounding behaviour with
+            // multiple selection.
+            QPointF shift = mousePos - _mouseDownPos;
+            int gridSize = GLOBAL_SCALE / 8;
+            shift = QPointF(round(shift.x()/gridSize)*gridSize, round(shift.y()/gridSize)*gridSize);
+
+            foreach (Node *n, _oldNodePositions.keys()) {
+                NodeItem *ni = _nodeItems[n];
+                ni->setPos(toScreen(_oldNodePositions[n]) + shift);
+                ni->writePos();
+            }
+
+            refreshAdjacentEdges(_oldNodePositions.keys());
         } else {
             // otherwise, process mouse move normally
             QGraphicsScene::mouseMoveEvent(event);
-            refreshAdjacentEdges(_oldNodePositions.keys());
         }
 
         break;
@@ -308,7 +332,9 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             int gridSize = GLOBAL_SCALE / 8;
             QPointF gridPos(round(mousePos.x()/gridSize)*gridSize, round(mousePos.y()/gridSize)*gridSize);
             Node *n = new Node(_tikzDocument);
+            n->setName(graph()->freshNodeName());
             n->setPoint(fromScreen(gridPos));
+            n->setStyleName(tikzit->stylePalette()->activeNodeStyleName());
 
             QRectF grow(gridPos.x() - GLOBAL_SCALEF, gridPos.y() - GLOBAL_SCALEF, 2 * GLOBAL_SCALEF, 2 * GLOBAL_SCALEF);
             QRectF newBounds = sceneRect().united(grow);
@@ -332,34 +358,31 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::CROP:
         break;
     }
+
+    // clear artefacts from rubber band selection
+    invalidate(QRect(), QGraphicsScene::BackgroundLayer);
 }
 
 void TikzScene::keyReleaseEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
-        QSet<Node*> selNodes;
-        QSet<Edge*> selEdges;
-        getSelection(selNodes, selEdges);
-
-        QMap<int,Node*> deleteNodes;
-        QMap<int,Edge*> deleteEdges;
-
-        for (int i = 0; i < _tikzDocument->graph()->nodes().length(); ++i) {
-            Node *n = _tikzDocument->graph()->nodes()[i];
-            if (selNodes.contains(n)) deleteNodes.insert(i, n);
+        deleteSelectedItems();
+    } else if (event->modifiers() == Qt::NoModifier) {
+        switch(event->key()) {
+        case Qt::Key_S:
+            tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::SELECT);
+            break;
+        case Qt::Key_V:
+        case Qt::Key_N:
+            tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::VERTEX);
+            break;
+        case Qt::Key_E:
+            tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::EDGE);
+            break;
+        case Qt::Key_B:
+            tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::CROP);
+            break;
         }
-
-        for (int i = 0; i < _tikzDocument->graph()->edges().length(); ++i) {
-            Edge *e = _tikzDocument->graph()->edges()[i];
-            if (selEdges.contains(e) ||
-                selNodes.contains(e->source()) ||
-                selNodes.contains(e->target())) deleteEdges.insert(i, e);
-        }
-
-        //qDebug() << "nodes:" << deleteNodes;
-        //qDebug() << "edges:" << deleteEdges;
-        DeleteCommand *cmd = new DeleteCommand(this, deleteNodes, deleteEdges, selEdges);
-        _tikzDocument->undoStack()->push(cmd);
     }
 }
 
@@ -375,12 +398,93 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
+void TikzScene::applyActiveStyleToNodes() {
+    ApplyStyleToNodesCommand *cmd = new ApplyStyleToNodesCommand(this, tikzit->stylePalette()->activeNodeStyleName());
+    _tikzDocument->undoStack()->push(cmd);
+}
+
+void TikzScene::deleteSelectedItems()
+{
+    QSet<Node*> selNodes;
+    QSet<Edge*> selEdges;
+    getSelection(selNodes, selEdges);
+
+    QMap<int,Node*> deleteNodes;
+    QMap<int,Edge*> deleteEdges;
+
+    for (int i = 0; i < _tikzDocument->graph()->nodes().length(); ++i) {
+        Node *n = _tikzDocument->graph()->nodes()[i];
+        if (selNodes.contains(n)) deleteNodes.insert(i, n);
+    }
+
+    for (int i = 0; i < _tikzDocument->graph()->edges().length(); ++i) {
+        Edge *e = _tikzDocument->graph()->edges()[i];
+        if (selEdges.contains(e) ||
+            selNodes.contains(e->source()) ||
+            selNodes.contains(e->target())) deleteEdges.insert(i, e);
+    }
+
+    //qDebug() << "nodes:" << deleteNodes;
+    //qDebug() << "edges:" << deleteEdges;
+    DeleteCommand *cmd = new DeleteCommand(this, deleteNodes, deleteEdges, selEdges);
+    _tikzDocument->undoStack()->push(cmd);
+}
+
+void TikzScene::copyToClipboard()
+{
+    Graph *g = graph()->copyOfSubgraphWithNodes(getSelectedNodes());
+    QGuiApplication::clipboard()->setText(g->tikz());
+    delete g;
+}
+
+void TikzScene::cutToClipboard()
+{
+    copyToClipboard();
+    deleteSelectedItems();
+}
+
+
+void TikzScene::pasteFromClipboard()
+{
+    QString tikz = QGuiApplication::clipboard()->text();
+    Graph *g = new Graph();
+    TikzAssembler ass(g);
+
+    // attempt to parse whatever's on the clipboard, if we get a
+    // non-empty tikz graph, insert it.
+    if (ass.parse(tikz) && !g->nodes().isEmpty()) {
+        // make sure names in the new subgraph are fresh
+        g->renameApart(graph());
+
+        // shift g to the right until there is some free space
+        QPointF p0 = toScreen(g->nodes()[0]->point());
+        QPointF p = p0;
+        while (!items(p).isEmpty()) p.setX(p.x()+GLOBAL_SCALEF);
+        QPointF shift(roundf((p.x() - p0.x())/GLOBAL_SCALEF), 0.0f);
+        foreach (Node *n, g->nodes()) {
+            n->setPoint(n->point() + shift);
+        }
+
+        PasteCommand *cmd = new PasteCommand(this, g);
+        _tikzDocument->undoStack()->push(cmd);
+    }
+}
+
 void TikzScene::getSelection(QSet<Node *> &selNodes, QSet<Edge *> &selEdges)
 {
     foreach (QGraphicsItem *gi, selectedItems()) {
         if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) selNodes << ni->node();
         if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) selEdges << ei->edge();
     }
+}
+
+QSet<Node *> TikzScene::getSelectedNodes()
+{
+    QSet<Node*> selNodes;
+    foreach (QGraphicsItem *gi, selectedItems()) {
+        if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) selNodes << ni->node();
+    }
+    return selNodes;
 }
 
 
@@ -393,6 +497,14 @@ void TikzScene::setTikzDocument(TikzDocument *tikzDocument)
 {
     _tikzDocument = tikzDocument;
     graphReplaced();
+}
+
+void TikzScene::reloadStyles()
+{
+    foreach (NodeItem *ni, _nodeItems) {
+        ni->node()->attachStyle();
+        ni->readPos(); // trigger a repaint
+    }
 }
 
 void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)

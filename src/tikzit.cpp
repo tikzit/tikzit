@@ -18,7 +18,7 @@ Tikzit::Tikzit() : _styleFile("[default]"), _activeWindow(0)
 {
 }
 
-void Tikzit::init()
+void Tikzit::init(QApplication *app)
 {
     QSettings settings("tikzit", "tikzit");
     _mainMenu = new MainMenu();
@@ -35,6 +35,8 @@ void Tikzit::init()
 
     QString styleFile = settings.value("previous-tikzstyles-file").toString();
     if (!styleFile.isEmpty()) loadStyles(styleFile);
+
+    connect(app, &QApplication::focusChanged, this, &focusChanged);
 }
 
 //QMenuBar *Tikzit::mainMenu() const
@@ -137,15 +139,34 @@ void Tikzit::loadStyles(QString fileName)
         }
         _stylePalette->reloadStyles();
 
+        foreach (MainWindow *w, _windows) {
+            w->tikzScene()->reloadStyles();
+        }
+
     } else {
         settings.setValue("previous-tikzstyles-file", "");
-        QMessageBox::warning(0, "Style file not found.", "Could not open style file, reverting to default.");
+        QMessageBox::warning(0, "Style file not found.", "Could not open style file: '" + fileName + "', reverting to default.");
     }
 }
 
 QString Tikzit::styleFile() const
 {
     return _styleFile;
+}
+
+void Tikzit::focusChanged(QWidget *old, QWidget *nw)
+{
+//    foreach (MainWindow *w, _windows) {
+//        if (w->isActiveWindow()) {
+//            _stylePalette->raise();
+//            break;
+//        }
+//    }
+}
+
+StylePalette *Tikzit::stylePalette() const
+{
+    return _stylePalette;
 }
 
 

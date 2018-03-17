@@ -11,7 +11,6 @@
 
 
 
-
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -20,7 +19,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
     tikzit = new Tikzit();
-    tikzit->init();
+    tikzit->init(&a);
 
     return a.exec();
 }

@@ -34,7 +34,12 @@ public:
 
     TikzDocument *tikzDocument() const;
     void setTikzDocument(TikzDocument *tikzDocument);
-
+    void reloadStyles();
+    void applyActiveStyleToNodes();
+    void deleteSelectedItems();
+    void copyToClipboard();
+    void cutToClipboard();
+    void pasteFromClipboard();
 public slots:
     void graphReplaced();
 
@@ -54,6 +59,8 @@ private:
     NodeItem *_edgeStartNodeItem;
     NodeItem *_edgeEndNodeItem;
     bool _firstControlPoint;
+    QPointF _mouseDownPos;
+    bool _draggingNodes;
 
     QMap<Node*,QPointF> _oldNodePositions;
     float _oldWeight;
@@ -62,6 +69,7 @@ private:
     int _oldOutAngle;
 
     void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges);
+    QSet<Node*> getSelectedNodes();
 };
 
 #endif // TIKZSCENE_H

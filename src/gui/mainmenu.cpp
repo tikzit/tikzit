@@ -19,17 +19,20 @@ void MainMenu::on_actionOpen_triggered()
 
 void MainMenu::on_actionClose_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->close();
 }
 
 void MainMenu::on_actionSave_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzDocument()->save();
 }
 
 void MainMenu::on_actionSave_As_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzDocument()->saveAs();
 }
 
 void MainMenu::on_actionExit_triggered()
@@ -53,22 +56,26 @@ void MainMenu::on_actionRedo_triggered()
 
 void MainMenu::on_actionCut_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->cutToClipboard();
 }
 
 void MainMenu::on_actionCopy_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->copyToClipboard();
 }
 
 void MainMenu::on_actionPaste_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->pasteFromClipboard();
 }
 
 void MainMenu::on_actionDelete_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->deleteSelectedItems();
 }
 
 void MainMenu::on_actionSelect_All_triggered()

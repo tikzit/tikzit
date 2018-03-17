@@ -25,6 +25,28 @@ Edge::~Edge()
     delete _edgeNode;
 }
 
+/*!
+ * @brief Edge::copy makes a deep copy of an edge.
+ * @param nodeTable is an optional pointer to a table mapping the old source/target
+ * node pointers to their new, copied versions. This is used when making a copy of
+ * an entire (sub)graph.
+ * @return a copy of the edge
+ */
+Edge *Edge::copy(QMap<Node*,Node*> *nodeTable)
+{
+    Edge *e;
+    if (nodeTable == 0) e = new Edge(_source, _target);
+    else e = new Edge(nodeTable->value(_source), nodeTable->value(_target));
+    e->setData(_data->copy());
+    e->setBasicBendMode(_basicBendMode);
+    e->setBend(_bend);
+    e->setInAngle(_inAngle);
+    e->setOutAngle(_outAngle);
+    e->setWeight(_weight);
+    e->updateControls();
+    return e;
+}
+
 Node *Edge::source() const
 {
     return _source;

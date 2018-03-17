@@ -15,8 +15,8 @@ NodeItem::NodeItem(Node *node)
 {
     _node = node;
     setFlag(QGraphicsItem::ItemIsSelectable);
-    setFlag(QGraphicsItem::ItemIsMovable);
-    setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+    //setFlag(QGraphicsItem::ItemIsMovable);
+    //setFlag(QGraphicsItem::ItemSendsGeometryChanges);
     readPos();
 }
 

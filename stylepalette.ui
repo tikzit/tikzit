@@ -74,7 +74,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_3">
+       <widget class="QToolButton" name="buttonRefreshTikzstyles">
         <property name="text">
          <string/>
         </property>
@@ -102,7 +102,7 @@
        <number>2</number>
       </property>
       <item>
-       <widget class="QToolButton" name="toolButton">
+       <widget class="QToolButton" name="buttonApplyNodeStyle">
         <property name="minimumSize">
          <size>
           <width>25</width>
@@ -110,20 +110,7 @@
          </size>
         </property>
         <property name="text">
-         <string>+</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="toolButton_2">
-        <property name="minimumSize">
-         <size>
-          <width>25</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>-</string>
+         <string>Apply</string>
         </property>
        </widget>
       </item>

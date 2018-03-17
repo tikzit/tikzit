@@ -22,11 +22,14 @@ public:
     QString tikz() const;
     QUndoStack *undoStack() const;
     bool parseSuccess() const;
+    void refreshTikz();
 
     void open(QString fileName);
 
     QString shortName() const;
 
+    void saveAs();
+    void save();
 private:
     Graph *_graph;
     QString _tikz;

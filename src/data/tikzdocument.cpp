@@ -3,9 +3,12 @@
 #include <QSettings>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QFileDialog>
 
+#include "tikzit.h"
 #include "tikzdocument.h"
 #include "tikzassembler.h"
+#include "mainwindow.h"
 
 TikzDocument::TikzDocument(QObject *parent) : QObject(parent)
 {
@@ -71,6 +74,41 @@ void TikzDocument::open(QString fileName)
     }
 }
 
+void TikzDocument::save() {
+    if (_fileName == "") {
+        saveAs();
+    } else {
+        refreshTikz();
+        QFile file(_fileName);
+        QFileInfo fi(file);
+        _shortName = fi.fileName();
+        QSettings settings("tikzit", "tikzit");
+        settings.setValue("previous-file-path", fi.absolutePath());
+
+        if (file.open(QIODevice::ReadWrite)) {
+            QTextStream stream(&file);
+            stream << _tikz;
+            file.close();
+            tikzit->activeWindow()->updateFileName();
+        } else {
+            QMessageBox::warning(0, "Save Failed", "Could not open file: '" + _fileName + "' for writing.");
+        }
+    }
+}
+
+void TikzDocument::saveAs() {
+    QSettings settings("tikzit", "tikzit");
+    QString fileName = QFileDialog::getSaveFileName(tikzit->activeWindow(),
+                tr("Save File As"),
+                settings.value("previous-file-path").toString(),
+                tr("TiKZ Files (*.tikz)"));
+
+    if (!fileName.isEmpty()) {
+        _fileName = fileName;
+        save();
+    }
+}
+
 QString TikzDocument::shortName() const
 {
     return _shortName;
@@ -79,4 +117,11 @@ QString TikzDocument::shortName() const
 bool TikzDocument::parseSuccess() const
 {
     return _parseSuccess;
+}
+
+void TikzDocument::refreshTikz()
+{
+    _tikz = _graph->tikz();
+    if (MainWindow *w = dynamic_cast<MainWindow*>(parent()))
+        w->refreshTikz();
 }

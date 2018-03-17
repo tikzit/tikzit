@@ -13,15 +13,17 @@ class GraphElementData : public QAbstractItemModel
 {
     Q_OBJECT
 public:
+    explicit GraphElementData(QVector<GraphElementProperty> init,
+                              QObject *parent = 0);
     explicit GraphElementData(QObject *parent = 0);
     ~GraphElementData();
+    GraphElementData *copy();
     void setProperty(QString key, QString value);
     void unsetProperty(QString key);
     void setAtom(QString atom);
     void unsetAtom(QString atom);
     QString property(QString key);
     bool atom(QString atom);
-
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation,
@@ -55,6 +57,8 @@ public:
 
     QString tikz();
     bool isEmpty();
+    QVector<GraphElementProperty> properties() const;
+
 signals:
 
 public slots:

@@ -9,20 +9,20 @@
 #include <QPainterPath>
 #include <QIcon>
 
-enum NodeShape {
-    Rectangle, UpTriangle, DownTriangle, Circle
-};
-
 class NodeStyle
 {
 public:
+    enum Shape {
+        Rectangle, UpTriangle, DownTriangle, Circle
+    };
+
     NodeStyle();
     NodeStyle(QString name, GraphElementData *data);
     bool isNone();
 
     GraphElementData *data() const;
     QString name() const;
-    NodeShape shape() const;
+    Shape shape() const;
     QColor fillColor() const;
     QColor strokeColor() const;
     int strokeThickness() const;

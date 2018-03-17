@@ -27,6 +27,15 @@ public:
     void addEdge(Edge *e);
     void addEdge(Edge *e, int index);
     void removeEdge(Edge *e);
+    int maxIntName();
+    QString freshNodeName();
+
+    /*!
+     * \brief renameApart assigns fresh names to all of the nodes in "this",
+     * with respect to the given graph
+     * \param graph
+     */
+    void renameApart(Graph *graph);
 
     GraphElementData *data() const;
     void setData(GraphElementData *data);
@@ -40,6 +49,22 @@ public:
     void clearBbox();
 
     QString tikz();
+
+    /*!
+     * \brief copyOfSubgraphWithNodes produces a copy of the full subgraph
+     * with the given nodes. Used for cutting and copying to clipboard.
+     * \param nds
+     * \return
+     */
+    Graph *copyOfSubgraphWithNodes(QSet<Node*> nds);
+
+    /*!
+     * \brief insertGraph inserts a copy of the given graph. Prior to calling this
+     * method, the node names in the given graph should be made fresh via
+     * "renameApart".
+     * \param graph
+     */
+    void insertGraph(Graph *graph);
 signals:
 
 public slots:

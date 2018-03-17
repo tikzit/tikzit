@@ -14,7 +14,17 @@
 
 #include <QUndoCommand>
 
-class MoveCommand : public QUndoCommand
+class GraphUpdateCommand : public QUndoCommand {
+public:
+    explicit GraphUpdateCommand(TikzScene *scene,
+                                QUndoCommand *parent = 0);
+    void undo() override;
+    void redo() override;
+protected:
+    TikzScene *_scene;
+};
+
+class MoveCommand : public GraphUpdateCommand
 {
 public:
     explicit MoveCommand(TikzScene *scene,
@@ -24,21 +34,20 @@ public:
     void undo() override;
     void redo() override;
 private:
-    TikzScene *_scene;
     QMap<Node*,QPointF> _oldNodePositions;
     QMap<Node*,QPointF> _newNodePositions;
 };
 
-class EdgeBendCommand : public QUndoCommand
+class EdgeBendCommand : public GraphUpdateCommand
 {
 public:
     explicit EdgeBendCommand(TikzScene *scene, Edge *edge,
                              float oldWeight, int oldBend,
-                             int oldInAngle, int oldOutAngle);
+                             int oldInAngle, int oldOutAngle,
+                             QUndoCommand *parent = 0);
     void undo() override;
     void redo() override;
 private:
-    TikzScene *_scene;
     Edge *_edge;
     float _oldWeight;
     int _oldBend;
@@ -50,55 +59,75 @@ private:
     int _newOutAngle;
 };
 
-class DeleteCommand : public QUndoCommand
+class DeleteCommand : public GraphUpdateCommand
 {
 public:
     explicit DeleteCommand(TikzScene *scene,
                            QMap<int,Node*> deleteNodes,
                            QMap<int,Edge*> deleteEdges,
-                           QSet<Edge*> selEdges);
+                           QSet<Edge*> selEdges,
+                           QUndoCommand *parent = 0);
     void undo() override;
     void redo() override;
 private:
-    TikzScene *_scene;
     QMap<int,Node*> _deleteNodes;
     QMap<int,Edge*> _deleteEdges;
     QSet<Edge*> _selEdges;
 };
 
-class AddNodeCommand : public QUndoCommand
+class AddNodeCommand : public GraphUpdateCommand
 {
 public:
-    explicit AddNodeCommand(TikzScene *scene, Node *node, QRectF newBounds);
+    explicit AddNodeCommand(TikzScene *scene, Node *node, QRectF newBounds,
+                            QUndoCommand *parent = 0);
     void undo() override;
     void redo() override;
 private:
-    TikzScene *_scene;
     Node *_node;
     QRectF _oldBounds;
     QRectF _newBounds;
 };
 
-class AddEdgeCommand : public QUndoCommand
+class AddEdgeCommand : public GraphUpdateCommand
 {
 public:
-    explicit AddEdgeCommand(TikzScene *scene, Edge *edge);
+    explicit AddEdgeCommand(TikzScene *scene, Edge *edge, QUndoCommand *parent = 0);
     void undo() override;
     void redo() override;
 private:
-    TikzScene *_scene;
     Edge *_edge;
 };
 
-class ChangeEdgeModeCommand : public QUndoCommand
+class ChangeEdgeModeCommand : public GraphUpdateCommand
 {
 public:
-    explicit ChangeEdgeModeCommand(TikzScene *scene, Edge *edge);
+    explicit ChangeEdgeModeCommand(TikzScene *scene, Edge *edge, QUndoCommand *parent = 0);
     void undo() override;
     void redo() override;
 private:
-    TikzScene *_scene;
     Edge *_edge;
+};
+
+class ApplyStyleToNodesCommand : public GraphUpdateCommand
+{
+public:
+    explicit ApplyStyleToNodesCommand(TikzScene *scene, QString style, QUndoCommand *parent = 0);
+    void undo() override;
+    void redo() override;
+private:
+    QString _style;
+    QMap<Node*,QString> _oldStyles;
+};
+
+class PasteCommand : public GraphUpdateCommand
+{
+public:
+    explicit PasteCommand(TikzScene *scene, Graph *graph, QUndoCommand *parent = 0);
+    void undo() override;
+    void redo() override;
+private:
+    Graph *_graph;
+    QList<QGraphicsItem*> _oldSelection;
 };
 
 #endif // UNDOCOMMANDS_H

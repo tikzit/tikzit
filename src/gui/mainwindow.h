@@ -33,17 +33,19 @@ public:
     TikzView *tikzView() const;
     TikzScene *tikzScene() const;
     TikzDocument *tikzDocument() const;
-
+    ToolPalette *toolPalette() const;
+    void updateFileName();
+    void refreshTikz();
 protected:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent *event);
+
 private:
     TikzScene *_tikzScene;
     TikzDocument *_tikzDocument;
     MainMenu *_menu;
-    ToolPalette *_tools;
+    ToolPalette *_toolPalette;
     Ui::MainWindow *ui;
-    QString _fileName;
     bool _pristine;
     int _windowId;
     static int _numWindows;

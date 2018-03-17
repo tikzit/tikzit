@@ -48,3 +48,21 @@ ToolPalette::Tool ToolPalette::currentTool() const
     else return SELECT;
 }
 
+void ToolPalette::setCurrentTool(ToolPalette::Tool tool)
+{
+    switch(tool) {
+    case SELECT:
+        select->setChecked(true);
+        break;
+    case VERTEX:
+        vertex->setChecked(true);
+        break;
+    case EDGE:
+        edge->setChecked(true);
+        break;
+    case CROP:
+        crop->setChecked(true);
+        break;
+    }
+}
+

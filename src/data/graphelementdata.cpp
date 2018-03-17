@@ -3,14 +3,24 @@
 #include <QDebug>
 #include <QTextStream>
 
-GraphElementData::GraphElementData(QObject *parent) : QAbstractItemModel(parent)
+GraphElementData::GraphElementData(QVector<GraphElementProperty> init, QObject *parent) : QAbstractItemModel(parent)
 {
+    root = new GraphElementProperty();
+    _properties = init;
+}
+
+GraphElementData::GraphElementData(QObject *parent) : QAbstractItemModel(parent) {
     root = new GraphElementProperty();
 }
 
 GraphElementData::~GraphElementData()
 {
     delete root;
+}
+
+GraphElementData *GraphElementData::copy()
+{
+    return new GraphElementData(_properties);
 }
 
 void GraphElementData::setProperty(QString key, QString value)
@@ -169,4 +179,9 @@ QString GraphElementData::tikz() {
 bool GraphElementData::isEmpty()
 {
     return _properties.isEmpty();
+}
+
+QVector<GraphElementProperty> GraphElementData::properties() const
+{
+    return _properties;
 }

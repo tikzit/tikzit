@@ -13,6 +13,7 @@ class Edge : public QObject
 public:
     explicit Edge(Node *s, Node *t, QObject *parent = 0);
     ~Edge();
+    Edge *copy(QMap<Node *, Node *> *nodeTable = 0);
 
     Node *source() const;
     Node *target() const;
