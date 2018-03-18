@@ -66,6 +66,19 @@ int Graph::maxIntName()
     return max;
 }
 
+QRectF Graph::realBbox()
+{
+    float maxX = 0.0f;
+    QRectF rect = bbox();
+    foreach (Node *n, _nodes) {
+        rect = rect.united(QRectF(n->point().x()-0.5f,
+                                  n->point().y()-0.5f,
+                                  1.0f, 1.0f));
+    }
+
+    return rect;
+}
+
 QString Graph::freshNodeName()
 {
     return QString::number(maxIntName() + 1);
@@ -228,14 +241,8 @@ Graph *Graph::copyOfSubgraphWithNodes(QSet<Node *> nds)
 void Graph::insertGraph(Graph *graph)
 {
     QMap<Node*,Node*> nodeTable;
-    foreach (Node *n, graph->nodes()) {
-        Node *n1 = n->copy();
-        nodeTable.insert(n, n1);
-        addNode(n1);
-    }
-    foreach (Edge *e, graph->edges()) {
-        addEdge(e->copy(&nodeTable));
-    }
+    foreach (Node *n, graph->nodes()) addNode(n);
+    foreach (Edge *e, graph->edges()) addEdge(e);
 }
 
 void Graph::setBbox(const QRectF &bbox)

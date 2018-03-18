@@ -30,11 +30,12 @@ public:
     QMap<Node*,NodeItem*> &nodeItems();
     QMap<Edge*,EdgeItem*> &edgeItems();
     void refreshAdjacentEdges(QList<Node*> nodes);
-    void setBounds(QRectF bounds);
+//    void setBounds(QRectF bounds);
 
     TikzDocument *tikzDocument() const;
     void setTikzDocument(TikzDocument *tikzDocument);
     void reloadStyles();
+    void refreshSceneBounds();
     void applyActiveStyleToNodes();
     void deleteSelectedItems();
     void copyToClipboard();

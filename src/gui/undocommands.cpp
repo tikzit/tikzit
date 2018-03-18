@@ -11,12 +11,14 @@ GraphUpdateCommand::GraphUpdateCommand(TikzScene *scene, QUndoCommand *parent) :
 void GraphUpdateCommand::undo()
 {
     _scene->tikzDocument()->refreshTikz();
+    _scene->refreshSceneBounds();
     _scene->invalidate();
 }
 
 void GraphUpdateCommand::redo()
 {
     _scene->tikzDocument()->refreshTikz();
+    _scene->refreshSceneBounds();
     _scene->invalidate();
 }
 
@@ -174,7 +176,7 @@ void AddNodeCommand::undo()
 
     _scene->graph()->removeNode(_node);
 
-    _scene->setBounds(_oldBounds);
+    //_scene->setBounds(_oldBounds);
 
     GraphUpdateCommand::undo();
 }
@@ -187,7 +189,8 @@ void AddNodeCommand::redo()
     _scene->nodeItems().insert(_node, ni);
     _scene->addItem(ni);
 
-    _scene->setBounds(_newBounds);
+    //_scene->setBounds(_newBounds);
+
     GraphUpdateCommand::redo();
 }
 

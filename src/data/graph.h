@@ -48,6 +48,15 @@ public:
     bool hasBbox();
     void clearBbox();
 
+    /*!
+     * \brief realBbox computes the union of the user-defined
+     * bounding box, and the bounding boxes of the graph's
+     * contents.
+     *
+     * \return
+     */
+    QRectF realBbox();
+
     QString tikz();
 
     /*!
@@ -59,9 +68,10 @@ public:
     Graph *copyOfSubgraphWithNodes(QSet<Node*> nds);
 
     /*!
-     * \brief insertGraph inserts a copy of the given graph. Prior to calling this
+     * \brief insertGraph inserts the given graph into "this". Prior to calling this
      * method, the node names in the given graph should be made fresh via
-     * "renameApart".
+     * "renameApart". Note that the parameter "graph" relinquishes ownership of its
+     * nodes and edges, so it should be not be allowed to exist longer than "this".
      * \param graph
      */
     void insertGraph(Graph *graph);

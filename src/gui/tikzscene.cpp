@@ -456,13 +456,15 @@ void TikzScene::pasteFromClipboard()
         // make sure names in the new subgraph are fresh
         g->renameApart(graph());
 
-        // shift g to the right until there is some free space
-        QPointF p0 = toScreen(g->nodes()[0]->point());
-        QPointF p = p0;
-        while (!items(p).isEmpty()) p.setX(p.x()+GLOBAL_SCALEF);
-        QPointF shift(roundf((p.x() - p0.x())/GLOBAL_SCALEF), 0.0f);
-        foreach (Node *n, g->nodes()) {
-            n->setPoint(n->point() + shift);
+        QRectF srcRect = g->realBbox();
+        QRectF tgtRect = graph()->realBbox();
+        QPointF shift(tgtRect.right() - srcRect.left(), 0.0f);
+
+        // shift g to the right until it is in free space
+        if (shift.x() > 0) {
+            foreach (Node *n, g->nodes()) {
+                n->setPoint(n->point() + shift);
+            }
         }
 
         PasteCommand *cmd = new PasteCommand(this, g);
@@ -507,6 +509,26 @@ void TikzScene::reloadStyles()
     }
 }
 
+void TikzScene::refreshSceneBounds()
+{
+    if (!views().empty()) {
+        QGraphicsView *v = views().first();
+        QRectF viewB = v->mapToScene(v->viewport()->rect()).boundingRect();
+        //QPointF tl = v->mapToScene(viewB.topLeft());
+        //viewB.setTopLeft(tl);
+
+        QRectF bounds = viewB.united(rectToScreen(graph()->realBbox().adjusted(-1.0f, -1.0f, 1.0f, 1.0f)));
+        qDebug() << viewB;
+
+        if (bounds != sceneRect()) {
+            QPointF c = viewB.center();
+            setSceneRect(bounds);
+            v->centerOn(c);
+        }
+    }
+    //setBounds(graphB);
+}
+
 void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
 {
     if (nodes.empty()) return;
@@ -518,19 +540,19 @@ void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
     }
 }
 
-void TikzScene::setBounds(QRectF bounds)
-{
-    if (bounds != sceneRect()) {
-        if (!views().empty()) {
-            QGraphicsView *v = views().first();
-            QPointF c = v->mapToScene(v->viewport()->rect().center());
-            setSceneRect(bounds);
-            v->centerOn(c);
-        } else {
-            setSceneRect(bounds);
-        }
-    }
-}
+//void TikzScene::setBounds(QRectF bounds)
+//{
+//    if (bounds != sceneRect()) {
+//        if (!views().empty()) {
+//            QGraphicsView *v = views().first();
+//            QPointF c = v->mapToScene(v->viewport()->rect().center());
+//            setSceneRect(bounds);
+//            v->centerOn(c);
+//        } else {
+//            setSceneRect(bounds);
+//        }
+//    }
+//}
 
 QMap<Node*,NodeItem *> &TikzScene::nodeItems()
 {

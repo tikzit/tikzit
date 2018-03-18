@@ -51,13 +51,25 @@
 // divisible by 8 to avoid rounding errors with e.g. grid-snapping.
 #define GLOBAL_SCALE 80
 #define GLOBAL_SCALEF 80.0f
+#define GLOBAL_SCALEF_INV 0.0125f
 
 inline QPointF toScreen(QPointF src)
 { src.setY(-src.y()); src *= GLOBAL_SCALEF; return src; }
 
 inline QPointF fromScreen(QPointF src)
-{ src.setY(-src.y()); src /= GLOBAL_SCALEF; return src; }
+{ src.setY(-src.y()); src *= GLOBAL_SCALEF_INV; return src; }
 
+inline QRectF rectToScreen(QRectF src)
+{ return QRectF(src.x()                 * GLOBAL_SCALEF,
+                -(src.y()+src.height()) * GLOBAL_SCALEF,
+                src.width()             * GLOBAL_SCALEF,
+                src.height()            * GLOBAL_SCALEF); }
+
+inline QRectF rectFromScreen(QRectF src)
+{ return QRectF(src.x()                 * GLOBAL_SCALEF_INV,
+                -(src.y()+src.height()) * GLOBAL_SCALEF_INV,
+                src.width()             * GLOBAL_SCALEF_INV,
+                src.height()            * GLOBAL_SCALEF_INV); }
 
 class Tikzit : public QObject {
     Q_OBJECT
