@@ -248,6 +248,8 @@ void Edge::updateData()
     if (_source == _target) _data->setAtom("loop");
     if (!isSelfLoop() && !isStraight() && _weight != 0.4f)
         _data->setProperty("looseness", QString::number(_weight*2.5f, 'f', 2));
+    if (_source->style()->isNone()) _sourceAnchor = "center";
+    if (_target->style()->isNone()) _targetAnchor = "center";
 
 }
 

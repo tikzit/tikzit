@@ -130,4 +130,20 @@ private:
     QList<QGraphicsItem*> _oldSelection;
 };
 
+class ChangeLabelCommand : public GraphUpdateCommand
+{
+public:
+    explicit ChangeLabelCommand(TikzScene *scene,
+                                Graph *graph,
+                                QMap<Node*,QString> oldLabels,
+                                QString newLabel,
+                                QUndoCommand *parent = 0);
+    void undo() override;
+    void redo() override;
+private:
+    Graph *_graph;
+    QMap<Node*,QString> _oldLabels;
+    QString _newLabel;
+};
+
 #endif // UNDOCOMMANDS_H

@@ -328,3 +328,26 @@ void PasteCommand::redo()
 
     GraphUpdateCommand::redo();
 }
+
+ChangeLabelCommand::ChangeLabelCommand(TikzScene *scene, Graph *graph, QMap<Node *, QString> oldLabels, QString newLabel, QUndoCommand *parent) :
+    GraphUpdateCommand(scene, parent), _oldLabels(oldLabels), _newLabel(newLabel)
+{
+}
+
+void ChangeLabelCommand::undo()
+{
+    foreach (Node *n, _oldLabels.keys()) {
+        n->setLabel(_oldLabels[n]);
+    }
+
+    GraphUpdateCommand::undo();
+}
+
+void ChangeLabelCommand::redo()
+{
+    foreach (Node *n, _oldLabels.keys()) {
+        n->setLabel(_newLabel);
+    }
+
+    GraphUpdateCommand::redo();
+}
