@@ -26,10 +26,10 @@ void Tikzit::init(QApplication *app)
 
     _toolPalette = new ToolPalette(dummy);
     _propertyPalette = new PropertyPalette(dummy);
-    _stylePalette = new StylePalette(dummy);
+    //_stylePalette = new StylePalette(dummy);
     _styles = new TikzStyles(this);
 
-    _stylePalette->show();
+    //_stylePalette->show();
     _windows << new MainWindow();
     _windows[0]->show();
 
@@ -137,7 +137,7 @@ void Tikzit::loadStyles(QString fileName)
         } else {
             qDebug() << "parse failed";
         }
-        _stylePalette->reloadStyles();
+        //_stylePalette->reloadStyles();
 
         foreach (MainWindow *w, _windows) {
             w->tikzScene()->reloadStyles();
@@ -164,10 +164,10 @@ void Tikzit::focusChanged(QWidget *old, QWidget *nw)
 //    }
 }
 
-StylePalette *Tikzit::stylePalette() const
-{
-    return _stylePalette;
-}
+//StylePalette *Tikzit::stylePalette() const
+//{
+//    return _stylePalette;
+//}
 
 
 TikzStyles *Tikzit::styles() const
@@ -177,7 +177,7 @@ TikzStyles *Tikzit::styles() const
 
 void Tikzit::quit()
 {
-    _stylePalette->close();
+    //_stylePalette->close();
     QApplication::quit();
 }
 

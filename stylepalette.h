@@ -20,9 +20,10 @@ public:
 
 
 public slots:
+    void itemDoubleClicked(const QModelIndex &index);
     void on_buttonOpenTikzstyles_clicked();
     void on_buttonRefreshTikzstyles_clicked();
-    void on_buttonApplyNodeStyle_clicked();
+    //void on_buttonApplyNodeStyle_clicked();
 
 private:
     Ui::StylePalette *ui;

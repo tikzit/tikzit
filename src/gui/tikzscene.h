@@ -11,6 +11,7 @@
 #include "edgeitem.h"
 #include "tikzdocument.h"
 #include "toolpalette.h"
+#include "stylepalette.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
@@ -24,7 +25,7 @@ class TikzScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-   TikzScene(TikzDocument *tikzDocument, ToolPalette *tools, QObject *parent);
+   TikzScene(TikzDocument *tikzDocument, ToolPalette *tools, StylePalette *styles, QObject *parent);
     ~TikzScene();
     Graph *graph();
     QMap<Node*,NodeItem*> &nodeItems();
@@ -55,6 +56,7 @@ protected:
 private:
     TikzDocument *_tikzDocument;
     ToolPalette *_tools;
+    StylePalette *_styles;
     QMap<Node*,NodeItem*> _nodeItems;
     QMap<Edge*,EdgeItem*> _edgeItems;
     QGraphicsLineItem *_drawEdgeItem;

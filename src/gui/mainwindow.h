@@ -11,6 +11,7 @@
 #include "tikzdocument.h"
 #include "mainmenu.h"
 #include "toolpalette.h"
+#include "stylepalette.h"
 
 #include <QMainWindow>
 #include <QGraphicsView>
@@ -33,9 +34,12 @@ public:
     TikzView *tikzView() const;
     TikzScene *tikzScene() const;
     TikzDocument *tikzDocument() const;
-    ToolPalette *toolPalette() const;
+    ToolPalette *toolPalette() const;    
+    StylePalette *stylePalette() const;
+
     void updateFileName();
     void refreshTikz();
+
 protected:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent *event);
@@ -45,6 +49,7 @@ private:
     TikzDocument *_tikzDocument;
     MainMenu *_menu;
     ToolPalette *_toolPalette;
+    StylePalette *_stylePalette;
     Ui::MainWindow *ui;
     bool _pristine;
     int _windowId;

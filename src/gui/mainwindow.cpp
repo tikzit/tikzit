@@ -28,7 +28,11 @@ MainWindow::MainWindow(QWidget *parent) :
     _toolPalette = new ToolPalette(this);
     addToolBar(_toolPalette);
 
-    _tikzScene = new TikzScene(_tikzDocument, _toolPalette, this);
+    _stylePalette = new StylePalette(this);
+    addDockWidget(Qt::RightDockWidgetArea, _stylePalette);
+
+
+    _tikzScene = new TikzScene(_tikzDocument, _toolPalette, _stylePalette, this);
     ui->tikzView->setScene(_tikzScene);
     _pristine = true;
 
@@ -79,9 +83,14 @@ void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::ActivationChange && isActiveWindow()) {
         tikzit->setActiveWindow(this);
-        tikzit->stylePalette()->raise();
+        //tikzit->stylePalette()->raise();
     }
     QMainWindow::changeEvent(event);
+}
+
+StylePalette *MainWindow::stylePalette() const
+{
+    return _stylePalette;
 }
 
 void MainWindow::updateFileName()

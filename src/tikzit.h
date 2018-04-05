@@ -98,7 +98,7 @@ public:
     void loadStyles(QString fileName);
     TikzStyles *styles() const;
     QString styleFile() const;
-    StylePalette *stylePalette() const;
+    //StylePalette *stylePalette() const;
 
 public slots:
     void focusChanged(QWidget *old, QWidget *nw);
@@ -108,7 +108,7 @@ private:
     MainMenu *_mainMenu;
     ToolPalette *_toolPalette;
     PropertyPalette *_propertyPalette;
-    StylePalette *_stylePalette;
+    //StylePalette *_stylePalette;
     QVector<MainWindow*> _windows;
     MainWindow *_activeWindow;
     TikzStyles *_styles;

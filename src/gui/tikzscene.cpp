@@ -11,8 +11,9 @@
 #include <cmath>
 
 
-TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools, QObject *parent) :
-    QGraphicsScene(parent), _tikzDocument(tikzDocument), _tools(tools)
+TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
+                     StylePalette *styles, QObject *parent) :
+    QGraphicsScene(parent), _tikzDocument(tikzDocument), _tools(tools), _styles(styles)
 {
     _modifyEdgeItem = 0;
     _edgeStartNodeItem = 0;
@@ -382,7 +383,7 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             Node *n = new Node(_tikzDocument);
             n->setName(graph()->freshNodeName());
             n->setPoint(fromScreen(gridPos));
-            n->setStyleName(tikzit->stylePalette()->activeNodeStyleName());
+            n->setStyleName(_styles->activeNodeStyleName());
 
             QRectF grow(gridPos.x() - GLOBAL_SCALEF, gridPos.y() - GLOBAL_SCALEF, 2 * GLOBAL_SCALEF, 2 * GLOBAL_SCALEF);
             QRectF newBounds = sceneRect().united(grow);
@@ -447,7 +448,7 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 
 void TikzScene::applyActiveStyleToNodes() {
-    ApplyStyleToNodesCommand *cmd = new ApplyStyleToNodesCommand(this, tikzit->stylePalette()->activeNodeStyleName());
+    ApplyStyleToNodesCommand *cmd = new ApplyStyleToNodesCommand(this, _styles->activeNodeStyleName());
     _tikzDocument->undoStack()->push(cmd);
 }
 
@@ -562,6 +563,7 @@ void TikzScene::setTikzDocument(TikzDocument *tikzDocument)
 
 void TikzScene::reloadStyles()
 {
+    _styles->reloadStyles();
     foreach (NodeItem *ni, _nodeItems) {
         ni->node()->attachStyle();
         ni->readPos(); // trigger a repaint
