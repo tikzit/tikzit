@@ -85,7 +85,7 @@ void TikzDocument::save() {
         QSettings settings("tikzit", "tikzit");
         settings.setValue("previous-file-path", fi.absolutePath());
 
-        if (file.open(QIODevice::ReadWrite)) {
+        if (file.open(QIODevice::WriteOnly)) {
             QTextStream stream(&file);
             stream << _tikz;
             file.close();

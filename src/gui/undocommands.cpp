@@ -312,18 +312,18 @@ void PasteCommand::redo()
     _scene->clearSelection();
     _scene->graph()->insertGraph(_graph);
 
+    foreach (Edge *e, _graph->edges()) {
+        EdgeItem *ei = new EdgeItem(e);
+        _scene->edgeItems().insert(e, ei);
+        _scene->addItem(ei);
+    }
+
     foreach (Node *n, _graph->nodes()) {
         n->attachStyle(); // in case styles have changed
         NodeItem *ni = new NodeItem(n);
         _scene->nodeItems().insert(n, ni);
         _scene->addItem(ni);
         ni->setSelected(true);
-    }
-
-    foreach (Edge *e, _graph->edges()) {
-        EdgeItem *ei = new EdgeItem(e);
-        _scene->edgeItems().insert(e, ei);
-        _scene->addItem(ei);
     }
 
     GraphUpdateCommand::redo();

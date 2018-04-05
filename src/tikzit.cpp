@@ -36,7 +36,7 @@ void Tikzit::init(QApplication *app)
     QString styleFile = settings.value("previous-tikzstyles-file").toString();
     if (!styleFile.isEmpty()) loadStyles(styleFile);
 
-    connect(app, &QApplication::focusChanged, this, &focusChanged);
+    //connect(app, &QApplication::focusChanged, this, &focusChanged);
 }
 
 //QMenuBar *Tikzit::mainMenu() const

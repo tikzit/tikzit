@@ -23,6 +23,7 @@ public:
 public slots:
     void zoomIn();
     void zoomOut();
+    void setScene(QGraphicsScene *scene);
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect);
 private:

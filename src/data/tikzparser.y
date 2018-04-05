@@ -25,6 +25,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #include "tikzparserdefs.h"
 %}
 
@@ -62,7 +63,7 @@
 #include "graphelementproperty.h"
 
 #include "tikzlexer.h"
-#import "tikzassembler.h"
+#include "tikzassembler.h"
 /* the assembler (used by this parser) is stored in the lexer
    state as "extra" data */
 #define assembler yyget_extra(scanner)
@@ -71,7 +72,7 @@
 void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 	// TODO: implement reportError()
 	//assembler->reportError(str, yylloc);
-    qDebug() << "parse error: " << str;
+    qDebug() << "\nparse error: " << str << " line:" << yylloc->first_line;
 }
 %}
 
@@ -104,7 +105,7 @@ void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
 %token RIGHTBRACKET "]"
 %token FULLSTOP "."
 %token EQUALS "="
-%token <pt> COORD "co-ordinate"
+%token <pt> TCOORD "coordinate"
 %token <str> PROPSTRING "key/value string"
 %token <str> REFSTRING "string"
 %token <str> DELIMITEDSTRING "{-delimited string"
@@ -187,7 +188,7 @@ property:
 val: PROPSTRING { $$ = $1; } | DELIMITEDSTRING { $$ = $1; };
 
 nodename: "(" REFSTRING ")" { $$ = $2; };
-node: "\\node" optproperties nodename "at" COORD DELIMITEDSTRING ";"
+node: "\\node" optproperties nodename "at" TCOORD DELIMITEDSTRING ";"
 	{
         Node *node = new Node();
 
@@ -240,36 +241,39 @@ edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
             t = s;
         }
 
-        Edge *edge = new Edge(s, t);
-        if ($2) {
-            edge->setData($2);
-            edge->setAttributesFromData();
-        }
-
-        if ($5)
-            edge->setEdgeNode($5);
-        if ($3.anchor) {
-            edge->setSourceAnchor(QString($3.anchor));
-            free($3.anchor);
-        }
-
-        if ($6.node) {
-            if ($6.anchor) {
-                edge->setTargetAnchor(QString($6.anchor));
-                free($6.anchor);
+        // if the source or the target of the edge doesn't exist, quietly ignore it.
+        if (s != 0 && t != 0) {
+            Edge *edge = new Edge(s, t);
+            if ($2) {
+                edge->setData($2);
+                edge->setAttributesFromData();
             }
-        } else {
-            edge->setTargetAnchor(edge->sourceAnchor());
-        }
 
-        assembler->graph()->addEdge(edge);
+            if ($5)
+                edge->setEdgeNode($5);
+            if ($3.anchor) {
+                edge->setSourceAnchor(QString($3.anchor));
+                free($3.anchor);
+            }
+
+            if ($6.node) {
+                if ($6.anchor) {
+                    edge->setTargetAnchor(QString($6.anchor));
+                    free($6.anchor);
+                }
+            } else {
+                edge->setTargetAnchor(edge->sourceAnchor());
+            }
+
+            assembler->graph()->addEdge(edge);
+        }
 	};
 
 ignoreprop: val | val "=" val;
 ignoreprops: ignoreprop ignoreprops | ;
 optignoreprops: "[" ignoreprops "]";
 boundingbox:
-	"\\path" optignoreprops COORD "rectangle" COORD ";"
+    "\\path" optignoreprops TCOORD "rectangle" TCOORD ";"
 	{
         assembler->graph()->setBbox(QRectF(*$3, *$5));
         delete $3;

@@ -222,21 +222,23 @@ void Edge::updateData()
 
     // TODO: style handling?
 
-    if (_basicBendMode && _bend != 0) {
-        QString bendKey;
-        int b;
-        if (_bend < 0) {
-            bendKey = "bend left";
-            b = -_bend;
-        } else {
-            bendKey = "bend right";
-            b = _bend;
-        }
+    if (_basicBendMode) {
+        if (_bend != 0) {
+            QString bendKey;
+            int b;
+            if (_bend < 0) {
+                bendKey = "bend left";
+                b = -_bend;
+            } else {
+                bendKey = "bend right";
+                b = _bend;
+            }
 
-        if (b == 30) {
-            _data->setAtom(bendKey);
-        } else {
-            _data->setProperty(bendKey, QString::number(b));
+            if (b == 30) {
+                _data->setAtom(bendKey);
+            } else {
+                _data->setProperty(bendKey, QString::number(b));
+            }
         }
     } else {
         _data->setProperty("in", QString::number(_inAngle));

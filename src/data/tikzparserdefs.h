@@ -1,6 +1,8 @@
 #ifndef TIKZPARSERDEFS_H
 #define TIKZPARSERDEFS_H
 
+#define YY_NO_UNISTD_H 1
+
 #include "graphelementproperty.h"
 #include "graphelementdata.h"
 #include "node.h"
@@ -14,5 +16,7 @@ struct noderef {
     Node *node;
     char *anchor;
 };
+
+inline int isatty(void*) { return 0; }
 
 #endif // TIKZPARSERDEFS_H

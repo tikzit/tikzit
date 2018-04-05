@@ -80,12 +80,14 @@ void MainMenu::on_actionDelete_triggered()
 
 void MainMenu::on_actionSelect_All_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->selectAllNodes();
 }
 
 void MainMenu::on_actionDeselect_All_triggered()
 {
-    // TODO
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->deselectAll();
 }
 
 

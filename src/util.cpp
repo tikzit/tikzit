@@ -46,3 +46,9 @@ float normaliseAngleRad (float rads) {
     }
     return rads;
 }
+
+// convert float to string, squashing very small floats to zero
+QString floatToString(float f) {
+    if (f >= -0.000001 && f <= 0.000001) return "0";
+    else return QString::number(f);
+}

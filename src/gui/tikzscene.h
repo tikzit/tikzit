@@ -41,6 +41,8 @@ public:
     void copyToClipboard();
     void cutToClipboard();
     void pasteFromClipboard();
+    void selectAllNodes();
+    void deselectAll();
 public slots:
     void graphReplaced();
 
@@ -56,6 +58,7 @@ private:
     QMap<Node*,NodeItem*> _nodeItems;
     QMap<Edge*,EdgeItem*> _edgeItems;
     QGraphicsLineItem *_drawEdgeItem;
+    QGraphicsRectItem *_rubberBandItem;
     EdgeItem *_modifyEdgeItem;
     NodeItem *_edgeStartNodeItem;
     NodeItem *_edgeEndNodeItem;

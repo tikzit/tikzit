@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "util.h"
 
 #include <QTextStream>
 #include <QSet>
@@ -158,7 +159,9 @@ QString Graph::tikz()
             code << n->data()->tikz() << " ";
 
         code << "(" << n->name() << ") at ("
-             << n->point().x() << ", " << n->point().y()
+             << floatToString(n->point().x())
+             << ", "
+             << floatToString(n->point().y())
              << ") {" << n->label() << "};\n";
         line++;
     }
@@ -230,7 +233,7 @@ Graph *Graph::copyOfSubgraphWithNodes(QSet<Node *> nds)
         g->addNode(n1);
     }
     foreach (Edge *e, edges()) {
-        if (nds.contains(e->source()) || nds.contains(e->target())) {
+        if (nds.contains(e->source()) && nds.contains(e->target())) {
             g->addEdge(e->copy(&nodeTable));
         }
     }

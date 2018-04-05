@@ -20,6 +20,5 @@ int main(int argc, char *argv[])
     a.setQuitOnLastWindowClosed(false);
     tikzit = new Tikzit();
     tikzit->init(&a);
-
     return a.exec();
 }

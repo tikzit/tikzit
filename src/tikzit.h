@@ -49,9 +49,12 @@
 
 // Number of pixels between (0,0) and (1,0) at 100% zoom level. This should be
 // divisible by 8 to avoid rounding errors with e.g. grid-snapping.
-#define GLOBAL_SCALE 80
-#define GLOBAL_SCALEF 80.0f
-#define GLOBAL_SCALEF_INV 0.0125f
+#define GLOBAL_SCALE 40
+#define GLOBAL_SCALEF 40.0f
+#define GLOBAL_SCALEF_INV 0.025f
+#define GRID_N 4
+#define GRID_SEP 10
+#define GRID_SEPF 10.0f
 
 inline QPointF toScreen(QPointF src)
 { src.setY(-src.y()); src *= GLOBAL_SCALEF; return src; }

@@ -94,7 +94,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 QPainterPath NodeItem::shape() const
 {
     QPainterPath path;
-    path.addEllipse(QPointF(0,0), GLOBAL_SCALEF * 0.1, GLOBAL_SCALEF * 0.1);
+    path.addEllipse(QPointF(0,0), GLOBAL_SCALEF * 0.2, GLOBAL_SCALEF * 0.2);
     return path;
 }
 

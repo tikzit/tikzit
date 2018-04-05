@@ -7,7 +7,7 @@
 TikzView::TikzView(QWidget *parent) : QGraphicsView(parent)
 {
     setRenderHint(QPainter::Antialiasing);
-    setDragMode(QGraphicsView::RubberBandDrag);
+    //setDragMode(QGraphicsView::RubberBandDrag);
 
     _scale = 1.0f;
 }
@@ -24,10 +24,15 @@ void TikzView::zoomOut()
     scale(0.625,0.625);
 }
 
+void TikzView::setScene(QGraphicsScene *scene)
+{
+    QGraphicsView::setScene(scene);
+    centerOn(QPointF(0.0f,-230.0f));
+}
+
 void TikzView::drawBackground(QPainter *painter, const QRectF &rect)
 {
     // draw the grid
-    int step = GLOBAL_SCALE / 8;
 
     QPen pen1;
     pen1.setWidth(1);
@@ -43,38 +48,38 @@ void TikzView::drawBackground(QPainter *painter, const QRectF &rect)
     painter->setPen(pen1);
 
     if (_scale > 0.2f) {
-        for (int x = -step; x > rect.left(); x -= step) {
-            if (x % (step * 8) != 0) painter->drawLine(x, rect.top(), x, rect.bottom());
+        for (int x = -GRID_SEP; x > rect.left(); x -= GRID_SEP) {
+            if (x % (GRID_SEP * GRID_N) != 0) painter->drawLine(x, rect.top(), x, rect.bottom());
         }
 
-        for (int x = step; x < rect.right(); x += step) {
-            if (x % (step * 8) != 0) painter->drawLine(x, rect.top(), x, rect.bottom());
+        for (int x = GRID_SEP; x < rect.right(); x += GRID_SEP) {
+            if (x % (GRID_SEP * GRID_N) != 0) painter->drawLine(x, rect.top(), x, rect.bottom());
         }
 
-        for (int y = -step; y > rect.top(); y -= step) {
-            if (y % (step * 8) != 0) painter->drawLine(rect.left(), y, rect.right(), y);
+        for (int y = -GRID_SEP; y > rect.top(); y -= GRID_SEP) {
+            if (y % (GRID_SEP * GRID_N) != 0) painter->drawLine(rect.left(), y, rect.right(), y);
         }
 
-        for (int y = step; y < rect.bottom(); y += step) {
-            if (y % (step * 8) != 0) painter->drawLine(rect.left(), y, rect.right(), y);
+        for (int y = GRID_SEP; y < rect.bottom(); y += GRID_SEP) {
+            if (y % (GRID_SEP * GRID_N) != 0) painter->drawLine(rect.left(), y, rect.right(), y);
         }
     }
 
     painter->setPen(pen2);
 
-    for (int x = -step*8; x > rect.left(); x -= step*8) {
+    for (int x = -GRID_SEP*GRID_N; x > rect.left(); x -= GRID_SEP*GRID_N) {
         painter->drawLine(x, rect.top(), x, rect.bottom());
     }
 
-    for (int x = step*8; x < rect.right(); x += step*8) {
+    for (int x = GRID_SEP*GRID_N; x < rect.right(); x += GRID_SEP*GRID_N) {
         painter->drawLine(x, rect.top(), x, rect.bottom());
     }
 
-    for (int y = -step*8; y > rect.top(); y -= step*8) {
+    for (int y = -GRID_SEP*GRID_N; y > rect.top(); y -= GRID_SEP*GRID_N) {
         painter->drawLine(rect.left(), y, rect.right(), y);
     }
 
-    for (int y = step*8; y < rect.bottom(); y += step*8) {
+    for (int y = GRID_SEP*GRID_N; y < rect.bottom(); y += GRID_SEP*GRID_N) {
         painter->drawLine(rect.left(), y, rect.right(), y);
     }
 

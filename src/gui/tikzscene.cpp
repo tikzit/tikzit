@@ -8,6 +8,7 @@
 #include <QBrush>
 #include <QDebug>
 #include <QClipboard>
+#include <cmath>
 
 
 TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools, QObject *parent) :
@@ -16,15 +17,28 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools, QObject *pa
     _modifyEdgeItem = 0;
     _edgeStartNodeItem = 0;
     _drawEdgeItem = new QGraphicsLineItem();
-    setSceneRect(-310,-230,620,450);
+    _rubberBandItem = new QGraphicsRectItem();
+    //setSceneRect(-310,-230,620,450);
+    setSceneRect(-1000,-1000,2000,2000);
 
     QPen pen;
     pen.setColor(QColor::fromRgbF(0.5f, 0.0f, 0.5f));
     pen.setWidth(3);
+    pen.setCosmetic(true);
     _drawEdgeItem->setPen(pen);
     _drawEdgeItem->setLine(0,0,0,0);
     _drawEdgeItem->setVisible(false);
     addItem(_drawEdgeItem);
+
+    pen.setColor(QColor::fromRgbF(0.6f, 0.6f, 0.8f));
+    pen.setWidth(3);
+    QVector<qreal> dash;
+    dash << 4.0 << 4.0;
+    pen.setDashPattern(dash);
+    _rubberBandItem->setPen(pen);
+
+    _rubberBandItem->setVisible(false);
+    addItem(_rubberBandItem);
 }
 
 TikzScene::~TikzScene() {
@@ -71,7 +85,7 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     // disable rubber band drag, which will clear the selection. Only re-enable it
     // for the SELECT tool, and when no control point has been clicked.
-    views()[0]->setDragMode(QGraphicsView::NoDrag);
+    //views()[0]->setDragMode(QGraphicsView::NoDrag);
 
     // radius of a control point for bezier edges, in scene coordinates
     qreal cpR = GLOBAL_SCALEF * (0.05);
@@ -113,8 +127,22 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             _oldWeight = e->weight();
         } else {
             // since we are not dragging a control point, process the click normally
-            views()[0]->setDragMode(QGraphicsView::RubberBandDrag);
+            //views()[0]->setDragMode(QGraphicsView::RubberBandDrag);
             QGraphicsScene::mousePressEvent(event);
+
+            if (items(_mouseDownPos).isEmpty()) {
+                _rubberBandItem->setRect(QRectF(_mouseDownPos,_mouseDownPos));
+                _rubberBandItem->setVisible(true);
+                qDebug() << "starting rubber band drag";
+            }
+
+//            foreach (QGraphicsItem *gi, items()) {
+//                if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) {
+//                    //qDebug() << "got an edge item: " << ei;
+//                    ei->setFlag(QGraphicsItem::ItemIsSelectable, false);
+//                    //ei->setSelected(true);
+//                }
+//            }
 
             // save current node positions for undo support
             _oldNodePositions.clear();
@@ -155,7 +183,7 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QPointF mousePos = event->scenePos();
     //QRectF rb = views()[0]->rubberBandRect();
     //invalidate(-800,-800,1600,1600);
-    invalidate(QRectF(), QGraphicsScene::BackgroundLayer);
+    //invalidate(QRectF(), QGraphicsScene::BackgroundLayer);
 
     switch (_tools->currentTool()) {
     case ToolPalette::SELECT:
@@ -244,8 +272,7 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             // apply the same offset to all nodes, otherwise we get odd rounding behaviour with
             // multiple selection.
             QPointF shift = mousePos - _mouseDownPos;
-            int gridSize = GLOBAL_SCALE / 8;
-            shift = QPointF(round(shift.x()/gridSize)*gridSize, round(shift.y()/gridSize)*gridSize);
+            shift = QPointF(round(shift.x()/GRID_SEP)*GRID_SEP, round(shift.y()/GRID_SEP)*GRID_SEP);
 
             foreach (Node *n, _oldNodePositions.keys()) {
                 NodeItem *ni = _nodeItems[n];
@@ -257,6 +284,15 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         } else {
             // otherwise, process mouse move normally
             QGraphicsScene::mouseMoveEvent(event);
+
+            if (_rubberBandItem->isVisible()) {
+                qreal left = std::min(_mouseDownPos.x(), mousePos.x());
+                qreal top = std::min(_mouseDownPos.y(), mousePos.y());
+                qreal w = std::abs(_mouseDownPos.x() - mousePos.x());
+                qreal h = std::abs(_mouseDownPos.y() - mousePos.y());
+
+                _rubberBandItem->setRect(QRectF(left, top, w, h));
+            }
         }
 
         break;
@@ -308,6 +344,19 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             // otherwise, process mouse move normally
             QGraphicsScene::mouseReleaseEvent(event);
 
+            if (_rubberBandItem->isVisible()) {
+                QPainterPath sel;
+                sel.addRect(_rubberBandItem->rect());
+                foreach (QGraphicsItem *gi, items()) {
+                    if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) {
+                        if (sel.contains(toScreen(ni->node()->point()))) ni->setSelected(true);
+                    }
+                }
+                //setSelectionArea(sel);
+            }
+
+            _rubberBandItem->setVisible(false);
+
             if (!_oldNodePositions.empty()) {
                 QMap<Node*,QPointF> newNodePositions;
 
@@ -329,8 +378,7 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         break;
     case ToolPalette::VERTEX:
         {
-            int gridSize = GLOBAL_SCALE / 8;
-            QPointF gridPos(round(mousePos.x()/gridSize)*gridSize, round(mousePos.y()/gridSize)*gridSize);
+            QPointF gridPos(round(mousePos.x()/GRID_SEP)*GRID_SEP, round(mousePos.y()/GRID_SEP)*GRID_SEP);
             Node *n = new Node(_tikzDocument);
             n->setName(graph()->freshNodeName());
             n->setPoint(fromScreen(gridPos));
@@ -460,7 +508,6 @@ void TikzScene::pasteFromClipboard()
         QRectF tgtRect = graph()->realBbox();
         QPointF shift(tgtRect.right() - srcRect.left(), 0.0f);
 
-        // shift g to the right until it is in free space
         if (shift.x() > 0) {
             foreach (Node *n, g->nodes()) {
                 n->setPoint(n->point() + shift);
@@ -470,6 +517,18 @@ void TikzScene::pasteFromClipboard()
         PasteCommand *cmd = new PasteCommand(this, g);
         _tikzDocument->undoStack()->push(cmd);
     }
+}
+
+void TikzScene::selectAllNodes()
+{
+    foreach (NodeItem *ni, _nodeItems.values()) {
+        ni->setSelected(true);
+    }
+}
+
+void TikzScene::deselectAll()
+{
+    selectedItems().clear();
 }
 
 void TikzScene::getSelection(QSet<Node *> &selNodes, QSet<Edge *> &selEdges)
@@ -511,21 +570,21 @@ void TikzScene::reloadStyles()
 
 void TikzScene::refreshSceneBounds()
 {
-    if (!views().empty()) {
-        QGraphicsView *v = views().first();
-        QRectF viewB = v->mapToScene(v->viewport()->rect()).boundingRect();
-        //QPointF tl = v->mapToScene(viewB.topLeft());
-        //viewB.setTopLeft(tl);
+//    if (!views().empty()) {
+//        QGraphicsView *v = views().first();
+//        QRectF viewB = v->mapToScene(v->viewport()->rect()).boundingRect();
+//        //QPointF tl = v->mapToScene(viewB.topLeft());
+//        //viewB.setTopLeft(tl);
 
-        QRectF bounds = viewB.united(rectToScreen(graph()->realBbox().adjusted(-1.0f, -1.0f, 1.0f, 1.0f)));
-        qDebug() << viewB;
+//        QRectF bounds = viewB.united(rectToScreen(graph()->realBbox().adjusted(-1.0f, -1.0f, 1.0f, 1.0f)));
+//        //qDebug() << viewB;
 
-        if (bounds != sceneRect()) {
-            QPointF c = viewB.center();
-            setSceneRect(bounds);
-            v->centerOn(c);
-        }
-    }
+//        if (bounds != sceneRect()) {
+//            QPointF c = viewB.center();
+//            setSceneRect(bounds);
+//            v->centerOn(c);
+//        }
+//    }
     //setBounds(graphB);
 }
 
