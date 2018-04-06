@@ -44,6 +44,10 @@ public:
     void pasteFromClipboard();
     void selectAllNodes();
     void deselectAll();
+    void parseTikz(QString tikz);
+    bool enabled() const;
+    void setEnabled(bool enabled);
+
 public slots:
     void graphReplaced();
 
@@ -73,6 +77,7 @@ private:
     int _oldBend;
     int _oldInAngle;
     int _oldOutAngle;
+    bool _enabled;
 
     void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges);
     QSet<Node*> getSelectedNodes();

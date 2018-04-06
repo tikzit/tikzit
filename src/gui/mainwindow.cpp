@@ -12,6 +12,7 @@
 #include <QSettings>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QTextEdit>
 
 int MainWindow::_numWindows = 0;
 
@@ -32,8 +33,11 @@ MainWindow::MainWindow(QWidget *parent) :
     addDockWidget(Qt::RightDockWidgetArea, _stylePalette);
 
 
+
     _tikzScene = new TikzScene(_tikzDocument, _toolPalette, _stylePalette, this);
     ui->tikzView->setScene(_tikzScene);
+
+
     _pristine = true;
 
 
@@ -93,6 +97,11 @@ StylePalette *MainWindow::stylePalette() const
     return _stylePalette;
 }
 
+QString MainWindow::tikzSource()
+{
+    return ui->tikzSource->toPlainText();
+}
+
 void MainWindow::updateFileName()
 {
     setWindowTitle("TiKZiT - " + _tikzDocument->shortName());
@@ -100,7 +109,10 @@ void MainWindow::updateFileName()
 
 void MainWindow::refreshTikz()
 {
+    // don't emit textChanged() when we update the tikz
+    ui->tikzSource->blockSignals(true);
     ui->tikzSource->setText(_tikzDocument->tikz());
+    ui->tikzSource->blockSignals(false);
 }
 
 ToolPalette *MainWindow::toolPalette() const
@@ -131,6 +143,11 @@ TikzView *MainWindow::tikzView() const
 bool MainWindow::pristine() const
 {
     return _pristine;
+}
+
+void MainWindow::on_tikzSource_textChanged()
+{
+    if (_tikzScene->enabled()) _tikzScene->setEnabled(false);
 }
 
 

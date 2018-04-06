@@ -80,6 +80,8 @@ void TikzScene::graphReplaced()
 
 void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (!_enabled) return;
+
     // current mouse position, in scene coordinates
     _mouseDownPos = event->scenePos();
 
@@ -181,6 +183,8 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (!_enabled) return;
+
     // current mouse position, in scene coordinates
     QPointF mousePos = event->scenePos();
     //QRectF rb = views()[0]->rubberBandRect();
@@ -323,6 +327,8 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (!_enabled) return;
+
     // current mouse position, in scene coordinates
     QPointF mousePos = event->scenePos();
 
@@ -415,6 +421,8 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void TikzScene::keyReleaseEvent(QKeyEvent *event)
 {
+    if (!_enabled) return;
+
     if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
         deleteSelectedItems();
     } else if (event->modifiers() == Qt::NoModifier) {
@@ -438,6 +446,8 @@ void TikzScene::keyReleaseEvent(QKeyEvent *event)
 
 void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (!_enabled) return;
+
     QPointF mousePos = event->scenePos();
     foreach (QGraphicsItem *gi, items(mousePos)) {
         if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) {
@@ -461,6 +471,18 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         }
     }
 }
+
+bool TikzScene::enabled() const
+{
+    return _enabled;
+}
+
+void TikzScene::setEnabled(bool enabled)
+{
+    _enabled = enabled;
+    update();
+}
+
 
 void TikzScene::applyActiveStyleToNodes() {
     ApplyStyleToNodesCommand *cmd = new ApplyStyleToNodesCommand(this, _styles->activeNodeStyleName());
@@ -545,6 +567,17 @@ void TikzScene::selectAllNodes()
 void TikzScene::deselectAll()
 {
     selectedItems().clear();
+}
+
+void TikzScene::parseTikz(QString tikz)
+{
+    Graph *newGraph = new Graph(this);
+    TikzAssembler ass(newGraph);
+    if (ass.parse(tikz)) {
+        ReplaceGraphCommand *cmd = new ReplaceGraphCommand(this, graph(), newGraph);
+        tikzDocument()->undoStack()->push(cmd);
+        setEnabled(true);
+    }
 }
 
 void TikzScene::getSelection(QSet<Node *> &selNodes, QSet<Edge *> &selEdges)

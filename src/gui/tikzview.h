@@ -20,6 +20,7 @@ class TikzView : public QGraphicsView
     Q_OBJECT
 public:
     explicit TikzView(QWidget *parent = 0);
+
 public slots:
     void zoomIn();
     void zoomOut();

@@ -32,6 +32,10 @@ void TikzView::setScene(QGraphicsScene *scene)
 
 void TikzView::drawBackground(QPainter *painter, const QRectF &rect)
 {
+    // draw a gray background if disabled
+    TikzScene *sc = static_cast<TikzScene*>(scene());
+    if (!sc->enabled()) painter->fillRect(rect, QBrush(QColor(240,240,240)));
+
     // draw the grid
 
     QPen pen1;

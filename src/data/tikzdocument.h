@@ -19,6 +19,7 @@ public:
     ~TikzDocument();
 
     Graph *graph() const;
+    void setGraph(Graph *graph);
     QString tikz() const;
     QUndoStack *undoStack() const;
     bool parseSuccess() const;
@@ -30,6 +31,7 @@ public:
 
     void saveAs();
     void save();
+
 private:
     Graph *_graph;
     QString _tikz;

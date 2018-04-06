@@ -28,6 +28,8 @@ StylePalette::StylePalette(QWidget *parent) :
     ui->styleListView->setMovement(QListView::Static);
     ui->styleListView->setGridSize(QSize(70,40));
 
+    reloadStyles();
+
     connect(ui->styleListView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT( itemDoubleClicked(const QModelIndex&)) );
 }
 

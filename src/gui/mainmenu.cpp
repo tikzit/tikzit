@@ -94,7 +94,19 @@ void MainMenu::on_actionDeselect_All_triggered()
 // Tikz
 void MainMenu::on_actionParse_triggered()
 {
-    // TODO
+    MainWindow *win = tikzit->activeWindow();
+    if (win != 0) {
+        win->tikzScene()->parseTikz(win->tikzSource());
+    }
+}
+
+void MainMenu::on_actionRevert_triggered()
+{
+    MainWindow *win = tikzit->activeWindow();
+    if (win != 0) {
+        win->tikzDocument()->refreshTikz();
+        win->tikzScene()->setEnabled(true);
+    }
 }
 
 

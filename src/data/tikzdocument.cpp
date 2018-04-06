@@ -96,6 +96,12 @@ void TikzDocument::save() {
     }
 }
 
+void TikzDocument::setGraph(Graph *graph)
+{
+    _graph = graph;
+    refreshTikz();
+}
+
 void TikzDocument::saveAs() {
     QSettings settings("tikzit", "tikzit");
     QString fileName = QFileDialog::getSaveFileName(tikzit->activeWindow(),

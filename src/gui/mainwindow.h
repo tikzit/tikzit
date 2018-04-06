@@ -36,10 +36,13 @@ public:
     TikzDocument *tikzDocument() const;
     ToolPalette *toolPalette() const;    
     StylePalette *stylePalette() const;
+    QString tikzSource();
 
     void updateFileName();
     void refreshTikz();
 
+public slots:
+    void on_tikzSource_textChanged();
 protected:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent *event);

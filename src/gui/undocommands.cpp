@@ -351,3 +351,20 @@ void ChangeLabelCommand::redo()
 
     GraphUpdateCommand::redo();
 }
+
+ReplaceGraphCommand::ReplaceGraphCommand(TikzScene *scene, Graph *oldGraph, Graph *newGraph, QUndoCommand *parent) :
+    GraphUpdateCommand(scene, parent), _oldGraph(oldGraph), _newGraph(newGraph)
+{
+}
+
+void ReplaceGraphCommand::undo()
+{
+    _scene->tikzDocument()->setGraph(_oldGraph);
+    _scene->graphReplaced();
+}
+
+void ReplaceGraphCommand::redo()
+{
+    _scene->tikzDocument()->setGraph(_newGraph);
+    _scene->graphReplaced();
+}

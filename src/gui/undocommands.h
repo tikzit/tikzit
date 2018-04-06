@@ -146,4 +146,18 @@ private:
     QString _newLabel;
 };
 
+class ReplaceGraphCommand : public GraphUpdateCommand
+{
+public:
+    explicit ReplaceGraphCommand(TikzScene *scene,
+                                 Graph *oldGraph,
+                                 Graph *newGraph,
+                                 QUndoCommand *parent = 0);
+    void undo() override;
+    void redo() override;
+private:
+    Graph *_oldGraph;
+    Graph *_newGraph;
+};
+
 #endif // UNDOCOMMANDS_H
