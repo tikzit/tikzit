@@ -11,6 +11,9 @@ To build with Qt Creator, simply click 'Open Project' and navigate to the `.pro`
 
 To install Qt VS Tools in Visual Studio 2017, go to `Tools > Extensions and Updates`, then click "Online" in the sidebar and search for Qt. Configure your Qt install under `Qt VS Tools > Qt Options`. If you installed Qt using the Windows package above, the path to Qt is probably something like `C:\Qt\5.XXX\msvc2017_64`. Once that is done, open the `.pro` file in the TikZiT repo via `Qt VS Tools > Open Qt Project File`.
 
+The only dependency besides Qt itself is flex/bison, which is used to build the TikZ parser. The simplest way to install this is to download <a href="https://github.com/lexxmark/winflexbison">WinFlexBison</a>, then rename or copy `win_flex.exe` and `win_bison.exe` to `flex.exe` and `bison.exe` respectively, and make sure both are in your `%PATH%` so the build tools can find them.
+
+
 ## Building on Linux
 
 This should be buildable in Linux using a "standard" dev setup (gcc, flex, bison, make). You will also need to configure Qt (instructions for Ubuntu are <a href="https://wiki.qt.io/Install_Qt_5_on_Ubuntu">here</a>). After that, building is:
