@@ -34,9 +34,16 @@ void EdgeItem::readPos()
     QPainterPath path;
 
     path.moveTo (toScreen(_edge->tail()));
-    path.cubicTo(toScreen(_edge->cp1()),
-                 toScreen(_edge->cp2()),
-                 toScreen(_edge->head()));
+
+	if (_edge->bend() != 0 || !_edge->basicBendMode()) {
+		path.cubicTo(toScreen(_edge->cp1()),
+			toScreen(_edge->cp2()),
+			toScreen(_edge->head()));
+	}
+	else {
+		path.lineTo(toScreen(_edge->head()));
+	}
+    
     setPath(path);
 
     _cp1Item->setPos(toScreen(_edge->cp1()));

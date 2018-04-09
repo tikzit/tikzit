@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QTextEdit>
+#include <QTextBlock>
 
 int MainWindow::_numWindows = 0;
 
@@ -32,14 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
     _stylePalette = new StylePalette(this);
     addDockWidget(Qt::RightDockWidgetArea, _stylePalette);
 
-
-
     _tikzScene = new TikzScene(_tikzDocument, _toolPalette, _stylePalette, this);
     ui->tikzView->setScene(_tikzScene);
-
-
-    _pristine = true;
-
 
     // TODO: check if each window should have a menu
     _menu = new MainMenu();
@@ -52,6 +47,10 @@ MainWindow::MainWindow(QWidget *parent) :
     sz[0] = sz[0] + sz[1];
     sz[1] = 0;
     ui->splitter->setSizes(sz);
+
+    _tikzDocument->refreshTikz();
+
+    connect(_tikzDocument->undoStack(), SIGNAL(cleanChanged(bool)), this, SLOT(updateFileName()));
 }
 
 MainWindow::~MainWindow()
@@ -62,15 +61,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::open(QString fileName)
 {
-    _pristine = false;
     _tikzDocument->open(fileName);
-    ui->tikzSource->setText(_tikzDocument->tikz());
+
+    //ui->tikzSource->setText(_tikzDocument->tikz());
 
 
     if (_tikzDocument->parseSuccess()) {
         statusBar()->showMessage("TiKZ parsed successfully", 2000);
-        setWindowTitle("TiKZiT - " + _tikzDocument->shortName());
+        //setWindowTitle("TiKZiT - " + _tikzDocument->shortName());
         _tikzScene->setTikzDocument(_tikzDocument);
+        updateFileName();
     } else {
         statusBar()->showMessage("Cannot read TiKZ source");
     }
@@ -102,9 +102,21 @@ QString MainWindow::tikzSource()
     return ui->tikzSource->toPlainText();
 }
 
+void MainWindow::setSourceLine(int line)
+{
+    QTextCursor cursor(ui->tikzSource->document()->findBlockByLineNumber(line));
+    cursor.movePosition(QTextCursor::EndOfLine);
+    //ui->tikzSource->moveCursor(QTextCursor::End);
+    ui->tikzSource->setTextCursor(cursor);
+    ui->tikzSource->setFocus();
+}
+
 void MainWindow::updateFileName()
 {
-    setWindowTitle("TiKZiT - " + _tikzDocument->shortName());
+    QString nm = _tikzDocument->shortName();
+    if (nm.isEmpty()) nm = "untitled";
+    if (!_tikzDocument->isClean()) nm += "*";
+    setWindowTitle("TiKZiT - " + nm);
 }
 
 void MainWindow::refreshTikz()
@@ -138,11 +150,6 @@ int MainWindow::windowId() const
 TikzView *MainWindow::tikzView() const
 {
     return ui->tikzView;
-}
-
-bool MainWindow::pristine() const
-{
-    return _pristine;
 }
 
 void MainWindow::on_tikzSource_textChanged()

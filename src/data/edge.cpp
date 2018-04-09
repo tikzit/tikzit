@@ -329,6 +329,16 @@ void Edge::setWeight(float weight)
     _weight = weight;
 }
 
+int Edge::tikzLine() const
+{
+    return _tikzLine;
+}
+
+void Edge::setTikzLine(int tikzLine)
+{
+    _tikzLine = tikzLine;
+}
+
 QPointF Edge::mid() const
 {
     return _mid;

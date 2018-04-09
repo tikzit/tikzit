@@ -47,6 +47,7 @@ public:
     void parseTikz(QString tikz);
     bool enabled() const;
     void setEnabled(bool enabled);
+    int lineNumberForSelection();
 
 public slots:
     void graphReplaced();

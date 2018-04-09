@@ -44,6 +44,7 @@
    </property>
    <addaction name="actionParse"/>
    <addaction name="actionRevert"/>
+   <addaction name="actionJump_to_Selection"/>
   </widget>
   <widget class="QMenu" name="menuView">
    <property name="title">
@@ -188,6 +189,14 @@
   <action name="actionRevert">
    <property name="text">
     <string>Revert Tikz</string>
+   </property>
+  </action>
+  <action name="actionJump_to_Selection">
+   <property name="text">
+    <string>Jump to Selection</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+J</string>
    </property>
   </action>
   <addaction name="menuFile"/>

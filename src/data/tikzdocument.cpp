@@ -17,6 +17,7 @@ TikzDocument::TikzDocument(QObject *parent) : QObject(parent)
     _fileName = "";
     _shortName = "";
     _undoStack = new QUndoStack();
+    _undoStack->setClean();
 }
 
 TikzDocument::~TikzDocument()
@@ -68,6 +69,8 @@ void TikzDocument::open(QString fileName)
         foreach (Node *n, _graph->nodes()) n->attachStyle();
         foreach (Edge *e, _graph->edges()) e->updateControls();
         _parseSuccess = true;
+        refreshTikz();
+        setClean();
     } else {
         delete newGraph;
         _parseSuccess = false;
@@ -78,6 +81,18 @@ void TikzDocument::save() {
     if (_fileName == "") {
         saveAs();
     } else {
+        MainWindow *win = tikzit->activeWindow();
+        if (win != 0 && !win->tikzScene()->enabled()) {
+            win->tikzScene()->parseTikz(win->tikzSource());
+            if (!win->tikzScene()->enabled()) {
+                auto resp = QMessageBox::question(0,
+                  tr("Tikz failed to parse"),
+                  tr("Cannot save file with invalid TiKZ source. Revert changes and save?"));
+                if (resp == QMessageBox::Yes) win->tikzScene()->setEnabled(true);
+                else return; // ABORT the save
+            }
+        }
+
         refreshTikz();
         QFile file(_fileName);
         QFileInfo fi(file);
@@ -89,11 +104,21 @@ void TikzDocument::save() {
             QTextStream stream(&file);
             stream << _tikz;
             file.close();
-            tikzit->activeWindow()->updateFileName();
+            setClean();
         } else {
             QMessageBox::warning(0, "Save Failed", "Could not open file: '" + _fileName + "' for writing.");
         }
     }
+}
+
+bool TikzDocument::isClean() const
+{
+    return _undoStack->isClean();
+}
+
+void TikzDocument::setClean()
+{
+    _undoStack->setClean();
 }
 
 void TikzDocument::setGraph(Graph *graph)
@@ -103,6 +128,18 @@ void TikzDocument::setGraph(Graph *graph)
 }
 
 void TikzDocument::saveAs() {
+    MainWindow *win = tikzit->activeWindow();
+    if (win != 0 && !win->tikzScene()->enabled()) {
+        win->tikzScene()->parseTikz(win->tikzSource());
+        if (!win->tikzScene()->enabled()) {
+            auto resp = QMessageBox::question(0,
+              tr("Tikz failed to parse"),
+              tr("Cannot save file with invalid TiKZ source. Revert changes and save?"));
+            if (resp == QMessageBox::Yes) win->tikzScene()->setEnabled(true);
+            else return; // ABORT the save
+        }
+    }
+
     QSettings settings("tikzit", "tikzit");
     QString fileName = QFileDialog::getSaveFileName(tikzit->activeWindow(),
                 tr("Save File As"),
@@ -112,6 +149,9 @@ void TikzDocument::saveAs() {
     if (!fileName.isEmpty()) {
         _fileName = fileName;
         save();
+
+        // clean state might not change, so update title bar manually
+        tikzit->activeWindow()->updateFileName();
     }
 }
 

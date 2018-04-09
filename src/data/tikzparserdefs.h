@@ -17,6 +17,6 @@ struct noderef {
     char *anchor;
 };
 
-inline int isatty(void*) { return 0; }
+inline int isatty(int) { return 0; }
 
 #endif // TIKZPARSERDEFS_H

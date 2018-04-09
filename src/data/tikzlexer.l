@@ -97,7 +97,7 @@ to                             {  return TO; }
 }
 <ycoord>\) {
 	BEGIN(INITIAL);
-	return COORD;
+    return TCOORD;
 }
 
  /* when we see "[", change parsing mode */

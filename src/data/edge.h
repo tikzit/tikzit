@@ -57,6 +57,9 @@ public:
     void setOutAngle(int outAngle);
     void setWeight(float weight);
 
+    int tikzLine() const;
+    void setTikzLine(int tikzLine);
+
 signals:
 
 public slots:
@@ -86,6 +89,8 @@ private:
     QPointF _cp1;
     QPointF _cp2;
     QPointF _mid;
+
+    int _tikzLine;
 };
 
 #endif // EDGE_H

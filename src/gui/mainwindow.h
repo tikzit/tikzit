@@ -29,7 +29,6 @@ public:
     ~MainWindow();
 
     void open(QString fileName);
-    bool pristine() const;
     int windowId() const;
     TikzView *tikzView() const;
     TikzScene *tikzScene() const;
@@ -37,12 +36,12 @@ public:
     ToolPalette *toolPalette() const;    
     StylePalette *stylePalette() const;
     QString tikzSource();
-
-    void updateFileName();
-    void refreshTikz();
+    void setSourceLine(int line);
 
 public slots:
     void on_tikzSource_textChanged();
+    void updateFileName();
+    void refreshTikz();
 protected:
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent *event);
@@ -54,7 +53,6 @@ private:
     ToolPalette *_toolPalette;
     StylePalette *_stylePalette;
     Ui::MainWindow *ui;
-    bool _pristine;
     int _windowId;
     static int _numWindows;
 };

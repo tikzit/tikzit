@@ -32,6 +32,9 @@ public:
     void saveAs();
     void save();
 
+    bool isClean() const;
+    void setClean();
+
 private:
     Graph *_graph;
     QString _tikz;

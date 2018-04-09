@@ -92,7 +92,10 @@ void Tikzit::open()
                 tr("TiKZ Files (*.tikz)"));
 
     if (!fileName.isEmpty()) {
-        if (_windows.size() == 1 && _windows[0]->pristine()) {
+        if (_windows.size() == 1 &&
+            _windows[0]->tikzDocument()->isClean() &&
+            _windows[0]->tikzDocument()->shortName().isEmpty())
+        {
             _windows[0]->open(fileName);
             _windows[0]->show();
         } else {

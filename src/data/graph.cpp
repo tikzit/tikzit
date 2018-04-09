@@ -179,6 +179,7 @@ QString Graph::tikz()
 
     Edge *e;
     foreach (e, _edges) {
+        e->setTikzLine(line);
         e->updateData();
         code << "\t\t\\draw ";
 

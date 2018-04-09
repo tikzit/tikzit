@@ -20,6 +20,7 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
     _edgeStartNodeItem = 0;
     _drawEdgeItem = new QGraphicsLineItem();
     _rubberBandItem = new QGraphicsRectItem();
+    _enabled = true;
     //setSceneRect(-310,-230,620,450);
     setSceneRect(-1000,-1000,2000,2000);
 
@@ -72,6 +73,7 @@ void TikzScene::graphReplaced()
     }
 
     foreach (Node *n, graph()->nodes()) {
+        n->attachStyle();
         NodeItem *ni = new NodeItem(n);
         _nodeItems.insert(n, ni);
         addItem(ni);
@@ -366,19 +368,25 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             _rubberBandItem->setVisible(false);
 
             if (!_oldNodePositions.empty()) {
-                QMap<Node*,QPointF> newNodePositions;
+                QPointF shift = mousePos - _mouseDownPos;
+                shift = QPointF(round(shift.x()/GRID_SEP)*GRID_SEP, round(shift.y()/GRID_SEP)*GRID_SEP);
 
-                foreach (QGraphicsItem *gi, selectedItems()) {
-                    if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) {
-                        ni->writePos();
-                        newNodePositions.insert(ni->node(), ni->node()->point());
+                if (shift.x() != 0 || shift.y() != 0) {
+                    QMap<Node*,QPointF> newNodePositions;
+
+                    foreach (QGraphicsItem *gi, selectedItems()) {
+                        if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) {
+                            ni->writePos();
+                            newNodePositions.insert(ni->node(), ni->node()->point());
+                        }
                     }
+
+                    //qDebug() << _oldNodePositions;
+                    //qDebug() << newNodePositions;
+
+                    _tikzDocument->undoStack()->push(new MoveCommand(this, _oldNodePositions, newNodePositions));
                 }
 
-                //qDebug() << _oldNodePositions;
-                //qDebug() << newNodePositions;
-
-                _tikzDocument->undoStack()->push(new MoveCommand(this, _oldNodePositions, newNodePositions));
                 _oldNodePositions.clear();
             }
         }
@@ -481,6 +489,14 @@ void TikzScene::setEnabled(bool enabled)
 {
     _enabled = enabled;
     update();
+}
+
+int TikzScene::lineNumberForSelection()
+{
+    foreach (QGraphicsItem *gi, selectedItems()) {
+        if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) return ni->node()->tikzLine();
+        if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) return ei->edge()->tikzLine();
+    }
 }
 
 

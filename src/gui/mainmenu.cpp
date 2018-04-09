@@ -1,6 +1,8 @@
 #include "mainmenu.h"
 #include "tikzit.h"
 
+#include <QDebug>
+
 MainMenu::MainMenu()
 {
     ui.setupUi(this);
@@ -106,6 +108,15 @@ void MainMenu::on_actionRevert_triggered()
     if (win != 0) {
         win->tikzDocument()->refreshTikz();
         win->tikzScene()->setEnabled(true);
+    }
+}
+
+void MainMenu::on_actionJump_to_Selection_triggered()
+{
+    MainWindow *win = tikzit->activeWindow();
+    if (win != 0) {
+        qDebug() << "jump to selection on line:" << win->tikzScene()->lineNumberForSelection();
+        win->setSourceLine(win->tikzScene()->lineNumberForSelection());
     }
 }
 

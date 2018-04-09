@@ -36,6 +36,7 @@ public slots:
     // Tikz
     void on_actionParse_triggered();
     void on_actionRevert_triggered();
+    void on_actionJump_to_Selection_triggered();
 
     // View
     void on_actionZoom_In_triggered();
