@@ -11,14 +11,14 @@ EdgeItem::EdgeItem(Edge *edge)
 
     _cp1Item = new QGraphicsEllipseItem(this);
     _cp1Item->setParentItem(this);
-    _cp1Item->setRect(GLOBAL_SCALEF * (-0.05), GLOBAL_SCALEF * (-0.05),
-                      GLOBAL_SCALEF * 0.1, GLOBAL_SCALEF * 0.1);
+    _cp1Item->setRect(GLOBAL_SCALEF * (-0.1), GLOBAL_SCALEF * (-0.1),
+                      GLOBAL_SCALEF * 0.2, GLOBAL_SCALEF * 0.2);
     _cp1Item->setVisible(false);
 
     _cp2Item = new QGraphicsEllipseItem(this);
     _cp2Item->setParentItem(this);
-    _cp2Item->setRect(GLOBAL_SCALEF * (-0.05), GLOBAL_SCALEF * (-0.05),
-                      GLOBAL_SCALEF * 0.1, GLOBAL_SCALEF * 0.1);
+    _cp2Item->setRect(GLOBAL_SCALEF * (-0.1), GLOBAL_SCALEF * (-0.1),
+                      GLOBAL_SCALEF * 0.2, GLOBAL_SCALEF * 0.2);
     _cp2Item->setVisible(false);
 
     readPos();
