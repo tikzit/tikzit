@@ -84,7 +84,6 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!_enabled) return;
 
-
     // current mouse position, in scene coordinates
     _mouseDownPos = event->scenePos();
 
@@ -498,6 +497,7 @@ int TikzScene::lineNumberForSelection()
         if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) return ni->node()->tikzLine();
         if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) return ei->edge()->tikzLine();
     }
+    return 0;
 }
 
 
