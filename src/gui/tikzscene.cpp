@@ -84,6 +84,7 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!_enabled) return;
 
+
     // current mouse position, in scene coordinates
     _mouseDownPos = event->scenePos();
 

@@ -14,7 +14,7 @@
 #include <QWidget>
 #include <QGraphicsEllipseItem>
 
-class EdgeItem : public QGraphicsPathItem
+class EdgeItem : public QGraphicsItem
 {
 public:
     EdgeItem(Edge *edge);
@@ -26,8 +26,15 @@ public:
     QGraphicsEllipseItem *cp1Item() const;
     QGraphicsEllipseItem *cp2Item() const;
 
+
+    QPainterPath path() const;
+    void setPath(const QPainterPath &path);
+
 private:
     Edge *_edge;
+    QPainterPath _path;
+    QPainterPath _expPath;
+    QRectF _boundingRect;
     QGraphicsEllipseItem *_cp1Item;
     QGraphicsEllipseItem *_cp2Item;
 };

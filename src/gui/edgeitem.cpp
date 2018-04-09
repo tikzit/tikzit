@@ -9,9 +9,6 @@ EdgeItem::EdgeItem(Edge *edge)
     _edge = edge;
     setFlag(QGraphicsItem::ItemIsSelectable);
 
-    QPen pen(Qt::black);
-    pen.setWidth(2);
-    setPen(pen);
     _cp1Item = new QGraphicsEllipseItem(this);
     _cp1Item->setParentItem(this);
     _cp1Item->setRect(GLOBAL_SCALEF * (-0.05), GLOBAL_SCALEF * (-0.05),
@@ -53,7 +50,9 @@ void EdgeItem::readPos()
 void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     //QGraphicsPathItem::paint(painter, option, widget);
-    painter->setPen(pen());
+    QPen pen(Qt::black);
+    pen.setWidth(2);
+    painter->setPen(pen);
     painter->setBrush(Qt::NoBrush);
     painter->drawPath(path());
 
@@ -107,19 +106,12 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 
 QRectF EdgeItem::boundingRect() const
 {
-    float r = GLOBAL_SCALEF * (_edge->cpDist() + 0.2);
-    return shape().boundingRect().adjusted(-r,-r,r,r);
+    return _boundingRect;
 }
 
 QPainterPath EdgeItem::shape() const
 {
-    // get the shape of the edge, and expand a bit to make selection easier
-    QPainterPath oldShape = QGraphicsPathItem::shape();
-    QPainterPathStroker stroker;
-    stroker.setWidth(5);
-    stroker.setJoinStyle(Qt::MiterJoin);
-    QPainterPath newShape = (stroker.createStroke(oldShape) + oldShape).simplified();
-    return newShape;
+    return _expPath;
 }
 
 Edge *EdgeItem::edge() const
@@ -135,4 +127,26 @@ QGraphicsEllipseItem *EdgeItem::cp1Item() const
 QGraphicsEllipseItem *EdgeItem::cp2Item() const
 {
     return _cp2Item;
+}
+
+QPainterPath EdgeItem::path() const
+{
+    return _path;
+}
+
+void EdgeItem::setPath(const QPainterPath &path)
+{
+    _path = path;
+
+    // get the shape of the edge, and expand a bit to make selection easier
+    QPainterPathStroker stroker;
+    stroker.setWidth(5);
+    stroker.setJoinStyle(Qt::MiterJoin);
+    _expPath = (stroker.createStroke(_path) + _path).simplified();
+
+    float r = GLOBAL_SCALEF * (_edge->cpDist() + 0.2);
+    _boundingRect = _path.boundingRect().adjusted(-r,-r,r,r);
+
+    prepareGeometryChange();
+    update();
 }
