@@ -16,7 +16,7 @@ The only dependency besides Qt itself is flex/bison, which is used to build the 
 
 ## Building on Linux
 
-This should be buildable in Linux using a "standard" dev setup (gcc, flex, bison, make). You will also need to configure Qt (instructions for Ubuntu are <a href="https://wiki.qt.io/Install_Qt_5_on_Ubuntu">here</a>). After that, building is:
+This should be buildable in Linux using a "standard" dev setup (gcc, flex, bison, make). You will also need to configure Qt (see instructions for <a href="https://wiki.qt.io/Install_Qt_5_on_openSUSE">openSUSE</a>, <a href="https://wiki.qt.io/Install_Qt_5_on_Ubuntu">Ubuntu</a> and <a href="https://wiki.archlinux.org/index.php/qt">Arch Linux</a>). After that, building is:
 
     $ qmake
     $ make
