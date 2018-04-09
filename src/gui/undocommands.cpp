@@ -11,14 +11,16 @@ GraphUpdateCommand::GraphUpdateCommand(TikzScene *scene, QUndoCommand *parent) :
 void GraphUpdateCommand::undo()
 {
     _scene->tikzDocument()->refreshTikz();
-    _scene->refreshSceneBounds();
+    //refreshSceneBounds does nothing
+    //_scene->refreshSceneBounds();
     _scene->invalidate();
 }
 
 void GraphUpdateCommand::redo()
 {
     _scene->tikzDocument()->refreshTikz();
-    _scene->refreshSceneBounds();
+    //refreshSceneBounds does nothing
+    //_scene->refreshSceneBounds();
     _scene->invalidate();
 }
 
