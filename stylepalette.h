@@ -16,6 +16,8 @@ public:
     explicit StylePalette(QWidget *parent = 0);
     ~StylePalette();
     void reloadStyles();
+    void nextStyle();
+    void previousStyle();
     QString activeNodeStyleName();
 
 
@@ -26,6 +28,8 @@ public slots:
     //void on_buttonApplyNodeStyle_clicked();
 
 private:
+    void changeStyle(int increment);
+
     Ui::StylePalette *ui;
     QStandardItemModel *_model;
 

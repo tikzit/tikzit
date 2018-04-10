@@ -40,6 +40,9 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
     pen.setDashPattern(dash);
     _rubberBandItem->setPen(pen);
 
+    QBrush brush(QColor::fromRgbF(0.6,0.6,0.8,0.2));
+    _rubberBandItem->setBrush(brush);
+
     _rubberBandItem->setVisible(false);
     addItem(_rubberBandItem);
 }
@@ -427,6 +430,8 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     invalidate(QRect(), QGraphicsScene::BackgroundLayer);
 }
 
+
+
 void TikzScene::keyReleaseEvent(QKeyEvent *event)
 {
     if (!_enabled) return;
@@ -452,19 +457,67 @@ void TikzScene::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
+void TikzScene::keyPressEvent(QKeyEvent *event)
+{
+    bool capture = false;
+
+    if (event->key() == Qt::Key_QuoteLeft) {
+        capture = true;
+        _styles->nextStyle();
+    }
+
+    if (event->modifiers() & Qt::ControlModifier) {
+        QPointF delta(0,0);
+        float shift = (event->modifiers() & Qt::ShiftModifier) ? 1.0f : 10.0f;
+        switch(event->key()) {
+        case Qt::Key_Left:
+            delta.setX(-0.025f * shift);
+            break;
+        case Qt::Key_Right:
+            delta.setX(0.025f * shift);
+            break;
+        case Qt::Key_Up:
+            delta.setY(0.025f * shift);
+            break;
+        case Qt::Key_Down:
+            delta.setY(-0.025f * shift);
+            break;
+        }
+
+        if (!delta.isNull()) {
+            capture = true;
+            QMap<Node*,QPointF> oldNodePositions;
+            QMap<Node*,QPointF> newNodePositions;
+            QPointF pos;
+
+            foreach (QGraphicsItem *gi, selectedItems()) {
+                if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) {
+                    pos = ni->node()->point();
+                    oldNodePositions.insert(ni->node(), pos);
+                    newNodePositions.insert(ni->node(), pos + delta);
+                }
+            }
+
+            MoveCommand *cmd = new MoveCommand(this, oldNodePositions, newNodePositions);
+            _tikzDocument->undoStack()->push(cmd);
+        }
+    }
+
+    if (!capture) QGraphicsScene::keyPressEvent(event);
+}
+
 void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!_enabled) return;
 
     QPointF mousePos = event->scenePos();
-    foreach (QGraphicsItem *gi, items(mousePos)) {
-        if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) {
+    auto sel = items(mousePos);
+
+    if (!sel.isEmpty()) {
+        if (EdgeItem *ei = dynamic_cast<EdgeItem*>(sel[0])) {
             ChangeEdgeModeCommand *cmd = new ChangeEdgeModeCommand(this, ei->edge());
             _tikzDocument->undoStack()->push(cmd);
-            break;
-        }
-
-        if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) {
+        } else if (NodeItem *ni = dynamic_cast<NodeItem*>(sel[0])) {
             bool ok;
             QString newLabel = QInputDialog::getText(views()[0], tr("Node label"),
                                                      tr("Label:"), QLineEdit::Normal,
@@ -475,7 +528,6 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
                 ChangeLabelCommand *cmd = new ChangeLabelCommand(this, graph(), oldLabels, newLabel);
                 _tikzDocument->undoStack()->push(cmd);
             }
-            break;
         }
     }
 }

@@ -131,7 +131,7 @@ int GraphElementData::rowCount(const QModelIndex &parent) const
     }
 }
 
-int GraphElementData::columnCount(const QModelIndex &parent) const
+int GraphElementData::columnCount(const QModelIndex &) const
 {
     return 2;
 }

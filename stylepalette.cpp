@@ -61,6 +61,30 @@ void StylePalette::reloadStyles()
     }
 }
 
+void StylePalette::changeStyle(int increment)
+{
+    QModelIndexList i = ui->styleListView->selectionModel()->selectedIndexes();
+    int row = 0;
+    if (!i.isEmpty()) {
+        int row = (i[0].row()+increment)%_model->rowCount();
+        if (row < 0) row += _model->rowCount();
+    }
+
+    QModelIndex i1 = ui->styleListView->rootIndex().child(row, 0);
+    ui->styleListView->selectionModel()->select(i1, QItemSelectionModel::ClearAndSelect);
+    ui->styleListView->scrollTo(i1);
+}
+
+void StylePalette::nextStyle()
+{
+    changeStyle(1);
+}
+
+void StylePalette::previousStyle()
+{
+    changeStyle(-1);
+}
+
 QString StylePalette::activeNodeStyleName()
 {
     const QModelIndexList i = ui->styleListView->selectionModel()->selectedIndexes();
