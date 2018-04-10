@@ -84,7 +84,6 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!_enabled) return;
 
-
     // current mouse position, in scene coordinates
     _mouseDownPos = event->scenePos();
 
@@ -498,6 +497,7 @@ int TikzScene::lineNumberForSelection()
         if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) return ni->node()->tikzLine();
         if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) return ei->edge()->tikzLine();
     }
+    return 0;
 }
 
 
@@ -635,25 +635,25 @@ void TikzScene::reloadStyles()
     }
 }
 
-void TikzScene::refreshSceneBounds()
-{
-//    if (!views().empty()) {
-//        QGraphicsView *v = views().first();
-//        QRectF viewB = v->mapToScene(v->viewport()->rect()).boundingRect();
-//        //QPointF tl = v->mapToScene(viewB.topLeft());
-//        //viewB.setTopLeft(tl);
-
-//        QRectF bounds = viewB.united(rectToScreen(graph()->realBbox().adjusted(-1.0f, -1.0f, 1.0f, 1.0f)));
-//        //qDebug() << viewB;
-
-//        if (bounds != sceneRect()) {
-//            QPointF c = viewB.center();
-//            setSceneRect(bounds);
-//            v->centerOn(c);
-//        }
-//    }
-    //setBounds(graphB);
-}
+// void TikzScene::refreshSceneBounds()
+// {
+// //    if (!views().empty()) {
+// //        QGraphicsView *v = views().first();
+// //        QRectF viewB = v->mapToScene(v->viewport()->rect()).boundingRect();
+// //        //QPointF tl = v->mapToScene(viewB.topLeft());
+// //        //viewB.setTopLeft(tl);
+//
+// //        QRectF bounds = viewB.united(rectToScreen(graph()->realBbox().adjusted(-1.0f, -1.0f, 1.0f, 1.0f)));
+// //        //qDebug() << viewB;
+//
+// //        if (bounds != sceneRect()) {
+// //            QPointF c = viewB.center();
+// //            setSceneRect(bounds);
+// //            v->centerOn(c);
+// //        }
+// //    }
+//     //setBounds(graphB);
+// }
 
 void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
 {

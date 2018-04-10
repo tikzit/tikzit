@@ -69,7 +69,7 @@ int Graph::maxIntName()
 
 QRectF Graph::realBbox()
 {
-    float maxX = 0.0f;
+    //float maxX = 0.0f;
     QRectF rect = bbox();
     foreach (Node *n, _nodes) {
         rect = rect.united(QRectF(n->point().x()-0.5f,
@@ -253,5 +253,3 @@ void Graph::setBbox(const QRectF &bbox)
 {
     _bbox = bbox;
 }
-
-

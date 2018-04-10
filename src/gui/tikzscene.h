@@ -36,7 +36,7 @@ public:
     TikzDocument *tikzDocument() const;
     void setTikzDocument(TikzDocument *tikzDocument);
     void reloadStyles();
-    void refreshSceneBounds();
+    //void refreshSceneBounds();
     void applyActiveStyleToNodes();
     void deleteSelectedItems();
     void copyToClipboard();
