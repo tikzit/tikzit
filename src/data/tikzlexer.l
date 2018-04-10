@@ -65,6 +65,7 @@ FLOAT \-?[0-9]*(\.[0-9]+)?
 	yylloc->first_column = yylloc->last_column = 0;
 }
 <INITIAL,xcoord,ycoord,props,noderef>[\t ]+  {  }
+<INITIAL,xcoord,ycoord,props,noderef>%.*$  {  }
 
 \\begin\{tikzpicture\}         {  return BEGIN_TIKZPICTURE_CMD; }
 \\end\{tikzpicture\}           {  return END_TIKZPICTURE_CMD; }
@@ -74,12 +75,12 @@ FLOAT \-?[0-9]*(\.[0-9]+)?
 \\draw                         {  return DRAW_CMD; }
 \\node                         {  return NODE_CMD; }
 \\path                         {  return PATH_CMD; }
-rectangle                      {  return RECTANGLE; }
-node                           {  return NODE; }
-at                             {  return AT; }
-to                             {  return TO; }
 ;                              {  return SEMICOLON; }
 =                              {  return EQUALS; }
+<INITIAL>rectangle             {  return RECTANGLE; }
+<INITIAL>node                  {  return NODE; }
+<INITIAL>at                    {  return AT; }
+<INITIAL>to                    {  return TO; }
 
 \([ ]*{FLOAT}[ ]*,[ ]*{FLOAT}[ ]*\) {
 	yylloc->last_column = yylloc->first_column + 1;

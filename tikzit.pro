@@ -4,10 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets
 CONFIG   += testcase
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET   = tikzit
 TEMPLATE = app
@@ -48,9 +46,11 @@ SOURCES += src/gui/mainwindow.cpp \
     src/gui/undocommands.cpp \
     src/gui/mainmenu.cpp \
     src/util.cpp \
-    stylepalette.cpp \
+    src/gui/stylepalette.cpp \
     src/data/tikzassembler.cpp \
-    src/data/tikzstyles.cpp
+    src/data/tikzstyles.cpp \
+    src/data/edgestyle.cpp \
+    src/data/style.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -72,14 +72,16 @@ HEADERS  += src/gui/mainwindow.h \
     src/gui/undocommands.h \
     src/gui/mainmenu.h \
     src/util.h \
-    stylepalette.h \
+    src/gui/stylepalette.h \
     src/data/tikzassembler.h \
-    src/data/tikzstyles.h
+    src/data/tikzstyles.h \
+    src/data/edgestyle.h \
+    src/data/style.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \
     src/gui/mainmenu.ui \
-    stylepalette.ui
+    src/gui/stylepalette.ui
 
 INCLUDEPATH += src src/gui src/data
 

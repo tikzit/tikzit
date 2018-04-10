@@ -3,6 +3,7 @@
 
 #include "graphelementdata.h"
 #include "nodestyle.h"
+#include "edgestyle.h"
 
 #include <QObject>
 #include <QString>
@@ -15,7 +16,9 @@ public:
     void addStyle(QString name, GraphElementData *data);
 
     NodeStyle *nodeStyle(QString name) const;
+    EdgeStyle *edgeStyle(QString name) const;
     QVector<NodeStyle *> nodeStyles() const;
+    QVector<EdgeStyle *> edgeStyles() const;
     void clear();
 
 signals:
@@ -24,6 +27,7 @@ public slots:
 
 private:
     QVector<NodeStyle*> _nodeStyles;
+    QVector<EdgeStyle*> _edgeStyles;
 };
 
 #endif // PROJECT_H

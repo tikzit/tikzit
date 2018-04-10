@@ -1,7 +1,7 @@
 #ifndef NODESTYLE_H
 #define NODESTYLE_H
 
-#include "graphelementdata.h"
+#include "style.h"
 
 #include <QColor>
 #include <QPen>
@@ -9,7 +9,7 @@
 #include <QPainterPath>
 #include <QIcon>
 
-class NodeStyle
+class NodeStyle : public Style
 {
 public:
     enum Shape {
@@ -18,23 +18,14 @@ public:
 
     NodeStyle();
     NodeStyle(QString name, GraphElementData *data);
-    bool isNone();
 
-    GraphElementData *data() const;
-    QString name() const;
-    Shape shape() const;
     QColor fillColor() const;
-    QColor strokeColor() const;
-    int strokeThickness() const;
-
-    QPen pen() const;
     QBrush brush() const;
     QPainterPath path() const;
-    QPainterPath palettePath() const;
-    QIcon icon() const;
-private:
-    QString _name;
-    GraphElementData *_data;
+    Shape shape() const;
+
+    QPainterPath palettePath() const override;
+    QIcon icon() const override;
 };
 
 extern NodeStyle *noneStyle;

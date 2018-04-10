@@ -16,22 +16,24 @@ public:
     explicit StylePalette(QWidget *parent = 0);
     ~StylePalette();
     void reloadStyles();
-    void nextStyle();
-    void previousStyle();
+    void nextNodeStyle();
+    void previousNodeStyle();
     QString activeNodeStyleName();
 
 
 public slots:
-    void itemDoubleClicked(const QModelIndex &index);
+    void nodeStyleDoubleClicked(const QModelIndex &index);
+    void edgeStyleDoubleClicked(const QModelIndex &index);
     void on_buttonOpenTikzstyles_clicked();
     void on_buttonRefreshTikzstyles_clicked();
     //void on_buttonApplyNodeStyle_clicked();
 
 private:
-    void changeStyle(int increment);
+    void changeNodeStyle(int increment);
 
     Ui::StylePalette *ui;
-    QStandardItemModel *_model;
+    QStandardItemModel *_nodeModel;
+    QStandardItemModel *_edgeModel;
 
 protected:
     void closeEvent(QCloseEvent *event) override;

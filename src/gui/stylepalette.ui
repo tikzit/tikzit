@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>88</width>
-    <height>0</height>
+    <height>191</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -66,7 +66,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="tikzit.qrc">
+         <iconset resource="../../tikzit.qrc">
           <normaloff>:/images/document-open.svg</normaloff>:/images/document-open.svg</iconset>
         </property>
        </widget>
@@ -77,7 +77,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="tikzit.qrc">
+         <iconset resource="../../tikzit.qrc">
           <normaloff>:/images/refresh.svg</normaloff>:/images/refresh.svg</iconset>
         </property>
        </widget>
@@ -108,13 +108,13 @@
      </widget>
     </item>
     <item>
-     <widget class="QListView" name="listView"/>
+     <widget class="QListView" name="edgeStyleListView"/>
     </item>
    </layout>
   </widget>
  </widget>
  <resources>
-  <include location="tikzit.qrc"/>
+  <include location="../../tikzit.qrc"/>
  </resources>
  <connections/>
 </ui>

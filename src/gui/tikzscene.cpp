@@ -463,7 +463,7 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
 
     if (event->key() == Qt::Key_QuoteLeft) {
         capture = true;
-        _styles->nextStyle();
+        _styles->nextNodeStyle();
     }
 
     if (event->modifiers() & Qt::ControlModifier) {

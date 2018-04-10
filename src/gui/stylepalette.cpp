@@ -22,15 +22,22 @@ StylePalette::StylePalette(QWidget *parent) :
 //        restoreGeometry(geom.toByteArray());
 //    }
 
-    _model = new QStandardItemModel(this);
-    ui->styleListView->setModel(_model);
+    _nodeModel = new QStandardItemModel(this);
+    _edgeModel = new QStandardItemModel(this);
+
+    ui->styleListView->setModel(_nodeModel);
     ui->styleListView->setViewMode(QListView::IconMode);
     ui->styleListView->setMovement(QListView::Static);
     ui->styleListView->setGridSize(QSize(70,40));
 
+    ui->edgeStyleListView->setModel(_edgeModel);
+    ui->edgeStyleListView->setViewMode(QListView::IconMode);
+    ui->edgeStyleListView->setMovement(QListView::Static);
+    ui->edgeStyleListView->setGridSize(QSize(70,40));
+
     reloadStyles();
 
-    connect(ui->styleListView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT( itemDoubleClicked(const QModelIndex&)) );
+    connect(ui->styleListView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT( nodeStyleDoubleClicked(const QModelIndex&)) );
 }
 
 StylePalette::~StylePalette()
@@ -40,34 +47,45 @@ StylePalette::~StylePalette()
 
 void StylePalette::reloadStyles()
 {
-    _model->clear();
+    _nodeModel->clear();
+    _edgeModel->clear();
     QString f = tikzit->styleFile();
-    //
     ui->styleFile->setText(f);
 
     QStandardItem *it;
-    //QSize sz(60,60);
 
     it = new QStandardItem(noneStyle->icon(), noneStyle->name());
     it->setEditable(false);
     it->setData(noneStyle->name());
-    _model->appendRow(it);
+    _nodeModel->appendRow(it);
 
     foreach(NodeStyle *ns, tikzit->styles()->nodeStyles()) {
         it = new QStandardItem(ns->icon(), ns->name());
         it->setEditable(false);
         it->setData(ns->name());
-        _model->appendRow(it);
+        _nodeModel->appendRow(it);
+    }
+
+    it = new QStandardItem(noneEdgeStyle->icon(), noneEdgeStyle->name());
+    it->setEditable(false);
+    it->setData(noneEdgeStyle->name());
+    _edgeModel->appendRow(it);
+
+    foreach(EdgeStyle *es, tikzit->styles()->edgeStyles()) {
+        it = new QStandardItem(es->icon(), es->name());
+        it->setEditable(false);
+        it->setData(es->name());
+        _edgeModel->appendRow(it);
     }
 }
 
-void StylePalette::changeStyle(int increment)
+void StylePalette::changeNodeStyle(int increment)
 {
     QModelIndexList i = ui->styleListView->selectionModel()->selectedIndexes();
     int row = 0;
     if (!i.isEmpty()) {
-        int row = (i[0].row()+increment)%_model->rowCount();
-        if (row < 0) row += _model->rowCount();
+        int row = (i[0].row()+increment)%_nodeModel->rowCount();
+        if (row < 0) row += _nodeModel->rowCount();
     }
 
     QModelIndex i1 = ui->styleListView->rootIndex().child(row, 0);
@@ -75,14 +93,14 @@ void StylePalette::changeStyle(int increment)
     ui->styleListView->scrollTo(i1);
 }
 
-void StylePalette::nextStyle()
+void StylePalette::nextNodeStyle()
 {
-    changeStyle(1);
+    changeNodeStyle(1);
 }
 
-void StylePalette::previousStyle()
+void StylePalette::previousNodeStyle()
 {
-    changeStyle(-1);
+    changeNodeStyle(-1);
 }
 
 QString StylePalette::activeNodeStyleName()
@@ -96,9 +114,14 @@ QString StylePalette::activeNodeStyleName()
     }
 }
 
-void StylePalette::itemDoubleClicked(const QModelIndex &index)
+void StylePalette::nodeStyleDoubleClicked(const QModelIndex &index)
 {
     tikzit->activeWindow()->tikzScene()->applyActiveStyleToNodes();
+}
+
+void StylePalette::edgeStyleDoubleClicked(const QModelIndex &index)
+{
+    // TODO
 }
 
 void StylePalette::on_buttonOpenTikzstyles_clicked()

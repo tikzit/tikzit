@@ -12,7 +12,14 @@ NodeStyle *TikzStyles::nodeStyle(QString name) const
 {
     foreach (NodeStyle *s , _nodeStyles)
         if (s->name() == name) return s;
-    return noneStyle; //NodeStyle(name, NodeShape::Circle, Qt::white);
+    return noneStyle;
+}
+
+EdgeStyle *TikzStyles::edgeStyle(QString name) const
+{
+    foreach (EdgeStyle *s , _edgeStyles)
+        if (s->name() == name) return s;
+    return noneEdgeStyle;
 }
 
 QVector<NodeStyle *> TikzStyles::nodeStyles() const
@@ -23,14 +30,24 @@ QVector<NodeStyle *> TikzStyles::nodeStyles() const
 void TikzStyles::clear()
 {
     _nodeStyles.clear();
+    _edgeStyles.clear();
+}
+
+QVector<EdgeStyle *> TikzStyles::edgeStyles() const
+{
+    return _edgeStyles;
 }
 
 void TikzStyles::addStyle(QString name, GraphElementData *data)
 {
-    //qDebug() << "got style {" << name << "} = [" << data << "]";
-    if (!data->property("fill").isNull()) { // node style
+    if (data->atom("-") || data->atom("->") || data->atom("-|") ||
+        data->atom("<-") || data->atom("<->") || data->atom("<-|") ||
+        data->atom("|-") || data->atom("|->") || data->atom("|-|"))
+    { // edge style
+        qDebug() << "got edge style" << name;
+        _edgeStyles << new EdgeStyle(name, data);
+    } else { // node style
+        qDebug() << "got node style" << name;
         _nodeStyles << new NodeStyle(name, data);
-    } else { // edge style
-        // TODO: edge styles
     }
 }

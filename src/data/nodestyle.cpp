@@ -3,91 +3,43 @@
 
 NodeStyle *noneStyle = new NodeStyle();
 
-NodeStyle::NodeStyle() : _name("none"), _data(0)
+NodeStyle::NodeStyle() : Style()
 {
 }
 
 
-NodeStyle::NodeStyle(QString name, GraphElementData *data): _name(name), _data(data)
+NodeStyle::NodeStyle(QString name, GraphElementData *data): Style(name, data)
 {
-}
-
-bool NodeStyle::isNone() { return _data == 0; }
-
-GraphElementData *NodeStyle::data() const
-{
-    return _data;
-}
-
-QString NodeStyle::name() const
-{
-    return _name;
-}
-
-NodeStyle::Shape NodeStyle::shape() const
-{
-    if (_data == 0) return NodeStyle::Circle;
-
-    QString sh = _data->property("shape");
-    if (sh.isNull()) return NodeStyle::Circle;
-    else if (sh == "circle") return NodeStyle::Circle;
-    else if (sh == "rectangle") return NodeStyle::Rectangle;
-    else return NodeStyle::Circle;
 }
 
 QColor NodeStyle::fillColor() const
 {
     if (_data == 0) return Qt::white;
 
-    QString col = _data->property("fill");
+    QString col = propertyWithDefault("fill", "white");
 
-    if (col.isNull()) {
+    QColor namedColor(col);
+    if (namedColor.isValid()) {
+        return namedColor;
+    } else {
+        // TODO: read RGB colors
         return QColor(Qt::white);
-    } else {
-        QColor namedColor(col);
-        if (namedColor.isValid()) {
-            return namedColor;
-        } else {
-            // TODO: read RGB colors
-            return QColor(Qt::white);
-        }
     }
-}
-
-QColor NodeStyle::strokeColor() const
-{
-    if (_data == 0) return Qt::black;
-
-    QString col = _data->property("draw");
-
-    if (col.isNull()) {
-        return QColor(Qt::black);
-    } else {
-        QColor namedColor(col);
-        if (namedColor.isValid()) {
-            return namedColor;
-        } else {
-            // TODO: read RGB colors
-            return QColor(Qt::white);
-        }
-    }
-}
-
-int NodeStyle::strokeThickness() const
-{
-    return 1;
-}
-
-QPen NodeStyle::pen() const
-{
-    QPen p(strokeColor());
-    p.setWidthF((float)strokeThickness() * 3.0f);
-    return p;
 }
 
 QBrush NodeStyle::brush() const
 {
     return QBrush(fillColor());
+}
+
+NodeStyle::Shape NodeStyle::shape() const
+{
+    if (_data == 0) return NodeStyle::Circle;
+
+    QString sh = propertyWithDefault("shape", "circle");
+    if (sh == "circle") return NodeStyle::Circle;
+    else if (sh == "rectangle") return NodeStyle::Rectangle;
+    else return NodeStyle::Circle;
 }
 
 QPainterPath NodeStyle::path() const
