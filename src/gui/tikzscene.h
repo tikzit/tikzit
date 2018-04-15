@@ -49,6 +49,10 @@ public:
     void setEnabled(bool enabled);
     int lineNumberForSelection();
 
+
+	void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges);
+	QSet<Node*> getSelectedNodes();
+
 public slots:
     void graphReplaced();
 
@@ -80,9 +84,6 @@ private:
     int _oldInAngle;
     int _oldOutAngle;
     bool _enabled;
-
-    void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges);
-    QSet<Node*> getSelectedNodes();
 };
 
 #endif // TIKZSCENE_H

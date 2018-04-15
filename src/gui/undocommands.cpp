@@ -279,7 +279,7 @@ void ApplyStyleToNodesCommand::redo()
 PasteCommand::PasteCommand(TikzScene *scene, Graph *graph, QUndoCommand *parent) :
     GraphUpdateCommand(scene, parent), _graph(graph)
 {
-    _oldSelection = scene->selectedItems();
+	scene->getSelection(_oldSelectedNodes, _oldSelectedEdges);
 }
 
 void PasteCommand::undo()
@@ -304,7 +304,8 @@ void PasteCommand::undo()
         _scene->graph()->removeNode(n);
     }
 
-    foreach (auto it, _oldSelection) it->setSelected(true);
+	foreach(Node *n, _oldSelectedNodes) _scene->nodeItems()[n]->setSelected(true);
+	foreach(Edge *e, _oldSelectedEdges) _scene->edgeItems()[e]->setSelected(true);
 
     GraphUpdateCommand::undo();
 }

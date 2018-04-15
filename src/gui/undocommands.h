@@ -13,6 +13,7 @@
 #include "tikzscene.h"
 
 #include <QUndoCommand>
+#include <QSet>
 
 class GraphUpdateCommand : public QUndoCommand {
 public:
@@ -127,7 +128,8 @@ public:
     void redo() override;
 private:
     Graph *_graph;
-    QList<QGraphicsItem*> _oldSelection;
+    QSet<Node*> _oldSelectedNodes;
+	QSet<Edge*> _oldSelectedEdges;
 };
 
 class ChangeLabelCommand : public GraphUpdateCommand
