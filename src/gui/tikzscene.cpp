@@ -97,7 +97,7 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     //views()[0]->setDragMode(QGraphicsView::NoDrag);
 
     // radius of a control point for bezier edges, in scene coordinates
-    qreal cpR = GLOBAL_SCALEF * (0.05);
+    qreal cpR = GLOBAL_SCALEF * (0.1);
     qreal cpR2 = cpR * cpR;
 
     switch (_tools->currentTool()) {
@@ -511,13 +511,13 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     if (!_enabled) return;
 
     QPointF mousePos = event->scenePos();
-    auto sel = items(mousePos);
 
-    if (!sel.isEmpty()) {
-        if (EdgeItem *ei = dynamic_cast<EdgeItem*>(sel[0])) {
+    foreach (QGraphicsItem *it, items(mousePos)) {
+        if (EdgeItem *ei = dynamic_cast<EdgeItem*>(it)) {
             ChangeEdgeModeCommand *cmd = new ChangeEdgeModeCommand(this, ei->edge());
             _tikzDocument->undoStack()->push(cmd);
-        } else if (NodeItem *ni = dynamic_cast<NodeItem*>(sel[0])) {
+			break;
+        } else if (NodeItem *ni = dynamic_cast<NodeItem*>(it)) {
             bool ok;
             QString newLabel = QInputDialog::getText(views()[0], tr("Node label"),
                                                      tr("Label:"), QLineEdit::Normal,
@@ -528,6 +528,7 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
                 ChangeLabelCommand *cmd = new ChangeLabelCommand(this, graph(), oldLabels, newLabel);
                 _tikzDocument->undoStack()->push(cmd);
             }
+			break;
         }
     }
 }
