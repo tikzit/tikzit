@@ -60,13 +60,13 @@ void TikzScene::graphReplaced()
 
 	foreach (NodeItem *ni, _nodeItems) {
         removeItem(ni);
-        //delete ni;
+        delete ni;
     }
     _nodeItems.clear();
 
     foreach (EdgeItem *ei, _edgeItems) {
         removeItem(ei);
-        //delete ei;
+        delete ei;
     }
     _edgeItems.clear();
 
