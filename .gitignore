@@ -4,6 +4,7 @@ debug
 release
 *.vcxproj*
 *.sln
+*.rc
 x64
 target_wrapper.bat
 .qmake.stash
