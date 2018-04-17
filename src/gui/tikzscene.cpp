@@ -57,15 +57,16 @@ Graph *TikzScene::graph()
 
 void TikzScene::graphReplaced()
 {
-    foreach (NodeItem *ni, _nodeItems) {
+
+	foreach (NodeItem *ni, _nodeItems) {
         removeItem(ni);
-        delete ni;
+        //delete ni;
     }
     _nodeItems.clear();
 
     foreach (EdgeItem *ei, _edgeItems) {
         removeItem(ei);
-        delete ei;
+        //delete ei;
     }
     _edgeItems.clear();
 
@@ -287,8 +288,12 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
             foreach (Node *n, _oldNodePositions.keys()) {
                 NodeItem *ni = _nodeItems[n];
-                ni->setPos(toScreen(_oldNodePositions[n]) + shift);
-                ni->writePos();
+
+				// in (rare) cases, the graph can change while we are dragging
+				if (ni != 0) {
+					ni->setPos(toScreen(_oldNodePositions[n]) + shift);
+					ni->writePos();
+				}
             }
 
             refreshAdjacentEdges(_oldNodePositions.keys());
@@ -711,11 +716,16 @@ void TikzScene::reloadStyles()
 void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
 {
     if (nodes.empty()) return;
-    foreach (EdgeItem *ei, _edgeItems) {
-        if (nodes.contains(ei->edge()->source()) || nodes.contains(ei->edge()->target())) {
-            ei->edge()->updateControls();
-            ei->readPos();
-        }
+    foreach (Edge *e, _edgeItems.keys()) {
+		EdgeItem *ei = _edgeItems[e];
+
+		// the list "nodes" can be out of date, e.g. if the graph changes while dragging
+		if (ei != 0) {
+			if (nodes.contains(ei->edge()->source()) || nodes.contains(ei->edge()->target())) {
+				ei->edge()->updateControls();
+				ei->readPos();
+			}
+		}
     }
 }
 

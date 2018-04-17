@@ -91,20 +91,26 @@ void Tikzit::open()
                 settings.value("previous-file-path").toString(),
                 tr("TiKZ Files (*.tikz)"));
 
-    if (!fileName.isEmpty()) {
-        if (_windows.size() == 1 &&
-            _windows[0]->tikzDocument()->isClean() &&
-            _windows[0]->tikzDocument()->shortName().isEmpty())
-        {
-            _windows[0]->open(fileName);
-            _windows[0]->show();
-        } else {
-            MainWindow *w = new MainWindow();
-            w->show();
-            w->open(fileName);
-            _windows << w;
-        }
-    }
+	open(fileName);
+}
+
+void Tikzit::open(QString fileName)
+{
+	if (!fileName.isEmpty()) {
+		if (_windows.size() == 1 &&
+			_windows[0]->tikzDocument()->isClean() &&
+			_windows[0]->tikzDocument()->shortName().isEmpty())
+		{
+			_windows[0]->open(fileName);
+			_windows[0]->show();
+		}
+		else {
+			MainWindow *w = new MainWindow();
+			w->show();
+			w->open(fileName);
+			_windows << w;
+		}
+	}
 }
 
 void Tikzit::openTikzStyles() {

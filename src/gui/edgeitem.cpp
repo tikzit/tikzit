@@ -136,7 +136,9 @@ QPainterPath EdgeItem::path() const
 
 void EdgeItem::setPath(const QPainterPath &path)
 {
-    _path = path;
+	prepareGeometryChange();
+
+	_path = path;
 
     // get the shape of the edge, and expand a bit to make selection easier
     QPainterPathStroker stroker;
@@ -147,6 +149,5 @@ void EdgeItem::setPath(const QPainterPath &path)
     float r = GLOBAL_SCALEF * (_edge->cpDist() + 0.2);
     _boundingRect = _path.boundingRect().adjusted(-r,-r,r,r);
 
-    prepareGeometryChange();
     update();
 }

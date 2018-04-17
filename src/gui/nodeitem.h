@@ -19,14 +19,15 @@ public:
     void readPos();
     void writePos();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    QPainterPath shape() const;
-    QRectF boundingRect() const;
+    QPainterPath shape() const override;
+    QRectF boundingRect() const override;
+	void updateBounds();
     Node *node() const;
 
 private:
     Node *_node;
     QRectF labelRect() const;
+	QRectF _boundingRect;
 };
 
 #endif // NODEITEM_H

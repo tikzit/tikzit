@@ -341,6 +341,8 @@ void ChangeLabelCommand::undo()
 {
     foreach (Node *n, _oldLabels.keys()) {
         n->setLabel(_oldLabels[n]);
+		NodeItem *ni = _scene->nodeItems()[n];
+		if (ni != 0) ni->updateBounds();
     }
 
     GraphUpdateCommand::undo();
@@ -350,6 +352,8 @@ void ChangeLabelCommand::redo()
 {
     foreach (Node *n, _oldLabels.keys()) {
         n->setLabel(_newLabel);
+		NodeItem *ni = _scene->nodeItems()[n];
+		if (ni != 0) ni->updateBounds();
     }
 
     GraphUpdateCommand::redo();

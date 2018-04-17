@@ -18,6 +18,7 @@ NodeItem::NodeItem(Node *node)
     //setFlag(QGraphicsItem::ItemIsMovable);
     //setFlag(QGraphicsItem::ItemSendsGeometryChanges);
     readPos();
+	updateBounds();
 }
 
 void NodeItem::readPos()
@@ -98,10 +99,25 @@ QPainterPath NodeItem::shape() const
     return path;
 }
 
+// TODO: nodeitem should sync boundingRect()-relevant stuff (label etc) explicitly,
+// to allow prepareGeometryChange()
 QRectF NodeItem::boundingRect() const
 {
-    QRectF r = labelRect();
-    return r.united(shape().boundingRect()).adjusted(-4,-4,4,4);
+	return _boundingRect;
+}
+
+void NodeItem::updateBounds()
+{
+	prepareGeometryChange();
+	QString label = _node->label();
+	if (label != "") {
+		QFontMetrics fm(Tikzit::LABEL_FONT);
+		QRectF labelRect = fm.boundingRect(label);
+		labelRect.moveCenter(QPointF(0, 0));
+		_boundingRect = labelRect.united(shape().boundingRect()).adjusted(-4, -4, 4, 4);
+	} else {
+		_boundingRect = shape().boundingRect().adjusted(-4, -4, 4, 4);
+	}
 }
 
 Node *NodeItem::node() const
@@ -109,16 +125,16 @@ Node *NodeItem::node() const
     return _node;
 }
 
-QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value)
-{
-    if (change == ItemPositionChange) {
-        QPointF newPos = value.toPointF();
-        int gridSize = GLOBAL_SCALE / 8;
-        QPointF gridPos(round(newPos.x()/gridSize)*gridSize, round(newPos.y()/gridSize)*gridSize);
-        _node->setPoint(fromScreen(gridPos));
-
-        return gridPos;
-    } else {
-        return QGraphicsItem::itemChange(change, value);
-    }
-}
+//QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value)
+//{
+//    if (change == ItemPositionChange) {
+//        QPointF newPos = value.toPointF();
+//        int gridSize = GLOBAL_SCALE / 8;
+//        QPointF gridPos(round(newPos.x()/gridSize)*gridSize, round(newPos.y()/gridSize)*gridSize);
+//        _node->setPoint(fromScreen(gridPos));
+//
+//        return gridPos;
+//    } else {
+//        return QGraphicsItem::itemChange(change, value);
+//    }
+//}
