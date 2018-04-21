@@ -71,6 +71,7 @@ void TikzScene::graphReplaced()
     _edgeItems.clear();
 
     foreach (Edge *e, graph()->edges()) {
+		e->attachStyle();
         EdgeItem *ei = new EdgeItem(e);
         _edgeItems.insert(e, ei);
         addItem(ei);
@@ -420,6 +421,7 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::EDGE:
         if (_edgeStartNodeItem != 0 && _edgeEndNodeItem != 0) {
             Edge *e = new Edge(_edgeStartNodeItem->node(), _edgeEndNodeItem->node(), _tikzDocument);
+			e->setStyleName(_styles->activeEdgeStyleName());
             AddEdgeCommand *cmd = new AddEdgeCommand(this, e);
             _tikzDocument->undoStack()->push(cmd);
         }
@@ -687,6 +689,11 @@ void TikzScene::setTikzDocument(TikzDocument *tikzDocument)
 void TikzScene::reloadStyles()
 {
     _styles->reloadStyles();
+	foreach(EdgeItem *ei, _edgeItems) {
+		ei->edge()->attachStyle();
+		ei->readPos(); // trigger a repaint
+	}
+
     foreach (NodeItem *ni, _nodeItems) {
         ni->node()->attachStyle();
         ni->readPos(); // trigger a repaint

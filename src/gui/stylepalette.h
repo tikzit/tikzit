@@ -19,6 +19,7 @@ public:
     void nextNodeStyle();
     void previousNodeStyle();
     QString activeNodeStyleName();
+	QString activeEdgeStyleName();
 
 
 public slots:

@@ -3,6 +3,7 @@
 
 #include "graphelementdata.h"
 #include "node.h"
+#include "edgestyle.h"
 
 #include <QObject>
 #include <QPointF>
@@ -43,6 +44,8 @@ public:
     QPointF cp1() const;
     QPointF cp2() const;
     QPointF mid() const;
+	QPointF headTangent() const;
+	QPointF tailTangent() const;
 
     int bend() const;
     int inAngle() const;
@@ -60,11 +63,18 @@ public:
     int tikzLine() const;
     void setTikzLine(int tikzLine);
 
+
+	void attachStyle();
+	QString styleName() const;
+	void setStyleName(const QString & styleName);
+	EdgeStyle *style() const;
+
 signals:
 
 public slots:
 
 private:
+	QPointF bezierTangent(float start, float end) const;
     QString _sourceAnchor;
     QString _targetAnchor;
 
@@ -75,6 +85,9 @@ private:
     // referenced
     Node *_source;
     Node *_target;
+
+
+	EdgeStyle *_style;
 
     bool _dirty;
     bool _basicBendMode;
@@ -89,6 +102,9 @@ private:
     QPointF _cp1;
     QPointF _cp2;
     QPointF _mid;
+
+	QPointF _headTangent;
+	QPointF _tailTangent;
 
     int _tikzLine;
 };

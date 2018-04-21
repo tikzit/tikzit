@@ -13,6 +13,7 @@
 #include <QStyleOptionGraphicsItem>
 #include <QWidget>
 #include <QGraphicsEllipseItem>
+#include <QString>
 
 class EdgeItem : public QGraphicsItem
 {
@@ -29,6 +30,7 @@ public:
 
     QPainterPath path() const;
     void setPath(const QPainterPath &path);
+
 
 private:
     Edge *_edge;

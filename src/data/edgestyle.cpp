@@ -41,7 +41,7 @@ EdgeStyle::DrawStyle EdgeStyle::drawStyle() const
 QPen EdgeStyle::pen() const
 {
     QPen p(strokeColor());
-    p.setWidthF((float)strokeThickness() * 3.0f);
+    p.setWidthF((float)strokeThickness() * 2.0f);
 
     QVector<qreal> pat;
     switch (drawStyle()) {
@@ -83,6 +83,10 @@ QIcon EdgeStyle::icon() const
     }
 
     painter.drawLine(10, 50, 90, 50);
+
+	QPen pn = pen();
+	pn.setStyle(Qt::SolidLine);
+	painter.setPen(pn);
 
     switch (arrowHead()) {
     case Pointer:

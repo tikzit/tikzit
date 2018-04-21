@@ -114,6 +114,17 @@ QString StylePalette::activeNodeStyleName()
     }
 }
 
+QString StylePalette::activeEdgeStyleName()
+{
+	const QModelIndexList i = ui->edgeStyleListView->selectionModel()->selectedIndexes();
+
+	if (i.isEmpty()) {
+		return "none";
+	} else {
+		return i[0].data().toString();
+	}
+}
+
 void StylePalette::nodeStyleDoubleClicked(const QModelIndex &index)
 {
     tikzit->activeWindow()->tikzScene()->applyActiveStyleToNodes();

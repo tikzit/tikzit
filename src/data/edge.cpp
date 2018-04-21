@@ -16,6 +16,7 @@ Edge::Edge(Node *s, Node *t, QObject *parent) :
     _inAngle = 0;
     _outAngle = 0;
     _weight = 0.4f;
+	_style = noneEdgeStyle;
     updateControls();
 }
 
@@ -43,6 +44,7 @@ Edge *Edge::copy(QMap<Node*,Node*> *nodeTable)
     e->setInAngle(_inAngle);
     e->setOutAngle(_outAngle);
     e->setWeight(_weight);
+	e->attachStyle();
     e->updateControls();
     return e;
 }
@@ -77,6 +79,19 @@ void Edge::setData(GraphElementData *data)
     delete _data;
     _data = data;
     setAttributesFromData();
+}
+
+QString Edge::styleName() const
+{
+	QString nm = _data->property("style");
+	if (nm.isNull()) return "none";
+	else return nm;
+}
+
+void Edge::setStyleName(const QString &styleName)
+{
+	if (!styleName.isNull() && styleName != "none") _data->setProperty("style", styleName);
+	else _data->unsetProperty("style");
 }
 
 QString Edge::sourceAnchor() const
@@ -142,15 +157,15 @@ void Edge::updateControls() {
     if (_source->style()->isNone()) {
         _tail = src;
     } else {
-        _tail = QPointF(src.x() + std::cos(outAngleR) * 0.1,
-                        src.y() + std::sin(outAngleR) * 0.1);
+        _tail = QPointF(src.x() + std::cos(outAngleR) * 0.2,
+                        src.y() + std::sin(outAngleR) * 0.2);
     }
 
     if (_target->style()->isNone()) {
         _head = targ;
     } else {
-        _head = QPointF(targ.x() + std::cos(inAngleR) * 0.1,
-                        targ.y() + std::sin(inAngleR) * 0.1);
+        _head = QPointF(targ.x() + std::cos(inAngleR) * 0.2,
+                        targ.y() + std::sin(inAngleR) * 0.2);
     }
 
     // give a default distance for self-loops
@@ -163,12 +178,8 @@ void Edge::updateControls() {
                    targ.y() + (_cpDist * std::sin(inAngleR)));
 
     _mid = bezierInterpolateFull (0.5f, _tail, _cp1, _cp2, _head);
-//        midTan = [self _findTanFor:mid usingSpanFrom:0.4f to:0.6f];
-
-//        tailTan = [self _findTanFor:tail usingSpanFrom:0.0f to:0.1f];
-//        headTan = [self _findTanFor:head usingSpanFrom:1.0f to:0.9f];
-    //_dirty = false;
-    //}
+    _tailTangent = bezierTangent(0.0f, 0.1f);
+    _headTangent = bezierTangent(1.0f, 0.9f);
 }
 
 void Edge::setAttributesFromData()
@@ -344,4 +355,41 @@ QPointF Edge::mid() const
     return _mid;
 }
 
+QPointF Edge::headTangent() const
+{
+	return _headTangent;
+}
 
+QPointF Edge::tailTangent() const
+{
+	return _tailTangent;
+}
+
+void Edge::attachStyle()
+{
+	QString nm = styleName();
+	if (nm.isNull()) _style = noneEdgeStyle;
+	else _style = tikzit->styles()->edgeStyle(nm);
+}
+
+EdgeStyle * Edge::style() const
+{
+	return _style;
+}
+
+QPointF Edge::bezierTangent(float start, float end) const
+{
+	float dx = bezierInterpolate(end, _tail.x(), _cp1.x(), _cp2.x(), _head.x()) -
+		bezierInterpolate(start, _tail.x(), _cp1.x(), _cp2.x(), _head.x());
+	float dy = bezierInterpolate(end, _tail.y(), _cp1.y(), _cp2.y(), _head.y()) -
+		bezierInterpolate(start, _tail.y(), _cp1.y(), _cp2.y(), _head.y());
+
+	// normalise
+	float len = sqrt(dx*dx + dy * dy);
+	if (len != 0) {
+		dx = (dx / len) * 0.1f;
+		dy = (dy / len) * 0.1f;
+	}
+
+	return QPointF(dx, dy);
+}

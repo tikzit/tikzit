@@ -120,6 +120,17 @@ private:
     QMap<Node*,QString> _oldStyles;
 };
 
+class ApplyStyleToEdgesCommand : public GraphUpdateCommand
+{
+public:
+	explicit ApplyStyleToEdgesCommand(TikzScene *scene, QString style, QUndoCommand *parent = 0);
+	void undo() override;
+	void redo() override;
+private:
+	QString _style;
+	QMap<Edge*, QString> _oldStyles;
+};
+
 class PasteCommand : public GraphUpdateCommand
 {
 public:

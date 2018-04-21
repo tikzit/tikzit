@@ -130,6 +130,7 @@ void DeleteCommand::undo()
 
     for (auto it = _deleteEdges.begin(); it != _deleteEdges.end(); ++it) {
         Edge *e = it.value();
+		e->attachStyle();
         _scene->graph()->addEdge(e, it.key());
         EdgeItem *ei = new EdgeItem(e);
         _scene->edgeItems().insert(e, ei);
@@ -185,7 +186,7 @@ void AddNodeCommand::undo()
 
 void AddNodeCommand::redo()
 {
-    _node->attachStyle(); // in case styles have changed
+    _node->attachStyle(); // do for every redo, in case styles have changed
     _scene->graph()->addNode(_node);
     NodeItem *ni = new NodeItem(_node);
     _scene->nodeItems().insert(_node, ni);
@@ -214,12 +215,13 @@ void AddEdgeCommand::undo()
 
 void AddEdgeCommand::redo()
 {
-    // TODO: get the current style
+	_edge->attachStyle(); // do for every redo, in case styles have changed
     _scene->graph()->addEdge(_edge);
     EdgeItem *ei = new EdgeItem(_edge);
     _scene->edgeItems().insert(_edge, ei);
     _scene->addItem(ei);
 
+	// TODO: deal consistently with stacking order
     // edges should always be stacked below nodes
     if (!_scene->graph()->nodes().isEmpty()) {
         ei->stackBefore(_scene->nodeItems()[_scene->graph()->nodes().first()]);
@@ -235,7 +237,8 @@ ChangeEdgeModeCommand::ChangeEdgeModeCommand(TikzScene *scene, Edge *edge, QUndo
 
 void ChangeEdgeModeCommand::undo()
 {
-    _edge->setBasicBendMode(!_edge->basicBendMode());
+    // FIXME: this act strangely sometimes
+	_edge->setBasicBendMode(!_edge->basicBendMode());
     _scene->edgeItems()[_edge]->readPos();
     GraphUpdateCommand::undo();
 }
@@ -274,6 +277,35 @@ void ApplyStyleToNodesCommand::redo()
         n->attachStyle();
     }
     GraphUpdateCommand::redo();
+}
+
+ApplyStyleToEdgesCommand::ApplyStyleToEdgesCommand(TikzScene *scene, QString style, QUndoCommand *parent) :
+	GraphUpdateCommand(scene, parent), _style(style), _oldStyles()
+{
+	foreach(QGraphicsItem *it, scene->selectedItems()) {
+		if (EdgeItem *ei = dynamic_cast<EdgeItem*>(it)) {
+			_oldStyles.insert(ei->edge(), ei->edge()->styleName());
+		}
+	}
+}
+
+void ApplyStyleToEdgesCommand::undo()
+{
+	foreach(Edge *e, _oldStyles.keys()) {
+		e->setStyleName(_oldStyles[e]);
+		e->attachStyle();
+	}
+
+	GraphUpdateCommand::undo();
+}
+
+void ApplyStyleToEdgesCommand::redo()
+{
+	foreach(Edge *e, _oldStyles.keys()) {
+		e->setStyleName(_style);
+		e->attachStyle();
+	}
+	GraphUpdateCommand::redo();
 }
 
 PasteCommand::PasteCommand(TikzScene *scene, Graph *graph, QUndoCommand *parent) :
@@ -316,6 +348,7 @@ void PasteCommand::redo()
     _scene->graph()->insertGraph(_graph);
 
     foreach (Edge *e, _graph->edges()) {
+		e->attachStyle(); // in case styles have changed
         EdgeItem *ei = new EdgeItem(e);
         _scene->edgeItems().insert(e, ei);
         _scene->addItem(ei);
