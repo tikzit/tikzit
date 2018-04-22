@@ -284,6 +284,7 @@ void ApplyStyleToNodesCommand::undo()
         n->setStyleName(_oldStyles[n]);
         n->attachStyle();
     }
+	_scene->refreshAdjacentEdges(_oldStyles.keys());
 
     GraphUpdateCommand::undo();
 }
@@ -294,10 +295,13 @@ void ApplyStyleToNodesCommand::redo()
         n->setStyleName(_style);
         n->attachStyle();
     }
+	_scene->refreshAdjacentEdges(_oldStyles.keys());
+
     GraphUpdateCommand::redo();
 }
 
-ApplyStyleToEdgesCommand::ApplyStyleToEdgesCommand(TikzScene *scene, QString style, QUndoCommand *parent) :
+
+ApplyStyleToEdgesCommand::ApplyStyleToEdgesCommand(TikzScene * scene, QString style, QUndoCommand * parent) :
 	GraphUpdateCommand(scene, parent), _style(style), _oldStyles()
 {
 	foreach(QGraphicsItem *it, scene->selectedItems()) {
