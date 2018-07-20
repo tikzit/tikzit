@@ -27,6 +27,15 @@
    <property name="title">
     <string>Edit</string>
    </property>
+   <widget class="QMenu" name="menuSelect">
+    <property name="title">
+     <string>Extend Selection</string>
+    </property>
+    <addaction name="actionExtendLeft"/>
+    <addaction name="actionExtendRight"/>
+    <addaction name="actionExtendAbove"/>
+    <addaction name="actionExtendBelow"/>
+   </widget>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
@@ -37,6 +46,12 @@
    <addaction name="separator"/>
    <addaction name="actionSelect_All"/>
    <addaction name="actionDeselect_All"/>
+   <addaction name="menuSelect"/>
+   <addaction name="separator"/>
+   <addaction name="actionReflectHorizontal"/>
+   <addaction name="actionReflectVertical"/>
+   <addaction name="actionRotateCW"/>
+   <addaction name="actionRotateCCW"/>
   </widget>
   <widget class="QMenu" name="menuTikz">
    <property name="title">
@@ -197,6 +212,70 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+J</string>
+   </property>
+  </action>
+  <action name="actionReflectHorizontal">
+   <property name="text">
+    <string>Reflect Horizontally</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Right</string>
+   </property>
+  </action>
+  <action name="actionReflectVertical">
+   <property name="text">
+    <string>Reflect Vertically</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Down</string>
+   </property>
+  </action>
+  <action name="actionRotateCW">
+   <property name="text">
+    <string>Rotate 90' CW</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Shift+Right</string>
+   </property>
+  </action>
+  <action name="actionRotateCCW">
+   <property name="text">
+    <string>Rotate 90' CCW</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Shift+Left</string>
+   </property>
+  </action>
+  <action name="actionExtendLeft">
+   <property name="text">
+    <string>To the left</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Left</string>
+   </property>
+  </action>
+  <action name="actionExtendRight">
+   <property name="text">
+    <string>To the right</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Right</string>
+   </property>
+  </action>
+  <action name="actionExtendAbove">
+   <property name="text">
+    <string>Above</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Up</string>
+   </property>
+  </action>
+  <action name="actionExtendBelow">
+   <property name="text">
+    <string>Below</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Down</string>
    </property>
   </action>
   <addaction name="menuFile"/>
