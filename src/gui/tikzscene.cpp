@@ -44,7 +44,7 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
 
     QPen pen;
     pen.setColor(QColor::fromRgbF(0.5f, 0.0f, 0.5f));
-    pen.setWidth(3);
+    //pen.setWidth(3.0f);
     pen.setCosmetic(true);
     _drawEdgeItem->setPen(pen);
     _drawEdgeItem->setLine(0,0,0,0);
@@ -52,10 +52,11 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
     addItem(_drawEdgeItem);
 
     pen.setColor(QColor::fromRgbF(0.6f, 0.6f, 0.8f));
-    pen.setWidth(3);
-    QVector<qreal> dash;
-    dash << 4.0 << 4.0;
-    pen.setDashPattern(dash);
+    //pen.setWidth(3.0f);
+    //QVector<qreal> dash;
+    //dash << 4.0 << 4.0;
+    pen.setStyle(Qt::DashLine);
+    //pen.setDashPattern(dash);
     _rubberBandItem->setPen(pen);
 
     QBrush brush(QColor::fromRgbF(0.6,0.6,0.8,0.2));

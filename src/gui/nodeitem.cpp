@@ -70,8 +70,9 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 
         QPen pen(QColor(180,180,220));
         QVector<qreal> p;
-        p << 2.0 << 2.0;
+        p << 1.0 << 2.0;
         pen.setDashPattern(p);
+		pen.setWidthF(2.0f);
         painter->setPen(pen);
         painter->setBrush(Qt::NoBrush);
         painter->drawPath(shape());

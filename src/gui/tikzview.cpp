@@ -57,52 +57,68 @@ void TikzView::drawBackground(QPainter *painter, const QRectF &rect)
     // draw the grid
 
     QPen pen1;
-    pen1.setWidth(1);
+    //pen1.setWidthF(0.5);
     pen1.setCosmetic(true);
-    pen1.setColor(QColor(230,230,230));
+    pen1.setColor(QColor(250,250,255));
 
     QPen pen2 = pen1;
-    pen2.setColor(QColor(200,200,200));
+    pen2.setColor(QColor(240,240,250));
 
     QPen pen3 = pen1;
-    pen3.setColor(QColor(160,160,160));
+    pen3.setColor(QColor(220,220,240));
 
     painter->setPen(pen1);
 
     if (_scale > 0.2f) {
         for (int x = -GRID_SEP; x > rect.left(); x -= GRID_SEP) {
-            if (x % (GRID_SEP * GRID_N) != 0) painter->drawLine(x, rect.top(), x, rect.bottom());
+            if (x % (GRID_SEP * GRID_N) != 0) {
+                qreal xf = (qreal)x;
+                painter->drawLine(xf, rect.top(), xf, rect.bottom());
+            }
         }
 
         for (int x = GRID_SEP; x < rect.right(); x += GRID_SEP) {
-            if (x % (GRID_SEP * GRID_N) != 0) painter->drawLine(x, rect.top(), x, rect.bottom());
+            if (x % (GRID_SEP * GRID_N) != 0) {
+                qreal xf = (qreal)x;
+                painter->drawLine(xf, rect.top(), xf, rect.bottom());
+            }
         }
 
         for (int y = -GRID_SEP; y > rect.top(); y -= GRID_SEP) {
-            if (y % (GRID_SEP * GRID_N) != 0) painter->drawLine(rect.left(), y, rect.right(), y);
+            if (y % (GRID_SEP * GRID_N) != 0) {
+                qreal yf = (qreal)y;
+                painter->drawLine(rect.left(), yf, rect.right(), yf);
+            }
         }
 
         for (int y = GRID_SEP; y < rect.bottom(); y += GRID_SEP) {
-            if (y % (GRID_SEP * GRID_N) != 0) painter->drawLine(rect.left(), y, rect.right(), y);
+            if (y % (GRID_SEP * GRID_N) != 0) {
+                qreal yf = (qreal)y;
+                painter->drawLine(rect.left(), yf, rect.right(), yf);
+            }
         }
     }
 
     painter->setPen(pen2);
 
     for (int x = -GRID_SEP*GRID_N; x > rect.left(); x -= GRID_SEP*GRID_N) {
-        painter->drawLine(x, rect.top(), x, rect.bottom());
+        qreal xf = (qreal)x;
+        painter->drawLine(xf, rect.top(), xf, rect.bottom());
     }
 
     for (int x = GRID_SEP*GRID_N; x < rect.right(); x += GRID_SEP*GRID_N) {
-        painter->drawLine(x, rect.top(), x, rect.bottom());
+        qreal xf = (qreal)x;
+        painter->drawLine(xf, rect.top(), xf, rect.bottom());
     }
 
     for (int y = -GRID_SEP*GRID_N; y > rect.top(); y -= GRID_SEP*GRID_N) {
-        painter->drawLine(rect.left(), y, rect.right(), y);
+        qreal yf = (qreal)y;
+        painter->drawLine(rect.left(), yf, rect.right(), yf);
     }
 
     for (int y = GRID_SEP*GRID_N; y < rect.bottom(); y += GRID_SEP*GRID_N) {
-        painter->drawLine(rect.left(), y, rect.right(), y);
+        qreal yf = (qreal)y;
+        painter->drawLine(rect.left(), yf, rect.right(), yf);
     }
 
     painter->setPen(pen3);

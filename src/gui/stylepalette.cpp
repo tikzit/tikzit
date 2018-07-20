@@ -46,12 +46,13 @@ StylePalette::StylePalette(QWidget *parent) :
     ui->styleListView->setModel(_nodeModel);
     ui->styleListView->setViewMode(QListView::IconMode);
     ui->styleListView->setMovement(QListView::Static);
-    ui->styleListView->setGridSize(QSize(70,40));
+    ui->styleListView->setGridSize(QSize(48,48));
+
 
     ui->edgeStyleListView->setModel(_edgeModel);
     ui->edgeStyleListView->setViewMode(QListView::IconMode);
     ui->edgeStyleListView->setMovement(QListView::Static);
-    ui->edgeStyleListView->setGridSize(QSize(70,40));
+    ui->edgeStyleListView->setGridSize(QSize(48,48));
 
     reloadStyles();
 
