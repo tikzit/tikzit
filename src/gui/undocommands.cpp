@@ -421,12 +421,16 @@ ReplaceGraphCommand::ReplaceGraphCommand(TikzScene *scene, Graph *oldGraph, Grap
 
 void ReplaceGraphCommand::undo()
 {
+    foreach (Node *n, _oldGraph->nodes()) n->attachStyle();
+    foreach (Edge *e, _oldGraph->edges()) e->updateControls();
     _scene->tikzDocument()->setGraph(_oldGraph);
     _scene->graphReplaced();
 }
 
 void ReplaceGraphCommand::redo()
 {
+    foreach (Node *n, _newGraph->nodes()) n->attachStyle();
+    foreach (Edge *e, _newGraph->edges()) e->updateControls();
     _scene->tikzDocument()->setGraph(_newGraph);
     _scene->graphReplaced();
 }

@@ -90,14 +90,15 @@ void TikzScene::graphReplaced()
     _edgeItems.clear();
 
     foreach (Edge *e, graph()->edges()) {
-		e->attachStyle();
+		//e->attachStyle();
+        //e->updateControls();
         EdgeItem *ei = new EdgeItem(e);
         _edgeItems.insert(e, ei);
         addItem(ei);
     }
 
     foreach (Node *n, graph()->nodes()) {
-        n->attachStyle();
+        //n->attachStyle();
         NodeItem *ni = new NodeItem(n);
         _nodeItems.insert(n, ni);
         addItem(ni);
