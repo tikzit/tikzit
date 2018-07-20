@@ -110,6 +110,17 @@ void MainMenu::on_actionDeselect_All_triggered()
         tikzit->activeWindow()->tikzScene()->deselectAll();
 }
 
+void MainMenu::on_actionReflectHorizontal_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->reflectNodes(true);
+}
+
+void MainMenu::on_actionReflectVertical_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->reflectNodes(false);
+}
 
 // Tikz
 void MainMenu::on_actionParse_triggered()

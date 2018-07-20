@@ -430,3 +430,34 @@ void ReplaceGraphCommand::redo()
     _scene->tikzDocument()->setGraph(_newGraph);
     _scene->graphReplaced();
 }
+
+ReflectNodesCommand::ReflectNodesCommand(TikzScene *scene, QSet<Node*> nodes, bool horizontal, QUndoCommand *parent) :
+    GraphUpdateCommand(scene, parent), _nodes(nodes), _horizontal(horizontal)
+{
+}
+
+void ReflectNodesCommand::undo()
+{
+    _scene->graph()->reflectNodes(_nodes, _horizontal);
+    foreach (NodeItem *ni, _scene->nodeItems()) {
+        if (_nodes.contains(ni->node())) {
+            ni->readPos();
+        }
+    }
+
+    _scene->refreshAdjacentEdges(_nodes.toList());
+    GraphUpdateCommand::undo();
+}
+
+void ReflectNodesCommand::redo()
+{
+    _scene->graph()->reflectNodes(_nodes, _horizontal);
+    foreach (NodeItem *ni, _scene->nodeItems()) {
+        if (_nodes.contains(ni->node())) {
+            ni->readPos();
+        }
+    }
+
+    _scene->refreshAdjacentEdges(_nodes.toList());
+    GraphUpdateCommand::redo();
+}

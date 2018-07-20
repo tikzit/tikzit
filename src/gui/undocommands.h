@@ -191,4 +191,18 @@ private:
     Graph *_newGraph;
 };
 
+class ReflectNodesCommand : public GraphUpdateCommand
+{
+public:
+    explicit ReflectNodesCommand(TikzScene *scene,
+                                 QSet<Node*> nodes,
+                                 bool horizontal,
+                                 QUndoCommand *parent = 0);
+    void undo() override;
+    void redo() override;
+private:
+    QSet<Node*> _nodes;
+    bool _horizontal;
+};
+
 #endif // UNDOCOMMANDS_H

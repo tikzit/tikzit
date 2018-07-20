@@ -46,7 +46,8 @@ public:
     void addEdge(Edge *e, int index);
     void removeEdge(Edge *e);
     int maxIntName();
-    QString freshNodeName();
+	QRectF boundsForNodes(QSet<Node*> ns);
+	QString freshNodeName();
 
     /*!
      * \brief renameApart assigns fresh names to all of the nodes in "this",
@@ -93,6 +94,15 @@ public:
      * \param graph
      */
     void insertGraph(Graph *graph);
+
+    /*!
+     * \brief reflectNodes flips the given set of nodes horizontally or vertically,
+     * depending on the value of the second parameter.
+     * \param nds a set of nodes to flip
+     * \param horizontal a boolean determining whether to flip horizontally or
+     *                   vertically
+     */
+    void reflectNodes(QSet<Node*> nds, bool horizontal);
 signals:
 
 public slots:

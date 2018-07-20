@@ -45,7 +45,7 @@ public:
     ArrowTipStyle arrowTail() const;
     DrawStyle drawStyle() const;
 
-    QPen pen() const;
+    QPen pen() const override;
     QPainterPath path() const override;
     QPainterPath palettePath() const override;
     QIcon icon() const override;

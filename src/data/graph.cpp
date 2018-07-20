@@ -98,6 +98,29 @@ QRectF Graph::realBbox()
     return rect;
 }
 
+QRectF Graph::boundsForNodes(QSet<Node*>nds) {
+	QPointF p;
+	QPointF tl;
+	QPointF br;
+	bool hasPoints = false;
+	foreach (Node *n, nds) {
+		p = n->point();
+		if (!hasPoints) {
+			hasPoints = true;
+			tl = p;
+			br = p;
+		} else {
+			if (p.x() < tl.x()) tl.setX(p.x());
+			if (p.y() > tl.y()) tl.setY(p.y());
+			if (p.x() > br.x()) br.setX(p.x());
+			if (p.y() < br.y()) br.setY(p.y());
+		}
+	}
+
+	QRectF rect(tl, br);
+	return rect;
+}
+
 QString Graph::freshNodeName()
 {
     return QString::number(maxIntName() + 1);
@@ -265,6 +288,43 @@ void Graph::insertGraph(Graph *graph)
     QMap<Node*,Node*> nodeTable;
     foreach (Node *n, graph->nodes()) addNode(n);
     foreach (Edge *e, graph->edges()) addEdge(e);
+}
+
+void Graph::reflectNodes(QSet<Node*> nds, bool horizontal)
+{
+    QRectF bds = boundsForNodes(nds);
+    float ctr;
+    if (horizontal) ctr = bds.center().x();
+    else ctr = bds.center().y();
+
+    QPointF p;
+    foreach(Node *n, nds) {
+        p = n->point();
+        if (horizontal) p.setX(2 * ctr - p.x());
+        else p.setY(2 * ctr - p.y());
+        n->setPoint(p);
+    }
+
+    foreach (Edge *e, _edges) {
+        if (nds.contains(e->source()) && nds.contains(e->target())) {
+            if (!e->basicBendMode()) {
+                if (horizontal) {
+                    if (e->inAngle() < 0) e->setInAngle(-180 - e->inAngle());
+                    else e->setInAngle(180 - e->inAngle());
+
+                    if (e->outAngle() < 0) e->setOutAngle(-180 - e->outAngle());
+                    else e->setOutAngle(180 - e->outAngle());
+                }
+                else {
+                    e->setInAngle(-e->inAngle());
+                    e->setOutAngle(-e->outAngle());
+                }
+            }
+            else {
+                e->setBend(-e->bend());
+            }
+        }
+    }
 }
 
 void Graph::setBbox(const QRectF &bbox)

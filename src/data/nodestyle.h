@@ -39,7 +39,7 @@ public:
 
     QColor fillColor() const;
     QBrush brush() const;
-    QPainterPath path() const;
+    QPainterPath path() const override;
     Shape shape() const;
 
     QPainterPath palettePath() const override;

@@ -681,6 +681,11 @@ void TikzScene::parseTikz(QString tikz)
     }
 }
 
+void TikzScene::reflectNodes(bool horizontal) {
+    ReflectNodesCommand *cmd = new ReflectNodesCommand(this, getSelectedNodes(), horizontal);
+    tikzDocument()->undoStack()->push(cmd);
+}
+
 void TikzScene::getSelection(QSet<Node *> &selNodes, QSet<Edge *> &selEdges)
 {
     foreach (QGraphicsItem *gi, selectedItems()) {
