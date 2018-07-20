@@ -548,7 +548,7 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             QString newLabel = QInputDialog::getText(views()[0], tr("Node label"),
                                                      tr("Label:"), QLineEdit::Normal,
                                                      ni->node()->label(), &ok);
-            if (ok && !newLabel.isEmpty()) {
+            if (ok) {
                 QMap<Node*,QString> oldLabels;
                 oldLabels.insert(ni->node(), ni->node()->label());
                 ChangeLabelCommand *cmd = new ChangeLabelCommand(this, graph(), oldLabels, newLabel);
