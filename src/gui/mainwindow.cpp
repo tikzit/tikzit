@@ -77,6 +77,10 @@ void MainWindow::open(QString fileName)
 
 }
 
+QSplitter *MainWindow::splitter() const {
+    return ui->splitter;
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "got close event";

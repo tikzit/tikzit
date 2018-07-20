@@ -670,7 +670,7 @@ void TikzScene::deselectAll()
     selectedItems().clear();
 }
 
-void TikzScene::parseTikz(QString tikz)
+bool TikzScene::parseTikz(QString tikz)
 {
     Graph *newGraph = new Graph(this);
     TikzAssembler ass(newGraph);
@@ -678,6 +678,10 @@ void TikzScene::parseTikz(QString tikz)
         ReplaceGraphCommand *cmd = new ReplaceGraphCommand(this, graph(), newGraph);
         tikzDocument()->undoStack()->push(cmd);
         setEnabled(true);
+        views()[0]->setFocus();
+        return true;
+    } else {
+        return false;
     }
 }
 

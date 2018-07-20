@@ -63,7 +63,7 @@ public:
     void pasteFromClipboard();
     void selectAllNodes();
     void deselectAll();
-    void parseTikz(QString tikz);
+    bool parseTikz(QString tikz);
     void reflectNodes(bool horizontal);
     bool enabled() const;
     void setEnabled(bool enabled);

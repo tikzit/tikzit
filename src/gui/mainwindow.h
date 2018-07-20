@@ -15,6 +15,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsView>
+#include <QSplitter>
 
 namespace Ui {
 class MainWindow;
@@ -35,6 +36,7 @@ public:
     TikzDocument *tikzDocument() const;
     ToolPalette *toolPalette() const;    
     StylePalette *stylePalette() const;
+    QSplitter *splitter() const;
     QString tikzSource();
     void setSourceLine(int line);
 

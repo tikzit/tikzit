@@ -127,7 +127,12 @@ void MainMenu::on_actionParse_triggered()
 {
     MainWindow *win = tikzit->activeWindow();
     if (win != 0) {
-        win->tikzScene()->parseTikz(win->tikzSource());
+        if (win->tikzScene()->parseTikz(win->tikzSource())) {
+            QList<int> sz = win->splitter()->sizes();
+            sz[0] = sz[0] + sz[1];
+            sz[1] = 0;
+            win->splitter()->setSizes(sz);
+        }
     }
 }
 
@@ -144,7 +149,12 @@ void MainMenu::on_actionJump_to_Selection_triggered()
 {
     MainWindow *win = tikzit->activeWindow();
     if (win != 0) {
-        qDebug() << "jump to selection on line:" << win->tikzScene()->lineNumberForSelection();
+        //qDebug() << "jump to selection on line:" << win->tikzScene()->lineNumberForSelection();
+        QList<int> sz = win->splitter()->sizes();
+        if (sz[1] == 0) {
+            sz[1] = 200;
+            win->splitter()->setSizes(sz);
+        }
         win->setSourceLine(win->tikzScene()->lineNumberForSelection());
     }
 }
