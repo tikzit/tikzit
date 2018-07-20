@@ -56,6 +56,7 @@ public:
     void reloadStyles();
     //void refreshSceneBounds();
     void applyActiveStyleToNodes();
+	void applyActiveStyleToEdges();
     void deleteSelectedItems();
     void copyToClipboard();
     void cutToClipboard();

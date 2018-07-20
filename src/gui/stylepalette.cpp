@@ -57,6 +57,7 @@ StylePalette::StylePalette(QWidget *parent) :
     reloadStyles();
 
     connect(ui->styleListView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT( nodeStyleDoubleClicked(const QModelIndex&)) );
+	connect(ui->edgeStyleListView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(edgeStyleDoubleClicked(const QModelIndex&)));
 }
 
 StylePalette::~StylePalette()
@@ -151,7 +152,8 @@ void StylePalette::nodeStyleDoubleClicked(const QModelIndex &index)
 
 void StylePalette::edgeStyleDoubleClicked(const QModelIndex &index)
 {
-    // TODO
+	qDebug() << "got double click";
+	tikzit->activeWindow()->tikzScene()->applyActiveStyleToEdges();
 }
 
 void StylePalette::on_buttonOpenTikzstyles_clicked()

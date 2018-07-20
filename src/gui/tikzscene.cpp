@@ -585,6 +585,11 @@ void TikzScene::applyActiveStyleToNodes() {
     _tikzDocument->undoStack()->push(cmd);
 }
 
+void TikzScene::applyActiveStyleToEdges() {
+	ApplyStyleToEdgesCommand *cmd = new ApplyStyleToEdgesCommand(this, _styles->activeEdgeStyleName());
+	_tikzDocument->undoStack()->push(cmd);
+}
+
 void TikzScene::deleteSelectedItems()
 {
     QSet<Node*> selNodes;
