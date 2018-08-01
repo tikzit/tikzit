@@ -122,6 +122,17 @@ void MainMenu::on_actionReflectVertical_triggered()
         tikzit->activeWindow()->tikzScene()->reflectNodes(false);
 }
 
+void MainMenu::on_actionRotateCW_triggered() {
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->rotateNodes(true);
+}
+
+void MainMenu::on_actionRotateCCW_triggered() {
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->rotateNodes(false);
+}
+
+
 // Tikz
 void MainMenu::on_actionParse_triggered()
 {

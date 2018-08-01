@@ -65,6 +65,7 @@ public:
     void deselectAll();
     bool parseTikz(QString tikz);
     void reflectNodes(bool horizontal);
+    void rotateNodes(bool clockwise);
     bool enabled() const;
     void setEnabled(bool enabled);
     int lineNumberForSelection();

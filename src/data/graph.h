@@ -103,6 +103,14 @@ public:
      *                   vertically
      */
     void reflectNodes(QSet<Node*> nds, bool horizontal);
+
+    /*!
+     * \brief rotateNodes rotates the given set of nodes clockwise or counter-clockwise,
+     * depending on the value of the second parameter.
+     * \param nds a set of nodes to flip
+     * \param clockwose a boolean determining whether to rotate clockwise or counter-clockwise
+     */
+    void rotateNodes(QSet<Node*> nds, bool clockwise);
 signals:
 
 public slots:

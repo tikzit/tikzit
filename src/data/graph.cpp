@@ -327,6 +327,44 @@ void Graph::reflectNodes(QSet<Node*> nds, bool horizontal)
     }
 }
 
+void Graph::rotateNodes(QSet<Node*> nds, bool clockwise)
+{
+    QRectF bds = boundsForNodes(nds);
+    // QPointF ctr = bds.center();
+    // ctr.setX((float)floor(ctr.x() * 4.0f) / 4.0f);
+    // ctr.setY((float)floor(ctr.y() * 4.0f) / 4.0f);
+    float sign = (clockwise) ? 1.0f : -1.0f;
+
+    QPointF p;
+    // float dx, dy;
+    foreach(Node *n, nds) {
+        p = n->point();
+        // dx = p.x() - ctr.x();
+        // dy = p.y() - ctr.y();
+        n->setPoint(QPointF(sign * p.y(), -sign * p.x()));
+    }
+
+    int newIn, newOut;
+    foreach (Edge *e, _edges) {
+        if (nds.contains(e->source()) && nds.contains(e->target())) {
+            // update angles if necessary. Note that "basic" bends are computed based
+            // on node position, so they don't need to be updated.
+            if (!e->basicBendMode()) {
+                newIn = e->inAngle() - sign * 90;
+                newOut = e->outAngle() - sign * 90;
+
+                // normalise the angle to be within (-180,180]
+                if (newIn > 180) newIn -= 360;
+                else if (newIn <= -180) newIn += 360;
+                if (newOut > 180) newOut -= 360;
+                else if (newOut <= -180) newOut += 360;
+                e->setInAngle(newIn);
+                e->setOutAngle(newOut);
+            }
+        }
+    }
+}
+
 void Graph::setBbox(const QRectF &bbox)
 {
     _bbox = bbox;

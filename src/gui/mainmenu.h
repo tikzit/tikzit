@@ -52,6 +52,8 @@ public slots:
     void on_actionDeselect_All_triggered();
     void on_actionReflectHorizontal_triggered();
     void on_actionReflectVertical_triggered();
+    void on_actionRotateCW_triggered();
+    void on_actionRotateCCW_triggered();
 
     // Tikz
     void on_actionParse_triggered();

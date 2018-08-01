@@ -205,4 +205,18 @@ private:
     bool _horizontal;
 };
 
+class RotateNodesCommand : public GraphUpdateCommand
+{
+public:
+    explicit RotateNodesCommand(TikzScene *scene,
+                                QSet<Node*> nodes,
+                                bool clockwise,
+                                QUndoCommand *parent = 0);
+    void undo() override;
+    void redo() override;
+private:
+    QSet<Node*> _nodes;
+    bool _clockwise;
+};
+
 #endif // UNDOCOMMANDS_H

@@ -686,10 +686,18 @@ bool TikzScene::parseTikz(QString tikz)
     }
 }
 
-void TikzScene::reflectNodes(bool horizontal) {
+void TikzScene::reflectNodes(bool horizontal)
+{
     ReflectNodesCommand *cmd = new ReflectNodesCommand(this, getSelectedNodes(), horizontal);
     tikzDocument()->undoStack()->push(cmd);
 }
+
+void TikzScene::rotateNodes(bool clockwise)
+{
+    RotateNodesCommand *cmd = new RotateNodesCommand(this, getSelectedNodes(), clockwise);
+    tikzDocument()->undoStack()->push(cmd);
+}
+
 
 void TikzScene::getSelection(QSet<Node *> &selNodes, QSet<Edge *> &selEdges)
 {

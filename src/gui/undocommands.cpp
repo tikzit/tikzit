@@ -465,3 +465,35 @@ void ReflectNodesCommand::redo()
     _scene->refreshAdjacentEdges(_nodes.toList());
     GraphUpdateCommand::redo();
 }
+
+
+RotateNodesCommand::RotateNodesCommand(TikzScene *scene, QSet<Node*> nodes, bool clockwise, QUndoCommand *parent) :
+    GraphUpdateCommand(scene, parent), _nodes(nodes), _clockwise(clockwise)
+{
+}
+
+void RotateNodesCommand::undo()
+{
+    _scene->graph()->rotateNodes(_nodes, !_clockwise);
+    foreach (NodeItem *ni, _scene->nodeItems()) {
+        if (_nodes.contains(ni->node())) {
+            ni->readPos();
+        }
+    }
+
+    _scene->refreshAdjacentEdges(_nodes.toList());
+    GraphUpdateCommand::undo();
+}
+
+void RotateNodesCommand::redo()
+{
+    _scene->graph()->rotateNodes(_nodes, _clockwise);
+    foreach (NodeItem *ni, _scene->nodeItems()) {
+        if (_nodes.contains(ni->node())) {
+            ni->readPos();
+        }
+    }
+
+    _scene->refreshAdjacentEdges(_nodes.toList());
+    GraphUpdateCommand::redo();
+}
