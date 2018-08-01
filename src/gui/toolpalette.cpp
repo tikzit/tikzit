@@ -35,26 +35,32 @@ ToolPalette::ToolPalette(QWidget *parent) :
 
     tools  = new QActionGroup(this);
 
-    select = new QAction(QIcon(":/images/Inkscape_icons_edit_select_all.svg"), "Select");
-    vertex = new QAction(QIcon(":/images/Inkscape_icons_draw_ellipse.svg"), "Add Vertex");
-    edge   = new QAction(QIcon(":/images/Inkscape_icons_draw_path.svg"), "Add Edge");
+    // select = new QAction(QIcon(":/images/Inkscape_icons_edit_select_all.svg"), "Select");
+    // vertex = new QAction(QIcon(":/images/Inkscape_icons_draw_ellipse.svg"), "Add Vertex");
+    // edge   = new QAction(QIcon(":/images/Inkscape_icons_draw_path.svg"), "Add Edge");
+    // crop   = new QAction(QIcon(":/images/crop.svg"), "Bounding Box");
+
+    select = new QAction(QIcon(":/images/select-ak.svg"), "Select");
+    vertex = new QAction(QIcon(":/images/node-ak.svg"), "Add Vertex");
+    edge   = new QAction(QIcon(":/images/edge-ak.svg"), "Add Edge");
     crop   = new QAction(QIcon(":/images/crop.svg"), "Bounding Box");
+
 
     tools->addAction(select);
     tools->addAction(vertex);
     tools->addAction(edge);
-    tools->addAction(crop);
+    //tools->addAction(crop);
 
     select->setCheckable(true);
     vertex->setCheckable(true);
     edge->setCheckable(true);
-    crop->setCheckable(true);
+    //crop->setCheckable(true);
     select->setChecked(true);
 
     addAction(select);
     addAction(vertex);
     addAction(edge);
-    addAction(crop);
+    //addAction(crop);
 }
 
 ToolPalette::Tool ToolPalette::currentTool() const
