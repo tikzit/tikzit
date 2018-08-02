@@ -18,6 +18,7 @@
 
 #include "util.h"
 
+
 float bezierInterpolate(float dist, float c0, float c1, float c2, float c3) {
     float distp = 1 - dist;
     return	(distp*distp*distp) * c0 +

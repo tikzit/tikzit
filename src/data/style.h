@@ -38,7 +38,7 @@ public:
     // properties that both edges and nodes have
     GraphElementData *data() const;
     QString name() const;
-    QColor strokeColor() const;
+    QColor strokeColor(bool tikzitOverride=true) const;
     int strokeThickness() const;
 
     // methods that are implemented differently for edges and nodes
@@ -47,7 +47,7 @@ public:
     virtual QPainterPath palettePath() const = 0;
     virtual QIcon icon() const = 0;
 protected:
-    QString propertyWithDefault(QString prop, QString def) const;
+    QString propertyWithDefault(QString prop, QString def, bool tikzitOverride=true) const;
     QString _name;
     GraphElementData *_data;
 };

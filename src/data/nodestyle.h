@@ -37,10 +37,10 @@ public:
     NodeStyle();
     NodeStyle(QString name, GraphElementData *data);
 
-    QColor fillColor() const;
+    QColor fillColor(bool tikzitOverride=true) const;
     QBrush brush() const;
     QPainterPath path() const override;
-    Shape shape() const;
+    Shape shape(bool tikzitOverride=true) const;
 
     QPainterPath palettePath() const override;
     QIcon icon() const override;

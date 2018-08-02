@@ -44,6 +44,7 @@ public slots:
     void nodeStyleDoubleClicked(const QModelIndex &index);
     void edgeStyleDoubleClicked(const QModelIndex &index);
     void on_buttonOpenTikzstyles_clicked();
+    void on_buttonEditTikzstyles_clicked();
     void on_buttonRefreshTikzstyles_clicked();
     //void on_buttonApplyNodeStyle_clicked();
 

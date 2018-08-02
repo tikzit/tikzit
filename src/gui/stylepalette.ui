@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>88</width>
-    <height>518</height>
+    <height>506</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -68,6 +68,20 @@
         <property name="icon">
          <iconset resource="../../tikzit.qrc">
           <normaloff>:/images/document-open.svg</normaloff>:/images/document-open.svg</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="buttonEditTikzstyles">
+        <property name="toolTip">
+         <string>New Project</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../tikzit.qrc">
+          <normaloff>:/images/document-new.svg</normaloff>:/images/document-new.svg</iconset>
         </property>
        </widget>
       </item>

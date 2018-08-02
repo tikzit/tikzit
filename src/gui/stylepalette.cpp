@@ -67,36 +67,10 @@ StylePalette::~StylePalette()
 
 void StylePalette::reloadStyles()
 {
-    _nodeModel->clear();
-    _edgeModel->clear();
     QString f = tikzit->styleFile();
     ui->styleFile->setText(f);
 
-    QStandardItem *it;
-
-    it = new QStandardItem(noneStyle->icon(), noneStyle->name());
-    it->setEditable(false);
-    it->setData(noneStyle->name());
-    _nodeModel->appendRow(it);
-
-    foreach(NodeStyle *ns, tikzit->styles()->nodeStyles()) {
-        it = new QStandardItem(ns->icon(), ns->name());
-        it->setEditable(false);
-        it->setData(ns->name());
-        _nodeModel->appendRow(it);
-    }
-
-    it = new QStandardItem(noneEdgeStyle->icon(), noneEdgeStyle->name());
-    it->setEditable(false);
-    it->setData(noneEdgeStyle->name());
-    _edgeModel->appendRow(it);
-
-    foreach(EdgeStyle *es, tikzit->styles()->edgeStyles()) {
-        it = new QStandardItem(es->icon(), es->name());
-        it->setEditable(false);
-        it->setData(es->name());
-        _edgeModel->appendRow(it);
-    }
+    tikzit->styles()->refreshModels(_nodeModel, _edgeModel);
 }
 
 void StylePalette::changeNodeStyle(int increment)
@@ -159,6 +133,11 @@ void StylePalette::edgeStyleDoubleClicked(const QModelIndex &index)
 void StylePalette::on_buttonOpenTikzstyles_clicked()
 {
     tikzit->openTikzStyles();
+}
+
+void StylePalette::on_buttonEditTikzstyles_clicked()
+{
+    tikzit->showStyleEditor();
 }
 
 void StylePalette::on_buttonRefreshTikzstyles_clicked()

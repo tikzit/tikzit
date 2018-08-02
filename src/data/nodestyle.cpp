@@ -30,11 +30,11 @@ NodeStyle::NodeStyle(QString name, GraphElementData *data): Style(name, data)
 {
 }
 
-QColor NodeStyle::fillColor() const
+QColor NodeStyle::fillColor(bool tikzitOverride) const
 {
     if (_data == 0) return Qt::white;
 
-    QString col = propertyWithDefault("fill", "white");
+    QString col = propertyWithDefault("fill", "white", tikzitOverride);
 
     QColor namedColor(col);
     if (namedColor.isValid()) {
@@ -50,11 +50,11 @@ QBrush NodeStyle::brush() const
     return QBrush(fillColor());
 }
 
-NodeStyle::Shape NodeStyle::shape() const
+NodeStyle::Shape NodeStyle::shape(bool tikzitOverride) const
 {
     if (_data == 0) return NodeStyle::Circle;
 
-    QString sh = propertyWithDefault("shape", "circle");
+    QString sh = propertyWithDefault("shape", "circle", tikzitOverride);
     if (sh == "circle") return NodeStyle::Circle;
     else if (sh == "rectangle") return NodeStyle::Rectangle;
     else return NodeStyle::Circle;

@@ -28,10 +28,16 @@
 #include <QApplication>
 #include <QMenuBar>
 
+// #ifdef Q_OS_WIN
+// #include <Windows.h>
+// #endif
 
 
 int main(int argc, char *argv[])
 {
+    // #ifdef Q_OS_WIN
+    //     SetProcessDPIAware();
+    // #endif
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     //QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);

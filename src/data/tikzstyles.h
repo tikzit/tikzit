@@ -25,6 +25,8 @@
 
 #include <QObject>
 #include <QString>
+#include <QColor>
+#include <QStandardItemModel>
 
 class TikzStyles : public QObject
 {
@@ -39,6 +41,12 @@ public:
     QVector<EdgeStyle *> edgeStyles() const;
     void clear();
 
+    // convenience functions for named colors
+    QColor colorByIndex(int i);
+    QColor colorByName(QString name);
+    QString nameForColor(QColor col);
+    void refreshModels(QStandardItemModel *nodeModel, QStandardItemModel *edgeModel);
+
 signals:
 
 public slots:
@@ -46,6 +54,8 @@ public slots:
 private:
     QVector<NodeStyle*> _nodeStyles;
     QVector<EdgeStyle*> _edgeStyles;
+    QStringList _colNames;
+    QVector<QColor> _cols;
 };
 
 #endif // PROJECT_H

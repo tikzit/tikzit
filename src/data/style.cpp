@@ -41,11 +41,11 @@ QString Style::name() const
     return _name;
 }
 
-QColor Style::strokeColor() const
+QColor Style::strokeColor(bool tikzitOverride) const
 {
     if (_data == 0) return Qt::black;
 
-    QString col = propertyWithDefault("draw", "black");
+    QString col = propertyWithDefault("draw", "black", tikzitOverride);
 
     QColor namedColor(col);
     if (namedColor.isValid()) {
@@ -69,10 +69,15 @@ QPen Style::pen() const
     return p;
 }
 
-QString Style::propertyWithDefault(QString prop, QString def) const
+QString Style::propertyWithDefault(QString prop, QString def, bool tikzitOverride) const
 {
-    QString val = _data->property("tikzit " + prop);
-    if (val.isNull()) val = _data->property(prop);
+    QString val;
+    if (tikzitOverride) {
+        val = _data->property("tikzit " + prop);
+        if (val.isNull()) val = _data->property(prop);
+    } else {
+        val = _data->property(prop);
+    }
     if (val.isNull()) val = def;
     return val;
 }

@@ -25,6 +25,7 @@
 
 #include <QPoint>
 #include <QString>
+#include <QColor>
 #include <cmath>
 
 #ifndef M_PI

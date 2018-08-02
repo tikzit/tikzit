@@ -20,10 +20,38 @@
 #include "nodestyle.h"
 
 #include <QDebug>
+#include <QColorDialog>
 
 TikzStyles::TikzStyles(QObject *parent) : QObject(parent)
 {
+    // 19 standard xcolor colours
+    _colNames <<
+        "black" <<
+        "gray" <<
+        "darkgray" <<
+        "lightgray" <<
+        "white" <<
 
+        "red" <<
+        "orange" <<
+        "yellow" <<
+        "lime" <<
+        "blue" <<
+        "purple" <<
+
+        "brown" <<
+        "olive" <<
+        "green" <<
+        "teal" <<
+        "cyan" <<
+
+        "magenta" <<
+        "violet" <<
+        "pink";
+
+    for (int i = 0; i < _colNames.length(); ++i) {
+        _cols << QColor(_colNames[i]);
+    }
 }
 
 NodeStyle *TikzStyles::nodeStyle(QString name) const
@@ -49,6 +77,61 @@ void TikzStyles::clear()
 {
     _nodeStyles.clear();
     _edgeStyles.clear();
+}
+
+QColor TikzStyles::colorByIndex(int i)
+{
+    return _cols[i];
+}
+
+QColor TikzStyles::colorByName(QString name)
+{
+    for (int i = 0; i < _colNames.length(); ++i) {
+        if (_colNames[i] == name) return _cols[i];
+    }
+    return QColor();
+}
+
+QString TikzStyles::nameForColor(QColor col)
+{
+    for (int i = 0; i < _colNames.length(); ++i) {
+        if (_cols[i] == col) return _colNames[i];
+    }
+    return QString();
+}
+
+void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel *edgeModel)
+{
+    nodeModel->clear();
+    edgeModel->clear();
+    //QString f = tikzit->styleFile();
+    //ui->styleFile->setText(f);
+
+    QStandardItem *it;
+
+    it = new QStandardItem(noneStyle->icon(), noneStyle->name());
+    it->setEditable(false);
+    it->setData(noneStyle->name());
+    nodeModel->appendRow(it);
+
+    foreach(NodeStyle *ns, _nodeStyles) {
+        it = new QStandardItem(ns->icon(), ns->name());
+        it->setEditable(false);
+        it->setData(ns->name());
+        nodeModel->appendRow(it);
+    }
+
+    it = new QStandardItem(noneEdgeStyle->icon(), noneEdgeStyle->name());
+    it->setEditable(false);
+    it->setData(noneEdgeStyle->name());
+    edgeModel->appendRow(it);
+
+    foreach(EdgeStyle *es, _edgeStyles) {
+        it = new QStandardItem(es->icon(), es->name());
+        it->setEditable(false);
+        it->setData(es->name());
+        edgeModel->appendRow(it);
+    }
 }
 
 QVector<EdgeStyle *> TikzStyles::edgeStyles() const

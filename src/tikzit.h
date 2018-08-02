@@ -53,6 +53,7 @@
 #include "mainmenu.h"
 #include "ui_mainmenu.h"
 
+#include "styleeditor.h"
 #include "toolpalette.h"
 #include "propertypalette.h"
 #include "stylepalette.h"
@@ -116,6 +117,7 @@ public:
 
     void openTikzStyles();
     void loadStyles(QString fileName);
+    void showStyleEditor();
     TikzStyles *styles() const;
     QString styleFile() const;
     //StylePalette *stylePalette() const;
@@ -133,7 +135,7 @@ private:
     MainWindow *_activeWindow;
     TikzStyles *_styles;
     QString _styleFile;
-
+    StyleEditor *_styleEditor;
 };
 
 extern Tikzit *tikzit;

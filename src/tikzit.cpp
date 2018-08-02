@@ -47,6 +47,8 @@ void Tikzit::init(QApplication *app)
     //_stylePalette = new StylePalette(dummy);
     _styles = new TikzStyles(this);
 
+    _styleEditor = new StyleEditor();
+
     //_stylePalette->show();
     _windows << new MainWindow();
     _windows[0]->show();
@@ -174,6 +176,11 @@ void Tikzit::loadStyles(QString fileName)
         settings.setValue("previous-tikzstyles-file", "");
         QMessageBox::warning(0, "Style file not found.", "Could not open style file: '" + fileName + "', reverting to default.");
     }
+}
+
+void Tikzit::showStyleEditor()
+{
+    _styleEditor->show();
 }
 
 QString Tikzit::styleFile() const
