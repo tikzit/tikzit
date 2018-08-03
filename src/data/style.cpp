@@ -17,6 +17,7 @@
 */
 
 #include "style.h"
+#include "tikzit.h"
 
 Style::Style() : _name("none"), _data(0)
 {
@@ -43,17 +44,10 @@ QString Style::name() const
 
 QColor Style::strokeColor(bool tikzitOverride) const
 {
-    if (_data == 0) return Qt::black;
+    if (_data == 0) return QColor(Qt::black);
 
     QString col = propertyWithDefault("draw", "black", tikzitOverride);
-
-    QColor namedColor(col);
-    if (namedColor.isValid()) {
-        return namedColor;
-    } else {
-        // TODO: read RGB colors
-        return QColor(Qt::black);
-    }
+    return tikzit->colorByName(col);
 }
 
 // TODO
@@ -80,4 +74,9 @@ QString Style::propertyWithDefault(QString prop, QString def, bool tikzitOverrid
     }
     if (val.isNull()) val = def;
     return val;
+}
+
+void Style::setName(const QString &name)
+{
+    _name = name;
 }

@@ -1,5 +1,6 @@
 #include <QColorDialog>
 #include <QDebug>
+#include <QMessageBox>
 
 #include "tikzit.h"
 #include "styleeditor.h"
@@ -16,7 +17,7 @@ StyleEditor::StyleEditor(QWidget *parent) :
     setColor(ui->tikzitFillColor, QColor(Qt::white));
     setColor(ui->tikzitDrawColor, QColor(Qt::black));
 
-    TikzStyles *styles = tikzit->styles();
+    _styles = 0;
 
     _nodeModel = new QStandardItemModel(this);
     _edgeModel = new QStandardItemModel(this);
@@ -41,28 +42,28 @@ StyleEditor::StyleEditor(QWidget *parent) :
     // grayscale in column 1
     int pos = 0;
     for (int i=0; i < 5; ++i) {
-        QColorDialog::setStandardColor(pos, styles->colorByIndex(i));
+        QColorDialog::setStandardColor(pos, tikzit->colorByIndex(i));
         pos += 1;
     }
 
     // rainbow in column 2
     pos = 6;
     for (int i=5; i < 11; ++i) {
-        QColorDialog::setStandardColor(pos, styles->colorByIndex(i));
+        QColorDialog::setStandardColor(pos, tikzit->colorByIndex(i));
         pos += 1;
     }
 
     // brown/green/teal spectrum in column 3
     pos = 12;
     for (int i=11; i < 16; ++i) {
-        QColorDialog::setStandardColor(pos, styles->colorByIndex(i));
+        QColorDialog::setStandardColor(pos, tikzit->colorByIndex(i));
         pos += 1;
     }
 
     // pinks in column 4
     pos = 18;
     for (int i=16; i < 19; ++i) {
-        QColorDialog::setStandardColor(pos, styles->colorByIndex(i));
+        QColorDialog::setStandardColor(pos, tikzit->colorByIndex(i));
         pos += 1;
     }
 
@@ -76,9 +77,17 @@ StyleEditor::~StyleEditor()
     delete ui;
 }
 
-void StyleEditor::showEvent(QShowEvent *)
-{
-    tikzit->styles()->refreshModels(_nodeModel, _edgeModel);
+void StyleEditor::open() {
+    if (_styles != 0) delete _styles;
+    _styles = new TikzStyles;
+    if (_styles->loadStyles(tikzit->styleFilePath())) {
+        _styles->refreshModels(_nodeModel, _edgeModel);
+        show();
+    } else {
+        QMessageBox::warning(0,
+            "Bad style file.",
+            "Bad style file: '" + tikzit->styleFile() + "'. Check that the file exists and is properly formatted.");
+    }
 }
 
 void StyleEditor::updateFields()
@@ -176,15 +185,24 @@ void StyleEditor::updateFields()
     }
 }
 
-
 void StyleEditor::on_fillColor_clicked()
 {
-    QColor col = QColorDialog::getColor(
-                color(ui->fillColor),
-                this,
-                "Fill Color",
-                QColorDialog::DontUseNativeDialog);
-    if (col.isValid()) setColor(ui->fillColor, col);
+    updateColor(ui->fillColor, "Fill Color", "fill");
+}
+
+void StyleEditor::on_drawColor_clicked()
+{
+    updateColor(ui->drawColor, "Draw Color", "draw");
+}
+
+void StyleEditor::on_tikzitFillColor_clicked()
+{
+    updateColor(ui->tikzitFillColor, "TikZiT Fill Color", "tikzit fill");
+}
+
+void StyleEditor::on_tikzitDrawColor_clicked()
+{
+    updateColor(ui->tikzitDrawColor, "TikZiT Draw Color", "tikzit draw");
 }
 
 void StyleEditor::on_styleListView_clicked()
@@ -194,7 +212,8 @@ void StyleEditor::on_styleListView_clicked()
     const QModelIndexList i = ui->styleListView->selectionModel()->selectedIndexes();
     QString sty;
     if (!i.isEmpty()) {
-        sty = i[0].data().toString();
+        _activeItem = _nodeModel->itemFromIndex(i[0]);
+        sty = _activeItem->text();
         if (sty != "none")
             _activeNodeStyle = tikzit->styles()->nodeStyle(sty);
     }
@@ -208,11 +227,24 @@ void StyleEditor::on_edgeStyleListView_clicked()
     const QModelIndexList i = ui->edgeStyleListView->selectionModel()->selectedIndexes();
     QString sty;
     if (!i.isEmpty()) {
-        sty = i[0].data().toString();
+        _activeItem = _edgeModel->itemFromIndex(i[0]);
+        sty = _activeItem->text();
         if (sty != "none")
             _activeEdgeStyle = tikzit->styles()->edgeStyle(sty);
     }
     updateFields();
+}
+
+void StyleEditor::on_name_editingFinished()
+{
+    Style *s;
+    if (_activeNodeStyle != 0) s = _activeNodeStyle;
+    else if (_activeEdgeStyle != 0) s = _activeEdgeStyle;
+    else return;
+
+    s->setName(ui->name->text());
+    _activeItem->setText(ui->name->text());
+    qDebug("got here");
 }
 
 void StyleEditor::setColor(QPushButton *btn, QColor col)
@@ -227,4 +259,23 @@ QColor StyleEditor::color(QPushButton *btn)
 {
     QPalette pal = btn->palette();
     return pal.color(QPalette::Button);
+}
+
+void StyleEditor::updateColor(QPushButton *btn, QString name, QString propName)
+{
+    QColor col = QColorDialog::getColor(
+                color(btn),
+                this,
+                name,
+                QColorDialog::DontUseNativeDialog);
+    if (col.isValid()) {
+        setColor(btn, col);
+        if (_activeNodeStyle != 0) {
+            _activeNodeStyle->data()->setProperty(propName, tikzit->nameForColor(col));
+            _activeItem->setIcon(_activeNodeStyle->icon());
+        } else if (_activeEdgeStyle != 0) {
+            _activeEdgeStyle->data()->setProperty(propName, tikzit->nameForColor(col));
+            _activeItem->setIcon(_activeEdgeStyle->icon());
+        }
+    }
 }

@@ -41,10 +41,7 @@ public:
     QVector<EdgeStyle *> edgeStyles() const;
     void clear();
 
-    // convenience functions for named colors
-    QColor colorByIndex(int i);
-    QColor colorByName(QString name);
-    QString nameForColor(QColor col);
+    bool loadStyles(QString fileName);
     void refreshModels(QStandardItemModel *nodeModel, QStandardItemModel *edgeModel);
 
 signals:

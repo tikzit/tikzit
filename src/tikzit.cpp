@@ -39,6 +39,36 @@ Tikzit::Tikzit() : _styleFile("[default]"), _activeWindow(0)
 void Tikzit::init(QApplication *app)
 {
     QSettings settings("tikzit", "tikzit");
+
+	// 19 standard xcolor colours
+    _colNames <<
+		"black" <<
+		"gray" <<
+		"darkgray" <<
+		"lightgray" <<
+		"white" <<
+
+		"red" <<
+		"orange" <<
+		"yellow" <<
+		"lime" <<
+		"blue" <<
+		"purple" <<
+
+		"brown" <<
+		"olive" <<
+		"green" <<
+		"teal" <<
+		"cyan" <<
+
+		"magenta" <<
+		"violet" <<
+		"pink";
+
+	for (int i = 0; i < _colNames.length(); ++i) {
+		_cols << QColor(_colNames[i]);
+	}
+
     _mainMenu = new MainMenu();
     QMainWindow *dummy = new QMainWindow();
 
@@ -63,6 +93,48 @@ void Tikzit::init(QApplication *app)
 //{
 //    return _mainMenu;
 //}
+
+QColor Tikzit::colorByIndex(int i)
+{
+    return _cols[i];
+}
+
+QColor Tikzit::colorByName(QString name)
+{
+    for (int i = 0; i < _colNames.length(); ++i) {
+        if (_colNames[i] == name) return _cols[i];
+    }
+
+    QRegExp re(
+      "rgb\\s*,\\s*255\\s*:\\s*"
+      "red\\s*,\\s*([0-9]+)\\s*;\\s*"
+      "green\\s*,\\s*([0-9]+)\\s*;\\s*"
+      "blue\\s*,\\s*([0-9]+)\\s*"
+    );
+
+    if (re.exactMatch(name)) {
+        QStringList cap = re.capturedTexts();
+        //qDebug() << cap;
+        return QColor(
+                cap[1].toInt(),
+                cap[2].toInt(),
+                cap[3].toInt());
+    }
+
+    return QColor();
+}
+
+QString Tikzit::nameForColor(QColor col)
+{
+    for (int i = 0; i < _colNames.length(); ++i) {
+        if (_cols[i] == col) return _colNames[i];
+    }
+
+    // if the color is not recognised, return it in tikz-readable RBG format
+    return "rgb,255: red,"+ QString::number(col.red()) +
+            "; green," + QString::number(col.green()) +
+            "; blue," + QString::number(col.blue());
+}
 
 ToolPalette *Tikzit::toolPalette() const
 {
@@ -141,46 +213,49 @@ void Tikzit::openTikzStyles() {
                 tr("TiKZ Style Files (*.tikzstyles)"));
 
     if (!fileName.isEmpty()) {
-        loadStyles(fileName);
+        QFileInfo fi(fileName);
+        if (fi.exists() && loadStyles(fileName)) {
+            QSettings settings("tikzit", "tikzit");
+            settings.setValue("previous-tikzstyles-path", fi.absolutePath());
+            settings.setValue("previous-tikzstyles-file", fileName);
+        } else {
+            // BAD STYLE FILE
+        }
     }
 }
 
-void Tikzit::loadStyles(QString fileName)
+bool Tikzit::loadStyles(QString fileName)
 {
-    QSettings settings("tikzit", "tikzit");
-    QFile file(fileName);
-    if (file.open(QIODevice::ReadOnly)) {
-        QFileInfo fi(file);
-        settings.setValue("previous-tikzstyles-path", fi.absolutePath());
-        settings.setValue("previous-tikzstyles-file", fileName);
-        _styleFile = fi.fileName();
-        QTextStream in(&file);
-        QString styleTikz = in.readAll();
-        file.close();
+    QFileInfo fi(fileName);
+    if (fi.exists()) {
+        TikzStyles *st = new TikzStyles(this);
+        if (st->loadStyles(fileName)) {
+            _styleFile = fi.fileName();
+            _styleFilePath = fi.absoluteFilePath();
+            delete _styles;
+            _styles = st;
 
-        _styles->clear();
-        TikzAssembler ass(_styles);
-        bool parseSuccess = ass.parse(styleTikz);
-        if (parseSuccess) {
-            qDebug() << "parse successful";
+            foreach (MainWindow *w, _windows) {
+                w->tikzScene()->reloadStyles();
+            }
+            return true;
         } else {
-            qDebug() << "parse failed";
-        }
-        //_stylePalette->reloadStyles();
-
-        foreach (MainWindow *w, _windows) {
-            w->tikzScene()->reloadStyles();
+            QMessageBox::warning(0,
+                "Bad style file.",
+                "Bad style file: '" + fileName + "'. Check the file is properly formatted and try to load it again.");
+            return false;
         }
 
     } else {
-        settings.setValue("previous-tikzstyles-file", "");
-        QMessageBox::warning(0, "Style file not found.", "Could not open style file: '" + fileName + "', reverting to default.");
+        //settings.setValue("previous-tikzstyles-file", "");
+        QMessageBox::warning(0, "Style file not found.", "Could not open style file: '" + fileName + "'.");
+        return false;
     }
 }
 
 void Tikzit::showStyleEditor()
 {
-    _styleEditor->show();
+    _styleEditor->open();
 }
 
 QString Tikzit::styleFile() const
@@ -196,6 +271,11 @@ void Tikzit::focusChanged(QWidget *old, QWidget *nw)
 //            break;
 //        }
 //    }
+}
+
+QString Tikzit::styleFilePath() const
+{
+    return _styleFilePath;
 }
 
 //StylePalette *Tikzit::stylePalette() const

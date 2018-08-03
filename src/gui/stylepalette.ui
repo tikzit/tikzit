@@ -60,7 +60,7 @@
       <item>
        <widget class="QToolButton" name="buttonOpenTikzstyles">
         <property name="toolTip">
-         <string>New Project</string>
+         <string>Load Styles</string>
         </property>
         <property name="text">
          <string/>
@@ -74,7 +74,7 @@
       <item>
        <widget class="QToolButton" name="buttonEditTikzstyles">
         <property name="toolTip">
-         <string>New Project</string>
+         <string>Edit styles</string>
         </property>
         <property name="text">
          <string/>
@@ -87,6 +87,9 @@
       </item>
       <item>
        <widget class="QToolButton" name="buttonRefreshTikzstyles">
+        <property name="toolTip">
+         <string>Refresh styles</string>
+        </property>
         <property name="text">
          <string/>
         </property>

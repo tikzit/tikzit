@@ -62,10 +62,12 @@
 
 #include <QObject>
 #include <QVector>
+#include <QStringList>
 #include <QPointF>
 #include <QMenuBar>
 #include <QMainWindow>
 #include <QFont>
+#include <QColor>
 
 // Number of pixels between (0,0) and (1,0) at 100% zoom level. This should be
 // divisible by 8 to avoid rounding errors with e.g. grid-snapping.
@@ -115,12 +117,19 @@ public:
     void quit();
     void init(QApplication *app);
 
+    // convenience functions for named colors
+    QColor colorByIndex(int i);
+    QColor colorByName(QString name);
+    QString nameForColor(QColor col);
+
     void openTikzStyles();
-    void loadStyles(QString fileName);
+    bool loadStyles(QString fileName);
     void showStyleEditor();
     TikzStyles *styles() const;
     QString styleFile() const;
     //StylePalette *stylePalette() const;
+
+    QString styleFilePath() const;
 
 public slots:
     void focusChanged(QWidget *old, QWidget *nw);
@@ -135,7 +144,10 @@ private:
     MainWindow *_activeWindow;
     TikzStyles *_styles;
     QString _styleFile;
+    QString _styleFilePath;
     StyleEditor *_styleEditor;
+    QStringList _colNames;
+    QVector<QColor> _cols;
 };
 
 extern Tikzit *tikzit;

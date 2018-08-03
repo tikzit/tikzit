@@ -46,6 +46,8 @@ public:
     virtual QPainterPath path() const = 0;
     virtual QPainterPath palettePath() const = 0;
     virtual QIcon icon() const = 0;
+    void setName(const QString &name);
+
 protected:
     QString propertyWithDefault(QString prop, QString def, bool tikzitOverride=true) const;
     QString _name;

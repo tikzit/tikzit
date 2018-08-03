@@ -18,40 +18,15 @@
 
 #include "tikzstyles.h"
 #include "nodestyle.h"
+#include "tikzassembler.h"
 
 #include <QDebug>
 #include <QColorDialog>
+#include <QFile>
+#include <QFileInfo>
 
 TikzStyles::TikzStyles(QObject *parent) : QObject(parent)
 {
-    // 19 standard xcolor colours
-    _colNames <<
-        "black" <<
-        "gray" <<
-        "darkgray" <<
-        "lightgray" <<
-        "white" <<
-
-        "red" <<
-        "orange" <<
-        "yellow" <<
-        "lime" <<
-        "blue" <<
-        "purple" <<
-
-        "brown" <<
-        "olive" <<
-        "green" <<
-        "teal" <<
-        "cyan" <<
-
-        "magenta" <<
-        "violet" <<
-        "pink";
-
-    for (int i = 0; i < _colNames.length(); ++i) {
-        _cols << QColor(_colNames[i]);
-    }
 }
 
 NodeStyle *TikzStyles::nodeStyle(QString name) const
@@ -79,31 +54,28 @@ void TikzStyles::clear()
     _edgeStyles.clear();
 }
 
-QColor TikzStyles::colorByIndex(int i)
+bool TikzStyles::loadStyles(QString fileName)
 {
-    return _cols[i];
-}
+    QFile file(fileName);
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream in(&file);
+        QString styleTikz = in.readAll();
+        file.close();
 
-QColor TikzStyles::colorByName(QString name)
-{
-    for (int i = 0; i < _colNames.length(); ++i) {
-        if (_colNames[i] == name) return _cols[i];
+        clear();
+        TikzAssembler ass(this);
+        return ass.parse(styleTikz);
+    } else {
+        return false;
     }
-    return QColor();
-}
-
-QString TikzStyles::nameForColor(QColor col)
-{
-    for (int i = 0; i < _colNames.length(); ++i) {
-        if (_cols[i] == col) return _colNames[i];
-    }
-    return QString();
 }
 
 void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel *edgeModel)
 {
     nodeModel->clear();
     edgeModel->clear();
+
+
     //QString f = tikzit->styleFile();
     //ui->styleFile->setText(f);
 
@@ -113,11 +85,14 @@ void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel
     it->setEditable(false);
     it->setData(noneStyle->name());
     nodeModel->appendRow(it);
+    it->setTextAlignment(Qt::AlignCenter);
+    it->setSizeHint(QSize(48,48));
 
     foreach(NodeStyle *ns, _nodeStyles) {
         it = new QStandardItem(ns->icon(), ns->name());
         it->setEditable(false);
         it->setData(ns->name());
+        it->setSizeHint(QSize(48,48));
         nodeModel->appendRow(it);
     }
 
@@ -152,3 +127,5 @@ void TikzStyles::addStyle(QString name, GraphElementData *data)
         _nodeStyles << new NodeStyle(name, data);
     }
 }
+
+

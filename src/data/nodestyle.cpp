@@ -17,6 +17,8 @@
 */
 
 #include "nodestyle.h"
+#include "tikzit.h"
+
 #include <QPainter>
 
 NodeStyle *noneStyle = new NodeStyle();
@@ -35,14 +37,7 @@ QColor NodeStyle::fillColor(bool tikzitOverride) const
     if (_data == 0) return Qt::white;
 
     QString col = propertyWithDefault("fill", "white", tikzitOverride);
-
-    QColor namedColor(col);
-    if (namedColor.isValid()) {
-        return namedColor;
-    } else {
-        // TODO: read RGB colors
-        return QColor(Qt::white);
-    }
+    return tikzit->colorByName(col);
 }
 
 QBrush NodeStyle::brush() const
