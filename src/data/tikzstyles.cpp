@@ -120,10 +120,8 @@ void TikzStyles::addStyle(QString name, GraphElementData *data)
         data->atom("<-") || data->atom("<->") || data->atom("<-|") ||
         data->atom("|-") || data->atom("|->") || data->atom("|-|"))
     { // edge style
-        qDebug() << "got edge style" << name;
         _edgeStyles << new EdgeStyle(name, data);
     } else { // node style
-        qDebug() << "got node style" << name;
         _nodeStyles << new NodeStyle(name, data);
     }
 }

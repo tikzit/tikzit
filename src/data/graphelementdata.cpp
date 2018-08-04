@@ -106,7 +106,7 @@ bool GraphElementData::atom(QString atom)
 
 QVariant GraphElementData::data(const QModelIndex &index, int role) const
 {
-    if (role != Qt::DisplayRole)
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     if (index.row() >= 0 && index.row() < _properties.length()) {
@@ -135,9 +135,10 @@ QModelIndex GraphElementData::index(int row, int column, const QModelIndex &pare
 
 QModelIndex GraphElementData::parent(const QModelIndex &index) const
 {
-    GraphElementProperty *p = static_cast<GraphElementProperty*>(index.internalPointer());
-    if (p == root) return QModelIndex();
-    else return createIndex(0,0,static_cast<void*>(root));
+    //GraphElementProperty *p = static_cast<GraphElementProperty*>(index.internalPointer());
+    //if (p == root) return QModelIndex();
+    //else return createIndex(0,0,static_cast<void*>(root));
+    return QModelIndex();
 }
 
 int GraphElementData::rowCount(const QModelIndex &parent) const
@@ -156,7 +157,7 @@ int GraphElementData::columnCount(const QModelIndex &) const
 
 Qt::ItemFlags GraphElementData::flags(const QModelIndex &index) const
 {
-    return QAbstractItemModel::flags(index);
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
 //bool GraphElementData::setData(const QModelIndex &index, const QVariant &value, int role)

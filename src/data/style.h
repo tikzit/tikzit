@@ -47,9 +47,9 @@ public:
     virtual QPainterPath palettePath() const = 0;
     virtual QIcon icon() const = 0;
     void setName(const QString &name);
+    QString propertyWithDefault(QString prop, QString def, bool tikzitOverride=true) const;
 
 protected:
-    QString propertyWithDefault(QString prop, QString def, bool tikzitOverride=true) const;
     QString _name;
     GraphElementData *_data;
 };

@@ -11,6 +11,12 @@ StyleEditor::StyleEditor(QWidget *parent) :
     ui(new Ui::StyleEditor)
 {
     ui->setupUi(this);
+    _formWidgets << ui->name << ui->category <<
+        ui->fillColor << ui->hasTikzitFillColor << ui->tikzitFillColor <<
+        ui->drawColor << ui->hasTikzitDrawColor << ui->tikzitDrawColor <<
+        ui->shape << ui->hasTikzitShape << ui->tikzitShape <<
+        ui->leftArrow << ui->rightArrow <<
+        ui->properties;
 
     setColor(ui->fillColor, QColor(Qt::white));
     setColor(ui->drawColor, QColor(Qt::black));
@@ -27,11 +33,17 @@ StyleEditor::StyleEditor(QWidget *parent) :
     ui->styleListView->setMovement(QListView::Static);
     ui->styleListView->setGridSize(QSize(48,48));
 
-
     ui->edgeStyleListView->setModel(_edgeModel);
     ui->edgeStyleListView->setViewMode(QListView::IconMode);
     ui->edgeStyleListView->setMovement(QListView::Static);
     ui->edgeStyleListView->setGridSize(QSize(48,48));
+
+    connect(ui->styleListView->selectionModel(),
+            SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(nodeItemChanged(QModelIndex)));
+    connect(ui->edgeStyleListView->selectionModel(),
+            SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(edgeItemChanged(QModelIndex)));
 
     // setup the color dialog to display only the named colors that tikzit/xcolor knows
     // about as "standard colors".
@@ -69,7 +81,7 @@ StyleEditor::StyleEditor(QWidget *parent) :
 
     _activeNodeStyle = 0;
     _activeEdgeStyle = 0;
-    updateFields();
+    refreshDisplay();
 }
 
 StyleEditor::~StyleEditor()
@@ -82,6 +94,7 @@ void StyleEditor::open() {
     _styles = new TikzStyles;
     if (_styles->loadStyles(tikzit->styleFilePath())) {
         _styles->refreshModels(_nodeModel, _edgeModel);
+        _dirty = false;
         show();
     } else {
         QMessageBox::warning(0,
@@ -90,24 +103,95 @@ void StyleEditor::open() {
     }
 }
 
-void StyleEditor::updateFields()
+void StyleEditor::closeEvent(QCloseEvent *event)
 {
-    ui->name->setEnabled(false);
-    ui->category->setEnabled(false);
-    ui->fillColor->setEnabled(false);
-    ui->drawColor->setEnabled(false);
-    ui->tikzitFillColor->setEnabled(false);
-    ui->tikzitDrawColor->setEnabled(false);
-    ui->hasTikzitFillColor->setEnabled(false);
-    ui->hasTikzitDrawColor->setEnabled(false);
-    ui->shape->setEnabled(false);
-    ui->hasTikzitShape->setEnabled(false);
-    ui->tikzitShape->setEnabled(false);
-    ui->leftArrow->setEnabled(false);
-    ui->rightArrow->setEnabled(false);
-    ui->properties->setEnabled(false);
+    if (_dirty) {
+        QMessageBox::StandardButton resBtn = QMessageBox::question(
+                    this, "Save Changes",
+                    "Do you wish to save changes to " + tikzit->styleFile() + "?",
+                    QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+                    QMessageBox::Yes);
+
+        if (resBtn == QMessageBox::Yes) {
+            // TODO save here
+            event->accept();
+        } else if (resBtn == QMessageBox::No) {
+            event->accept();
+        } else {
+            event->ignore();
+        }
+    } else {
+        event->accept();
+    }
+}
+
+void StyleEditor::nodeItemChanged(QModelIndex sel)
+{
+    //ui->edgeStyleListView->blockSignals(true);
+    ui->edgeStyleListView->selectionModel()->clear();
+    //ui->edgeStyleListView->blockSignals(false);
+    qDebug() << "got node item change";
+
+    _activeNodeStyle = 0;
+    _activeEdgeStyle = 0;
+    QString sty;
+    if (sel.isValid()) {
+        _activeItem = _nodeModel->itemFromIndex(sel);
+        sty = _activeItem->text();
+        if (sty != "none")
+            _activeNodeStyle = tikzit->styles()->nodeStyle(sty);
+    }
+    refreshDisplay();
+}
+
+void StyleEditor::edgeItemChanged(QModelIndex sel)
+{
+    //ui->styleListView->blockSignals(true);
+    ui->styleListView->selectionModel()->clear();
+    //ui->styleListView->blockSignals(false);
+    qDebug() << "got edge item change";
+
+    _activeNodeStyle = 0;
+    _activeEdgeStyle = 0;
+
+    QString sty;
+    if (sel.isValid()) {
+        _activeItem = _edgeModel->itemFromIndex(sel);
+        sty = _activeItem->text();
+        if (sty != "none")
+            _activeEdgeStyle = tikzit->styles()->edgeStyle(sty);
+    }
+    refreshDisplay();
+}
+
+void StyleEditor::refreshDisplay()
+{
+    // disable all fields and block signals while we set their values
+    foreach (QWidget *w, _formWidgets) {
+        w->setEnabled(false);
+        w->blockSignals(true);
+    }
+
+    // set to default values
+    ui->name->setText("none");
+    ui->category->setCurrentText("");
+    setColor(ui->fillColor, QColor(Qt::gray));
+    setColor(ui->drawColor, QColor(Qt::gray));
+    setColor(ui->tikzitFillColor, QColor(Qt::gray));
+    setColor(ui->tikzitDrawColor, QColor(Qt::gray));
+    ui->hasTikzitDrawColor->setChecked(false);
+    ui->hasTikzitFillColor->setChecked(false);
+    ui->shape->setCurrentText("");
+    ui->hasTikzitShape->setChecked(false);
+    ui->tikzitShape->setCurrentText("");
+    ui->leftArrow->setCurrentText("");
+    ui->rightArrow->setCurrentText("");
+    ui->properties->setModel(0);
 
     if (_activeNodeStyle != 0) {
+        _activeItem->setText(_activeNodeStyle->name());
+        _activeItem->setIcon(_activeNodeStyle->icon());
+
         ui->name->setEnabled(true);
         ui->name->setText(_activeNodeStyle->name());
 
@@ -133,26 +217,35 @@ void StyleEditor::updateFields()
         ui->hasTikzitFillColor->setChecked(fillOverride);
 
         ui->tikzitFillColor->setEnabled(fillOverride);
-        setColor(ui->tikzitFillColor, fill);
+        if (fillOverride) setColor(ui->tikzitFillColor, fill);
 
         ui->hasTikzitDrawColor->setEnabled(true);
         ui->hasTikzitDrawColor->setChecked(drawOverride);
 
         ui->tikzitDrawColor->setEnabled(drawOverride);
-        setColor(ui->tikzitDrawColor, draw);
+        if (drawOverride) setColor(ui->tikzitDrawColor, draw);
 
-        // TODO
+        QString realShape = _activeNodeStyle->propertyWithDefault("shape", "", false);
+        QString shape = _activeNodeStyle->propertyWithDefault("tikzit shape", "", false);
+        bool shapeOverride = shape != realShape;
         ui->shape->setEnabled(true);
+        ui->shape->setCurrentText(realShape);
+
         ui->hasTikzitShape->setEnabled(true);
-        ui->tikzitShape->setEnabled(true);
+        ui->tikzitShape->setEnabled(shapeOverride);
+        if (shapeOverride) ui->tikzitShape->setCurrentText(shape);
+
         ui->properties->setEnabled(true);
+        ui->properties->setModel(_activeNodeStyle->data());
+        qDebug() << _activeNodeStyle->data()->tikz();
     } else if (_activeEdgeStyle != 0) {
+        _activeItem->setText(_activeEdgeStyle->name());
+        _activeItem->setIcon(_activeEdgeStyle->icon());
         ui->name->setEnabled(true);
         ui->name->setText(_activeEdgeStyle->name());
 
-        ui->category->setEnabled(true);
         // TODO
-
+        ui->category->setEnabled(true);
 
         setColor(ui->fillColor, QColor(Qt::gray));
         setColor(ui->tikzitFillColor, QColor(Qt::gray));
@@ -173,15 +266,45 @@ void StyleEditor::updateFields()
         ui->tikzitDrawColor->setEnabled(drawOverride);
         setColor(ui->tikzitDrawColor, draw);
 
-        // TODO
         ui->leftArrow->setEnabled(true);
+
+        switch (_activeEdgeStyle->arrowTail()) {
+        case EdgeStyle::NoTip:
+            ui->leftArrow->setCurrentText("");
+            break;
+        case EdgeStyle::Pointer:
+            ui->leftArrow->setCurrentText("<");
+            break;
+        case EdgeStyle::Flat:
+            ui->leftArrow->setCurrentText("|");
+            break;
+        }
+
         ui->rightArrow->setEnabled(true);
+        switch (_activeEdgeStyle->arrowHead()) {
+        case EdgeStyle::NoTip:
+            ui->rightArrow->setCurrentText("");
+            break;
+        case EdgeStyle::Pointer:
+            ui->rightArrow->setCurrentText(">");
+            break;
+        case EdgeStyle::Flat:
+            ui->rightArrow->setCurrentText("|");
+            break;
+        }
+
+        // TODO
         ui->properties->setEnabled(true);
     } else {
         setColor(ui->fillColor, QColor(Qt::gray));
         setColor(ui->drawColor, QColor(Qt::gray));
         setColor(ui->tikzitDrawColor, QColor(Qt::gray));
         setColor(ui->tikzitFillColor, QColor(Qt::gray));
+    }
+
+    // unblock signals so we are ready for user input
+    foreach (QWidget *w, _formWidgets) {
+        w->blockSignals(false);
     }
 }
 
@@ -205,34 +328,24 @@ void StyleEditor::on_tikzitDrawColor_clicked()
     updateColor(ui->tikzitDrawColor, "TikZiT Draw Color", "tikzit draw");
 }
 
+void StyleEditor::on_save_clicked()
+{
+    save();
+    close();
+}
+
+void StyleEditor::save()
+{
+    _dirty = false;
+    // TODO
+}
+
 void StyleEditor::on_styleListView_clicked()
 {
-    _activeNodeStyle = 0;
-    _activeEdgeStyle = 0;
-    const QModelIndexList i = ui->styleListView->selectionModel()->selectedIndexes();
-    QString sty;
-    if (!i.isEmpty()) {
-        _activeItem = _nodeModel->itemFromIndex(i[0]);
-        sty = _activeItem->text();
-        if (sty != "none")
-            _activeNodeStyle = tikzit->styles()->nodeStyle(sty);
-    }
-    updateFields();
 }
 
 void StyleEditor::on_edgeStyleListView_clicked()
 {
-    _activeNodeStyle = 0;
-    _activeEdgeStyle = 0;
-    const QModelIndexList i = ui->edgeStyleListView->selectionModel()->selectedIndexes();
-    QString sty;
-    if (!i.isEmpty()) {
-        _activeItem = _edgeModel->itemFromIndex(i[0]);
-        sty = _activeItem->text();
-        if (sty != "none")
-            _activeEdgeStyle = tikzit->styles()->edgeStyle(sty);
-    }
-    updateFields();
 }
 
 void StyleEditor::on_name_editingFinished()
@@ -243,8 +356,19 @@ void StyleEditor::on_name_editingFinished()
     else return;
 
     s->setName(ui->name->text());
-    _activeItem->setText(ui->name->text());
-    qDebug("got here");
+    //_activeItem->setText(ui->name->text());
+    refreshDisplay();
+    _dirty = true;
+}
+
+void StyleEditor::on_shape_currentTextChanged()
+{
+    if (_activeNodeStyle != 0) {
+        _activeNodeStyle->data()->setProperty("shape", ui->shape->currentText());
+        //_activeItem->setIcon(_activeNodeStyle->icon());
+        refreshDisplay();
+        _dirty = true;
+    }
 }
 
 void StyleEditor::setColor(QPushButton *btn, QColor col)
@@ -272,10 +396,13 @@ void StyleEditor::updateColor(QPushButton *btn, QString name, QString propName)
         setColor(btn, col);
         if (_activeNodeStyle != 0) {
             _activeNodeStyle->data()->setProperty(propName, tikzit->nameForColor(col));
-            _activeItem->setIcon(_activeNodeStyle->icon());
+//            _activeItem->setIcon(_activeNodeStyle->icon());
         } else if (_activeEdgeStyle != 0) {
             _activeEdgeStyle->data()->setProperty(propName, tikzit->nameForColor(col));
-            _activeItem->setIcon(_activeEdgeStyle->icon());
+//            _activeItem->setIcon(_activeEdgeStyle->icon());
         }
+
+        refreshDisplay();
+        _dirty = true;
     }
 }

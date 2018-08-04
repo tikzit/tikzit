@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>580</width>
-    <height>519</height>
+    <height>517</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Style Editor - TikZiT</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QComboBox" name="currentCategory">
@@ -33,11 +33,6 @@
       <height>20</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
     <property name="text">
      <string>Name</string>
     </property>
@@ -56,11 +51,6 @@
       <width>61</width>
       <height>20</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
     </property>
     <property name="text">
      <string>Category</string>
@@ -81,11 +71,6 @@
       <height>20</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
     <property name="text">
      <string>Fill Color</string>
     </property>
@@ -104,11 +89,6 @@
       <width>61</width>
       <height>20</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
     </property>
     <property name="text">
      <string>Draw Color</string>
@@ -190,15 +170,14 @@
    <widget class="QCheckBox" name="hasTikzitFillColor">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>390</x>
       <y>110</y>
-      <width>71</width>
+      <width>61</width>
       <height>17</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
       <italic>false</italic>
      </font>
     </property>
@@ -209,15 +188,14 @@
    <widget class="QCheckBox" name="hasTikzitDrawColor">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>390</x>
       <y>140</y>
-      <width>71</width>
+      <width>61</width>
       <height>17</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
       <italic>false</italic>
      </font>
     </property>
@@ -272,11 +250,6 @@
       <height>20</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
     <property name="text">
      <string>Shape</string>
     </property>
@@ -318,15 +291,14 @@
    <widget class="QCheckBox" name="hasTikzitShape">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>290</x>
       <y>200</y>
-      <width>71</width>
+      <width>61</width>
       <height>17</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
       <italic>false</italic>
      </font>
     </property>
@@ -343,6 +315,21 @@
       <height>22</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string/>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>circle</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>rectangle</string>
+     </property>
+    </item>
    </widget>
    <widget class="QLabel" name="labelArrowhead">
     <property name="geometry">
@@ -352,11 +339,6 @@
       <width>61</width>
       <height>20</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
     </property>
     <property name="text">
      <string>Arrowhead</string>
@@ -373,12 +355,12 @@
      <rect>
       <x>270</x>
       <y>230</y>
-      <width>71</width>
+      <width>41</width>
       <height>22</height>
      </rect>
     </property>
     <property name="editable">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <item>
      <property name="text">
@@ -392,49 +374,14 @@
     </item>
     <item>
      <property name="text">
-      <string>&gt;</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
       <string>|</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>stealth</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>latex</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>[</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>]</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>(</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>)</string>
      </property>
     </item>
    </widget>
    <widget class="QLabel" name="labelDash">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>320</x>
       <y>230</y>
       <width>16</width>
       <height>21</height>
@@ -452,14 +399,14 @@
    <widget class="QComboBox" name="rightArrow">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>340</x>
       <y>230</y>
-      <width>71</width>
+      <width>41</width>
       <height>22</height>
      </rect>
     </property>
     <property name="editable">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <item>
      <property name="text">
@@ -473,42 +420,7 @@
     </item>
     <item>
      <property name="text">
-      <string>&lt;</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
       <string>|</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>stealth</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>latex</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>]</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>[</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>)</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>(</string>
      </property>
     </item>
    </widget>
@@ -521,11 +433,6 @@
       <height>20</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
     <property name="text">
      <string>Properties</string>
     </property>
@@ -536,31 +443,11 @@
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QTreeWidget" name="properties">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>270</y>
-      <width>301</width>
-      <height>211</height>
-     </rect>
-    </property>
-    <column>
-     <property name="text">
-      <string notr="true">Name</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Value</string>
-     </property>
-    </column>
-   </widget>
    <widget class="QToolButton" name="addProperty">
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>490</y>
+      <y>460</y>
       <width>23</width>
       <height>18</height>
      </rect>
@@ -573,7 +460,7 @@
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>490</y>
+      <y>460</y>
       <width>23</width>
       <height>18</height>
      </rect>
@@ -586,7 +473,7 @@
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>490</y>
+      <y>460</y>
       <width>23</width>
       <height>18</height>
      </rect>
@@ -599,7 +486,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>490</y>
+      <y>460</y>
       <width>23</width>
       <height>18</height>
      </rect>
@@ -612,7 +499,7 @@
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>490</y>
+      <y>460</y>
       <width>23</width>
       <height>18</height>
      </rect>
@@ -744,6 +631,46 @@
     <property name="text">
      <string>v</string>
     </property>
+   </widget>
+   <widget class="QPushButton" name="save">
+    <property name="geometry">
+     <rect>
+      <x>489</x>
+      <y>490</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save and Close</string>
+    </property>
+   </widget>
+   <widget class="QTreeView" name="properties">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>270</y>
+      <width>301</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>8</pointsize>
+     </font>
+    </property>
+    <property name="rootIsDecorated">
+     <bool>false</bool>
+    </property>
+    <property name="uniformRowHeights">
+     <bool>true</bool>
+    </property>
+    <property name="headerHidden">
+     <bool>false</bool>
+    </property>
+    <attribute name="headerVisible">
+     <bool>true</bool>
+    </attribute>
    </widget>
   </widget>
  </widget>

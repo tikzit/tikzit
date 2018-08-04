@@ -65,6 +65,7 @@ QPen Style::pen() const
 
 QString Style::propertyWithDefault(QString prop, QString def, bool tikzitOverride) const
 {
+    if (_data == 0) return def;
     QString val;
     if (tikzitOverride) {
         val = _data->property("tikzit " + prop);

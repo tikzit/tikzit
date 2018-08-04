@@ -30,17 +30,13 @@
 class NodeStyle : public Style
 {
 public:
-    enum Shape {
-        Rectangle, UpTriangle, DownTriangle, Circle
-    };
-
     NodeStyle();
     NodeStyle(QString name, GraphElementData *data);
 
     QColor fillColor(bool tikzitOverride=true) const;
     QBrush brush() const;
     QPainterPath path() const override;
-    Shape shape(bool tikzitOverride=true) const;
+    QString shape(bool tikzitOverride=true) const;
 
     QPainterPath palettePath() const override;
     QIcon icon() const override;
