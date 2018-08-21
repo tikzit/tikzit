@@ -18,11 +18,6 @@ StyleEditor::StyleEditor(QWidget *parent) :
         ui->leftArrow << ui->rightArrow <<
         ui->properties;
 
-    setColor(ui->fillColor, QColor(Qt::white));
-    setColor(ui->drawColor, QColor(Qt::black));
-    setColor(ui->tikzitFillColor, QColor(Qt::white));
-    setColor(ui->tikzitDrawColor, QColor(Qt::black));
-
     _styles = 0;
 
     _nodeModel = new QStandardItemModel(this);
@@ -44,6 +39,12 @@ StyleEditor::StyleEditor(QWidget *parent) :
     connect(ui->edgeStyleListView->selectionModel(),
             SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(edgeItemChanged(QModelIndex)));
+    connect(ui->category->lineEdit(),
+            SIGNAL(editingFinished()),
+            this, SLOT(categoryChanged()));
+    connect(ui->category,
+            SIGNAL(currentIndexChanged(int)),
+            this, SLOT(categoryChanged()));
 
     // setup the color dialog to display only the named colors that tikzit/xcolor knows
     // about as "standard colors".
@@ -81,6 +82,7 @@ StyleEditor::StyleEditor(QWidget *parent) :
 
     _activeNodeStyle = 0;
     _activeEdgeStyle = 0;
+	_activeItem = 0;
     refreshDisplay();
 }
 
@@ -92,9 +94,16 @@ StyleEditor::~StyleEditor()
 void StyleEditor::open() {
     if (_styles != 0) delete _styles;
     _styles = new TikzStyles;
+    _activeNodeStyle = 0;
+    _activeEdgeStyle = 0;
+    _activeItem = 0;
+    ui->styleListView->selectionModel()->clear();
+    ui->edgeStyleListView->selectionModel()->clear();
     if (_styles->loadStyles(tikzit->styleFilePath())) {
-        _styles->refreshModels(_nodeModel, _edgeModel);
         _dirty = false;
+        _styles->refreshModels(_nodeModel, _edgeModel, "", false);
+        refreshCategories();
+        refreshDisplay();
         show();
     } else {
         QMessageBox::warning(0,
@@ -130,16 +139,17 @@ void StyleEditor::nodeItemChanged(QModelIndex sel)
     //ui->edgeStyleListView->blockSignals(true);
     ui->edgeStyleListView->selectionModel()->clear();
     //ui->edgeStyleListView->blockSignals(false);
-    qDebug() << "got node item change";
+    //qDebug() << "got node item change";
 
     _activeNodeStyle = 0;
     _activeEdgeStyle = 0;
+	_activeItem = 0;
     QString sty;
     if (sel.isValid()) {
         _activeItem = _nodeModel->itemFromIndex(sel);
         sty = _activeItem->text();
         if (sty != "none")
-            _activeNodeStyle = tikzit->styles()->nodeStyle(sty);
+            _activeNodeStyle = _styles->nodeStyle(sty);
     }
     refreshDisplay();
 }
@@ -149,18 +159,103 @@ void StyleEditor::edgeItemChanged(QModelIndex sel)
     //ui->styleListView->blockSignals(true);
     ui->styleListView->selectionModel()->clear();
     //ui->styleListView->blockSignals(false);
-    qDebug() << "got edge item change";
+    //qDebug() << "got edge item change";
 
     _activeNodeStyle = 0;
     _activeEdgeStyle = 0;
+	_activeItem = 0;
 
     QString sty;
     if (sel.isValid()) {
         _activeItem = _edgeModel->itemFromIndex(sel);
         sty = _activeItem->text();
         if (sty != "none")
-            _activeEdgeStyle = tikzit->styles()->edgeStyle(sty);
+            _activeEdgeStyle = _styles->edgeStyle(sty);
     }
+    refreshDisplay();
+}
+
+void StyleEditor::categoryChanged()
+{
+    Style *s = activeStyle();
+    QString cat = ui->category->currentText();
+    //qDebug() << "got category: " << cat;
+
+    if (s != 0 && s->data()->property("tikzit category") != cat) {
+        if (cat.isEmpty()) s->data()->unsetProperty("tikzit category");
+        else s->data()->setProperty("tikzit category", cat);
+        _dirty = true;
+        refreshCategories();
+        refreshDisplay();
+    }
+}
+
+void StyleEditor::currentCategoryChanged()
+{
+    qDebug() << "refreshing models on category change";
+    _styles->refreshModels(_nodeModel, _edgeModel, ui->currentCategory->currentText(), false);
+    _activeItem = 0;
+
+    // try to keep the selection as is, or clear the current style
+    if (_activeNodeStyle != 0) {
+        ui->styleListView->selectionModel()->clear();
+        for (int i = 0; i < _nodeModel->rowCount(); ++i) {
+            if (_activeNodeStyle->name() == _nodeModel->item(i)->data()) {
+                _activeItem = _nodeModel->item(i);
+                ui->styleListView->selectionModel()->select(
+                            _nodeModel->index(i,0),
+                            QItemSelectionModel::SelectCurrent);
+            }
+        }
+    } else if (_activeEdgeStyle != 0) {
+        ui->edgeStyleListView->selectionModel()->clear();
+        for (int i = 0; i < _edgeModel->rowCount(); ++i) {
+            if (_activeEdgeStyle->name() == _edgeModel->item(i)->data()) {
+                _activeItem = _edgeModel->item(i);
+                ui->edgeStyleListView->selectionModel()->select(
+                            _edgeModel->index(i,0),
+                            QItemSelectionModel::SelectCurrent);
+            }
+        }
+    }
+
+    if (_activeItem == 0) {
+        _activeNodeStyle = 0;
+        _activeEdgeStyle = 0;
+    }
+}
+
+void StyleEditor::refreshCategories()
+{
+    ui->currentCategory->blockSignals(true);
+    ui->category->blockSignals(true);
+    QString curCat = ui->currentCategory->currentText();
+    QString cat = ui->category->currentText();
+    ui->currentCategory->clear();
+    ui->category->clear();
+
+    if (_styles != 0) {
+        foreach(QString c, _styles->categories()) {
+            ui->category->addItem(c);
+            ui->currentCategory->addItem(c);
+        }
+    }
+
+    ui->currentCategory->setCurrentText(curCat);
+    ui->category->setCurrentText(cat);
+    ui->currentCategory->blockSignals(false);
+    ui->category->blockSignals(false);
+}
+
+void StyleEditor::propertyChanged()
+{
+    if (_activeNodeStyle != 0) {
+        _activeItem->setIcon(_activeNodeStyle->icon());
+        refreshCategories();
+    } else if (_activeEdgeStyle != 0) {
+        _activeItem->setIcon(_activeEdgeStyle->icon());
+    }
+    _dirty = true;
     refreshDisplay();
 }
 
@@ -175,6 +270,8 @@ void StyleEditor::refreshDisplay()
     // set to default values
     ui->name->setText("none");
     ui->category->setCurrentText("");
+    //ui->category->clear();
+
     setColor(ui->fillColor, QColor(Qt::gray));
     setColor(ui->drawColor, QColor(Qt::gray));
     setColor(ui->tikzitFillColor, QColor(Qt::gray));
@@ -189,14 +286,15 @@ void StyleEditor::refreshDisplay()
     ui->properties->setModel(0);
 
     if (_activeNodeStyle != 0) {
-        _activeItem->setText(_activeNodeStyle->name());
-        _activeItem->setIcon(_activeNodeStyle->icon());
+        //_activeItem->setText(_activeNodeStyle->name());
+        //_activeItem->setIcon(_activeNodeStyle->icon());
 
         ui->name->setEnabled(true);
         ui->name->setText(_activeNodeStyle->name());
 
         ui->category->setEnabled(true);
-        // TODO
+        ui->category->setCurrentText(
+            _activeNodeStyle->propertyWithDefault("tikzit category", "", false));
 
         // passing 'false' to these methods prevents 'tikzit foo' from overriding property 'foo'
         QColor realFill = _activeNodeStyle->fillColor(false);
@@ -236,16 +334,17 @@ void StyleEditor::refreshDisplay()
         if (shapeOverride) ui->tikzitShape->setCurrentText(shape);
 
         ui->properties->setEnabled(true);
-        ui->properties->setModel(_activeNodeStyle->data());
+        setPropertyModel(_activeNodeStyle->data());
         qDebug() << _activeNodeStyle->data()->tikz();
     } else if (_activeEdgeStyle != 0) {
-        _activeItem->setText(_activeEdgeStyle->name());
-        _activeItem->setIcon(_activeEdgeStyle->icon());
+        //_activeItem->setText(_activeEdgeStyle->name());
+        //_activeItem->setIcon(_activeEdgeStyle->icon());
         ui->name->setEnabled(true);
         ui->name->setText(_activeEdgeStyle->name());
 
-        // TODO
-        ui->category->setEnabled(true);
+        //ui->category->setEnabled(true);
+        //ui->category->setCurrentText(
+        //    _activeEdgeStyle->propertyWithDefault("tikzit category", "", false));
 
         setColor(ui->fillColor, QColor(Qt::gray));
         setColor(ui->tikzitFillColor, QColor(Qt::gray));
@@ -293,8 +392,8 @@ void StyleEditor::refreshDisplay()
             break;
         }
 
-        // TODO
         ui->properties->setEnabled(true);
+        setPropertyModel(_activeEdgeStyle->data());
     } else {
         setColor(ui->fillColor, QColor(Qt::gray));
         setColor(ui->drawColor, QColor(Qt::gray));
@@ -328,16 +427,63 @@ void StyleEditor::on_tikzitDrawColor_clicked()
     updateColor(ui->tikzitDrawColor, "TikZiT Draw Color", "tikzit draw");
 }
 
+void StyleEditor::on_addProperty_clicked()
+{
+    Style *s = activeStyle();
+    if (s != 0) {
+        s->data()->add(GraphElementProperty("new property", ""));
+        _dirty = true;
+    }
+}
+
+void StyleEditor::on_addAtom_clicked()
+{
+    Style *s = activeStyle();
+    if (s != 0) {
+        s->data()->add(GraphElementProperty("new atom"));
+        _dirty = true;
+    }
+}
+
+void StyleEditor::on_removeProperty_clicked()
+{
+
+}
+
+void StyleEditor::on_propertyUp_clicked()
+{
+
+}
+
+void StyleEditor::on_propertyDown_clicked()
+{
+
+}
+
 void StyleEditor::on_save_clicked()
 {
     save();
     close();
 }
 
+void StyleEditor::on_currentCategory_currentIndexChanged(int)
+{
+    currentCategoryChanged();
+}
+
+
 void StyleEditor::save()
 {
-    _dirty = false;
-    // TODO
+    QString p = tikzit->styleFilePath();
+
+    if (_styles->saveStyles(p)) {
+        _dirty = false;
+        tikzit->loadStyles(p);
+    } else {
+        QMessageBox::warning(0,
+            "Unabled to save style file",
+            "Unable to write to file: '" + tikzit->styleFile() + "'.");
+    }
 }
 
 void StyleEditor::on_styleListView_clicked()
@@ -350,22 +496,21 @@ void StyleEditor::on_edgeStyleListView_clicked()
 
 void StyleEditor::on_name_editingFinished()
 {
-    Style *s;
-    if (_activeNodeStyle != 0) s = _activeNodeStyle;
-    else if (_activeEdgeStyle != 0) s = _activeEdgeStyle;
-    else return;
+    Style *s = activeStyle();
 
-    s->setName(ui->name->text());
-    //_activeItem->setText(ui->name->text());
-    refreshDisplay();
-    _dirty = true;
+    if (s != 0) {
+        s->setName(ui->name->text());
+        _activeItem->setText(ui->name->text());
+        refreshDisplay();
+        _dirty = true;
+    }
 }
 
 void StyleEditor::on_shape_currentTextChanged()
 {
     if (_activeNodeStyle != 0) {
         _activeNodeStyle->data()->setProperty("shape", ui->shape->currentText());
-        //_activeItem->setIcon(_activeNodeStyle->icon());
+        _activeItem->setIcon(_activeNodeStyle->icon());
         refreshDisplay();
         _dirty = true;
     }
@@ -379,10 +524,27 @@ void StyleEditor::setColor(QPushButton *btn, QColor col)
     btn->update();
 }
 
+void StyleEditor::setPropertyModel(GraphElementData *d)
+{
+    if (ui->properties->model() != 0) {
+        disconnect(ui->properties->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+                   this, SLOT(propertyChanged()));
+    }
+    ui->properties->setModel(d);
+    connect(d, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+            this, SLOT(propertyChanged()));
+}
+
 QColor StyleEditor::color(QPushButton *btn)
 {
     QPalette pal = btn->palette();
     return pal.color(QPalette::Button);
+}
+
+Style *StyleEditor::activeStyle()
+{
+    if (_activeNodeStyle != 0) return _activeNodeStyle;
+    else return _activeEdgeStyle;
 }
 
 void StyleEditor::updateColor(QPushButton *btn, QString name, QString propName)
@@ -396,10 +558,10 @@ void StyleEditor::updateColor(QPushButton *btn, QString name, QString propName)
         setColor(btn, col);
         if (_activeNodeStyle != 0) {
             _activeNodeStyle->data()->setProperty(propName, tikzit->nameForColor(col));
-//            _activeItem->setIcon(_activeNodeStyle->icon());
+            _activeItem->setIcon(_activeNodeStyle->icon());
         } else if (_activeEdgeStyle != 0) {
             _activeEdgeStyle->data()->setProperty(propName, tikzit->nameForColor(col));
-//            _activeItem->setIcon(_activeEdgeStyle->icon());
+            _activeItem->setIcon(_activeEdgeStyle->icon());
         }
 
         refreshDisplay();

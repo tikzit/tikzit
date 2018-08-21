@@ -1,3 +1,4 @@
+*.sublime-*
 src-old
 GeneratedFiles
 .vs

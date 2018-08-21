@@ -25,25 +25,26 @@ class GraphElementProperty
 {
 public:
     GraphElementProperty();
-    GraphElementProperty(QString key, QString value, bool atom, bool keyMatch);
 
-    // construct a property
+    // full constructor
+    GraphElementProperty(QString key, QString value, bool atom);
+
+    // construct a proper property
     GraphElementProperty(QString key, QString value);
 
-    // construct an atom or keymatch
-    GraphElementProperty(QString key, bool keyMatch = false);
+    // construct an atom
+    GraphElementProperty(QString key);
 
     QString key() const;
+    void setKey(const QString &key);
     QString value() const;
     void setValue(const QString &value);
     bool atom() const;
-    bool keyMatch() const;
-
-    bool matches(const GraphElementProperty &p);
     bool operator==(const GraphElementProperty &p);
 
     static QString tikzEscape(QString str);
     QString tikz();
+
 signals:
 
 public slots:

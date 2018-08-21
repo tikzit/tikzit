@@ -49,6 +49,7 @@ public:
     void setName(const QString &name);
     QString propertyWithDefault(QString prop, QString def, bool tikzitOverride=true) const;
 
+    QString tikz() const;
 protected:
     QString _name;
     GraphElementData *_data;

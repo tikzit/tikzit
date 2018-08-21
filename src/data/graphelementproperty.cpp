@@ -21,19 +21,19 @@
 #include <QRegExp>
 
 GraphElementProperty::GraphElementProperty ():
-    _key(""), _value(""), _atom(false), _keyMatch(false)
+    _key(""), _value(""), _atom(false)
 {}
 
-GraphElementProperty::GraphElementProperty(QString key, QString value, bool atom, bool keyMatch) :
-    _key(key), _value(value), _atom(atom), _keyMatch(keyMatch)
+GraphElementProperty::GraphElementProperty(QString key, QString value, bool atom) :
+    _key(key), _value(value), _atom(atom)
 {}
 
 GraphElementProperty::GraphElementProperty(QString key, QString value) :
-    _key(key), _value(value), _atom(false), _keyMatch(false)
+    _key(key), _value(value), _atom(false)
 {}
 
-GraphElementProperty::GraphElementProperty(QString key, bool keyMatch) :
-    _key(key), _value(""), _atom(!keyMatch), _keyMatch(keyMatch)
+GraphElementProperty::GraphElementProperty(QString key) :
+    _key(key), _value(""), _atom(true)
 {}
 
 QString GraphElementProperty::key() const
@@ -48,20 +48,11 @@ void GraphElementProperty::setValue(const QString &value)
 bool GraphElementProperty::atom() const
 { return _atom; }
 
-bool GraphElementProperty::keyMatch() const
-{ return _keyMatch; }
-
-bool GraphElementProperty::matches(const GraphElementProperty &p)
-{
-    if (p.atom()) return _atom && _key == p.key();
-    if (p.keyMatch()) return !_atom && _key == p.key();
-    if (_keyMatch) return !p.atom() && _key == p.key();
-    return !_atom && _key == p.key() && _value == p.value();
-}
 
 bool GraphElementProperty::operator==(const GraphElementProperty &p)
 {
-    return matches(p);
+    if (_atom) return p.atom() && p.key() == _key;
+    else return !p.atom() && p.key() == _key && p.value() == _value;
 }
 
 QString GraphElementProperty::tikzEscape(QString str)
@@ -74,4 +65,9 @@ QString GraphElementProperty::tikzEscape(QString str)
 QString GraphElementProperty::tikz() {
     if (_atom) return tikzEscape(_key);
     return tikzEscape(_key) + "=" + tikzEscape(_value);
+}
+
+void GraphElementProperty::setKey(const QString &key)
+{
+    _key = key;
 }

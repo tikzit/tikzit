@@ -70,7 +70,14 @@ void StylePalette::reloadStyles()
     QString f = tikzit->styleFile();
     ui->styleFile->setText(f);
 
-    tikzit->styles()->refreshModels(_nodeModel, _edgeModel);
+    QString cat = ui->currentCategory->currentText();
+    ui->currentCategory->clear();
+
+	// TODO: styleFile() should return invalid string if no style file loaded
+	if (f != "[default]") {
+		ui->currentCategory->addItems(tikzit->styles()->categories());
+		ui->currentCategory->setCurrentText(cat);
+	}
 }
 
 void StylePalette::changeNodeStyle(int increment)
@@ -145,6 +152,11 @@ void StylePalette::on_buttonRefreshTikzstyles_clicked()
     QSettings settings("tikzit", "tikzit");
     QString path = settings.value("previous-tikzstyles-file").toString();
     if (!path.isEmpty()) tikzit->loadStyles(path);
+}
+
+void StylePalette::on_currentCategory_currentTextChanged(const QString &cat)
+{
+	tikzit->styles()->refreshModels(_nodeModel, _edgeModel, cat);
 }
 
 //void StylePalette::on_buttonApplyNodeStyle_clicked()

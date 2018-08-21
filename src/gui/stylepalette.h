@@ -46,6 +46,7 @@ public slots:
     void on_buttonOpenTikzstyles_clicked();
     void on_buttonEditTikzstyles_clicked();
     void on_buttonRefreshTikzstyles_clicked();
+    void on_currentCategory_currentTextChanged(const QString &cat);
     //void on_buttonApplyNodeStyle_clicked();
 
 private:

@@ -43,8 +43,7 @@ GraphElementData *GraphElementData::copy()
 
 void GraphElementData::setProperty(QString key, QString value)
 {
-    GraphElementProperty m(key, true);
-    int i = _properties.indexOf(m);
+    int i = indexOfKey(key);
     if (i != -1) {
         _properties[i].setValue(value);
     } else {
@@ -55,15 +54,17 @@ void GraphElementData::setProperty(QString key, QString value)
 
 void GraphElementData::unsetProperty(QString key)
 {
-    GraphElementProperty m(key, true);
-    int i = _properties.indexOf(m);
+    int i = indexOfKey(key);
     if (i != -1)
         _properties.remove(i);
 }
 
 void GraphElementData::add(GraphElementProperty p)
 {
+    int i = _properties.size();
+    beginInsertRows(QModelIndex(), i, i);
     _properties << p;
+    endInsertRows();
 }
 
 void GraphElementData::operator <<(GraphElementProperty p)
@@ -73,24 +74,21 @@ void GraphElementData::operator <<(GraphElementProperty p)
 
 void GraphElementData::setAtom(QString atom)
 {
-    GraphElementProperty a(atom);
-    int i = _properties.indexOf(a);
+    int i = indexOfKey(atom);
     if (i == -1)
-        _properties << a;
+        _properties << GraphElementProperty(atom);
 }
 
 void GraphElementData::unsetAtom(QString atom)
 {
-    GraphElementProperty a(atom);
-    int i = _properties.indexOf(a);
+    int i = indexOfKey(atom);
     if (i != -1)
         _properties.remove(i);
 }
 
 QString GraphElementData::property(QString key)
 {
-    GraphElementProperty m(key, true);
-    int i = _properties.indexOf(m);
+    int i = indexOfKey(key);
     if (i != -1) {
         return _properties[i].value();
     } else {
@@ -100,22 +98,29 @@ QString GraphElementData::property(QString key)
 
 bool GraphElementData::atom(QString atom)
 {
-    GraphElementProperty a(atom);
-    return (_properties.indexOf(a) != -1);
+    return (indexOfKey(atom) != -1);
+}
+
+int GraphElementData::indexOfKey(QString key)
+{
+    for (int i = 0; i < _properties.size(); ++i) {
+		QString key1 = _properties[i].key();
+        if (key1 == key) return i;
+    }
+    return -1;
 }
 
 QVariant GraphElementData::data(const QModelIndex &index, int role) const
 {
-    if (role != Qt::DisplayRole && role != Qt::EditRole)
+    if (role == Qt::DisplayRole || role == Qt::EditRole) {
+        if (index.row() >= 0 && index.row() < _properties.length()) {
+            const GraphElementProperty &p = _properties[index.row()];
+            QString s = (index.column() == 0) ? p.key() : p.value();
+            return QVariant(s);
+        }
+    } else {
         return QVariant();
-
-    if (index.row() >= 0 && index.row() < _properties.length()) {
-        const GraphElementProperty &p = _properties[index.row()];
-        QString s = (index.column() == 0) ? p.key() : p.value();
-        return QVariant(s);
     }
-
-    return QVariant();
 }
 
 QVariant GraphElementData::headerData(int section, Qt::Orientation orientation, int role) const
@@ -135,9 +140,7 @@ QModelIndex GraphElementData::index(int row, int column, const QModelIndex &pare
 
 QModelIndex GraphElementData::parent(const QModelIndex &index) const
 {
-    //GraphElementProperty *p = static_cast<GraphElementProperty*>(index.internalPointer());
-    //if (p == root) return QModelIndex();
-    //else return createIndex(0,0,static_cast<void*>(root));
+    // there is no nesting, so always return an invalid index
     return QModelIndex();
 }
 
@@ -157,23 +160,37 @@ int GraphElementData::columnCount(const QModelIndex &) const
 
 Qt::ItemFlags GraphElementData::flags(const QModelIndex &index) const
 {
-    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+    if (index.row() >= 0 && index.row() < _properties.length()) {
+        if (index.column() == 0 ||
+            (!_properties[index.row()].atom() && index.column() == 1))
+        {
+            return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+        }
+    }
+    return QAbstractItemModel::flags(index);
 }
 
-//bool GraphElementData::setData(const QModelIndex &index, const QVariant &value, int role)
-//{
+bool GraphElementData::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    bool success = false;
+    if (index.row() >= 0 && index.row() < _properties.length()) {
+        if (index.column() == 0) {
+            _properties[index.row()].setKey(value.toString());
+            success = true;
+        } else if (index.column() == 1 && !_properties[index.row()].atom()) {
+            _properties[index.row()].setValue(value.toString());
+            success = true;
+        }
+    }
 
-//}
+    if (success) {
+        QVector<int> roles;
+        roles << role;
+        emit dataChanged(index, index, roles);
+    }
 
-//bool GraphElementData::insertRows(int position, int rows, const QModelIndex &parent)
-//{
-
-//}
-
-//bool GraphElementData::removeRows(int position, int rows, const QModelIndex &parent)
-//{
-
-//}
+    return success;
+}
 
 QString GraphElementData::tikz() {
     if (_properties.length() == 0) return "";

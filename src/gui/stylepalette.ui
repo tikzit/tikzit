@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>88</width>
+    <width>130</width>
     <height>506</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>88</width>
-    <height>191</height>
+    <width>130</width>
+    <height>218</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>88</width>
+    <width>130</width>
     <height>524287</height>
    </size>
   </property>
@@ -115,12 +115,21 @@
      </widget>
     </item>
     <item>
+     <widget class="QComboBox" name="currentCategory"/>
+    </item>
+    <item>
      <widget class="QListView" name="styleListView">
       <property name="font">
        <font>
         <pointsize>8</pointsize>
         <italic>true</italic>
        </font>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
      </widget>
     </item>

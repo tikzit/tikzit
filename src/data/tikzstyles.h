@@ -39,10 +39,16 @@ public:
     EdgeStyle *edgeStyle(QString name) const;
     QVector<NodeStyle *> nodeStyles() const;
     QVector<EdgeStyle *> edgeStyles() const;
+    QStringList categories() const;
+    QString tikz() const;
     void clear();
 
     bool loadStyles(QString fileName);
-    void refreshModels(QStandardItemModel *nodeModel, QStandardItemModel *edgeModel);
+    bool saveStyles(QString fileName);
+    void refreshModels(QStandardItemModel *nodeModel,
+                       QStandardItemModel *edgeModel,
+                       QString category="",
+                       bool includeNone=true);
 
 signals:
 

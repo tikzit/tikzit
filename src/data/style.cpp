@@ -77,6 +77,11 @@ QString Style::propertyWithDefault(QString prop, QString def, bool tikzitOverrid
     return val;
 }
 
+QString Style::tikz() const
+{
+    return "\\tikzstyle{" + _name + "}=" + _data->tikz();
+}
+
 void Style::setName(const QString &name)
 {
     _name = name;
