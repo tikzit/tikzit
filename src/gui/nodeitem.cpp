@@ -114,7 +114,12 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 QPainterPath NodeItem::shape() const
 {
     QPainterPath path;
-    path.addEllipse(QPointF(0,0), GLOBAL_SCALEF * 0.2, GLOBAL_SCALEF * 0.2);
+
+	if (_node->style()->shape() == "rectangle") {
+        path.addRect(-0.2 * GLOBAL_SCALEF, -0.2 * GLOBAL_SCALEF, 0.4 * GLOBAL_SCALEF, 0.4 * GLOBAL_SCALEF);
+	} else {
+        path.addEllipse(QPointF(0, 0), GLOBAL_SCALEF * 0.2, GLOBAL_SCALEF * 0.2);
+	}
     return path;
 }
 
