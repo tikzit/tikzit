@@ -12,6 +12,7 @@ TEMPLATE = app
 
 win32:RC_ICONS += images/tikzit.ico
 win32:RC_ICONS += images/tikzdoc.ico
+macx:ICON = images/tikzit.icns
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -107,3 +108,4 @@ test {
 } else {
     SOURCES += src/main.cpp
 }
+
