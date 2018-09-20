@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     _stylePalette = new StylePalette(this);
     addDockWidget(Qt::RightDockWidgetArea, _stylePalette);
+    resizeDocks({_stylePalette}, {130}, Qt::Horizontal);
 
     _tikzScene = new TikzScene(_tikzDocument, _toolPalette, _stylePalette, this);
     ui->tikzView->setScene(_tikzScene);
