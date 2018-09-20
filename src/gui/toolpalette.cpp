@@ -43,7 +43,7 @@ ToolPalette::ToolPalette(QWidget *parent) :
     select = new QAction(QIcon(":/images/select-ak.svg"), "Select");
     vertex = new QAction(QIcon(":/images/node-ak.svg"), "Add Vertex");
     edge   = new QAction(QIcon(":/images/edge-ak.svg"), "Add Edge");
-    crop   = new QAction(QIcon(":/images/crop.svg"), "Bounding Box");
+    //crop   = new QAction(QIcon(":/images/crop.svg"), "Bounding Box");
 
 
     tools->addAction(select);

@@ -36,6 +36,22 @@
     <addaction name="actionExtendAbove"/>
     <addaction name="actionExtendBelow"/>
    </widget>
+   <widget class="QMenu" name="menuReorder">
+    <property name="title">
+     <string>Reorder</string>
+    </property>
+    <addaction name="actionBring_to_Front"/>
+    <addaction name="actionSend_to_Back"/>
+   </widget>
+   <widget class="QMenu" name="menuTransform">
+    <property name="title">
+     <string>Transform</string>
+    </property>
+    <addaction name="actionReflectHorizontal"/>
+    <addaction name="actionReflectVertical"/>
+    <addaction name="actionRotateCW"/>
+    <addaction name="actionRotateCCW"/>
+   </widget>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
@@ -48,10 +64,8 @@
    <addaction name="actionDeselect_All"/>
    <addaction name="menuSelect"/>
    <addaction name="separator"/>
-   <addaction name="actionReflectHorizontal"/>
-   <addaction name="actionReflectVertical"/>
-   <addaction name="actionRotateCW"/>
-   <addaction name="actionRotateCCW"/>
+   <addaction name="menuReorder"/>
+   <addaction name="menuTransform"/>
   </widget>
   <widget class="QMenu" name="menuTikz">
    <property name="title">
@@ -276,6 +290,22 @@
    </property>
    <property name="shortcut">
     <string>Shift+Down</string>
+   </property>
+  </action>
+  <action name="actionBring_to_Front">
+   <property name="text">
+    <string>Bring to Front</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+]</string>
+   </property>
+  </action>
+  <action name="actionSend_to_Back">
+   <property name="text">
+    <string>Send to Back</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+[</string>
    </property>
   </action>
   <addaction name="menuFile"/>
