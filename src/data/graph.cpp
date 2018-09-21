@@ -269,10 +269,12 @@ Graph *Graph::copyOfSubgraphWithNodes(QSet<Node *> nds)
     Graph *g = new Graph();
     g->setData(_data->copy());
     QMap<Node*,Node*> nodeTable;
-    foreach (Node *n, nds) {
-        Node *n1 = n->copy();
-        nodeTable.insert(n, n1);
-        g->addNode(n1);
+    foreach (Node *n, nodes()) {
+        if (nds.contains(n)) {
+            Node *n1 = n->copy();
+            nodeTable.insert(n, n1);
+            g->addNode(n1);
+        }
     }
     foreach (Edge *e, edges()) {
         if (nds.contains(e->source()) && nds.contains(e->target())) {

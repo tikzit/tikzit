@@ -90,12 +90,14 @@ FLOAT \-?[0-9]*(\.[0-9]+)?
 }
 <xcoord>{FLOAT} {
     yylval->pt = new QPointF();
-    yylval->pt->setX(strtod(yytext,NULL));
+    QString s(yytext);
+    yylval->pt->setX(s.toDouble());
 	BEGIN(ycoord);
 }
 <ycoord>, {  }
 <ycoord>{FLOAT} {
-    yylval->pt->setY(strtod(yytext,NULL));
+    QString s(yytext);
+    yylval->pt->setY(s.toDouble());
 }
 <ycoord>\) {
 	BEGIN(INITIAL);

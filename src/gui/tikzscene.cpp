@@ -621,6 +621,7 @@ void TikzScene::deleteSelectedItems()
 void TikzScene::copyToClipboard()
 {
     Graph *g = graph()->copyOfSubgraphWithNodes(getSelectedNodes());
+    //qDebug() << g->tikz();
     QGuiApplication::clipboard()->setText(g->tikz());
     delete g;
 }
@@ -641,8 +642,11 @@ void TikzScene::pasteFromClipboard()
     // attempt to parse whatever's on the clipboard, if we get a
     // non-empty tikz graph, insert it.
     if (ass.parse(tikz) && !g->nodes().isEmpty()) {
+        qDebug() << "CLIPBOARD:" << tikz;
+        qDebug() << "PARSED:" << g->tikz();
         // make sure names in the new subgraph are fresh
         g->renameApart(graph());
+        qDebug() << "FRESH:" << g->tikz();
 
         QRectF srcRect = g->realBbox();
         QRectF tgtRect = graph()->realBbox();
