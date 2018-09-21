@@ -22,6 +22,7 @@
 #include <QPainter>
 
 NodeStyle *noneStyle = new NodeStyle();
+NodeStyle *unknownStyle = new NodeStyle("unknown", new GraphElementData({GraphElementProperty("tikzit fill", "red")}));
 
 NodeStyle::NodeStyle() : Style()
 {

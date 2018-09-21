@@ -85,7 +85,10 @@ void TikzDocument::open(QString fileName)
         delete _graph;
         _graph = newGraph;
         foreach (Node *n, _graph->nodes()) n->attachStyle();
-        foreach (Edge *e, _graph->edges()) e->updateControls();
+        foreach (Edge *e, _graph->edges()) {
+            e->attachStyle();
+            e->updateControls();
+        }
         _parseSuccess = true;
         refreshTikz();
         setClean();
