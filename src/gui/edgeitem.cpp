@@ -102,7 +102,12 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 			painter->drawPath(pth);
 			break;
 		}
-	}
+    }
+
+    //QPen outline = QPen(Qt::red);
+    //painter->setPen(outline);
+    //painter->drawPath(_expPath);
+    //painter->setPen(pen);
 	
 	switch (_edge->style()->arrowTail()) {
 		case EdgeStyle::Flat:
@@ -209,9 +214,9 @@ void EdgeItem::setPath(const QPainterPath &path)
 
     // get the shape of the edge, and expand a bit to make selection easier
     QPainterPathStroker stroker;
-    stroker.setWidth(5);
+    stroker.setWidth(8);
     stroker.setJoinStyle(Qt::MiterJoin);
-    _expPath = (stroker.createStroke(_path) + _path).simplified();
+    _expPath = stroker.createStroke(_path).simplified();
 
     float r = GLOBAL_SCALEF * (_edge->cpDist() + 0.2);
     _boundingRect = _path.boundingRect().adjusted(-r,-r,r,r);

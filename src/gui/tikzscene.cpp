@@ -164,7 +164,7 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             if (items(_mouseDownPos).isEmpty()) {
                 _rubberBandItem->setRect(QRectF(_mouseDownPos,_mouseDownPos));
                 _rubberBandItem->setVisible(true);
-                qDebug() << "starting rubber band drag";
+                //qDebug() << "starting rubber band drag";
             }
 
 //            foreach (QGraphicsItem *gi, items()) {
