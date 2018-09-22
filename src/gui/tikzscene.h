@@ -76,6 +76,10 @@ public:
 
 public slots:
     void graphReplaced();
+    void extendSelectionUp();
+    void extendSelectionDown();
+    void extendSelectionLeft();
+    void extendSelectionRight();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

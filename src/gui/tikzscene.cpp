@@ -105,6 +105,78 @@ void TikzScene::graphReplaced()
     }
 }
 
+void TikzScene::extendSelectionUp()
+{
+    bool found = false;
+    float m = 0.0f;
+    foreach (Node *n, getSelectedNodes()) {
+        if (!found) {
+            m = n->point().y();
+            found = true;
+        } else {
+            if (n->point().y() > m) m = n->point().y();
+        }
+    }
+
+    foreach (NodeItem *ni, nodeItems().values()) {
+        if (ni->node()->point().y() >= m) ni->setSelected(true);
+    }
+}
+
+void TikzScene::extendSelectionDown()
+{
+    bool found = false;
+    float m = 0.0f;
+    foreach (Node *n, getSelectedNodes()) {
+        if (!found) {
+            m = n->point().y();
+            found = true;
+        } else {
+            if (n->point().y() < m) m = n->point().y();
+        }
+    }
+
+    foreach (NodeItem *ni, nodeItems().values()) {
+        if (ni->node()->point().y() <= m) ni->setSelected(true);
+    }
+}
+
+void TikzScene::extendSelectionLeft()
+{
+    bool found = false;
+    float m = 0.0f;
+    foreach (Node *n, getSelectedNodes()) {
+        if (!found) {
+            m = n->point().x();
+            found = true;
+        } else {
+            if (n->point().x() < m) m = n->point().x();
+        }
+    }
+
+    foreach (NodeItem *ni, nodeItems().values()) {
+        if (ni->node()->point().x() <= m) ni->setSelected(true);
+    }
+}
+
+void TikzScene::extendSelectionRight()
+{
+    bool found = false;
+    float m = 0.0f;
+    foreach (Node *n, getSelectedNodes()) {
+        if (!found) {
+            m = n->point().x();
+            found = true;
+        } else {
+            if (n->point().x() < m) m = n->point().x();
+        }
+    }
+
+    foreach (NodeItem *ni, nodeItems().values()) {
+        if (ni->node()->point().x() >= m) ni->setSelected(true);
+    }
+}
+
 void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!_enabled) return;
@@ -642,11 +714,8 @@ void TikzScene::pasteFromClipboard()
     // attempt to parse whatever's on the clipboard, if we get a
     // non-empty tikz graph, insert it.
     if (ass.parse(tikz) && !g->nodes().isEmpty()) {
-        qDebug() << "CLIPBOARD:" << tikz;
-        qDebug() << "PARSED:" << g->tikz();
         // make sure names in the new subgraph are fresh
         g->renameApart(graph());
-        qDebug() << "FRESH:" << g->tikz();
 
         QRectF srcRect = g->realBbox();
         QRectF tgtRect = graph()->realBbox();

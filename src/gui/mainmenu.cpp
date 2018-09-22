@@ -132,6 +132,30 @@ void MainMenu::on_actionRotateCCW_triggered() {
         tikzit->activeWindow()->tikzScene()->rotateNodes(false);
 }
 
+void MainMenu::on_actionExtendUp_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->extendSelectionUp();
+}
+
+void MainMenu::on_actionExtendDown_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->extendSelectionDown();
+}
+
+void MainMenu::on_actionExtendLeft_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->extendSelectionLeft();
+}
+
+void MainMenu::on_actionExtendRight_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->extendSelectionRight();
+}
+
 
 // Tikz
 void MainMenu::on_actionParse_triggered()

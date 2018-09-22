@@ -33,8 +33,8 @@
     </property>
     <addaction name="actionExtendLeft"/>
     <addaction name="actionExtendRight"/>
-    <addaction name="actionExtendAbove"/>
-    <addaction name="actionExtendBelow"/>
+    <addaction name="actionExtendUp"/>
+    <addaction name="actionExtendDown"/>
    </widget>
    <widget class="QMenu" name="menuReorder">
     <property name="title">
@@ -276,17 +276,17 @@
     <string>Shift+Right</string>
    </property>
   </action>
-  <action name="actionExtendAbove">
+  <action name="actionExtendUp">
    <property name="text">
-    <string>Above</string>
+    <string>Upward</string>
    </property>
    <property name="shortcut">
     <string>Shift+Up</string>
    </property>
   </action>
-  <action name="actionExtendBelow">
+  <action name="actionExtendDown">
    <property name="text">
-    <string>Below</string>
+    <string>Downward</string>
    </property>
    <property name="shortcut">
     <string>Shift+Down</string>
