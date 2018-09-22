@@ -14,6 +14,8 @@
 #include <QFileDialog>
 #include <QTextEdit>
 #include <QTextBlock>
+#include <QIcon>
+#include <QPushButton>
 
 int MainWindow::_numWindows = 0;
 
@@ -24,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _windowId = _numWindows;
     _numWindows++;
     ui->setupUi(this);
+
+    setWindowIcon(QIcon(":/images/logo.png"));
+
     setAttribute(Qt::WA_DeleteOnClose, true);
     _tikzDocument = new TikzDocument(this);
 

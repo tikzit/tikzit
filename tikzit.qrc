@@ -12,6 +12,7 @@
         <file>images/node-ak.svg</file>
         <file>images/select-ak.svg</file>
         <file>images/refresh.svg</file>
+        <file>images/logo.png</file>
     </qresource>
     <qresource prefix="/qt/etc">
         <file>qt.conf</file>
