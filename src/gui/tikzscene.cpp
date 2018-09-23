@@ -179,6 +179,35 @@ void TikzScene::extendSelectionRight()
     }
 }
 
+void TikzScene::reorderSelection(bool toFront)
+{
+    QVector<Node*> nodeOrd, nodeOrd1;
+    QVector<Edge*> edgeOrd, edgeOrd1;
+    QSet<Node*> selNodes;
+    QSet<Edge*> selEdges;
+    getSelection(selNodes, selEdges);
+    foreach (Node *n, graph()->nodes()) {
+        if (selNodes.contains(n)) nodeOrd1 << n;
+        else nodeOrd << n;
+    }
+
+    foreach (Edge *e, graph()->edges()) {
+        if (selEdges.contains(e)) edgeOrd1 << e;
+        else edgeOrd << e;
+    }
+
+    if (toFront) {
+        nodeOrd += nodeOrd1;
+        edgeOrd += edgeOrd1;
+    } else {
+        nodeOrd = nodeOrd1 + nodeOrd;
+        edgeOrd = edgeOrd1 + edgeOrd;
+    }
+
+    ReorderCommand *cmd = new ReorderCommand(this, graph()->nodes(), nodeOrd, graph()->edges(), edgeOrd);
+    _tikzDocument->undoStack()->push(cmd);
+}
+
 void TikzScene::refreshZIndices()
 {
     qreal z = 0.0;

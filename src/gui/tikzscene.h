@@ -70,16 +70,19 @@ public:
     void setEnabled(bool enabled);
     int lineNumberForSelection();
 
+    void extendSelectionUp();
+    void extendSelectionDown();
+    void extendSelectionLeft();
+    void extendSelectionRight();
+
+    void reorderSelection(bool toFront);
+
 
 	void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges);
 	QSet<Node*> getSelectedNodes();
 
 public slots:
     void graphReplaced();
-    void extendSelectionUp();
-    void extendSelectionDown();
-    void extendSelectionLeft();
-    void extendSelectionRight();
     void refreshZIndices();
 
 protected:

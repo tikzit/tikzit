@@ -219,4 +219,22 @@ private:
     bool _clockwise;
 };
 
+class ReorderCommand : public GraphUpdateCommand
+{
+public:
+    explicit ReorderCommand(TikzScene *scene,
+                            const QVector<Node*> &oldNodeOrder,
+                            const QVector<Node*> &newNodeOrder,
+                            const QVector<Edge*> &oldEdgeOrder,
+                            const QVector<Edge*> &newEdgeOrder,
+                            QUndoCommand *parent = 0);
+    void undo() override;
+    void redo() override;
+private:
+    QVector<Node*> _oldNodeOrder;
+    QVector<Node*> _newNodeOrder;
+    QVector<Edge*> _oldEdgeOrder;
+    QVector<Edge*> _newEdgeOrder;
+};
+
 #endif // UNDOCOMMANDS_H

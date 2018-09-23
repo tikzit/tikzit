@@ -54,6 +54,8 @@ public slots:
     void on_actionReflectVertical_triggered();
     void on_actionRotateCW_triggered();
     void on_actionRotateCCW_triggered();
+    void on_actionBring_to_Front_triggered();
+    void on_actionSend_to_Back_triggered();
     void on_actionExtendUp_triggered();
     void on_actionExtendDown_triggered();
     void on_actionExtendLeft_triggered();

@@ -513,3 +513,31 @@ void RotateNodesCommand::redo()
     _scene->refreshAdjacentEdges(_nodes.toList());
     GraphUpdateCommand::redo();
 }
+
+ReorderCommand::ReorderCommand(TikzScene *scene,
+                               const QVector<Node *> &oldNodeOrder,
+                               const QVector<Node *> &newNodeOrder,
+                               const QVector<Edge *> &oldEdgeOrder,
+                               const QVector<Edge *> &newEdgeOrder,
+                               QUndoCommand *parent) :
+    GraphUpdateCommand(scene, parent),
+    _oldNodeOrder(oldNodeOrder), _newNodeOrder(newNodeOrder),
+    _oldEdgeOrder(oldEdgeOrder), _newEdgeOrder(newEdgeOrder)
+{
+}
+
+void ReorderCommand::undo()
+{
+    _scene->graph()->reorderNodes(_oldNodeOrder);
+    _scene->graph()->reorderEdges(_oldEdgeOrder);
+    _scene->refreshZIndices();
+    GraphUpdateCommand::undo();
+}
+
+void ReorderCommand::redo()
+{
+    _scene->graph()->reorderNodes(_newNodeOrder);
+    _scene->graph()->reorderEdges(_newEdgeOrder);
+    _scene->refreshZIndices();
+    GraphUpdateCommand::redo();
+}

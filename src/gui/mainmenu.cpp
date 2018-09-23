@@ -132,6 +132,18 @@ void MainMenu::on_actionRotateCCW_triggered() {
         tikzit->activeWindow()->tikzScene()->rotateNodes(false);
 }
 
+void MainMenu::on_actionBring_to_Front_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->reorderSelection(true);
+}
+
+void MainMenu::on_actionSend_to_Back_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->reorderSelection(false);
+}
+
 void MainMenu::on_actionExtendUp_triggered()
 {
     if (tikzit->activeWindow() != 0)

@@ -32,6 +32,7 @@
 #include <QMultiHash>
 #include <QRectF>
 #include <QString>
+#include <QMap>
 
 class Graph : public QObject
 {
@@ -46,6 +47,8 @@ public:
     void addEdge(Edge *e, int index);
     void removeEdge(Edge *e);
     int maxIntName();
+    void reorderNodes(const QVector<Node*> &newOrder);
+    void reorderEdges(const QVector<Edge*> &newOrder);
 	QRectF boundsForNodes(QSet<Node*> ns);
 	QString freshNodeName();
 

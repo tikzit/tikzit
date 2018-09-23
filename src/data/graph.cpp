@@ -85,6 +85,16 @@ int Graph::maxIntName()
     return max;
 }
 
+void Graph::reorderNodes(const QVector<Node *> &newOrder)
+{
+    _nodes = newOrder;
+}
+
+void Graph::reorderEdges(const QVector<Edge *> &newOrder)
+{
+    _edges = newOrder;
+}
+
 QRectF Graph::realBbox()
 {
     //float maxX = 0.0f;
