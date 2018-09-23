@@ -103,6 +103,8 @@ void TikzScene::graphReplaced()
         _nodeItems.insert(n, ni);
         addItem(ni);
     }
+
+    refreshZIndices();
 }
 
 void TikzScene::extendSelectionUp()
@@ -174,6 +176,20 @@ void TikzScene::extendSelectionRight()
 
     foreach (NodeItem *ni, nodeItems().values()) {
         if (ni->node()->point().x() >= m) ni->setSelected(true);
+    }
+}
+
+void TikzScene::refreshZIndices()
+{
+    qreal z = 0.0;
+    foreach (Edge *e, graph()->edges()) {
+        edgeItems()[e]->setZValue(z);
+        z += 1.0;
+    }
+
+    foreach (Node *n, graph()->nodes()) {
+        nodeItems()[n]->setZValue(z);
+        z += 1.0;
     }
 }
 

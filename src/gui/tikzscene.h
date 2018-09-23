@@ -80,6 +80,7 @@ public slots:
     void extendSelectionDown();
     void extendSelectionLeft();
     void extendSelectionRight();
+    void refreshZIndices();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

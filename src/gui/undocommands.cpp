@@ -157,6 +157,7 @@ void DeleteCommand::undo()
         if (_selEdges.contains(e)) ei->setSelected(true);
     }
 
+    _scene->refreshZIndices();
     GraphUpdateCommand::undo();
 }
 
@@ -180,6 +181,7 @@ void DeleteCommand::redo()
         _scene->graph()->removeNode(n);
     }
 
+    _scene->refreshZIndices();
     GraphUpdateCommand::redo();
 }
 
@@ -199,6 +201,7 @@ void AddNodeCommand::undo()
 
     //_scene->setBounds(_oldBounds);
 
+    _scene->refreshZIndices();
     GraphUpdateCommand::undo();
 }
 
@@ -212,6 +215,7 @@ void AddNodeCommand::redo()
 
     //_scene->setBounds(_newBounds);
 
+    _scene->refreshZIndices();
     GraphUpdateCommand::redo();
 }
 
@@ -228,6 +232,7 @@ void AddEdgeCommand::undo()
     delete ei;
 
     _scene->graph()->removeEdge(_edge);
+    _scene->refreshZIndices();
     GraphUpdateCommand::undo();
 }
 
@@ -245,6 +250,7 @@ void AddEdgeCommand::redo()
         ei->stackBefore(_scene->nodeItems()[_scene->graph()->nodes().first()]);
     }
 
+    _scene->refreshZIndices();
     GraphUpdateCommand::redo();
 }
 
@@ -361,6 +367,7 @@ void PasteCommand::undo()
 	foreach(Node *n, _oldSelectedNodes) _scene->nodeItems()[n]->setSelected(true);
 	foreach(Edge *e, _oldSelectedEdges) _scene->edgeItems()[e]->setSelected(true);
 
+    _scene->refreshZIndices();
     GraphUpdateCommand::undo();
 }
 
@@ -384,6 +391,7 @@ void PasteCommand::redo()
         ni->setSelected(true);
     }
 
+    _scene->refreshZIndices();
     GraphUpdateCommand::redo();
 }
 
@@ -428,6 +436,7 @@ void ReplaceGraphCommand::undo()
     }
     _scene->tikzDocument()->setGraph(_oldGraph);
     _scene->graphReplaced();
+    GraphUpdateCommand::undo();
 }
 
 void ReplaceGraphCommand::redo()
@@ -439,6 +448,7 @@ void ReplaceGraphCommand::redo()
     }
     _scene->tikzDocument()->setGraph(_newGraph);
     _scene->graphReplaced();
+    GraphUpdateCommand::redo();
 }
 
 ReflectNodesCommand::ReflectNodesCommand(TikzScene *scene, QSet<Node*> nodes, bool horizontal, QUndoCommand *parent) :
