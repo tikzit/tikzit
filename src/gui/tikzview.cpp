@@ -126,3 +126,11 @@ void TikzView::drawBackground(QPainter *painter, const QRectF &rect)
     painter->drawLine(0, rect.top(), 0, rect.bottom());
 }
 
+void TikzView::wheelEvent(QWheelEvent *event)
+{
+    if (event->modifiers() & Qt::ShiftModifier) {
+        event->setModifiers(Qt::NoModifier);
+        QGraphicsView::wheelEvent(event);
+    }
+}
+

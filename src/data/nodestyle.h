@@ -43,5 +43,6 @@ public:
 };
 
 extern NodeStyle *noneStyle;
+extern NodeStyle *unknownStyle;
 
 #endif // NODESTYLE_H

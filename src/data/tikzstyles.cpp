@@ -33,7 +33,7 @@ NodeStyle *TikzStyles::nodeStyle(QString name) const
 {
     foreach (NodeStyle *s , _nodeStyles)
         if (s->name() == name) return s;
-    return noneStyle;
+    return unknownStyle;
 }
 
 EdgeStyle *TikzStyles::edgeStyle(QString name) const

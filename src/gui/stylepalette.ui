@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>130</width>
-    <height>218</height>
+    <height>268</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -134,7 +134,14 @@
      </widget>
     </item>
     <item>
-     <widget class="QListView" name="edgeStyleListView"/>
+     <widget class="QListView" name="edgeStyleListView">
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+        <italic>true</italic>
+       </font>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

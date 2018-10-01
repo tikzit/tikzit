@@ -53,6 +53,8 @@ public:
     void attachStyle();
     NodeStyle *style() const;
 
+    bool isBlankNode();
+
     int tikzLine() const;
     void setTikzLine(int tikzLine);
 

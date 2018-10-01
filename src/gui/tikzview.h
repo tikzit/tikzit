@@ -45,6 +45,7 @@ public slots:
     void setScene(QGraphicsScene *scene);
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect);
+    void wheelEvent(QWheelEvent *event) override;
 private:
     float _scale;
 };

@@ -20,9 +20,10 @@
 #include "tikzit.h"
 
 #include <QPainter>
+#include <QImage>
 
 NodeStyle *noneStyle = new NodeStyle();
-NodeStyle *unknownStyle = new NodeStyle("unknown", new GraphElementData({GraphElementProperty("tikzit fill", "red")}));
+NodeStyle *unknownStyle = new NodeStyle("unknown", new GraphElementData({GraphElementProperty("tikzit fill", "blue")}));
 
 NodeStyle::NodeStyle() : Style()
 {
@@ -72,9 +73,12 @@ QPainterPath NodeStyle::palettePath() const
 QIcon NodeStyle::icon() const
 {
     // draw an icon matching the style
-    QPixmap px(100,100);
+    QImage px(100,100,QImage::Format_ARGB32_Premultiplied);
     px.fill(Qt::transparent);
+
+
     QPainter painter(&px);
+    painter.setRenderHint(QPainter::Antialiasing);
     QPainterPath pth = path();
     pth.translate(50.0f, 50.0f);
 
@@ -98,7 +102,6 @@ QIcon NodeStyle::icon() const
         painter.drawPath(pth);
     }
 
-
-    return QIcon(px);
+    return QIcon(QPixmap::fromImage(px));
 }
 

@@ -107,6 +107,11 @@ NodeStyle *Node::style() const
     return _style;
 }
 
+bool Node::isBlankNode()
+{
+    return styleName() == "none";
+}
+
 int Node::tikzLine() const
 {
     return _tikzLine;
