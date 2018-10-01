@@ -118,9 +118,9 @@ QVariant GraphElementData::data(const QModelIndex &index, int role) const
             QString s = (index.column() == 0) ? p.key() : p.value();
             return QVariant(s);
         }
-    } else {
-        return QVariant();
     }
+
+    return QVariant();
 }
 
 QVariant GraphElementData::headerData(int section, Qt::Orientation orientation, int role) const
@@ -133,12 +133,12 @@ QVariant GraphElementData::headerData(int section, Qt::Orientation orientation, 
     return QVariant();
 }
 
-QModelIndex GraphElementData::index(int row, int column, const QModelIndex &parent) const
+QModelIndex GraphElementData::index(int row, int column, const QModelIndex &) const
 {
     return createIndex(row, column, (void*)0);
 }
 
-QModelIndex GraphElementData::parent(const QModelIndex &index) const
+QModelIndex GraphElementData::parent(const QModelIndex &) const
 {
     // there is no nesting, so always return an invalid index
     return QModelIndex();

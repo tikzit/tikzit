@@ -115,7 +115,7 @@ public:
     void open();
 	void open(QString fileName);
     void quit();
-    void init(QApplication *app);
+    void init();
 
     // convenience functions for named colors
     QColor colorByIndex(int i);
@@ -132,7 +132,7 @@ public:
     QString styleFilePath() const;
 
 public slots:
-    void focusChanged(QWidget *old, QWidget *nw);
+    //void focusChanged(QWidget *old, QWidget *nw);
 private:
     //    void createMenu();
 
@@ -140,11 +140,11 @@ private:
     ToolPalette *_toolPalette;
     PropertyPalette *_propertyPalette;
     //StylePalette *_stylePalette;
-    QVector<MainWindow*> _windows;
-    MainWindow *_activeWindow;
     TikzStyles *_styles;
     QString _styleFile;
     QString _styleFilePath;
+    QVector<MainWindow*> _windows;
+    MainWindow *_activeWindow;
     StyleEditor *_styleEditor;
     QStringList _colNames;
     QVector<QColor> _cols;

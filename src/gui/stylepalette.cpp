@@ -89,7 +89,8 @@ void StylePalette::changeNodeStyle(int increment)
         if (row < 0) row += _nodeModel->rowCount();
     }
 
-    QModelIndex i1 = ui->styleListView->rootIndex().child(row, 0);
+    //QModelIndex i1 = ui->styleListView->rootIndex().child(row, 0);
+    QModelIndex i1 = _nodeModel->index(row,0);
     ui->styleListView->selectionModel()->select(i1, QItemSelectionModel::ClearAndSelect);
     ui->styleListView->scrollTo(i1);
 }
@@ -126,12 +127,12 @@ QString StylePalette::activeEdgeStyleName()
 	}
 }
 
-void StylePalette::nodeStyleDoubleClicked(const QModelIndex &index)
+void StylePalette::nodeStyleDoubleClicked(const QModelIndex &)
 {
     tikzit->activeWindow()->tikzScene()->applyActiveStyleToNodes();
 }
 
-void StylePalette::edgeStyleDoubleClicked(const QModelIndex &index)
+void StylePalette::edgeStyleDoubleClicked(const QModelIndex &)
 {
 	qDebug() << "got double click";
 	tikzit->activeWindow()->tikzScene()->applyActiveStyleToEdges();

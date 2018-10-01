@@ -69,7 +69,7 @@
 #define assembler yyget_extra(scanner)
 
 /* pass errors off to the assembler */
-void yyerror(YYLTYPE *yylloc, void *scanner, const char *str) {
+void yyerror(YYLTYPE *yylloc, void * /*scanner*/, const char *str) {
 	// TODO: implement reportError()
 	//assembler->reportError(str, yylloc);
     qDebug() << "\nparse error: " << str << " line:" << yylloc->first_line;

@@ -341,7 +341,7 @@ void Graph::reflectNodes(QSet<Node*> nds, bool horizontal)
 
 void Graph::rotateNodes(QSet<Node*> nds, bool clockwise)
 {
-    QRectF bds = boundsForNodes(nds);
+    //QRectF bds = boundsForNodes(nds);
     // QPointF ctr = bds.center();
     // ctr.setX((float)floor(ctr.x() * 4.0f) / 4.0f);
     // ctr.setY((float)floor(ctr.y() * 4.0f) / 4.0f);

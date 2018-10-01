@@ -71,6 +71,8 @@ QPen EdgeStyle::pen() const
         pat << 1.0 << 1.0;
         p.setDashPattern(pat);
         break;
+    case Solid:
+        break;
     }
 
     return p;
@@ -114,6 +116,8 @@ QIcon EdgeStyle::icon() const
     case Flat:
         painter.drawLine(90,40,90,60);
         break;
+    case NoTip:
+        break;
     }
 
     switch (arrowTail()) {
@@ -123,6 +127,8 @@ QIcon EdgeStyle::icon() const
         break;
     case Flat:
         painter.drawLine(10,40,10,60);
+        break;
+    case NoTip:
         break;
     }
 

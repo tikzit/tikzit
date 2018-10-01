@@ -102,6 +102,8 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 			painter->drawPath(pth);
 			break;
 		}
+    case EdgeStyle::NoTip:
+        break;
     }
 
     //QPen outline = QPen(Qt::red);
@@ -126,6 +128,8 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 			painter->drawPath(pth);
 			break;
 		}
+        case EdgeStyle::NoTip:
+            break;
 	}
 
     if (isSelected()) {

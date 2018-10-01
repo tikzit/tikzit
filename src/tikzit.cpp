@@ -36,7 +36,7 @@ Tikzit::Tikzit() : _styleFile("[default]"), _activeWindow(0)
 {
 }
 
-void Tikzit::init(QApplication *app)
+void Tikzit::init()
 {
     QSettings settings("tikzit", "tikzit");
 
@@ -261,16 +261,6 @@ void Tikzit::showStyleEditor()
 QString Tikzit::styleFile() const
 {
     return _styleFile;
-}
-
-void Tikzit::focusChanged(QWidget *old, QWidget *nw)
-{
-//    foreach (MainWindow *w, _windows) {
-//        if (w->isActiveWindow()) {
-//            _stylePalette->raise();
-//            break;
-//        }
-//    }
 }
 
 QString Tikzit::styleFilePath() const

@@ -669,7 +669,7 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             if (ok) {
                 QMap<Node*,QString> oldLabels;
                 oldLabels.insert(ni->node(), ni->node()->label());
-                ChangeLabelCommand *cmd = new ChangeLabelCommand(this, graph(), oldLabels, newLabel);
+                ChangeLabelCommand *cmd = new ChangeLabelCommand(this, oldLabels, newLabel);
                 _tikzDocument->undoStack()->push(cmd);
             }
 			break;
