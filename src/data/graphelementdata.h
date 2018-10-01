@@ -43,6 +43,11 @@ public:
     QString property(QString key);
     bool atom(QString atom);
     int indexOfKey(QString key);
+    bool removeRows(int row, int count, const QModelIndex &parent) override;
+    bool moveRows(const QModelIndex &sourceParent,
+                  int sourceRow, int,
+                  const QModelIndex &destinationParent,
+                  int destinationRow) override;
 
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation,

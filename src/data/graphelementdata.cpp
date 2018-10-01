@@ -110,6 +110,42 @@ int GraphElementData::indexOfKey(QString key)
     return -1;
 }
 
+bool GraphElementData::removeRows(int row, int /*count*/, const QModelIndex &parent)
+{
+    if (row >= 0 && row < _properties.length()) {
+        beginRemoveRows(parent, row, row+1);
+        _properties.remove(row);
+        endRemoveRows();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool GraphElementData::moveRows(const QModelIndex &sourceParent,
+                                int sourceRow,
+                                int /*count*/,
+                                const QModelIndex &destinationParent,
+                                int destinationRow)
+{
+    if (sourceRow >= 0 && sourceRow < _properties.length() &&
+        destinationRow >= 0 && destinationRow <= _properties.length())
+    {
+        beginMoveRows(sourceParent, sourceRow, sourceRow, destinationParent, destinationRow);
+        GraphElementProperty p = _properties[sourceRow];
+        _properties.remove(sourceRow);
+        if (sourceRow < destinationRow) {
+            _properties.insert(destinationRow - 1, p);
+        } else {
+            _properties.insert(destinationRow, p);
+        }
+        endMoveRows();
+        return true;
+    } else {
+        return false;
+    }
+}
+
 QVariant GraphElementData::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole || role == Qt::EditRole) {

@@ -447,17 +447,46 @@ void StyleEditor::on_addAtom_clicked()
 
 void StyleEditor::on_removeProperty_clicked()
 {
-
+    Style *s = activeStyle();
+    if (s != 0) {
+        QModelIndexList sel = ui->properties->selectionModel()->selectedRows();
+        if (!sel.isEmpty()) {
+            s->data()->removeRows(sel[0].row(), 1, sel[0].parent());
+            _dirty = true;
+        }
+    }
 }
 
 void StyleEditor::on_propertyUp_clicked()
 {
-
+    Style *s = activeStyle();
+    if (s != 0) {
+        QModelIndexList sel = ui->properties->selectionModel()->selectedRows();
+        if (!sel.isEmpty()) {
+            s->data()->moveRows(
+                    sel[0].parent(),
+                    sel[0].row(), 1,
+                    sel[0].parent(),
+                    sel[0].row() - 1);
+            _dirty = true;
+        }
+    }
 }
 
 void StyleEditor::on_propertyDown_clicked()
 {
-
+    Style *s = activeStyle();
+    if (s != 0) {
+        QModelIndexList sel = ui->properties->selectionModel()->selectedRows();
+        if (!sel.isEmpty()) {
+            s->data()->moveRows(
+                    sel[0].parent(),
+                    sel[0].row(), 1,
+                    sel[0].parent(),
+                    sel[0].row() + 2);
+            _dirty = true;
+        }
+    }
 }
 
 void StyleEditor::on_save_clicked()

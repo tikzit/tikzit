@@ -20,3 +20,8 @@ src/data/tikzlexer.lexer.cpp
 src/data/tikzparser.parser.cpp
 src/data/tikzparser.parser.hpp
 *.o
+moc_*.cpp
+moc_*.h
+ui_*.h
+qrc_*.cpp
+tikzit
