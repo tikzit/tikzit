@@ -556,8 +556,8 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
         break;
     case ToolPalette::EDGE:
-        // add an edge. Currently, self-loops are not supported (since they aren't drawn properly)
-        if (_edgeStartNodeItem != 0 && _edgeEndNodeItem != 0 && _edgeStartNodeItem != _edgeEndNodeItem) {
+        // add an edge
+        if (_edgeStartNodeItem != 0 && _edgeEndNodeItem != 0) {
             Edge *e = new Edge(_edgeStartNodeItem->node(), _edgeEndNodeItem->node(), _tikzDocument);
 			e->setStyleName(_styles->activeEdgeStyleName());
             AddEdgeCommand *cmd = new AddEdgeCommand(this, e);
@@ -659,8 +659,10 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
     foreach (QGraphicsItem *it, items(mousePos)) {
         if (EdgeItem *ei = dynamic_cast<EdgeItem*>(it)) {
-            ChangeEdgeModeCommand *cmd = new ChangeEdgeModeCommand(this, ei->edge());
-            _tikzDocument->undoStack()->push(cmd);
+            if (!ei->edge()->isSelfLoop()) {
+                ChangeEdgeModeCommand *cmd = new ChangeEdgeModeCommand(this, ei->edge());
+                _tikzDocument->undoStack()->push(cmd);
+            }
 			break;
         } else if (NodeItem *ni = dynamic_cast<NodeItem*>(it)) {
             bool ok;

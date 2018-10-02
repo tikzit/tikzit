@@ -29,11 +29,20 @@ Edge::Edge(Node *s, Node *t, QObject *parent) :
     _data = new GraphElementData();
     _edgeNode = 0;
     _dirty = true;
-    _basicBendMode = true;
-    _bend = 0;
-    _inAngle = 0;
-    _outAngle = 0;
-    _weight = 0.4f;
+
+    if (s != t) {
+        _basicBendMode = true;
+        _bend = 0;
+        _inAngle = 0;
+        _outAngle = 0;
+        _weight = 0.4f;
+    } else {
+        _basicBendMode = false;
+        _bend = 0;
+        _inAngle = 135;
+        _outAngle = 45;
+        _weight = 1.0f;
+    }
 	_style = noneEdgeStyle;
     updateControls();
 }
@@ -227,7 +236,7 @@ void Edge::setAttributesFromData()
         }
     }
 
-    if (_data->property("looseness") != 0) {
+    if (!_data->property("looseness").isNull()) {
         _weight = _data->property("looseness").toFloat(&ok) / 2.5f;
         if (!ok) _weight = 0.4f;
     } else {
