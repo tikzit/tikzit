@@ -556,7 +556,8 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
         break;
     case ToolPalette::EDGE:
-        if (_edgeStartNodeItem != 0 && _edgeEndNodeItem != 0) {
+        // add an edge. Currently, self-loops are not supported (since they aren't drawn properly)
+        if (_edgeStartNodeItem != 0 && _edgeEndNodeItem != 0 && _edgeStartNodeItem != _edgeEndNodeItem) {
             Edge *e = new Edge(_edgeStartNodeItem->node(), _edgeEndNodeItem->node(), _tikzDocument);
 			e->setStyleName(_styles->activeEdgeStyleName());
             AddEdgeCommand *cmd = new AddEdgeCommand(this, e);
