@@ -40,16 +40,16 @@ StylePalette::StylePalette(QWidget *parent) :
 //        restoreGeometry(geom.toByteArray());
 //    }
 
-    _nodeModel = new QStandardItemModel(this);
-    _edgeModel = new QStandardItemModel(this);
+//    _nodeModel = new QStandardItemModel(this);
+//    _edgeModel = new QStandardItemModel(this);
 
-    ui->styleListView->setModel(_nodeModel);
+    ui->styleListView->setModel(tikzit->styles()->nodeStyles());
     ui->styleListView->setViewMode(QListView::IconMode);
     ui->styleListView->setMovement(QListView::Static);
     ui->styleListView->setGridSize(QSize(48,48));
 
 
-    ui->edgeStyleListView->setModel(_edgeModel);
+    ui->edgeStyleListView->setModel(tikzit->styles()->edgeStyles());
     ui->edgeStyleListView->setViewMode(QListView::IconMode);
     ui->edgeStyleListView->setMovement(QListView::Static);
     ui->edgeStyleListView->setGridSize(QSize(48,48));
@@ -70,6 +70,9 @@ void StylePalette::reloadStyles()
     QString f = tikzit->styleFile();
     ui->styleFile->setText(f);
 
+    ui->styleListView->setModel(tikzit->styles()->nodeStyles());
+    ui->edgeStyleListView->setModel(tikzit->styles()->edgeStyles());
+
     QString cat = ui->currentCategory->currentText();
     ui->currentCategory->clear();
 
@@ -85,12 +88,12 @@ void StylePalette::changeNodeStyle(int increment)
     QModelIndexList i = ui->styleListView->selectionModel()->selectedIndexes();
     int row = 0;
     if (!i.isEmpty()) {
-        int row = (i[0].row()+increment)%_nodeModel->rowCount();
-        if (row < 0) row += _nodeModel->rowCount();
+        int row = (i[0].row()+increment)% tikzit->styles()->nodeStyles()->numInCategory();
+        if (row < 0) row += tikzit->styles()->nodeStyles()->numInCategory();
     }
 
     //QModelIndex i1 = ui->styleListView->rootIndex().child(row, 0);
-    QModelIndex i1 = _nodeModel->index(row,0);
+    QModelIndex i1 =tikzit->styles()->nodeStyles()->index(row,0);
     ui->styleListView->selectionModel()->select(i1, QItemSelectionModel::ClearAndSelect);
     ui->styleListView->scrollTo(i1);
 }
@@ -134,7 +137,6 @@ void StylePalette::nodeStyleDoubleClicked(const QModelIndex &)
 
 void StylePalette::edgeStyleDoubleClicked(const QModelIndex &)
 {
-	qDebug() << "got double click";
 	tikzit->activeWindow()->tikzScene()->applyActiveStyleToEdges();
 }
 
@@ -157,7 +159,8 @@ void StylePalette::on_buttonRefreshTikzstyles_clicked()
 
 void StylePalette::on_currentCategory_currentTextChanged(const QString &cat)
 {
-	tikzit->styles()->refreshModels(_nodeModel, _edgeModel, cat);
+    //tikzit->styles()->refreshModels(_nodeModel, _edgeModel, cat);
+    tikzit->styles()->nodeStyles()->setCategory(cat);
 }
 
 //void StylePalette::on_buttonApplyNodeStyle_clicked()

@@ -26,7 +26,8 @@
 
 TikzStyles::TikzStyles(QObject *parent) : QObject(parent)
 {
-    _nodeStyles = new NodeStyleList(this);
+    _nodeStyles = new StyleList(false, this);
+    _edgeStyles = new StyleList(true, this);
 }
 
 Style *TikzStyles::nodeStyle(QString name) const
@@ -38,16 +39,15 @@ Style *TikzStyles::nodeStyle(QString name) const
 
 Style *TikzStyles::edgeStyle(QString name) const
 {
-    foreach (Style *s , _edgeStyles)
-        if (s->name() == name) return s;
-    return noneEdgeStyle;
+    Style *s = _edgeStyles->style(name);
+    return (s == nullptr) ? noneEdgeStyle : s;
 }
 
 
 void TikzStyles::clear()
 {
     _nodeStyles->clear();
-    _edgeStyles.clear();
+    _edgeStyles->clear();
 }
 
 bool TikzStyles::loadStyles(QString fileName)
@@ -98,14 +98,14 @@ void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel
         it->setSizeHint(QSize(48,48));
     }
 
-    Style *ns;
+    Style *s;
     for (int i = 0; i < _nodeStyles->length(); ++i) {
-        ns = _nodeStyles->style(i);
-        if (category == "" || category == ns->propertyWithDefault("tikzit category", "", false))
+        s = _nodeStyles->style(i);
+        if (category == "" || category == s->propertyWithDefault("tikzit category", "", false))
         {
-            it = new QStandardItem(ns->icon(), ns->name());
+            it = new QStandardItem(s->icon(), s->name());
             it->setEditable(false);
-            it->setData(ns->name());
+            it->setData(s->name());
             it->setSizeHint(QSize(48,48));
             nodeModel->appendRow(it);
         }
@@ -118,15 +118,24 @@ void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel
         edgeModel->appendRow(it);
     }
 
-    foreach(Style *es, _edgeStyles) {
-        //if (category == "" || category == es->propertyWithDefault("tikzit category", "", false))
-        //{
-            it = new QStandardItem(es->icon(), es->name());
-            it->setEditable(false);
-            it->setData(es->name());
-            edgeModel->appendRow(it);
-        //}
+    for (int i = 0; i < _edgeStyles->length(); ++i) {
+        s = _edgeStyles->style(i);
+        it = new QStandardItem(s->icon(), s->name());
+        it->setEditable(false);
+        it->setData(s->name());
+        it->setSizeHint(QSize(48,48));
+        edgeModel->appendRow(it);
     }
+}
+
+StyleList *TikzStyles::nodeStyles() const
+{
+    return _nodeStyles;
+}
+
+StyleList *TikzStyles::edgeStyles() const
+{
+    return _edgeStyles;
 }
 
 QStringList TikzStyles::categories() const
@@ -156,7 +165,7 @@ QString TikzStyles::tikz() const
     code << _nodeStyles->tikz();
 
     code << "\n% Edge styles\n";
-    foreach (Style *s, _edgeStyles) code << s->tikz() << "\n";
+    code << _edgeStyles->tikz();
 
     code.flush();
     return str;
@@ -165,12 +174,8 @@ QString TikzStyles::tikz() const
 void TikzStyles::addStyle(QString name, GraphElementData *data)
 {
     Style *s = new Style(name, data);
-    if (s->isEdgeStyle())
-    { // edge style
-        _edgeStyles << s;
-    } else { // node style
-        _nodeStyles->addStyle(new Style(name, data));
-    }
+    if (s->isEdgeStyle()) _edgeStyles->addStyle(s);
+    else _nodeStyles->addStyle(s);
 }
 
 

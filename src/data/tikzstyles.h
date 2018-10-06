@@ -20,7 +20,7 @@
 #define PROJECT_H
 
 #include "graphelementdata.h"
-#include "nodestylelist.h"
+#include "stylelist.h"
 #include "style.h"
 
 #include <QObject>
@@ -48,13 +48,16 @@ public:
                        QString category="",
                        bool includeNone=true);
 
+    StyleList *nodeStyles() const;
+    StyleList *edgeStyles() const;
+
 signals:
 
 public slots:
 
 private:
-    NodeStyleList *_nodeStyles;
-    QVector<Style*> _edgeStyles;
+    StyleList *_nodeStyles;
+    StyleList* _edgeStyles;
     QStringList _colNames;
     QVector<QColor> _cols;
 };

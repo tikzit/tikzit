@@ -5,11 +5,11 @@
 
 #include <QAbstractListModel>
 
-class NodeStyleList : public QAbstractListModel
+class StyleList : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit NodeStyleList(QObject *parent = nullptr);
+    explicit StyleList(bool edgeStyles = false, QObject *parent = nullptr);
     Style *style(QString name);
     Style *style(int i);
     int length() const;
@@ -35,6 +35,7 @@ public slots:
 private:
     QVector<Style*> _styles;
     QString _category;
+    bool _edgeStyles;
 };
 
 #endif // NODESTYLELIST_H

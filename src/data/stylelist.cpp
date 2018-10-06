@@ -1,29 +1,34 @@
-#include "nodestylelist.h"
+#include "stylelist.h"
 
 #include <QTextStream>
 
-NodeStyleList::NodeStyleList(QObject *parent) : QAbstractListModel(parent)
+StyleList::StyleList(bool edgeStyles, QObject *parent) : QAbstractListModel(parent), _edgeStyles(edgeStyles)
 {
+    if (edgeStyles) {
+        _styles << noneEdgeStyle;
+    } else {
+        _styles << noneStyle;
+    }
 }
 
-Style *NodeStyleList::style(QString name)
+Style *StyleList::style(QString name)
 {
     foreach (Style *s, _styles)
         if (s->name() == name) return s;
     return nullptr;
 }
 
-Style *NodeStyleList::style(int i)
+Style *StyleList::style(int i)
 {
     return _styles[i];
 }
 
-int NodeStyleList::length() const
+int StyleList::length() const
 {
     return _styles.length();
 }
 
-void NodeStyleList::addStyle(Style *s)
+void StyleList::addStyle(Style *s)
 {
     s->setParent(this);
     if (s->category() == _category) {
@@ -36,21 +41,25 @@ void NodeStyleList::addStyle(Style *s)
     }
 }
 
-void NodeStyleList::clear()
+void StyleList::clear()
 {
     int n = numInCategory();
     if (n > 0) {
-        beginRemoveRows(QModelIndex(), 0, n - 1);
+        beginRemoveRows(QModelIndex(), 1, n - 1);
         _styles.clear();
+        if (_edgeStyles) _styles << noneEdgeStyle;
+        else _styles << noneStyle;
         endRemoveRows();
     } else {
         _styles.clear();
+        if (_edgeStyles) _styles << noneEdgeStyle;
+        else _styles << noneStyle;
     }
 
     _category = "";
 }
 
-QString NodeStyleList::tikz()
+QString StyleList::tikz()
 {
     QString str;
     QTextStream code(&str);
@@ -59,22 +68,22 @@ QString NodeStyleList::tikz()
     return str;
 }
 
-int NodeStyleList::numInCategory() const
+int StyleList::numInCategory() const
 {
     int c = 0;
     foreach (Style *s, _styles) {
-        if (_category == "" || s->category() == _category) {
+        if (_category == "" || s->isNone() || s->category() == _category) {
             ++c;
         }
     }
     return c;
 }
 
-int NodeStyleList::nthInCategory(int n) const
+int StyleList::nthInCategory(int n) const
 {
     int c = 0;
     for (int j = 0; j < _styles.length(); ++j) {
-        if (_category == "" || _styles[j]->category() == _category) {
+        if (_category == "" || _styles[j]->isNone() || _styles[j]->category() == _category) {
             if (c == n) return j;
             else ++c;
         }
@@ -82,12 +91,12 @@ int NodeStyleList::nthInCategory(int n) const
     return -1;
 }
 
-Style *NodeStyleList::styleInCategory(int n) const
+Style *StyleList::styleInCategory(int n) const
 {
     return _styles[nthInCategory(n)];
 }
 
-QVariant NodeStyleList::data(const QModelIndex &index, int role) const
+QVariant StyleList::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole) {
         return QVariant(styleInCategory(index.row())->name());
@@ -98,17 +107,21 @@ QVariant NodeStyleList::data(const QModelIndex &index, int role) const
     }
 }
 
-int NodeStyleList::rowCount(const QModelIndex &/*parent*/) const
+int StyleList::rowCount(const QModelIndex &/*parent*/) const
 {
     return numInCategory();
 }
 
-QString NodeStyleList::category() const
+QString StyleList::category() const
 {
     return _category;
 }
 
-void NodeStyleList::setCategory(const QString &category)
+void StyleList::setCategory(const QString &category)
 {
-    _category = category;
+    if (category != _category) {
+        beginResetModel();
+        _category = category;
+        endResetModel();
+    }
 }

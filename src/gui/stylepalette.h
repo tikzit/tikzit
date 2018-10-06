@@ -53,8 +53,6 @@ private:
     void changeNodeStyle(int increment);
 
     Ui::StylePalette *ui;
-    QStandardItemModel *_nodeModel;
-    QStandardItemModel *_edgeModel;
 
 protected:
     void closeEvent(QCloseEvent *event) override;

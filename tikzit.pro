@@ -53,7 +53,7 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/tikzstyles.cpp \
     src/data/style.cpp \
     src/gui/styleeditor.cpp \
-    src/data/nodestylelist.cpp
+    src/data/stylelist.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -79,7 +79,7 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/tikzstyles.h \
     src/data/style.h \
     src/gui/styleeditor.h \
-    src/data/nodestylelist.h
+    src/data/stylelist.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \
