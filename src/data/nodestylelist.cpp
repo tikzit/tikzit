@@ -6,14 +6,14 @@ NodeStyleList::NodeStyleList(QObject *parent) : QAbstractListModel(parent)
 {
 }
 
-NodeStyle *NodeStyleList::style(QString name)
+Style *NodeStyleList::style(QString name)
 {
-    foreach (NodeStyle *s, _styles)
+    foreach (Style *s, _styles)
         if (s->name() == name) return s;
     return nullptr;
 }
 
-NodeStyle *NodeStyleList::style(int i)
+Style *NodeStyleList::style(int i)
 {
     return _styles[i];
 }
@@ -23,8 +23,9 @@ int NodeStyleList::length() const
     return _styles.length();
 }
 
-void NodeStyleList::addStyle(NodeStyle *s)
+void NodeStyleList::addStyle(Style *s)
 {
+    s->setParent(this);
     if (s->category() == _category) {
         int n = numInCategory();
         beginInsertRows(QModelIndex(), n, n);
@@ -53,7 +54,7 @@ QString NodeStyleList::tikz()
 {
     QString str;
     QTextStream code(&str);
-    foreach (NodeStyle *s, _styles) code << s->tikz() << "\n";
+    foreach (Style *s, _styles) code << s->tikz() << "\n";
     code.flush();
     return str;
 }
@@ -61,7 +62,7 @@ QString NodeStyleList::tikz()
 int NodeStyleList::numInCategory() const
 {
     int c = 0;
-    foreach (NodeStyle *s, _styles) {
+    foreach (Style *s, _styles) {
         if (_category == "" || s->category() == _category) {
             ++c;
         }
@@ -81,7 +82,7 @@ int NodeStyleList::nthInCategory(int n) const
     return -1;
 }
 
-NodeStyle *NodeStyleList::styleInCategory(int n) const
+Style *NodeStyleList::styleInCategory(int n) const
 {
     return _styles[nthInCategory(n)];
 }

@@ -73,4 +73,9 @@ protected:
     QString _name;
     GraphElementData *_data;
 };
+
+extern Style *noneStyle;
+extern Style *unknownStyle;
+extern Style *noneEdgeStyle;
+
 #endif // STYLE_H

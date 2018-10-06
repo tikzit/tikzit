@@ -102,7 +102,7 @@ void Node::attachStyle()
     else _style = tikzit->styles()->nodeStyle(nm);
 }
 
-NodeStyle *Node::style() const
+Style *Node::style() const
 {
     return _style;
 }

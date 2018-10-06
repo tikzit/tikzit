@@ -401,7 +401,7 @@ void Edge::attachStyle()
 	else _style = tikzit->styles()->edgeStyle(nm);
 }
 
-EdgeStyle * Edge::style() const
+Style *Edge::style() const
 {
 	return _style;
 }

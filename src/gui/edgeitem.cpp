@@ -86,14 +86,14 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 	
 	
 	switch (_edge->style()->arrowHead()) {
-		case EdgeStyle::Flat:
+        case Style::Flat:
 		{
 			painter->drawLine(
 				toScreen(_edge->head() + hLeft),
 				toScreen(_edge->head() + hRight));
 			break;
 		}
-		case EdgeStyle::Pointer:
+        case Style::Pointer:
 		{
 			QPainterPath pth;
 			pth.moveTo(toScreen(_edge->head() + ht + hLeft));
@@ -102,7 +102,7 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 			painter->drawPath(pth);
 			break;
 		}
-    case EdgeStyle::NoTip:
+    case Style::NoTip:
         break;
     }
 
@@ -112,14 +112,14 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
     //painter->setPen(pen);
 	
 	switch (_edge->style()->arrowTail()) {
-		case EdgeStyle::Flat:
+        case Style::Flat:
 		{
 			painter->drawLine(
 				toScreen(_edge->tail() + tLeft),
 				toScreen(_edge->tail() + tRight));
 			break;
 		}
-		case EdgeStyle::Pointer:
+        case Style::Pointer:
 		{
 			QPainterPath pth;
 			pth.moveTo(toScreen(_edge->tail() + tt + tLeft));
@@ -128,7 +128,7 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 			painter->drawPath(pth);
 			break;
 		}
-        case EdgeStyle::NoTip:
+        case Style::NoTip:
             break;
 	}
 

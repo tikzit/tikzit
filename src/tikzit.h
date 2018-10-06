@@ -57,7 +57,6 @@
 #include "toolpalette.h"
 #include "propertypalette.h"
 #include "stylepalette.h"
-#include "nodestyle.h"
 #include "tikzstyles.h"
 
 #include <QObject>

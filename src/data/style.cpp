@@ -19,6 +19,10 @@
 #include "style.h"
 #include "tikzit.h"
 
+Style *noneStyle = new Style("none", new GraphElementData());
+Style *unknownStyle = new Style("unknown", new GraphElementData({GraphElementProperty("tikzit fill", "blue")}));
+Style *noneEdgeStyle = new Style("none", new GraphElementData({GraphElementProperty("-")}));
+
 Style::Style() : _name("none")
 {
     _data = new GraphElementData(this);

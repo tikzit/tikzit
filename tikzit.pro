@@ -43,7 +43,6 @@ SOURCES += src/gui/mainwindow.cpp \
     src/gui/nodeitem.cpp \
     src/gui/edgeitem.cpp \
     src/tikzit.cpp \
-    src/data/nodestyle.cpp \
     src/gui/commands.cpp \
     src/data/tikzdocument.cpp \
     src/gui/undocommands.cpp \
@@ -52,7 +51,6 @@ SOURCES += src/gui/mainwindow.cpp \
     src/gui/stylepalette.cpp \
     src/data/tikzassembler.cpp \
     src/data/tikzstyles.cpp \
-    src/data/edgestyle.cpp \
     src/data/style.cpp \
     src/gui/styleeditor.cpp \
     src/data/nodestylelist.cpp
@@ -71,7 +69,6 @@ HEADERS  += src/gui/mainwindow.h \
     src/gui/nodeitem.h \
     src/tikzit.h \
     src/gui/edgeitem.h \
-    src/data/nodestyle.h \
     src/gui/commands.h \
     src/data/tikzdocument.h \
     src/gui/undocommands.h \
@@ -80,7 +77,6 @@ HEADERS  += src/gui/mainwindow.h \
     src/gui/stylepalette.h \
     src/data/tikzassembler.h \
     src/data/tikzstyles.h \
-    src/data/edgestyle.h \
     src/data/style.h \
     src/gui/styleeditor.h \
     src/data/nodestylelist.h

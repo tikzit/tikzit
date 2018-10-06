@@ -21,7 +21,7 @@
 
 #include "graphelementdata.h"
 #include "nodestylelist.h"
-#include "edgestyle.h"
+#include "style.h"
 
 #include <QObject>
 #include <QString>
@@ -35,8 +35,8 @@ public:
     explicit TikzStyles(QObject *parent = 0);
     void addStyle(QString name, GraphElementData *data);
 
-    NodeStyle *nodeStyle(QString name) const;
-    EdgeStyle *edgeStyle(QString name) const;
+    Style *nodeStyle(QString name) const;
+    Style *edgeStyle(QString name) const;
     QStringList categories() const;
     QString tikz() const;
     void clear();
@@ -54,7 +54,7 @@ public slots:
 
 private:
     NodeStyleList *_nodeStyles;
-    QVector<EdgeStyle*> _edgeStyles;
+    QVector<Style*> _edgeStyles;
     QStringList _colNames;
     QVector<QColor> _cols;
 };

@@ -21,7 +21,7 @@
 
 #include "graphelementdata.h"
 #include "node.h"
-#include "edgestyle.h"
+#include "style.h"
 
 #include <QObject>
 #include <QPointF>
@@ -85,7 +85,7 @@ public:
 	void attachStyle();
 	QString styleName() const;
 	void setStyleName(const QString & styleName);
-	EdgeStyle *style() const;
+    Style *style() const;
 
 signals:
 
@@ -105,7 +105,7 @@ private:
     Node *_target;
 
 
-	EdgeStyle *_style;
+    Style *_style;
 
     bool _dirty;
     bool _basicBendMode;

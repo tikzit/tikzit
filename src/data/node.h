@@ -20,7 +20,7 @@
 #define NODE_H
 
 #include "graphelementdata.h"
-#include "nodestyle.h"
+#include "style.h"
 
 #include <QObject>
 #include <QPointF>
@@ -51,7 +51,7 @@ public:
     void setStyleName(const QString &styleName);
 
     void attachStyle();
-    NodeStyle *style() const;
+    Style *style() const;
 
     bool isBlankNode();
 
@@ -66,7 +66,7 @@ private:
     QPointF _point;
     QString _name;
     QString _label;
-    NodeStyle *_style;
+    Style *_style;
     GraphElementData *_data;
     int _tikzLine;
 };

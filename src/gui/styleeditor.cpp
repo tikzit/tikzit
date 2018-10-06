@@ -368,26 +368,26 @@ void StyleEditor::refreshDisplay()
         ui->leftArrow->setEnabled(true);
 
         switch (_activeEdgeStyle->arrowTail()) {
-        case EdgeStyle::NoTip:
+        case Style::NoTip:
             ui->leftArrow->setCurrentText("");
             break;
-        case EdgeStyle::Pointer:
+        case Style::Pointer:
             ui->leftArrow->setCurrentText("<");
             break;
-        case EdgeStyle::Flat:
+        case Style::Flat:
             ui->leftArrow->setCurrentText("|");
             break;
         }
 
         ui->rightArrow->setEnabled(true);
         switch (_activeEdgeStyle->arrowHead()) {
-        case EdgeStyle::NoTip:
+        case Style::NoTip:
             ui->rightArrow->setCurrentText("");
             break;
-        case EdgeStyle::Pointer:
+        case Style::Pointer:
             ui->rightArrow->setCurrentText(">");
             break;
-        case EdgeStyle::Flat:
+        case Style::Flat:
             ui->rightArrow->setCurrentText("|");
             break;
         }

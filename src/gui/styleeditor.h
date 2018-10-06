@@ -1,8 +1,7 @@
 #ifndef STYLEEDITOR_H
 #define STYLEEDITOR_H
 
-#include "nodestyle.h"
-#include "edgestyle.h"
+#include "style.h"
 #include "tikzstyles.h"
 
 #include <QMainWindow>
@@ -62,8 +61,8 @@ private:
     QStandardItemModel *_nodeModel;
     QStandardItemModel *_edgeModel;
     QStandardItem *_activeItem;
-    NodeStyle *_activeNodeStyle;
-    EdgeStyle *_activeEdgeStyle;
+    Style *_activeNodeStyle;
+    Style *_activeEdgeStyle;
     //QString _activeCategory;
     Style *activeStyle();
     TikzStyles *_styles;
