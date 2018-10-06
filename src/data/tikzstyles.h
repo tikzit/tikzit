@@ -20,7 +20,7 @@
 #define PROJECT_H
 
 #include "graphelementdata.h"
-#include "nodestyle.h"
+#include "nodestylelist.h"
 #include "edgestyle.h"
 
 #include <QObject>
@@ -37,8 +37,6 @@ public:
 
     NodeStyle *nodeStyle(QString name) const;
     EdgeStyle *edgeStyle(QString name) const;
-    QVector<NodeStyle *> nodeStyles() const;
-    QVector<EdgeStyle *> edgeStyles() const;
     QStringList categories() const;
     QString tikz() const;
     void clear();
@@ -55,7 +53,7 @@ signals:
 public slots:
 
 private:
-    QVector<NodeStyle*> _nodeStyles;
+    NodeStyleList *_nodeStyles;
     QVector<EdgeStyle*> _edgeStyles;
     QStringList _colNames;
     QVector<QColor> _cols;

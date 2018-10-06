@@ -33,22 +33,22 @@ public:
     EdgeStyle();
     EdgeStyle(QString name, GraphElementData *data);
 
-    enum ArrowTipStyle {
-        Flat, Pointer, NoTip
-    };
+//    enum ArrowTipStyle {
+//        Flat, Pointer, NoTip
+//    };
 
-    enum DrawStyle {
-        Solid, Dotted, Dashed
-    };
+//    enum DrawStyle {
+//        Solid, Dotted, Dashed
+//    };
 
-    ArrowTipStyle arrowHead() const;
-    ArrowTipStyle arrowTail() const;
-    DrawStyle drawStyle() const;
+//    ArrowTipStyle arrowHead() const;
+//    ArrowTipStyle arrowTail() const;
+//    DrawStyle drawStyle() const;
 
-    QPen pen() const override;
-    QPainterPath path() const override;
-    QPainterPath palettePath() const override;
-    QIcon icon() const override;
+//    QPen pen() const override;
+//    QPainterPath path() const override;
+//    QPainterPath palettePath() const override;
+//    QIcon icon() const override;
 };
 
 extern EdgeStyle *noneEdgeStyle;

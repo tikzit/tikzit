@@ -22,34 +22,53 @@
 
 #include "graphelementdata.h"
 
+#include <QObject>
 #include <QColor>
 #include <QPen>
 #include <QBrush>
 #include <QPainterPath>
 #include <QIcon>
 
-class Style
+class Style : public QObject
 {
+    Q_OBJECT
 public:
+    enum ArrowTipStyle {
+        Flat, Pointer, NoTip
+    };
+
+    enum DrawStyle {
+        Solid, Dotted, Dashed
+    };
+
     Style();
     Style(QString name, GraphElementData *data);
-    bool isNone();
+    bool isNone() const;
+    bool isEdgeStyle() const;
 
-    // properties that both edges and nodes have
+    // for node and edge styles
     GraphElementData *data() const;
     QString name() const;
     QColor strokeColor(bool tikzitOverride=true) const;
     int strokeThickness() const;
-
-    // methods that are implemented differently for edges and nodes
-    virtual QPen pen() const;
-    virtual QPainterPath path() const = 0;
-    virtual QPainterPath palettePath() const = 0;
-    virtual QIcon icon() const = 0;
+    QPen pen() const;
+    QPainterPath path() const;
+    QIcon icon() const;
     void setName(const QString &name);
     QString propertyWithDefault(QString prop, QString def, bool tikzitOverride=true) const;
-
     QString tikz() const;
+
+    // only relevant for node styles
+    QColor fillColor(bool tikzitOverride=true) const;
+    QBrush brush() const;
+    QString shape(bool tikzitOverride=true) const;
+
+    // only relevant for edge styles
+    Style::ArrowTipStyle arrowHead() const;
+    Style::ArrowTipStyle arrowTail() const;
+    Style::DrawStyle drawStyle() const;
+    QString category() const;
+
 protected:
     QString _name;
     GraphElementData *_data;

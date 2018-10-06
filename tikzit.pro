@@ -54,7 +54,8 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/tikzstyles.cpp \
     src/data/edgestyle.cpp \
     src/data/style.cpp \
-    src/gui/styleeditor.cpp
+    src/gui/styleeditor.cpp \
+    src/data/nodestylelist.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -81,7 +82,8 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/tikzstyles.h \
     src/data/edgestyle.h \
     src/data/style.h \
-    src/gui/styleeditor.h
+    src/gui/styleeditor.h \
+    src/data/nodestylelist.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \

@@ -33,13 +33,14 @@ public:
     NodeStyle();
     NodeStyle(QString name, GraphElementData *data);
 
-    QColor fillColor(bool tikzitOverride=true) const;
-    QBrush brush() const;
-    QPainterPath path() const override;
-    QString shape(bool tikzitOverride=true) const;
+//    QColor fillColor(bool tikzitOverride=true) const;
+//    QBrush brush() const;
+//    QPainterPath path() const override;
+//    QString shape(bool tikzitOverride=true) const;
 
-    QPainterPath palettePath() const override;
-    QIcon icon() const override;
+//    QPainterPath palettePath() const override;
+//    QIcon icon() const override;
+
 };
 
 extern NodeStyle *noneStyle;

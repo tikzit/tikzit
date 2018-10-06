@@ -34,74 +34,79 @@ NodeStyle::NodeStyle(QString name, GraphElementData *data): Style(name, data)
 {
 }
 
-QColor NodeStyle::fillColor(bool tikzitOverride) const
-{
-    if (_data == 0) return Qt::white;
+//QColor NodeStyle::fillColor(bool tikzitOverride) const
+//{
+//    if (_data == 0) return Qt::white;
 
-    QString col = propertyWithDefault("fill", "white", tikzitOverride);
-    return tikzit->colorByName(col);
-}
+//    QString col = propertyWithDefault("fill", "white", tikzitOverride);
+//    return tikzit->colorByName(col);
+//}
 
-QBrush NodeStyle::brush() const
-{
-    return QBrush(fillColor());
-}
+//QBrush NodeStyle::brush() const
+//{
+//    return QBrush(fillColor());
+//}
 
-QString NodeStyle::shape(bool tikzitOverride) const
-{
-    return propertyWithDefault("shape", "circle", tikzitOverride);
-}
+//QString NodeStyle::shape(bool tikzitOverride) const
+//{
+//    return propertyWithDefault("shape", "circle", tikzitOverride);
+//}
 
-QPainterPath NodeStyle::path() const
-{
-    QPainterPath pth;
-    QString sh = shape();
+//QPainterPath NodeStyle::path() const
+//{
+//    QPainterPath pth;
+//    QString sh = shape();
 
-    if (sh == "rectangle") {
-        pth.addRect(-30.0f, -30.0f, 60.0f, 60.0f);
-    } else { // default is 'circle'
-        pth.addEllipse(QPointF(0.0f,0.0f), 30.0f, 30.0f);
-    }
-    return pth;
-}
+//    if (sh == "rectangle") {
+//        pth.addRect(-30.0f, -30.0f, 60.0f, 60.0f);
+//    } else { // default is 'circle'
+//        pth.addEllipse(QPointF(0.0f,0.0f), 30.0f, 30.0f);
+//    }
+//    return pth;
+//}
 
-QPainterPath NodeStyle::palettePath() const
-{
-    return path();
-}
+//QPainterPath NodeStyle::palettePath() const
+//{
+//    return path();
+//}
 
-QIcon NodeStyle::icon() const
-{
-    // draw an icon matching the style
-    QImage px(100,100,QImage::Format_ARGB32_Premultiplied);
-    px.fill(Qt::transparent);
+//QIcon NodeStyle::icon() const
+//{
+//    // draw an icon matching the style
+//    QImage px(100,100,QImage::Format_ARGB32_Premultiplied);
+//    px.fill(Qt::transparent);
 
 
-    QPainter painter(&px);
-    painter.setRenderHint(QPainter::Antialiasing);
-    QPainterPath pth = path();
-    pth.translate(50.0f, 50.0f);
+//    QPainter painter(&px);
+//    painter.setRenderHint(QPainter::Antialiasing);
+//    QPainterPath pth = path();
+//    pth.translate(50.0f, 50.0f);
 
-    if (_data == 0) {
-        QColor c(180,180,200);
-        painter.setPen(QPen(c));
-        painter.setBrush(QBrush(c));
-        painter.drawEllipse(QPointF(50.0f,50.0f), 3,3);
+//    if (_data == 0) {
+//        QColor c(180,180,200);
+//        painter.setPen(QPen(c));
+//        painter.setBrush(QBrush(c));
+//        painter.drawEllipse(QPointF(50.0f,50.0f), 3,3);
 
-        QPen pen(QColor(180,180,220));
-        pen.setWidth(3);
-        QVector<qreal> p;
-        p << 2.0 << 2.0;
-        pen.setDashPattern(p);
-        painter.setPen(pen);
-        painter.setBrush(Qt::NoBrush);
-        painter.drawPath(pth);
-    } else {
-        painter.setPen(pen());
-        painter.setBrush(brush());
-        painter.drawPath(pth);
-    }
+//        QPen pen(QColor(180,180,220));
+//        pen.setWidth(3);
+//        QVector<qreal> p;
+//        p << 2.0 << 2.0;
+//        pen.setDashPattern(p);
+//        painter.setPen(pen);
+//        painter.setBrush(Qt::NoBrush);
+//        painter.drawPath(pth);
+//    } else {
+//        painter.setPen(pen());
+//        painter.setBrush(brush());
+//        painter.drawPath(pth);
+//    }
 
-    return QIcon(QPixmap::fromImage(px));
-}
+//    return QIcon(QPixmap::fromImage(px));
+//}
+
+//QString NodeStyle::category()
+//{
+//    return propertyWithDefault("tikzit category", "", false);
+//}
 

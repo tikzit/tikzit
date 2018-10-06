@@ -27,13 +27,14 @@
 
 TikzStyles::TikzStyles(QObject *parent) : QObject(parent)
 {
+    _nodeStyles = new NodeStyleList(this);
 }
 
 NodeStyle *TikzStyles::nodeStyle(QString name) const
 {
-    foreach (NodeStyle *s , _nodeStyles)
-        if (s->name() == name) return s;
-    return unknownStyle;
+    NodeStyle *s = _nodeStyles->style(name);
+
+    return (s == nullptr) ? unknownStyle : s;
 }
 
 EdgeStyle *TikzStyles::edgeStyle(QString name) const
@@ -43,14 +44,10 @@ EdgeStyle *TikzStyles::edgeStyle(QString name) const
     return noneEdgeStyle;
 }
 
-QVector<NodeStyle *> TikzStyles::nodeStyles() const
-{
-    return _nodeStyles;
-}
 
 void TikzStyles::clear()
 {
-    _nodeStyles.clear();
+    _nodeStyles->clear();
     _edgeStyles.clear();
 }
 
@@ -102,7 +99,9 @@ void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel
         it->setSizeHint(QSize(48,48));
     }
 
-    foreach(NodeStyle *ns, _nodeStyles) {
+    NodeStyle *ns;
+    for (int i = 0; i < _nodeStyles->length(); ++i) {
+        ns = _nodeStyles->style(i);
         if (category == "" || category == ns->propertyWithDefault("tikzit category", "", false))
         {
             it = new QStandardItem(ns->icon(), ns->name());
@@ -131,16 +130,15 @@ void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel
     }
 }
 
-QVector<EdgeStyle *> TikzStyles::edgeStyles() const
-{
-    return _edgeStyles;
-}
-
 QStringList TikzStyles::categories() const
 {
     QMap<QString,bool> cats; // use a QMap to keep keys sorted
     cats.insert("", true);
-    foreach (NodeStyle *s, _nodeStyles) cats.insert(s->propertyWithDefault("tikzit category", "", false), true);
+    NodeStyle *ns;
+    for (int i = 0; i < _nodeStyles->length(); ++i) {
+        ns = _nodeStyles->style(i);
+        cats.insert(ns->propertyWithDefault("tikzit category", "", false), true);
+    }
     //foreach (EdgeStyle *s, _edgeStyles) cats << s->propertyWithDefault("tikzit category", "", false);
     return QStringList(cats.keys());
 }
@@ -156,10 +154,10 @@ QString TikzStyles::tikz() const
     code << "% \\tikzstyle{NAME}=[PROPERTY LIST]\n\n";
 
     code << "% Node styles\n";
-    foreach (NodeStyle *s, nodeStyles()) code << s->tikz() << "\n";
+    code << _nodeStyles->tikz();
 
     code << "\n% Edge styles\n";
-    foreach (EdgeStyle *s, edgeStyles()) code << s->tikz() << "\n";
+    foreach (EdgeStyle *s, _edgeStyles) code << s->tikz() << "\n";
 
     code.flush();
     return str;
@@ -173,7 +171,7 @@ void TikzStyles::addStyle(QString name, GraphElementData *data)
     { // edge style
         _edgeStyles << new EdgeStyle(name, data);
     } else { // node style
-        _nodeStyles << new NodeStyle(name, data);
+        _nodeStyles->addStyle(new NodeStyle(name, data));
     }
 }
 
