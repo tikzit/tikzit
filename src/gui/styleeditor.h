@@ -58,17 +58,16 @@ private:
     void setColor(QPushButton *btn, QColor col);
     void setPropertyModel(GraphElementData *d);
     QColor color(QPushButton *btn);
-    QStandardItemModel *_nodeModel;
-    QStandardItemModel *_edgeModel;
-    QStandardItem *_activeItem;
-    Style *_activeNodeStyle;
-    Style *_activeEdgeStyle;
     //QString _activeCategory;
     Style *activeStyle();
+    void refreshActiveStyle();
     TikzStyles *_styles;
     void updateColor(QPushButton *btn, QString name, QString propName);
     QVector<QWidget*> _formWidgets;
     bool _dirty;
+
+    QModelIndex _nodeStyleIndex;
+    QModelIndex _edgeStyleIndex;
 };
 
 #endif // STYLEEDITOR_H
