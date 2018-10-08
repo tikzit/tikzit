@@ -31,6 +31,7 @@ ToolPalette::ToolPalette(QWidget *parent) :
                    | Qt::WindowDoesNotAcceptFocus);
     setOrientation(Qt::Vertical);
     setFocusPolicy(Qt::NoFocus);
+    setWindowTitle("Tools");
     //setGeometry(100,200,30,195);
 
     tools  = new QActionGroup(this);

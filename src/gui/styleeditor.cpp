@@ -442,6 +442,39 @@ void StyleEditor::on_propertyDown_clicked()
     }
 }
 
+void StyleEditor::on_addStyle_clicked()
+{
+    int i = 0;
+
+    // get a fresh name
+    QString name;
+    while (true) {
+        name = QString("new style ") + QString::number(i);
+        if (_styles->nodeStyles()->style(name) == nullptr) break;
+        ++i;
+    }
+
+    // add the style to the current category
+    Style *s;
+    if (_styles->nodeStyles()->category() == "") {
+        s = new Style(name, new GraphElementData());
+    } else {
+        s = new Style(name,
+          new GraphElementData({
+            GraphElementProperty("category",_styles->nodeStyles()->category())
+          }));
+    }
+    _styles->nodeStyles()->addStyle(s);
+
+    // set dirty flag and select the newly-added style
+    _dirty = true;
+//    ui->styleListView->selectionModel()->clear();
+//    ui->edgeStyleListView->selectionModel()->clear();
+    ui->styleListView->selectionModel()->setCurrentIndex(
+                _styles->nodeStyles()->index(_styles->nodeStyles()->numInCategory()-1),
+                QItemSelectionModel::ClearAndSelect);
+}
+
 void StyleEditor::on_save_clicked()
 {
     save();
@@ -540,11 +573,19 @@ Style *StyleEditor::activeStyle()
 void StyleEditor::refreshActiveStyle()
 {
     if (_styles != nullptr) {
-        if (_nodeStyleIndex.isValid())
+        if (_nodeStyleIndex.isValid()) {
             emit _styles->nodeStyles()->dataChanged(_nodeStyleIndex, _nodeStyleIndex);
 
-        if (_edgeStyleIndex.isValid())
+            // force a re-layout
+            ui->styleListView->setGridSize(QSize(48,48));
+        }
+
+        if (_edgeStyleIndex.isValid()) {
             emit _styles->edgeStyles()->dataChanged(_edgeStyleIndex, _edgeStyleIndex);
+
+            // force a re-layout
+            ui->edgeStyleListView->setGridSize(QSize(48,48));
+        }
     }
 }
 

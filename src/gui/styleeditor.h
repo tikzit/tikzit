@@ -48,6 +48,8 @@ public slots:
     void on_propertyUp_clicked();
     void on_propertyDown_clicked();
 
+    void on_addStyle_clicked();
+
     void on_save_clicked();
 
     void on_currentCategory_currentIndexChanged(int);

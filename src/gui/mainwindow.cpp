@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    QSettings settings("tikzit", "tikzit");
     _windowId = _numWindows;
     _numWindows++;
     ui->setupUi(this);
@@ -36,8 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
     addToolBar(_toolPalette);
 
     _stylePalette = new StylePalette(this);
-    addDockWidget(Qt::RightDockWidgetArea, _stylePalette);
-    resizeDocks({_stylePalette}, {130}, Qt::Horizontal);
 
     _tikzScene = new TikzScene(_tikzDocument, _toolPalette, _stylePalette, this);
     ui->tikzView->setScene(_tikzScene);
@@ -47,6 +46,20 @@ MainWindow::MainWindow(QWidget *parent) :
     _menu->setParent(this);
 
     setMenuBar(_menu);
+
+    QVariant geom = settings.value("geometry-main");
+    QVariant state = settings.value("windowState-main");
+
+    if (geom.isValid()) {
+        restoreGeometry(geom.toByteArray());
+    }
+
+    if (state.isValid()) {
+        restoreState(state.toByteArray(), 2);
+    } else {
+        addDockWidget(Qt::RightDockWidgetArea, _stylePalette);
+        resizeDocks({_stylePalette}, {130}, Qt::Horizontal);
+    }
 
     // initially, the source view should be collapsed
     QList<int> sz = ui->splitter->sizes();
@@ -90,6 +103,11 @@ QSplitter *MainWindow::splitter() const {
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "got close event";
+
+    QSettings settings("tikzit", "tikzit");
+    settings.setValue("geometry-main", saveGeometry());
+    settings.setValue("windowState-main", saveState(2));
+
     QMainWindow::closeEvent(event);
 }
 

@@ -56,6 +56,7 @@ private:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 };
 
 #endif // STYLEPALETTE_H

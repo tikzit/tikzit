@@ -25,6 +25,7 @@
 TikzView::TikzView(QWidget *parent) : QGraphicsView(parent)
 {
     setRenderHint(QPainter::Antialiasing);
+    setResizeAnchor(QGraphicsView::AnchorViewCenter);
     //setDragMode(QGraphicsView::RubberBandDrag);
 
     _scale = 1.0f;
@@ -45,7 +46,7 @@ void TikzView::zoomOut()
 void TikzView::setScene(QGraphicsScene *scene)
 {
     QGraphicsView::setScene(scene);
-    centerOn(QPointF(0.0f,-230.0f));
+    centerOn(QPointF(0.0f,0.0f));
 }
 
 void TikzView::drawBackground(QPainter *painter, const QRectF &rect)

@@ -174,3 +174,10 @@ void StylePalette::closeEvent(QCloseEvent *event)
     settings.setValue("style-palette-geometry", saveGeometry());
     QDockWidget::closeEvent(event);
 }
+
+void StylePalette::resizeEvent(QResizeEvent *event)
+{
+    QDockWidget::resizeEvent(event);
+    ui->styleListView->setGridSize(QSize(48,48));
+    ui->edgeStyleListView->setGridSize(QSize(48,48));
+}
