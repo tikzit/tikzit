@@ -19,6 +19,7 @@ StyleEditor::StyleEditor(QWidget *parent) :
         ui->properties;
 
     _styles = nullptr;
+    _activeStyle = nullptr;
 
     ui->styleListView->setViewMode(QListView::IconMode);
     ui->styleListView->setMovement(QListView::Static);
@@ -80,6 +81,7 @@ StyleEditor::~StyleEditor()
 void StyleEditor::open() {
     if (_styles != nullptr) delete _styles;
     _styles = new TikzStyles;
+    _activeStyle = nullptr;
     ui->styleListView->setModel(_styles->nodeStyles());
     ui->edgeStyleListView->setModel(_styles->edgeStyles());
     connect(ui->styleListView->selectionModel(),
@@ -127,8 +129,7 @@ void StyleEditor::nodeItemChanged(QModelIndex sel)
 {
     if (sel.isValid()) {
         ui->edgeStyleListView->selectionModel()->clear();
-        qDebug() << "active style:" << ((activeStyle() == nullptr) ? "null" : activeStyle()->tikz());
-        qDebug() << "style from index:" << _styles->nodeStyles()->styleInCategory(sel.row())->tikz();
+        _activeStyle = _styles->nodeStyles()->styleInCategory(sel.row());
     }
     _nodeStyleIndex = sel;
     refreshDisplay();
@@ -138,7 +139,7 @@ void StyleEditor::edgeItemChanged(QModelIndex sel)
 {
     if (sel.isValid()) {
         ui->styleListView->selectionModel()->clear();
-        //_nodeStyleIndex = QModelIndex();
+        _activeStyle = _styles->edgeStyles()->styleInCategory(sel.row());
     }
     _edgeStyleIndex = sel;
     refreshDisplay();
@@ -150,17 +151,43 @@ void StyleEditor::categoryChanged()
     QString cat = ui->category->currentText();
     //qDebug() << "got category: " << cat;
 
-    if (s != 0 && s->data()->property("tikzit category") != cat) {
+    if (s != nullptr && s->data()->property("tikzit category") != cat) {
         if (cat.isEmpty()) s->data()->unsetProperty("tikzit category");
         else s->data()->setProperty("tikzit category", cat);
         _dirty = true;
         refreshCategories();
-        refreshDisplay();
+
+        if (_styles->nodeStyles()->category() != "") {
+            ui->currentCategory->setCurrentText(cat);
+            //qDebug() << "after cat change, cat reports:" << _styles->nodeStyles()->category();
+        }
+        //refreshDisplay();
     }
 }
 
 void StyleEditor::currentCategoryChanged()
 {
+    if (_styles != nullptr) {
+        QString cat = ui->currentCategory->currentText();
+        qDebug() << "got category:" << cat;
+        qDebug() << "node style category:" << _styles->nodeStyles()->category();
+        if (cat != _styles->nodeStyles()->category()) {
+            ui->styleListView->selectionModel()->clear();
+            _styles->nodeStyles()->setCategory(cat);
+
+            if (_activeStyle != nullptr && !_activeStyle->isEdgeStyle()) {
+                for (int i = 0; i < _styles->nodeStyles()->numInCategory(); ++i) {
+                    if (_styles->nodeStyles()->styleInCategory(i) == _activeStyle) {
+                        ui->styleListView->selectionModel()->setCurrentIndex(
+                                    _styles->nodeStyles()->index(i),
+                                    QItemSelectionModel::ClearAndSelect);
+                        break;
+                    }
+                }
+                if (!_nodeStyleIndex.isValid()) _activeStyle = nullptr;
+            }
+        }
+    }
 }
 
 void StyleEditor::refreshCategories()
@@ -187,13 +214,16 @@ void StyleEditor::refreshCategories()
 
 void StyleEditor::propertyChanged()
 {
-    QModelIndexList nSel = ui->styleListView->selectionModel()->selectedRows();
-    QModelIndexList eSel = ui->edgeStyleListView->selectionModel()->selectedRows();
-    if (!nSel.isEmpty()) {
-        emit _styles->nodeStyles()->dataChanged(nSel[0], nSel[0]);
-        refreshCategories();
-    } else if (!eSel.isEmpty()) {
-        emit _styles->edgeStyles()->dataChanged(eSel[0], eSel[0]);
+    if (_nodeStyleIndex.isValid()) {
+        emit _styles->nodeStyles()->dataChanged(_nodeStyleIndex, _nodeStyleIndex);
+
+        if (_activeStyle->category() != _styles->nodeStyles()->category()) {
+            refreshCategories();
+            if (_styles->nodeStyles()->category() != "")
+                ui->currentCategory->setCurrentText(_activeStyle->category());
+        }
+    } else if (_edgeStyleIndex.isValid()) {
+        emit _styles->edgeStyles()->dataChanged(_edgeStyleIndex, _edgeStyleIndex);
     }
     _dirty = true;
     refreshDisplay();
@@ -496,15 +526,15 @@ QColor StyleEditor::color(QPushButton *btn)
 
 Style *StyleEditor::activeStyle()
 {
-    if (_styles != nullptr) {
-        if (_nodeStyleIndex.isValid())
-            return _styles->nodeStyles()->styleInCategory(_nodeStyleIndex.row());
+//    if (_styles != nullptr) {
+//        if (_nodeStyleIndex.isValid())
+//            return _styles->nodeStyles()->styleInCategory(_nodeStyleIndex.row());
 
-        if (_edgeStyleIndex.isValid())
-            return _styles->edgeStyles()->styleInCategory(_edgeStyleIndex.row());
-    }
+//        if (_edgeStyleIndex.isValid())
+//            return _styles->edgeStyles()->styleInCategory(_edgeStyleIndex.row());
+//    }
 
-    return nullptr;
+    return _activeStyle;
 }
 
 void StyleEditor::refreshActiveStyle()

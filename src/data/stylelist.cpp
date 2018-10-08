@@ -63,7 +63,8 @@ QString StyleList::tikz()
 {
     QString str;
     QTextStream code(&str);
-    foreach (Style *s, _styles) code << s->tikz() << "\n";
+    for (int i = 1; i < _styles.length(); ++i)
+        code << _styles[i]->tikz() << "\n";
     code.flush();
     return str;
 }

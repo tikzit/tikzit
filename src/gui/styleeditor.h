@@ -68,6 +68,7 @@ private:
 
     QModelIndex _nodeStyleIndex;
     QModelIndex _edgeStyleIndex;
+    Style *_activeStyle;
 };
 
 #endif // STYLEEDITOR_H
