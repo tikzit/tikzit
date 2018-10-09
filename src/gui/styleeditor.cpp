@@ -18,6 +18,7 @@ StyleEditor::StyleEditor(QWidget *parent) :
         ui->leftArrow << ui->rightArrow <<
         ui->properties;
 
+    setWindowIcon(QIcon(":/images/logo.png"));
     _styles = nullptr;
     _activeStyle = nullptr;
 
@@ -92,7 +93,7 @@ void StyleEditor::open() {
             this, SLOT(edgeItemChanged(QModelIndex)));
 
     if (_styles->loadStyles(tikzit->styleFilePath())) {
-        _dirty = false;
+        setDirty(false);
         refreshCategories();
         refreshDisplay();
         show();
@@ -105,7 +106,7 @@ void StyleEditor::open() {
 
 void StyleEditor::closeEvent(QCloseEvent *event)
 {
-    if (_dirty) {
+    if (dirty()) {
         QMessageBox::StandardButton resBtn = QMessageBox::question(
                     this, "Save Changes",
                     "Do you wish to save changes to " + tikzit->styleFile() + "?",
@@ -113,7 +114,7 @@ void StyleEditor::closeEvent(QCloseEvent *event)
                     QMessageBox::Yes);
 
         if (resBtn == QMessageBox::Yes) {
-            // TODO save here
+            save();
             event->accept();
         } else if (resBtn == QMessageBox::No) {
             event->accept();
@@ -127,6 +128,7 @@ void StyleEditor::closeEvent(QCloseEvent *event)
 
 void StyleEditor::nodeItemChanged(QModelIndex sel)
 {
+    qDebug() << "nodeItemChanged, new index:" << sel.row();
     if (sel.isValid()) {
         ui->edgeStyleListView->selectionModel()->clear();
         _activeStyle = _styles->nodeStyles()->styleInCategory(sel.row());
@@ -154,7 +156,7 @@ void StyleEditor::categoryChanged()
     if (s != nullptr && s->data()->property("tikzit category") != cat) {
         if (cat.isEmpty()) s->data()->unsetProperty("tikzit category");
         else s->data()->setProperty("tikzit category", cat);
-        _dirty = true;
+        setDirty(true);
         refreshCategories();
 
         if (_styles->nodeStyles()->category() != "") {
@@ -225,7 +227,7 @@ void StyleEditor::propertyChanged()
     } else if (_edgeStyleIndex.isValid()) {
         emit _styles->edgeStyles()->dataChanged(_edgeStyleIndex, _edgeStyleIndex);
     }
-    _dirty = true;
+    setDirty(true);
     refreshDisplay();
 }
 
@@ -385,7 +387,7 @@ void StyleEditor::on_addProperty_clicked()
     Style *s = activeStyle();
     if (s != 0) {
         s->data()->add(GraphElementProperty("new property", ""));
-        _dirty = true;
+        setDirty(true);
     }
 }
 
@@ -394,7 +396,7 @@ void StyleEditor::on_addAtom_clicked()
     Style *s = activeStyle();
     if (s != 0) {
         s->data()->add(GraphElementProperty("new atom"));
-        _dirty = true;
+        setDirty(true);
     }
 }
 
@@ -405,7 +407,7 @@ void StyleEditor::on_removeProperty_clicked()
         QModelIndexList sel = ui->properties->selectionModel()->selectedRows();
         if (!sel.isEmpty()) {
             s->data()->removeRows(sel[0].row(), 1, sel[0].parent());
-            _dirty = true;
+            setDirty(true);
         }
     }
 }
@@ -421,7 +423,7 @@ void StyleEditor::on_propertyUp_clicked()
                     sel[0].row(), 1,
                     sel[0].parent(),
                     sel[0].row() - 1);
-            _dirty = true;
+            setDirty(true);
         }
     }
 }
@@ -437,7 +439,7 @@ void StyleEditor::on_propertyDown_clicked()
                     sel[0].row(), 1,
                     sel[0].parent(),
                     sel[0].row() + 2);
-            _dirty = true;
+            setDirty(true);
         }
     }
 }
@@ -467,12 +469,123 @@ void StyleEditor::on_addStyle_clicked()
     _styles->nodeStyles()->addStyle(s);
 
     // set dirty flag and select the newly-added style
-    _dirty = true;
-//    ui->styleListView->selectionModel()->clear();
-//    ui->edgeStyleListView->selectionModel()->clear();
-    ui->styleListView->selectionModel()->setCurrentIndex(
-                _styles->nodeStyles()->index(_styles->nodeStyles()->numInCategory()-1),
-                QItemSelectionModel::ClearAndSelect);
+    setDirty(true);
+    selectNodeStyle(_styles->nodeStyles()->numInCategory()-1);
+}
+
+void StyleEditor::on_removeStyle_clicked()
+{
+    if (_nodeStyleIndex.isValid()) {
+        int i = _nodeStyleIndex.row();
+        if (i > 0) {
+            ui->styleListView->selectionModel()->clear();
+            _styles->nodeStyles()->removeNthStyle(i);
+            setDirty(true);
+            if (i < _styles->nodeStyles()->numInCategory()) {
+                selectNodeStyle(i);
+            }
+        }
+    }
+}
+
+void StyleEditor::on_styleUp_clicked()
+{
+    if (_nodeStyleIndex.isValid()) {
+        int r = _nodeStyleIndex.row();
+        if (_styles->nodeStyles()->moveRows(
+                    _nodeStyleIndex.parent(),
+                    r, 1,
+                    _nodeStyleIndex.parent(),
+                    r - 1))
+        {
+            setDirty(true);
+            nodeItemChanged(_styles->nodeStyles()->index(r - 1));
+        }
+    }
+}
+
+void StyleEditor::on_styleDown_clicked()
+{
+    if (_nodeStyleIndex.isValid()) {
+        int r = _nodeStyleIndex.row();
+        if (_styles->nodeStyles()->moveRows(
+                    _nodeStyleIndex.parent(),
+                    r, 1,
+                    _nodeStyleIndex.parent(),
+                    r + 2))
+        {
+            setDirty(true);
+            nodeItemChanged(_styles->nodeStyles()->index(r + 1));
+        }
+    }
+}
+
+void StyleEditor::on_addEdgeStyle_clicked()
+{
+    int i = 0;
+
+    // get a fresh name
+    QString name;
+    while (true) {
+        name = QString("new edge style ") + QString::number(i);
+        if (_styles->edgeStyles()->style(name) == nullptr) break;
+        ++i;
+    }
+
+    // add the style (edge styles only have one category: "")
+    Style *s = new Style(name, new GraphElementData({GraphElementProperty("-")}));
+    _styles->edgeStyles()->addStyle(s);
+
+    // set dirty flag and select the newly-added style
+    setDirty(true);
+    selectEdgeStyle(_styles->edgeStyles()->numInCategory()-1);
+}
+
+void StyleEditor::on_removeEdgeStyle_clicked()
+{
+    if (_edgeStyleIndex.isValid()) {
+        int i = _edgeStyleIndex.row();
+        if (i > 0) {
+            ui->edgeStyleListView->selectionModel()->clear();
+            _styles->edgeStyles()->removeNthStyle(i);
+            setDirty(true);
+            if (i < _styles->edgeStyles()->numInCategory()) {
+                selectEdgeStyle(i);
+            }
+        }
+    }
+}
+
+void StyleEditor::on_edgeStyleUp_clicked()
+{
+    if (_edgeStyleIndex.isValid()) {
+        int r = _edgeStyleIndex.row();
+        if (_styles->edgeStyles()->moveRows(
+                    _edgeStyleIndex.parent(),
+                    r, 1,
+                    _edgeStyleIndex.parent(),
+                    r - 1))
+        {
+            setDirty(true);
+            edgeItemChanged(_styles->edgeStyles()->index(r - 1));
+        }
+    }
+}
+
+void StyleEditor::on_edgeStyleDown_clicked()
+{
+    if (_edgeStyleIndex.isValid()) {
+        int r = _edgeStyleIndex.row();
+        if (_styles->edgeStyles()->moveRows(
+                    _edgeStyleIndex.parent(),
+                    r, 1,
+                    _edgeStyleIndex.parent(),
+                    r + 2))
+        {
+            setDirty(true);
+            edgeItemChanged(_styles->edgeStyles()->index(r + 1));
+        }
+    }
 }
 
 void StyleEditor::on_save_clicked()
@@ -492,7 +605,7 @@ void StyleEditor::save()
     QString p = tikzit->styleFilePath();
 
     if (_styles->saveStyles(p)) {
-        _dirty = false;
+        setDirty(false);
         tikzit->loadStyles(p);
     } else {
         QMessageBox::warning(0,
@@ -517,7 +630,7 @@ void StyleEditor::on_name_editingFinished()
         s->setName(ui->name->text());
         refreshActiveStyle();
 //        refreshDisplay();
-        _dirty = true;
+        setDirty(true);
     }
 }
 
@@ -528,7 +641,7 @@ void StyleEditor::on_shape_currentTextChanged()
         s->data()->setProperty("shape", ui->shape->currentText());
         refreshActiveStyle();
 //        refreshDisplay();
-        _dirty = true;
+        setDirty(true);
     }
 }
 
@@ -602,6 +715,35 @@ void StyleEditor::updateColor(QPushButton *btn, QString name, QString propName)
         s->data()->setProperty(propName, tikzit->nameForColor(col));
         refreshActiveStyle();
 //        refreshDisplay();
-        _dirty = true;
+        setDirty(true);
+    }
+}
+
+void StyleEditor::selectNodeStyle(int i)
+{
+    ui->styleListView->selectionModel()->setCurrentIndex(
+                _styles->nodeStyles()->index(i),
+                QItemSelectionModel::ClearAndSelect);
+}
+
+void StyleEditor::selectEdgeStyle(int i)
+{
+    ui->edgeStyleListView->selectionModel()->setCurrentIndex(
+                _styles->edgeStyles()->index(i),
+                QItemSelectionModel::ClearAndSelect);
+}
+
+bool StyleEditor::dirty() const
+{
+    return _dirty;
+}
+
+void StyleEditor::setDirty(bool dirty)
+{
+    _dirty = dirty;
+    if (dirty) {
+        setWindowTitle("Style Editor* - TikZiT");
+    } else {
+        setWindowTitle("Style Editor - TikZiT");
     }
 }

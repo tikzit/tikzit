@@ -41,6 +41,13 @@ void StyleList::addStyle(Style *s)
     }
 }
 
+void StyleList::removeNthStyle(int n)
+{
+    beginRemoveRows(QModelIndex(), n, n);
+    _styles.remove(nthInCategory(n));
+    endRemoveRows();
+}
+
 void StyleList::clear()
 {
     int n = numInCategory();
@@ -111,6 +118,34 @@ QVariant StyleList::data(const QModelIndex &index, int role) const
 int StyleList::rowCount(const QModelIndex &/*parent*/) const
 {
     return numInCategory();
+}
+
+bool StyleList::moveRows(const QModelIndex &sourceParent,
+                                int sourceRow,
+                                int /*count*/,
+                                const QModelIndex &destinationParent,
+                                int destinationRow)
+{
+    if (sourceRow >= 1 && sourceRow < numInCategory() &&
+        destinationRow >= 1 && destinationRow <= numInCategory())
+    {
+        beginMoveRows(sourceParent, sourceRow, sourceRow, destinationParent, destinationRow);
+        int sourceIndex = nthInCategory(sourceRow);
+        int destinationIndex = nthInCategory(destinationRow);
+        if (destinationIndex == -1)
+            destinationIndex = _styles.length();
+        Style *s = _styles[sourceIndex];
+        _styles.remove(sourceIndex);
+        if (sourceIndex < destinationIndex) {
+            _styles.insert(destinationIndex - 1, s);
+        } else {
+            _styles.insert(destinationIndex, s);
+        }
+        endMoveRows();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 QString StyleList::category() const

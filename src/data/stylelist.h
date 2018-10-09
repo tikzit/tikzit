@@ -14,6 +14,7 @@ public:
     Style *style(int i);
     int length() const;
     void addStyle(Style *s);
+    void removeNthStyle(int n);
     void clear();
     QString tikz();
 
@@ -23,6 +24,11 @@ public:
 
     QVariant data(const QModelIndex &index, int role) const override;
     int rowCount(const QModelIndex &/*parent*/) const override;
+    bool moveRows(const QModelIndex &sourceParent,
+                  int sourceRow,
+                  int /*count*/,
+                  const QModelIndex &destinationParent,
+                  int destinationChild);
 
 
     QString category() const;

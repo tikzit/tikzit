@@ -24,6 +24,9 @@ public:
     void save();
     void closeEvent(QCloseEvent *event) override;
 
+    bool dirty() const;
+    void setDirty(bool dirty);
+
 public slots:
     void refreshDisplay();
     void nodeItemChanged(QModelIndex sel);
@@ -49,6 +52,14 @@ public slots:
     void on_propertyDown_clicked();
 
     void on_addStyle_clicked();
+    void on_removeStyle_clicked();
+    void on_styleUp_clicked();
+    void on_styleDown_clicked();
+
+    void on_addEdgeStyle_clicked();
+    void on_removeEdgeStyle_clicked();
+    void on_edgeStyleUp_clicked();
+    void on_edgeStyleDown_clicked();
 
     void on_save_clicked();
 
@@ -65,6 +76,9 @@ private:
     void refreshActiveStyle();
     TikzStyles *_styles;
     void updateColor(QPushButton *btn, QString name, QString propName);
+    void selectNodeStyle(int i);
+    void selectEdgeStyle(int i);
+
     QVector<QWidget*> _formWidgets;
     bool _dirty;
 
