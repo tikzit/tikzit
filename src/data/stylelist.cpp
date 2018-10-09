@@ -51,7 +51,7 @@ void StyleList::removeNthStyle(int n)
 void StyleList::clear()
 {
     int n = numInCategory();
-    if (n > 0) {
+    if (n > 1) {
         beginRemoveRows(QModelIndex(), 1, n - 1);
         _styles.clear();
         if (_edgeStyles) _styles << noneEdgeStyle;
