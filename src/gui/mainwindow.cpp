@@ -102,7 +102,7 @@ QSplitter *MainWindow::splitter() const {
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    qDebug() << "got close event";
+    //qDebug() << "got close event";
 
     QSettings settings("tikzit", "tikzit");
     settings.setValue("geometry-main", saveGeometry());
