@@ -74,6 +74,12 @@
          <iconset resource="../../tikzit.qrc">
           <normaloff>:/images/document-open.svg</normaloff>:/images/document-open.svg</iconset>
         </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
        </widget>
       </item>
       <item>
@@ -86,7 +92,13 @@
         </property>
         <property name="icon">
          <iconset resource="../../tikzit.qrc">
-          <normaloff>:/images/document-new.svg</normaloff>:/images/document-new.svg</iconset>
+          <normaloff>:/images/text-x-generic_with_pencil.svg</normaloff>:/images/text-x-generic_with_pencil.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -101,6 +113,12 @@
         <property name="icon">
          <iconset resource="../../tikzit.qrc">
           <normaloff>:/images/refresh.svg</normaloff>:/images/refresh.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
         </property>
        </widget>
       </item>

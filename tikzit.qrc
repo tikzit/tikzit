@@ -1,11 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/draw-ellipse.png</file>
-        <file>images/draw-path.png</file>
-        <file>images/select-rectangular.png</file>
-        <file>images/transform-crop-and-resize.png</file>
-        <file>images/document-new.png</file>
-        <file>images/document-open.png</file>
         <file>images/document-new.svg</file>
         <file>images/document-open.svg</file>
         <file>images/edge-ak.svg</file>
@@ -13,6 +7,7 @@
         <file>images/select-ak.svg</file>
         <file>images/refresh.svg</file>
         <file>images/logo.png</file>
+        <file>images/text-x-generic_with_pencil.svg</file>
     </qresource>
     <qresource prefix="/qt/etc">
         <file>qt.conf</file>
