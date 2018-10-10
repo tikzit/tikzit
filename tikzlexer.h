@@ -2,9 +2,9 @@
 #define yyHEADER_H 1
 #define yyIN_HEADER 1
 
-#line 5 "tikzlexer.h"
+#line 6 "tikzlexer.h"
 
-#line 7 "tikzlexer.h"
+#line 8 "tikzlexer.h"
 
 #define  YY_INT_ALIGNED short int
 
@@ -259,7 +259,7 @@ void yyfree ( void * , yyscan_t yyscanner );
  */
 #include <unistd.h>
 #endif
-    
+
 #define YY_EXTRA_TYPE TikzAssembler *
 
 int yylex_init (yyscan_t* scanner);
@@ -518,8 +518,8 @@ extern int yylex \
 #undef yyTABLES_NAME
 #endif
 
-#line 195 "src\\data\\tikzlexer.l"
+#line 195 "src/data/tikzlexer.l"
 
-#line 523 "tikzlexer.h"
+#line 524 "tikzlexer.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */
