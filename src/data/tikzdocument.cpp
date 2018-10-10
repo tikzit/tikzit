@@ -166,24 +166,24 @@ bool TikzDocument::saveAs() {
 
     QSettings settings("tikzit", "tikzit");
 
-//    QFileDialog dialog;
-//    dialog.setDefaultSuffix("tikz");
-//    dialog.setWindowTitle(tr("Save File As"));
-//    dialog.setAcceptMode(QFileDialog::AcceptSave);
-//    dialog.setNameFilter(tr("TiKZ Files (*.tikz)"));
-//    dialog.setFileMode(QFileDialog::AnyFile);
-//    dialog.setDirectory(settings.value("previous-file-path").toString());
-//    dialog.setOption(QFileDialog::DontUseNativeDialog);
+    QFileDialog dialog;
+    dialog.setDefaultSuffix("tikz");
+    dialog.setWindowTitle(tr("Save File As"));
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setNameFilter(tr("TiKZ Files (*.tikz)"));
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setDirectory(settings.value("previous-file-path").toString());
+    dialog.setOption(QFileDialog::DontUseNativeDialog);
 
-    QString fileName = QFileDialog::getSaveFileName(tikzit->activeWindow(),
-                tr("Save File As"),
-                settings.value("previous-file-path").toString(),
-                tr("TiKZ Files (*.tikz)"),
-                nullptr,
-                QFileDialog::DontUseNativeDialog);
+//    QString fileName = QFileDialog::getSaveFileName(tikzit->activeWindow(),
+//                tr("Save File As"),
+//                settings.value("previous-file-path").toString(),
+//                tr("TiKZ Files (*.tikz)"),
+//                nullptr,
+//                QFileDialog::DontUseNativeDialog);
 
-    if (!fileName.isEmpty()) {
-//        QString fileName = dialog.selectedFiles()[0];
+    if (dialog.exec() && !dialog.selectedFiles().isEmpty()) {
+        QString fileName = dialog.selectedFiles()[0];
         _fileName = fileName;
         if (save()) {
             // clean state might not change, so update title bar manually
