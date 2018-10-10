@@ -108,7 +108,25 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings.setValue("geometry-main", saveGeometry());
     settings.setValue("windowState-main", saveState(2));
 
-    QMainWindow::closeEvent(event);
+    if (!_tikzDocument->isClean()) {
+        QString nm = _tikzDocument->shortName();
+        if (nm.isEmpty()) nm = "untitled";
+        QMessageBox::StandardButton resBtn = QMessageBox::question(
+                    this, "Save Changes",
+                    "Do you wish to save changes to " + nm + "?",
+                    QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+                    QMessageBox::Yes);
+
+        if (resBtn == QMessageBox::Yes && _tikzDocument->save()) {
+            event->accept();
+        } else if (resBtn == QMessageBox::No) {
+            event->accept();
+        } else {
+            event->ignore();
+        }
+    } else {
+        event->accept();
+    }
 }
 
 void MainWindow::changeEvent(QEvent *event)
@@ -144,7 +162,7 @@ void MainWindow::updateFileName()
     QString nm = _tikzDocument->shortName();
     if (nm.isEmpty()) nm = "untitled";
     if (!_tikzDocument->isClean()) nm += "*";
-    setWindowTitle("TiKZiT - " + nm);
+    setWindowTitle(nm + " - TikZiT");
 }
 
 void MainWindow::refreshTikz()

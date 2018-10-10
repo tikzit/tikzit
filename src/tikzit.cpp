@@ -181,7 +181,9 @@ void Tikzit::open()
     QString fileName = QFileDialog::getOpenFileName(0,
                 tr("Open File"),
                 settings.value("previous-file-path").toString(),
-                tr("TiKZ Files (*.tikz)"));
+                tr("TiKZ Files (*.tikz)"),
+                nullptr,
+                QFileDialog::DontUseNativeDialog);
 
 	open(fileName);
 }
@@ -210,7 +212,9 @@ void Tikzit::openTikzStyles() {
     QString fileName = QFileDialog::getOpenFileName(0,
                 tr("Open File"),
                 settings.value("previous-tikzstyles-path").toString(),
-                tr("TiKZ Style Files (*.tikzstyles)"));
+                tr("TiKZ Style Files (*.tikzstyles)"),
+                nullptr,
+                QFileDialog::DontUseNativeDialog);
 
     if (!fileName.isEmpty()) {
         QFileInfo fi(fileName);

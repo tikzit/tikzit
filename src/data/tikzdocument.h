@@ -47,8 +47,8 @@ public:
 
     QString shortName() const;
 
-    void saveAs();
-    void save();
+    bool saveAs();
+    bool save();
 
     bool isClean() const;
     void setClean();

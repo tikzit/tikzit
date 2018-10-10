@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>TikZiT - untitled</string>
+   <string>untitled - TikZiT</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">

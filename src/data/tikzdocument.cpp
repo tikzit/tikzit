@@ -98,9 +98,9 @@ void TikzDocument::open(QString fileName)
     }
 }
 
-void TikzDocument::save() {
+bool TikzDocument::save() {
     if (_fileName == "") {
-        saveAs();
+        return saveAs();
     } else {
         MainWindow *win = tikzit->activeWindow();
         if (win != 0 && !win->tikzScene()->enabled()) {
@@ -110,7 +110,7 @@ void TikzDocument::save() {
                   tr("Tikz failed to parse"),
                   tr("Cannot save file with invalid TiKZ source. Revert changes and save?"));
                 if (resp == QMessageBox::Yes) win->tikzScene()->setEnabled(true);
-                else return; // ABORT the save
+                else return false; // ABORT the save
             }
         }
 
@@ -126,10 +126,13 @@ void TikzDocument::save() {
             stream << _tikz;
             file.close();
             setClean();
+            return true;
         } else {
             QMessageBox::warning(0, "Save Failed", "Could not open file: '" + _fileName + "' for writing.");
         }
     }
+
+    return false;
 }
 
 bool TikzDocument::isClean() const
@@ -148,7 +151,7 @@ void TikzDocument::setGraph(Graph *graph)
     refreshTikz();
 }
 
-void TikzDocument::saveAs() {
+bool TikzDocument::saveAs() {
     MainWindow *win = tikzit->activeWindow();
     if (win != 0 && !win->tikzScene()->enabled()) {
         win->tikzScene()->parseTikz(win->tikzSource());
@@ -157,23 +160,39 @@ void TikzDocument::saveAs() {
               tr("Tikz failed to parse"),
               tr("Cannot save file with invalid TiKZ source. Revert changes and save?"));
             if (resp == QMessageBox::Yes) win->tikzScene()->setEnabled(true);
-            else return; // ABORT the save
+            else return false; // ABORT the save
         }
     }
 
     QSettings settings("tikzit", "tikzit");
+
+//    QFileDialog dialog;
+//    dialog.setDefaultSuffix("tikz");
+//    dialog.setWindowTitle(tr("Save File As"));
+//    dialog.setAcceptMode(QFileDialog::AcceptSave);
+//    dialog.setNameFilter(tr("TiKZ Files (*.tikz)"));
+//    dialog.setFileMode(QFileDialog::AnyFile);
+//    dialog.setDirectory(settings.value("previous-file-path").toString());
+//    dialog.setOption(QFileDialog::DontUseNativeDialog);
+
     QString fileName = QFileDialog::getSaveFileName(tikzit->activeWindow(),
                 tr("Save File As"),
                 settings.value("previous-file-path").toString(),
-                tr("TiKZ Files (*.tikz)"));
+                tr("TiKZ Files (*.tikz)"),
+                nullptr,
+                QFileDialog::DontUseNativeDialog);
 
     if (!fileName.isEmpty()) {
+//        QString fileName = dialog.selectedFiles()[0];
         _fileName = fileName;
-        save();
-
-        // clean state might not change, so update title bar manually
-        tikzit->activeWindow()->updateFileName();
+        if (save()) {
+            // clean state might not change, so update title bar manually
+            tikzit->activeWindow()->updateFileName();
+            return true;
+        }
     }
+
+    return false;
 }
 
 QString TikzDocument::shortName() const
