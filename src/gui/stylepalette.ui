@@ -50,7 +50,7 @@
        </font>
       </property>
       <property name="text">
-       <string>[default]</string>
+       <string>[no style file]</string>
       </property>
      </widget>
     </item>
@@ -62,6 +62,23 @@
       <property name="topMargin">
        <number>0</number>
       </property>
+      <item>
+       <widget class="QToolButton" name="buttonNewTikzstyles">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../tikzit.qrc">
+          <normaloff>:/images/document-new.svg</normaloff>:/images/document-new.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QToolButton" name="buttonOpenTikzstyles">
         <property name="toolTip">
