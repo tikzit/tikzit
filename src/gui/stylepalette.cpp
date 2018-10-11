@@ -137,7 +137,12 @@ void StylePalette::nodeStyleDoubleClicked(const QModelIndex &)
 
 void StylePalette::edgeStyleDoubleClicked(const QModelIndex &)
 {
-	tikzit->activeWindow()->tikzScene()->applyActiveStyleToEdges();
+    tikzit->activeWindow()->tikzScene()->applyActiveStyleToEdges();
+}
+
+void StylePalette::on_buttonNewTikzstyles_clicked()
+{
+    tikzit->newTikzStyles();
 }
 
 void StylePalette::on_buttonOpenTikzstyles_clicked()

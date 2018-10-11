@@ -136,6 +136,41 @@ QString Tikzit::nameForColor(QColor col)
             "; blue," + QString::number(col.blue());
 }
 
+void Tikzit::newTikzStyles()
+{
+    QSettings settings("tikzit", "tikzit");
+    QFileDialog dialog;
+    dialog.setDefaultSuffix("tikzstyles");
+    dialog.setWindowTitle(tr("Create TikZ Style File"));
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setLabelText(QFileDialog::Accept, "Create");
+    dialog.setNameFilter(tr("TiKZ Style File (*.tikzstyles)"));
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setDirectory(settings.value("previous-file-path").toString());
+    dialog.setOption(QFileDialog::DontUseNativeDialog);
+
+    if (dialog.exec() && !dialog.selectedFiles().isEmpty()) {
+        QString fileName = dialog.selectedFiles()[0];
+        TikzStyles *st = new TikzStyles;
+
+        if (st->saveStyles(fileName)) {
+            QFileInfo fi(fileName);
+            _styleFile = fi.fileName();
+            _styleFilePath = fi.absoluteFilePath();
+            delete _styles;
+            _styles = st;
+
+            foreach (MainWindow *w, _windows) {
+                w->tikzScene()->reloadStyles();
+            }
+        } else {
+            QMessageBox::warning(0,
+                "Could not write to style file.",
+                "Could not write to: '" + fileName + "'. Check file permissions or choose a new location.");
+        }
+    }
+}
+
 ToolPalette *Tikzit::toolPalette() const
 {
     return _toolPalette;
@@ -222,8 +257,6 @@ void Tikzit::openTikzStyles() {
             QSettings settings("tikzit", "tikzit");
             settings.setValue("previous-tikzstyles-path", fi.absolutePath());
             settings.setValue("previous-tikzstyles-file", fileName);
-        } else {
-            // BAD STYLE FILE
         }
     }
 }

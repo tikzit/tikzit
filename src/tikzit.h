@@ -121,6 +121,7 @@ public:
     QColor colorByName(QString name);
     QString nameForColor(QColor col);
 
+    void newTikzStyles();
     void openTikzStyles();
     bool loadStyles(QString fileName);
     void showStyleEditor();
