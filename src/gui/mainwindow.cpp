@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _numWindows++;
     ui->setupUi(this);
 
-    setWindowIcon(QIcon(":/images/logo.png"));
+    setWindowIcon(QIcon(":/images/tikzit.png"));
 
     setAttribute(Qt::WA_DeleteOnClose, true);
     _tikzDocument = new TikzDocument(this);

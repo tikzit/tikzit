@@ -2,11 +2,11 @@
     <qresource prefix="/">
         <file>images/document-new.svg</file>
         <file>images/document-open.svg</file>
-        <file>images/edge-ak.svg</file>
-        <file>images/node-ak.svg</file>
-        <file>images/select-ak.svg</file>
+        <file>images/tikzit-tool-edge.svg</file>
+        <file>images/tikzit-tool-node.svg</file>
+        <file>images/tikzit-tool-select.svg</file>
         <file>images/refresh.svg</file>
-        <file>images/logo.png</file>
+        <file>images/tikzit.png</file>
         <file>images/text-x-generic_with_pencil.svg</file>
     </qresource>
     <qresource prefix="/qt/etc">

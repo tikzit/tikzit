@@ -42,9 +42,9 @@ ToolPalette::ToolPalette(QWidget *parent) :
     // edge   = new QAction(QIcon(":/images/Inkscape_icons_draw_path.svg"), "Add Edge");
     // crop   = new QAction(QIcon(":/images/crop.svg"), "Bounding Box");
 
-    select = new QAction(QIcon(":/images/select-ak.svg"), "Select");
-    vertex = new QAction(QIcon(":/images/node-ak.svg"), "Add Vertex");
-    edge   = new QAction(QIcon(":/images/edge-ak.svg"), "Add Edge");
+    select = new QAction(QIcon(":/images/tikzit-tool-select.svg"), "Select");
+    vertex = new QAction(QIcon(":/images/tikzit-tool-node.svg"), "Add Vertex");
+    edge   = new QAction(QIcon(":/images/tikzit-tool-edge.svg"), "Add Edge");
     //crop   = new QAction(QIcon(":/images/crop.svg"), "Bounding Box");
 
 

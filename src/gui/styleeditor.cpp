@@ -18,7 +18,7 @@ StyleEditor::StyleEditor(QWidget *parent) :
         ui->leftArrow << ui->rightArrow <<
         ui->properties;
 
-    setWindowIcon(QIcon(":/images/logo.png"));
+    setWindowIcon(QIcon(":/images/tikzit.png"));
     _styles = nullptr;
     _activeStyle = nullptr;
 
