@@ -132,6 +132,12 @@ void TikzView::wheelEvent(QWheelEvent *event)
     if (event->modifiers() & Qt::ShiftModifier) {
         event->setModifiers(Qt::NoModifier);
         QGraphicsView::wheelEvent(event);
+    } else if (event->modifiers() & Qt::ControlModifier) {
+        if (event->angleDelta().y() > 0) {
+            zoomIn();
+        } else if (event->angleDelta().y() < 0) {
+            zoomOut();
+        }
     }
 }
 

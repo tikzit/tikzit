@@ -44,7 +44,7 @@ public slots:
     void zoomOut();
     void setScene(QGraphicsScene *scene);
 protected:
-    void drawBackground(QPainter *painter, const QRectF &rect);
+    void drawBackground(QPainter *painter, const QRectF &rect) override;
     void wheelEvent(QWheelEvent *event) override;
 private:
     float _scale;

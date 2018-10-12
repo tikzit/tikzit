@@ -38,7 +38,7 @@ public:
     ~PropertyPalette();
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event) override;
 private:
     Ui::PropertyPalette *ui;
 };

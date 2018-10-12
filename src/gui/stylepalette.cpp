@@ -27,6 +27,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QPainterPath>
+#include <QMessageBox>
 
 StylePalette::StylePalette(QWidget *parent) :
     QDockWidget(parent),
@@ -77,7 +78,7 @@ void StylePalette::reloadStyles()
     ui->currentCategory->clear();
 
 	// TODO: styleFile() should return invalid string if no style file loaded
-	if (f != "[default]") {
+    if (f != "[no styles]") {
 		ui->currentCategory->addItems(tikzit->styles()->categories());
 		ui->currentCategory->setCurrentText(cat);
 	}
@@ -152,7 +153,13 @@ void StylePalette::on_buttonOpenTikzstyles_clicked()
 
 void StylePalette::on_buttonEditTikzstyles_clicked()
 {
-    tikzit->showStyleEditor();
+    if (tikzit->styleFile() != "[no styles]") {
+        tikzit->showStyleEditor();
+    } else {
+        QMessageBox::warning(0,
+            "No style file",
+            "You cannot edit styles until a style file is loaded. Either create a new style file or load an existing one.");
+    }
 }
 
 void StylePalette::on_buttonRefreshTikzstyles_clicked()

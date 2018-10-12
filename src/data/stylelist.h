@@ -28,7 +28,7 @@ public:
                   int sourceRow,
                   int /*count*/,
                   const QModelIndex &destinationParent,
-                  int destinationChild);
+                  int destinationChild) override;
 
 
     QString category() const;

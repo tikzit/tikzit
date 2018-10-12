@@ -38,9 +38,9 @@ class EdgeItem : public QGraphicsItem
 public:
     EdgeItem(Edge *edge);
     void readPos();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
+    QRectF boundingRect() const override;
+    QPainterPath shape() const override;
     Edge *edge() const;
     QGraphicsEllipseItem *cp1Item() const;
     QGraphicsEllipseItem *cp2Item() const;

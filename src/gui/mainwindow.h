@@ -45,8 +45,8 @@ public slots:
     void updateFileName();
     void refreshTikz();
 protected:
-    void closeEvent(QCloseEvent *event);
-    void changeEvent(QEvent *event);
+    void closeEvent(QCloseEvent *event) override;
+    void changeEvent(QEvent *event) override;
 
 private:
     TikzScene *_tikzScene;

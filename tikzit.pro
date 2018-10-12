@@ -6,6 +6,7 @@
 
 QT       += core gui widgets
 CONFIG   += testcase
+QMAKE_CXXFLAGS += -Wsuggest-override
 
 TARGET   = tikzit
 TEMPLATE = app

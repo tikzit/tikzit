@@ -32,7 +32,7 @@ Tikzit *tikzit;
 // font to use for node labels
 QFont Tikzit::LABEL_FONT("Courrier", 9);
 
-Tikzit::Tikzit() : _styleFile("[default]"), _activeWindow(0)
+Tikzit::Tikzit() : _styleFile("[no styles]"), _activeWindow(0)
 {
 }
 
