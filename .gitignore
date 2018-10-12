@@ -1,3 +1,6 @@
+tex/sample/Output
+tex/sample/sample.pdf
+*.synctex.gz
 *.sublime-*
 src-old
 GeneratedFiles
