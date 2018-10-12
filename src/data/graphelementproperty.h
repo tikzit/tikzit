@@ -53,7 +53,6 @@ private:
     QString _key;
     QString _value;
     bool _atom;
-    bool _keyMatch;
 };
 
 #endif // GRAPHELEMENTPROPERTY_H

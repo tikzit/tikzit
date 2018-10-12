@@ -57,6 +57,7 @@ public:
     void setName(const QString &name);
     QString propertyWithDefault(QString prop, QString def, bool tikzitOverride=true) const;
     QString tikz() const;
+    void setArrowAtom(QString atom);
 
     // only relevant for node styles
     QColor fillColor(bool tikzitOverride=true) const;

@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     // dummy application for detecting DPI
     QApplication *a0 = new QApplication(argc, argv);
-    qDebug() << "physical DPI" << QApplication::screens()[0]->physicalDotsPerInch();
+//    qDebug() << "physical DPI" << QApplication::screens()[0]->physicalDotsPerInch();
 
     if (QApplication::screens()[0]->physicalDotsPerInch() >= 100) {
         QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

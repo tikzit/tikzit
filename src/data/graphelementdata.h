@@ -41,6 +41,7 @@ public:
     void setAtom(QString atom);
     void unsetAtom(QString atom);
     QString property(QString key);
+    bool hasProperty(QString key);
     bool atom(QString atom);
     int indexOfKey(QString key);
     bool removeRows(int row, int count, const QModelIndex &parent) override;

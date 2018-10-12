@@ -33,17 +33,25 @@ public slots:
     void edgeItemChanged(QModelIndex sel);
     void categoryChanged();
     void currentCategoryChanged();
+    void shapeChanged();
     void refreshCategories();
     void propertyChanged();
     void on_styleListView_clicked();
     void on_edgeStyleListView_clicked();
 
     void on_name_editingFinished();
-    void on_shape_currentTextChanged();
     void on_fillColor_clicked();
     void on_drawColor_clicked();
     void on_tikzitFillColor_clicked();
     void on_tikzitDrawColor_clicked();
+    void on_hasTikzitFillColor_stateChanged(int state);
+    void on_hasTikzitDrawColor_stateChanged(int state);
+
+    void on_hasTikzitShape_stateChanged(int state);
+    void on_tikzitShape_currentIndexChanged(int);
+
+    void on_leftArrow_currentIndexChanged(int);
+    void on_rightArrow_currentIndexChanged(int);
 
     void on_addProperty_clicked();
     void on_addAtom_clicked();

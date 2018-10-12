@@ -106,6 +106,23 @@ QString Style::tikz() const
     return "\\tikzstyle{" + _name + "}=" + _data->tikz();
 }
 
+void Style::setArrowAtom(QString atom)
+{
+    _data->unsetAtom("-");
+    _data->unsetAtom("->");
+    _data->unsetAtom("-|");
+
+    _data->unsetAtom("<-");
+    _data->unsetAtom("<->");
+    _data->unsetAtom("<-|");
+
+    _data->unsetAtom("|-");
+    _data->unsetAtom("|->");
+    _data->unsetAtom("|-|");
+
+    _data->setAtom(atom);
+}
+
 void Style::setName(const QString &name)
 {
     _name = name;

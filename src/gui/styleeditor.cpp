@@ -37,6 +37,13 @@ StyleEditor::StyleEditor(QWidget *parent) :
             SIGNAL(currentIndexChanged(int)),
             this, SLOT(categoryChanged()));
 
+    connect(ui->shape->lineEdit(),
+            SIGNAL(editingFinished()),
+            this, SLOT(shapeChanged()));
+    connect(ui->shape,
+            SIGNAL(currentIndexChanged(int)),
+            this, SLOT(shapeChanged()));
+
     // setup the color dialog to display only the named colors that tikzit/xcolor knows
     // about as "standard colors".
     for (int i = 0; i < 48; ++i) {
@@ -128,7 +135,7 @@ void StyleEditor::closeEvent(QCloseEvent *event)
 
 void StyleEditor::nodeItemChanged(QModelIndex sel)
 {
-    qDebug() << "nodeItemChanged, new index:" << sel.row();
+    //qDebug() << "nodeItemChanged, new index:" << sel.row();
     if (sel.isValid()) {
         ui->edgeStyleListView->selectionModel()->clear();
         _activeStyle = _styles->nodeStyles()->styleInCategory(sel.row());
@@ -171,8 +178,6 @@ void StyleEditor::currentCategoryChanged()
 {
     if (_styles != nullptr) {
         QString cat = ui->currentCategory->currentText();
-        qDebug() << "got category:" << cat;
-        qDebug() << "node style category:" << _styles->nodeStyles()->category();
         if (cat != _styles->nodeStyles()->category()) {
             ui->styleListView->selectionModel()->clear();
             _styles->nodeStyles()->setCategory(cat);
@@ -189,6 +194,17 @@ void StyleEditor::currentCategoryChanged()
                 if (!_nodeStyleIndex.isValid()) _activeStyle = nullptr;
             }
         }
+    }
+}
+
+void StyleEditor::shapeChanged()
+{
+    Style *s = activeStyle();
+    if (s != 0) {
+        s->data()->setProperty("shape", ui->shape->currentText());
+        refreshActiveStyle();
+        refreshDisplay();
+        setDirty(true);
     }
 }
 
@@ -233,9 +249,8 @@ void StyleEditor::propertyChanged()
 
 void StyleEditor::refreshDisplay()
 {
-    // disable all fields and block signals while we set their values
+    // enable all fields and block signals while we set their values
     foreach (QWidget *w, _formWidgets) {
-        w->setEnabled(false);
         w->blockSignals(true);
     }
 
@@ -259,7 +274,10 @@ void StyleEditor::refreshDisplay()
 
     Style *s = activeStyle();
 
+//    qDebug() << "style" << s;
     if (s != nullptr && !s->isNone()) {
+//        qDebug() << "non-null style update";
+
         // name
         ui->name->setEnabled(true);
         ui->name->setText(s->name());
@@ -275,7 +293,7 @@ void StyleEditor::refreshDisplay()
         setColor(ui->drawColor, realDraw);
 
         // tikzit draw
-        bool drawOverride = realDraw != draw;
+        bool drawOverride = s->data()->hasProperty("tikzit draw");
         ui->hasTikzitDrawColor->setEnabled(true);
         ui->hasTikzitDrawColor->setChecked(drawOverride);
 
@@ -283,6 +301,7 @@ void StyleEditor::refreshDisplay()
         if (drawOverride) setColor(ui->tikzitDrawColor, draw);
 
         if (!s->isEdgeStyle()) {
+//            qDebug() << "node style update";
             // category
             ui->category->setEnabled(true);
             ui->category->setCurrentText(
@@ -295,7 +314,7 @@ void StyleEditor::refreshDisplay()
             setColor(ui->fillColor, realFill);
 
             // tikzit fill
-            bool fillOverride = realFill != fill;
+            bool fillOverride = s->data()->hasProperty("tikzit fill");
             ui->hasTikzitFillColor->setEnabled(true);
             ui->hasTikzitFillColor->setChecked(fillOverride);
             ui->tikzitFillColor->setEnabled(fillOverride);
@@ -308,15 +327,22 @@ void StyleEditor::refreshDisplay()
             ui->shape->setCurrentText(realShape);
 
             // tikzit shape
-            bool shapeOverride = shape != realShape;
+            bool shapeOverride = s->data()->hasProperty("tikzit shape");
             ui->hasTikzitShape->setEnabled(true);
+            ui->hasTikzitShape->setChecked(shapeOverride);
             ui->tikzitShape->setEnabled(shapeOverride);
             if (shapeOverride) ui->tikzitShape->setCurrentText(shape);
         } else {
+//            qDebug() << "edge style update";
+
             // set fill to gray (disabled)
-            setColor(ui->fillColor, QColor(Qt::gray));
-            setColor(ui->tikzitFillColor, QColor(Qt::gray));
-            ui->hasTikzitFillColor->setChecked(false);
+            ui->fillColor->setEnabled(false);
+            ui->tikzitFillColor->setEnabled(false);
+            ui->hasTikzitFillColor->setEnabled(false);
+
+            ui->shape->setEnabled(false);
+            ui->tikzitShape->setEnabled(false);
+            ui->hasTikzitShape->setEnabled(false);
 
 
             // arrow tail
@@ -350,10 +376,11 @@ void StyleEditor::refreshDisplay()
         }
 
     } else {
-        setColor(ui->fillColor, QColor(Qt::gray));
-        setColor(ui->drawColor, QColor(Qt::gray));
-        setColor(ui->tikzitDrawColor, QColor(Qt::gray));
-        setColor(ui->tikzitFillColor, QColor(Qt::gray));
+//        qDebug() << "null style update";
+
+        foreach (QWidget *w, _formWidgets) {
+            w->setEnabled(false);
+        }
     }
 
     // unblock signals so we are ready for user input
@@ -382,10 +409,78 @@ void StyleEditor::on_tikzitDrawColor_clicked()
     updateColor(ui->tikzitDrawColor, "TikZiT Draw Color", "tikzit draw");
 }
 
+void StyleEditor::on_hasTikzitFillColor_stateChanged(int state)
+{
+    Style *s = activeStyle();
+    if (s != nullptr) {
+        if (state == Qt::Checked) s->data()->setProperty("tikzit fill", s->data()->property("fill"));
+        else s->data()->unsetProperty("tikzit fill");
+        refreshDisplay();
+        setDirty(true);
+    }
+}
+
+void StyleEditor::on_hasTikzitDrawColor_stateChanged(int state)
+{
+    Style *s = activeStyle();
+    if (s != nullptr) {
+        if (state == Qt::Checked) s->data()->setProperty("tikzit draw", s->data()->property("draw"));
+        else s->data()->unsetProperty("tikzit draw");
+        refreshDisplay();
+        setDirty(true);
+    }
+}
+
+void StyleEditor::on_hasTikzitShape_stateChanged(int state)
+{
+    Style *s = activeStyle();
+    if (s != nullptr) {
+        if (state == Qt::Checked) s->data()->setProperty("tikzit shape", s->data()->property("shape"));
+        else s->data()->unsetProperty("tikzit shape");
+        refreshDisplay();
+        setDirty(true);
+    }
+}
+
+void StyleEditor::on_tikzitShape_currentIndexChanged(int)
+{
+    Style *s = activeStyle();
+    if (s != nullptr) {
+        s->data()->setProperty("tikzit shape", ui->tikzitShape->currentText());
+        refreshActiveStyle();
+        refreshDisplay();
+        setDirty(true);
+    }
+}
+
+void StyleEditor::on_leftArrow_currentIndexChanged(int)
+{
+    Style *s = activeStyle();
+    if (s != nullptr) {
+        s->setArrowAtom(ui->leftArrow->currentText() + "-" +
+                        ui->rightArrow->currentText());
+        refreshActiveStyle();
+        refreshDisplay();
+        setDirty(true);
+    }
+}
+
+void StyleEditor::on_rightArrow_currentIndexChanged(int)
+{
+    Style *s = activeStyle();
+    if (s != nullptr) {
+        s->setArrowAtom(ui->leftArrow->currentText() + "-" +
+                        ui->rightArrow->currentText());
+        refreshActiveStyle();
+        refreshDisplay();
+        setDirty(true);
+    }
+}
+
 void StyleEditor::on_addProperty_clicked()
 {
     Style *s = activeStyle();
-    if (s != 0) {
+    if (s != nullptr) {
         s->data()->add(GraphElementProperty("new property", ""));
         setDirty(true);
     }
@@ -459,12 +554,18 @@ void StyleEditor::on_addStyle_clicked()
     // add the style to the current category
     Style *s;
     if (_styles->nodeStyles()->category() == "") {
-        s = new Style(name, new GraphElementData());
+        s = new Style(name, new GraphElementData({
+          GraphElementProperty("fill", "white"),
+          GraphElementProperty("draw", "black"),
+          GraphElementProperty("shape", "circle")
+        }));
     } else {
-        s = new Style(name,
-          new GraphElementData({
-            GraphElementProperty("category",_styles->nodeStyles()->category())
-          }));
+        s = new Style(name, new GraphElementData({
+          GraphElementProperty("fill", "white"),
+          GraphElementProperty("draw", "black"),
+          GraphElementProperty("shape", "circle"),
+          GraphElementProperty("category", _styles->nodeStyles()->category()),
+        }));
     }
     _styles->nodeStyles()->addStyle(s);
 
@@ -634,16 +735,6 @@ void StyleEditor::on_name_editingFinished()
     }
 }
 
-void StyleEditor::on_shape_currentTextChanged()
-{
-    Style *s = activeStyle();
-    if (s != 0) {
-        s->data()->setProperty("shape", ui->shape->currentText());
-        refreshActiveStyle();
-//        refreshDisplay();
-        setDirty(true);
-    }
-}
 
 void StyleEditor::setColor(QPushButton *btn, QColor col)
 {
@@ -709,13 +800,15 @@ void StyleEditor::updateColor(QPushButton *btn, QString name, QString propName)
                 this,
                 name,
                 QColorDialog::DontUseNativeDialog);
-    setColor(btn, col);
-    Style *s = activeStyle();
-    if (s != nullptr) {
-        s->data()->setProperty(propName, tikzit->nameForColor(col));
-        refreshActiveStyle();
-//        refreshDisplay();
-        setDirty(true);
+    if (col.isValid()) {
+        setColor(btn, col);
+        Style *s = activeStyle();
+        if (s != nullptr) {
+            s->data()->setProperty(propName, tikzit->nameForColor(col));
+            refreshActiveStyle();
+            refreshDisplay();
+            setDirty(true);
+        }
     }
 }
 

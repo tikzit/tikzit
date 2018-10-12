@@ -96,6 +96,11 @@ QString GraphElementData::property(QString key)
     }
 }
 
+bool GraphElementData::hasProperty(QString key)
+{
+    return (indexOfKey(key) != -1);
+}
+
 bool GraphElementData::atom(QString atom)
 {
     return (indexOfKey(atom) != -1);
