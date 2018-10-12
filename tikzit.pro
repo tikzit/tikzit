@@ -6,14 +6,15 @@
 
 QT       += core gui widgets
 CONFIG   += testcase
-QMAKE_CXXFLAGS += -Wsuggest-override
 
 TARGET   = tikzit
 TEMPLATE = app
 
+# platform-specific options
 win32:RC_ICONS += images/tikzit.ico
 win32:RC_ICONS += images/tikzdoc.ico
 macx:ICON = images/tikzit.icns
+linux-g++:QMAKE_CXXFLAGS += -Wsuggest-override
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
