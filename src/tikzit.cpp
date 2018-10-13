@@ -157,6 +157,8 @@ void Tikzit::newTikzStyles()
             QFileInfo fi(fileName);
             _styleFile = fi.fileName();
             _styleFilePath = fi.absoluteFilePath();
+            settings.setValue("previous-tikzstyles-file", fileName);
+            settings.setValue("previous-tikzstyles-path", fi.absolutePath());
             delete _styles;
             _styles = st;
 
