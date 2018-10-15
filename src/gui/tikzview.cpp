@@ -28,6 +28,8 @@ TikzView::TikzView(QWidget *parent) : QGraphicsView(parent)
     setResizeAnchor(QGraphicsView::AnchorViewCenter);
     //setDragMode(QGraphicsView::RubberBandDrag);
 
+    setBackgroundBrush(QBrush(Qt::white));
+
     _scale = 1.0f;
 }
 
@@ -51,6 +53,7 @@ void TikzView::setScene(QGraphicsScene *scene)
 
 void TikzView::drawBackground(QPainter *painter, const QRectF &rect)
 {
+    QGraphicsView::drawBackground(painter, rect);
     // draw a gray background if disabled
     TikzScene *sc = static_cast<TikzScene*>(scene());
     if (!sc->enabled()) painter->fillRect(rect, QBrush(QColor(240,240,240)));

@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
     tikzit = new Tikzit();
     tikzit->init();
 
+    qDebug() << a.arguments().length();
 
 	
     if (a.arguments().length() > 1) {
