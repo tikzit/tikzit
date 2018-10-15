@@ -1,30 +1,35 @@
 language: cpp
 
+env:
+  - DEPLOY_TIKZIT=0
+
 matrix:
  include:
   - os: osx
     compiler: clang
     env:
-     - QT_BASE=510
-     - FILE=tikzit-osx.dmg
-  - os: osx
-    osx_image: xcode7.3
+      - FILE=tikzit-osx.dmg
+  - os: linux
+    dist: trusty
     env:
-      - QT_BASE=510
-      - FILE=tikzit-osx-elcap.dmg 
+      - FILE=tikzit-linux.tar.gz
+      - PPA=beineri/opt-qt-5.10.1-trusty
 
 before_install:
+  - '[[ "$TRAVIS_OS_NAME" != linux || -z "$PPA" ]] || sudo add-apt-repository -y ppa:$PPA'
+  - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy update'
 
 install:
-  brew install qt5;
-  brew link --force qt5;
+  - '[[ "$TRAVIS_OS_NAME" != osx ]] || brew install qt5'
+  - '[[ "$TRAVIS_OS_NAME" != osx ]] || brew link --force qt5'
+  - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy install qt510base qt510xmlpatterns'
 
 script:
   - qmake -v
   - qmake -r
   - make
-  - macdeployqt tikzit.app -dmg
-  - curl --upload-file tikzit.dmg https://transfer.sh/$FILE
+  - '[[ "$TRAVIS_OS_NAME" != osx ]] || (macdeployqt tikzit.app -dmg && mv tikzit.dmg $FILE)'
+  - '[[ "$DEPLOY_TIKZIT" != 1 ]] || curl --upload-file $FILE https://transfer.sh/$FILE'
 
 notifications:
   email: false
