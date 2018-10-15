@@ -17,6 +17,8 @@ script:
   - qmake -v
   - qmake -r
   - make
+  - macdeployqt tikzit.app -dmg
+  - curl --upload-file tikzit.dmg https://transfer.sh/tikzit.dmg
 
 notifications:
   email: false
