@@ -10,8 +10,8 @@ matrix:
 before_install:
 
 install:
-  brew install qt5
-  brew link --force qt5
+  brew install qt5;
+  brew link --force qt5;
 
 script:
   - qmake -v
