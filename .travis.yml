@@ -1,0 +1,27 @@
+language: cpp
+
+matrix:
+ include:
+  - os: osx
+    compiler: clang
+    env:
+     - QT_BASE=510
+
+before_install:
+
+install:
+      if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
+        # TODO
+      else
+        brew install qt5;
+        brew link --force qt5;
+      fi
+    fi
+
+script:
+  - qmake -v
+  - qmake -r
+  - make
+
+notifications:
+  email: false
