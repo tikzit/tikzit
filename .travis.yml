@@ -10,13 +10,12 @@ matrix:
 before_install:
 
 install:
-      if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
-        # TODO
-      else
-        brew install qt5;
-        brew link --force qt5;
-      fi
-    fi
+  if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
+    # TODO
+  else
+    brew install qt5;
+    brew link --force qt5;
+  fi
 
 script:
   - qmake -v
