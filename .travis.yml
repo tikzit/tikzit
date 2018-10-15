@@ -6,6 +6,12 @@ matrix:
     compiler: clang
     env:
      - QT_BASE=510
+     - FILE=tikzit-osx.dmg
+  - os: osx
+    osx_image: xcode6.4
+    env:
+      - QT_BASE=510
+      - FILE=tikzit-osx-yosemite.dmg 
 
 before_install:
 
@@ -18,7 +24,7 @@ script:
   - qmake -r
   - make
   - macdeployqt tikzit.app -dmg
-  - curl --upload-file tikzit.dmg https://transfer.sh/tikzit.dmg
+  - curl --upload-file tikzit.dmg https://transfer.sh/$FILE
 
 notifications:
   email: false
