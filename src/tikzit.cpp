@@ -89,10 +89,6 @@ void Tikzit::init()
         QColor::fromRgbF(0.5,0,0.5) <<
         QColor::fromRgbF(1,0.75,0.75);
 
-//	for (int i = 0; i < _colNames.length(); ++i) {
-//		_cols << QColor(_colNames[i]);
-//	}
-
     _mainMenu = new MainMenu();
     QMainWindow *dummy = new QMainWindow();
 
