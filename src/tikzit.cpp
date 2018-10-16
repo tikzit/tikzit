@@ -43,31 +43,55 @@ void Tikzit::init()
 	// 19 standard xcolor colours
     _colNames <<
 		"black" <<
-		"gray" <<
-		"darkgray" <<
+        "darkgray" <<
+        "gray" <<
 		"lightgray" <<
 		"white" <<
 
 		"red" <<
 		"orange" <<
 		"yellow" <<
-		"lime" <<
+        "green" <<
 		"blue" <<
 		"purple" <<
 
 		"brown" <<
 		"olive" <<
-		"green" <<
-		"teal" <<
-		"cyan" <<
+        "lime" <<
+        "cyan" <<
+        "teal" <<
 
 		"magenta" <<
 		"violet" <<
 		"pink";
 
-	for (int i = 0; i < _colNames.length(); ++i) {
-		_cols << QColor(_colNames[i]);
-	}
+    _cols <<
+        QColor::fromRgbF(0,0,0) <<
+        QColor::fromRgbF(0.25,0.25,0.25) <<
+        QColor::fromRgbF(0.5,0.5,0.5) <<
+        QColor::fromRgbF(0.75,0.75,0.75) <<
+        QColor::fromRgbF(1,1,1) <<
+
+        QColor::fromRgbF(1,0,0) <<
+        QColor::fromRgbF(1,0.5,0) <<
+        QColor::fromRgbF(1,1,0) <<
+        QColor::fromRgbF(0,1,0) <<
+        QColor::fromRgbF(0,0,1) <<
+        QColor::fromRgbF(0.75,0,0.25) <<
+
+        QColor::fromRgbF(0.75,0.5,0.25) <<
+        QColor::fromRgbF(0.5,0.5,0) <<
+        QColor::fromRgbF(0.75,1,0) <<
+        QColor::fromRgbF(0,1,1) <<
+        QColor::fromRgbF(0,0.5,0.5) <<
+
+        QColor::fromRgbF(1,0,1) <<
+        QColor::fromRgbF(0.5,0,0.5) <<
+        QColor::fromRgbF(1,0.75,0.75);
+
+//	for (int i = 0; i < _colNames.length(); ++i) {
+//		_cols << QColor(_colNames[i]);
+//	}
 
     _mainMenu = new MainMenu();
     QMainWindow *dummy = new QMainWindow();
