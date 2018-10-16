@@ -9,9 +9,6 @@ matrix:
     compiler: clang
     env:
       - FILE=tikzit-osx.dmg
-    cache:
-      directories:
-        - $HOME/Library/Caches/Homebrew
   - os: linux
     dist: trusty
     env:
