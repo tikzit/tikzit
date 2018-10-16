@@ -23,7 +23,7 @@ install:
   - '[[ "$TRAVIS_OS_NAME" != osx ]] || brew install qt5'
   - '[[ "$TRAVIS_OS_NAME" != osx ]] || brew link --force qt5'
   - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy install qt510base qt510xmlpatterns'
-  - '[[ "$TRAVIS_OS_NAME" != linux ]] || . /opt/qt$QT/bin/qt510-env.sh'
+  - '[[ "$TRAVIS_OS_NAME" != linux ]] || . /opt/qt510/bin/qt510-env.sh'
 
 script:
   - qmake -v
