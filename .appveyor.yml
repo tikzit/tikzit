@@ -10,13 +10,13 @@ configuration:
   - release
 
 install:
-  # Setup the build toolchains.
+  - choco install winflexbison
   - '%QTDIR%\bin\qtenv2.bat'
   - call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
+  - cd C:\projects\tikzit
 
 
 build_script:
-  - cd C:\projects\tikzit
   - qmake -v
   - qmake
   - nmake.exe
