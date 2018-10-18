@@ -16,7 +16,8 @@ install:
 
 
 build_script:
+  - cd C:\projects\tikzit
   - qmake -v
-  - qmake tikzit.pro
+  - qmake
   - nmake.exe
 
