@@ -44,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // TODO: check if each window should have a menu
     _menu = new MainMenu();
     _menu->setParent(this);
-
     setMenuBar(_menu);
 
     QVariant geom = settings.value("geometry-main");
@@ -70,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _tikzDocument->refreshTikz();
 
     connect(_tikzDocument->undoStack(), SIGNAL(cleanChanged(bool)), this, SLOT(updateFileName()));
+    _menu->addDocks(createPopupMenu());
 }
 
 MainWindow::~MainWindow()

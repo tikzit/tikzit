@@ -26,6 +26,14 @@ MainMenu::MainMenu()
     ui.setupUi(this);
 }
 
+void MainMenu::addDocks(QMenu *m)
+{
+    ui.menuView->addSeparator();
+    foreach (QAction *a, m->actions()) {
+        if (!a->isSeparator()) ui.menuView->addAction(a);
+    }
+}
+
 // File
 void MainMenu::on_actionNew_triggered()
 {

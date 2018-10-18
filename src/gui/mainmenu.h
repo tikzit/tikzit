@@ -28,6 +28,7 @@ class MainMenu : public QMenuBar
     Q_OBJECT
 public:
     MainMenu();
+    void addDocks(QMenu *m);
 
 private:
     Ui::MainMenu ui;
