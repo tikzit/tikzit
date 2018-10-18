@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=TikZiT
+Comment=A graphical editor for PGF/TikZ
+Exec=tikzit %u
+Icon=tikzit
+Terminal=false
+Type=Application
+MimeType=application/x-tikz-document

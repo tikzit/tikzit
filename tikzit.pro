@@ -4,11 +4,26 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets
-CONFIG   += testcase
+QT += core gui widgets
+
+test {
+    CONFIG += testcase
+}
 
 TARGET   = tikzit
 TEMPLATE = app
+
+PREFIX = $$(PREFIX)
+
+isEmpty(PREFIX) {
+    PREFIX=/usr/local
+}
+
+share.path = $${PREFIX}/share
+share.files = share/*
+
+target.path = $${PREFIX}/bin
+INSTALLS += target share
 
 # platform-specific options
 win32:RC_ICONS += images/tikzit.ico
@@ -114,4 +129,6 @@ test {
 } else {
     SOURCES += src/main.cpp
 }
+
+
 
