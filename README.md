@@ -38,6 +38,26 @@ Then, TikZiT is built just like a normal Qt project:
     $ qmake
     $ make
 
+## Building with Nix
+
+We also provide a convenient way to build and install using the [nix package manager](https://nixos.org/nix/)
+
+To build run:
+```bash
+# for nix 2
+nix build
+# for older nix versions
+nix-build
+```
+
+This symlinks the results in a local folder `result` where you can execute TikZit as `result/bin/tikzit`
+
+To install run:
+
+```bash
+nix-env -f . -i tikzit
+# or specify the path to the folder containing the .nix files as the -f argument
+```
 
 ## Building Poppler with Qt bindings
 
@@ -47,4 +67,3 @@ Poppler should be built from source to get the Qt5 bindings. If Qt is setup corr
 
     $ CXXFLAGS="-std=c++11" ./configure
     $ CXXFLAGS="-std=c++11" make
-
