@@ -1,0 +1,30 @@
+version: '{branch}-{build}'
+
+environment:
+  matrix:
+    # - QTDIR: C:\Qt\5.11.1\mingw53_32
+    # - QTDIR: C:\Qt\5.11.1\msvc2015
+    - QTDIR: C:\Qt\5.11.1\msvc2015_64
+
+configuration:
+  - release
+
+install:
+  # Setup the build toolchains.
+  - '%QTDIR%\bin\qtenv2.bat'
+  - qmake -v
+  - if %QTDIR:_64=%==%QTDIR% ( set ARCH=x86 ) else set ARCH=x64
+  - if %QTDIR:msvc=%==%QTDIR% g++ --version
+  - if %QTDIR:msvc=%==%QTDIR% set make=mingw32-make.exe
+  - if %QTDIR:msvc=%==%QTDIR% %make% --version
+  - if not %QTDIR:msvc2013=%==%QTDIR% call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" %ARCH%
+  - if not %QTDIR:msvc2015=%==%QTDIR% call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %ARCH%
+  - if not %QTDIR:msvc=%==%QTDIR% set make=nmake.exe
+  - if not %QTDIR:msvc=%==%QTDIR% %make% /? > nul
+
+
+build_script:
+  - qmake -v
+  - qmake -r
+  - '%make%'
+
