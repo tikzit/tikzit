@@ -40,6 +40,8 @@ public:
     QString tikzSource();
     void setSourceLine(int line);
 
+    MainMenu *menu() const;
+
 public slots:
     void on_tikzSource_textChanged();
     void updateFileName();

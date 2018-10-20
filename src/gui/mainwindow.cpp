@@ -144,6 +144,11 @@ void MainWindow::changeEvent(QEvent *event)
     QMainWindow::changeEvent(event);
 }
 
+MainMenu *MainWindow::menu() const
+{
+    return _menu;
+}
+
 StylePalette *MainWindow::stylePalette() const
 {
     return _stylePalette;

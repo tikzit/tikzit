@@ -20,10 +20,19 @@
 #include "tikzit.h"
 
 #include <QDebug>
+#include <QSettings>
+#include <QMessageBox>
 
 MainMenu::MainMenu()
 {
+    QSettings settings("tikzit", "tikzit");
     ui.setupUi(this);
+
+    if (!settings.value("check-for-updates").isNull()) {
+        ui.actionCheck_for_updates_automatically->blockSignals(true);
+        ui.actionCheck_for_updates_automatically->setChecked(settings.value("check-for-updates").toBool());
+        ui.actionCheck_for_updates_automatically->blockSignals(false);
+    }
 }
 
 void MainMenu::addDocks(QMenu *m)
@@ -32,6 +41,11 @@ void MainMenu::addDocks(QMenu *m)
     foreach (QAction *a, m->actions()) {
         if (!a->isSeparator()) ui.menuView->addAction(a);
     }
+}
+
+QAction *MainMenu::updatesAction()
+{
+    return ui.actionCheck_for_updates_automatically;
 }
 
 // File
@@ -224,4 +238,27 @@ void MainMenu::on_actionZoom_In_triggered()
 void MainMenu::on_actionZoom_Out_triggered()
 {
     if (tikzit->activeWindow() != 0) tikzit->activeWindow()->tikzView()->zoomOut();
+}
+
+void MainMenu::on_actionAbout_triggered()
+{
+    QMessageBox::about(this,
+                       "TikZiT",
+                       "<h2><b>TikZiT</b></h2>"
+                       "<p><i>version " TIKZIT_VERSION "</i></p>"
+                       "<p>TikZiT is a GUI diagram editor for PGF/TikZ. It is licensed under the "
+                       "<a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html\">GNU General "
+                       "Public License, version 3.0</a>.</p>"
+                       "<p>For more info and updates, visit: "
+                       "<a href=\"https://tikzit.github.io\">tikzit.github.io</a></p>");
+}
+
+void MainMenu::on_actionCheck_for_updates_automatically_triggered()
+{
+    qDebug() << "check automatically:" << ui.actionCheck_for_updates_automatically->isChecked();
+}
+
+void MainMenu::on_actionCheck_now_triggered()
+{
+    qDebug() << "check now";
 }

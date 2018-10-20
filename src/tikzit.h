@@ -49,6 +49,8 @@
 #ifndef TIKZIT_H
 #define TIKZIT_H
 
+#define TIKZIT_VERSION "2.0-rc1"
+
 #include "mainwindow.h"
 #include "mainmenu.h"
 #include "ui_mainmenu.h"
@@ -67,6 +69,7 @@
 #include <QMainWindow>
 #include <QFont>
 #include <QColor>
+#include <QNetworkAccessManager>
 
 // Number of pixels between (0,0) and (1,0) at 100% zoom level. This should be
 // divisible by 8 to avoid rounding errors with e.g. grid-snapping.
@@ -107,8 +110,6 @@ public:
     void removeWindow(MainWindow *w);
 
     static QFont LABEL_FONT;
-//    Ui::MainMenu *_mainMenuUi;
-//    QMenuBar *_mainMenu;
 
     void newDoc();
     void open();
@@ -132,7 +133,10 @@ public:
     QString styleFilePath() const;
 
 public slots:
-    //void focusChanged(QWidget *old, QWidget *nw);
+    void setCheckForUpdates(bool check);
+    void checkForUpdates();
+    void updateReply(QNetworkReply *reply);
+
 private:
     //    void createMenu();
 

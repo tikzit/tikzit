@@ -29,6 +29,7 @@ class MainMenu : public QMenuBar
 public:
     MainMenu();
     void addDocks(QMenu *m);
+    QAction *updatesAction();
 
 private:
     Ui::MainMenu ui;
@@ -70,6 +71,11 @@ public slots:
     // View
     void on_actionZoom_In_triggered();
     void on_actionZoom_Out_triggered();
+
+    // Help
+    void on_actionAbout_triggered();
+    void on_actionCheck_for_updates_automatically_triggered();
+    void on_actionCheck_now_triggered();
 };
 
 #endif // MAINMENU_H

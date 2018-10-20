@@ -82,6 +82,15 @@
    <addaction name="actionZoom_In"/>
    <addaction name="actionZoom_Out"/>
   </widget>
+  <widget class="QMenu" name="menuHelp">
+   <property name="title">
+    <string>Help</string>
+   </property>
+   <addaction name="actionAbout"/>
+   <addaction name="separator"/>
+   <addaction name="actionCheck_for_updates_automatically"/>
+   <addaction name="actionCheck_now"/>
+  </widget>
   <action name="actionNew">
    <property name="text">
     <string>New...</string>
@@ -308,10 +317,29 @@
     <string>Ctrl+[</string>
    </property>
   </action>
+  <action name="actionCheck_for_updates_automatically">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Check for updates automatically</string>
+   </property>
+  </action>
+  <action name="actionCheck_now">
+   <property name="text">
+    <string>Check now</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
   <addaction name="menuFile"/>
   <addaction name="menuEdit"/>
   <addaction name="menuView"/>
   <addaction name="menuTikz"/>
+  <addaction name="menuHelp"/>
  </widget>
  <resources/>
  <connections/>

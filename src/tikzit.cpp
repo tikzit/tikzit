@@ -106,7 +106,19 @@ void Tikzit::init()
     QString styleFile = settings.value("previous-tikzstyles-file").toString();
     if (!styleFile.isEmpty()) loadStyles(styleFile);
 
-    //connect(app, &QApplication::focusChanged, this, &focusChanged);
+    QVariant check = settings.value("check-for-updates");
+    if (check.isNull()) {
+        int resp = QMessageBox::question(0,
+          tr("Check for updates"),
+          tr("Would you like TikZiT to check for updates automatically?"
+             " (You can always change this later in the Help menu.)"),
+          QMessageBox::Yes | QMessageBox::Default,
+          QMessageBox::No,
+          QMessageBox::NoButton);
+        check.setValue(resp == QMessageBox::Yes);
+    }
+
+    setCheckForUpdates(check.toBool());
 }
 
 //QMenuBar *Tikzit::mainMenu() const
@@ -325,6 +337,27 @@ QString Tikzit::styleFile() const
 QString Tikzit::styleFilePath() const
 {
     return _styleFilePath;
+}
+
+void Tikzit::setCheckForUpdates(bool check)
+{
+    QSettings settings("tikzit", "tikzit");
+    settings.setValue("check-for-updates", check);
+    foreach (MainWindow *w, _windows) {
+        w->menu()->updatesAction()->blockSignals(true);
+        w->menu()->updatesAction()->setChecked(check);
+        w->menu()->updatesAction()->blockSignals(false);
+    }
+}
+
+void Tikzit::checkForUpdates()
+{
+
+}
+
+void Tikzit::updateReply(QNetworkReply *reply)
+{
+
 }
 
 //StylePalette *Tikzit::stylePalette() const
