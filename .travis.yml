@@ -1,7 +1,7 @@
 language: cpp
 
 env:
-  - DEPLOY_TIKZIT=0
+  - DEPLOY_TIKZIT=1
 
 matrix:
  include:

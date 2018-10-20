@@ -13,14 +13,30 @@ To install Qt VS Tools in Visual Studio 2017, go to `Tools > Extensions and Upda
 
 The only dependency besides Qt itself is flex/bison, which is used to build the TikZ parser. The simplest way to install this is to download <a href="https://github.com/lexxmark/winflexbison">WinFlexBison</a>, then rename or copy `win_flex.exe` and `win_bison.exe` to `flex.exe` and `bison.exe` respectively, and make sure both are in your `%PATH%` so the build tools can find them.
 
+You can alternatively build from the command line with mingw or Visual Studio, and install necessary dependencies via <a href="https://chocolatey.org">Chocolatey</a>. This setup has been tested on Windows 10 with Visual Studio 2015 and Qt 5.11.1. After installing Qt 5.11 and Visual Studio, run the following commands in a `cmd` prompt:
+
+    
+    choco install winflexbison
+    C:\Qt\5.11.1\msvc2015_64\bin\qtenv2.bat
+    call "C:\ProgramFiles (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
+    cd C:\path\to\tikzit
+    qmake
+    nmake.exe
+
+
 
 ## Building on Linux
 
-This should be buildable in Linux using a "standard" dev setup (gcc, flex, bison, make). You will also need to configure Qt (see instructions for <a href="https://wiki.qt.io/Install_Qt_5_on_openSUSE">openSUSE</a>, <a href="https://wiki.qt.io/Install_Qt_5_on_Ubuntu">Ubuntu</a> and <a href="https://wiki.archlinux.org/index.php/qt">Arch Linux</a>). After that, building is:
+This should be buildable in Linux using a "standard" dev setup (gcc, flex, bison, make) as well as Qt. It has been tested with Qt 5.9, which is packaged with Ubuntu 18.04 (Bionic Beaver). The setup on Ubuntu is:
+
+    $ sudo apt-get install flex bison qt5-default
+
+After that, building is:
 
     $ qmake
     $ make
 
+Building on other distributions should be similar. For Qt setup, you can find instructions for <a href="https://wiki.qt.io/Install_Qt_5_on_openSUSE">openSUSE</a> and <a href="https://wiki.archlinux.org/index.php/qt">Arch Linux</a> on the Qt wiki.
 
 
 ## Building on MacOS
@@ -37,6 +53,16 @@ Then, TikZiT is built just like a normal Qt project:
 
     $ qmake
     $ make
+
+
+On older systems (pre-10.11), you can build with Qt 5.6, which <a href="http://doc.qt.io/qt-5/supported-platforms-and-configurations.html">claims</a> to support Mac OS as far back as Mountain Lion. It is installable via <a href="https://www.macports.org">MacPorts</a>:
+
+    $ sudo port -N -k install qt56
+    $ export PATH=/opt/local/libexec/qt5/bin:$PATH
+
+Then, you should be able to run `qmake && make`, as above.
+
+
 
 
 ## Building Poppler with Qt bindings
