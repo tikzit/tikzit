@@ -2,7 +2,7 @@ version: '{branch}-{build}'
 
 image:
   - Visual Studio 2015
-  - Ubuntu
+  - Ubuntu1804
 
 configuration:
   - release
