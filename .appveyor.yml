@@ -1,23 +1,23 @@
 version: '{branch}-{build}'
 
-environment:
-  matrix:
-    # - QTDIR: C:\Qt\5.11.1\mingw53_32
-    # - QTDIR: C:\Qt\5.11.1\msvc2015
-    - QTDIR: C:\Qt\5.11.1\msvc2015_64
+image:
+  - Visual Studio 2015
+  - Ubuntu
 
 configuration:
   - release
 
 install:
-  - choco install winflexbison
-  - '%QTDIR%\bin\qtenv2.bat'
-  - call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
-  - cd C:\projects\tikzit
-
+  - cmd: choco install winflexbison
+  - cmd: 'C:\Qt\5.11.1\msvc2015_64\bin\qtenv2.bat'
+  - cmd: call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
+  - cmd: cd C:\projects\tikzit
+  - sh: sudo apt-get install flex bison
+  - sh: sudo apt-get install qt5-default
 
 build_script:
   - qmake -v
   - qmake
-  - nmake.exe
+  - cmd: nmake.exe
+  - sh: make
 

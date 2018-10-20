@@ -13,7 +13,7 @@ matrix:
     env:
       - FILE=tikzit-osx-mountain.dmg
       - QTVER=56
-      - DEPLOY_TIKZIT=1
+      - DEPLOY_TIKZIT=0
   # - os: linux
   #   dist: trusty
   #   env:
