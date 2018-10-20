@@ -9,21 +9,33 @@ matrix:
     compiler: clang
     env:
       - FILE=tikzit-osx.dmg
-  - os: linux
-    dist: trusty
+      - QTVER=511
+  - os: osx
+    compiler: clang
     env:
-      - FILE=tikzit-linux.tar.gz
-      - PPA=beineri/opt-qt-5.10.1-trusty
+      - FILE=tikzit-osx-mountain.dmg
+      - QTVER=56
+  # - os: linux
+  #   dist: trusty
+  #   env:
+  #     - FILE=tikzit-linux.tar.gz
+  #     - PPA=beineri/opt-qt-5.10.1-trusty
 
 before_install:
-  - '[[ "$TRAVIS_OS_NAME" != linux || -z "$PPA" ]] || sudo add-apt-repository -y ppa:$PPA'
-  - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy update'
+  # - '[[ "$TRAVIS_OS_NAME" != linux || -z "$PPA" ]] || sudo add-apt-repository -y ppa:$PPA'
+  # - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy update'
+  - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 56 ]] || curl https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci > macports-ci'
+  - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 56 ]] || source macports-ci install'
+
+
 
 install:
-  - '[[ "$TRAVIS_OS_NAME" != osx ]] || brew install qt5'
-  - '[[ "$TRAVIS_OS_NAME" != osx ]] || brew link --force qt5'
-  - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy install qt510base qt510xmlpatterns'
-  - '[[ "$TRAVIS_OS_NAME" != linux ]] || . /opt/qt510/bin/qt510-env.sh'
+  - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 511 ]] || brew install qt5'
+  - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 511 ]] || brew link --force qt5'
+  - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 56 ]] || sudo port -N -k install qt56'
+  - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 56 ]] || export PATH=/opt/local/libexec/qt5/bin:$PATH'
+  # - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy install qt510base qt510xmlpatterns'
+  # - '[[ "$TRAVIS_OS_NAME" != linux ]] || . /opt/qt510/bin/qt510-env.sh'
 
 script:
   - qmake -v

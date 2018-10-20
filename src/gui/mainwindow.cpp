@@ -70,6 +70,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(_tikzDocument->undoStack(), SIGNAL(cleanChanged(bool)), this, SLOT(updateFileName()));
     _menu->addDocks(createPopupMenu());
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+    ui->tikzSource->setTabStopDistance(20.0);
+#else
+    ui->tikzSource->setTabStopWidth(20);
+#endif
 }
 
 MainWindow::~MainWindow()
