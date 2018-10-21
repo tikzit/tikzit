@@ -25,6 +25,9 @@
 #include <QSettings>
 #include <QDebug>
 #include <QMessageBox>
+#include <QRegularExpression>
+#include <QVersionNumber>
+#include <QNetworkAccessManager>
 
 // application-level instance of Tikzit
 Tikzit *tikzit;
@@ -119,6 +122,10 @@ void Tikzit::init()
     }
 
     setCheckForUpdates(check.toBool());
+
+    if (check.toBool()) {
+        checkForUpdates();
+    }
 }
 
 //QMenuBar *Tikzit::mainMenu() const
@@ -352,12 +359,44 @@ void Tikzit::setCheckForUpdates(bool check)
 
 void Tikzit::checkForUpdates()
 {
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(updateReply(QNetworkReply*)));
 
+    manager->get(QNetworkRequest(QUrl("http://tikzit.github.io/latest-version.txt")));
 }
 
 void Tikzit::updateReply(QNetworkReply *reply)
 {
+    if (!reply->isReadable()) return;
 
+    QByteArray data = reply->read(200);
+    QString strLatest = QString::fromUtf8(data).simplified();
+    qDebug() << "got response:" << strLatest;
+
+    QVersionNumber current = QVersionNumber::fromString(TIKZIT_VERSION).normalized();
+    QVersionNumber latest = QVersionNumber::fromString(strLatest).normalized();
+
+    // check for an optional RC suffix. Any non-RC versions are considered later than RC versions.
+    QRegularExpression re("-[rR][cC]([0-9]+)$");
+    QRegularExpressionMatch m;
+    m = re.match(TIKZIT_VERSION);
+    int rcCurrent = (m.hasMatch()) ? m.captured(1).toInt() : 1000;
+    m = re.match(strLatest);
+    int rcLatest = (m.hasMatch()) ? m.captured(1).toInt() : 1000;
+
+    //qDebug() << "latest" << latest << "rc" << rcLatest;
+    //qDebug() << "current" << current << "rc" << rcCurrent;
+
+    if (latest > current || (latest == current && rcLatest > rcCurrent)) {
+        QMessageBox::information(0,
+          tr("Update available"),
+          "<p><b>A new version of TikZiT is available!</b></p>"
+          "<p><i>current version: " TIKZIT_VERSION "<br />"
+          "latest version: " + strLatest + "</i></p>"
+          "<p>Download it now from: "
+          "<a href=\"https://tikzit.github.io\">tikzit.github.io</a>.</p>");
+    }
 }
 
 //StylePalette *Tikzit::stylePalette() const

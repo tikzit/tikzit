@@ -255,10 +255,10 @@ void MainMenu::on_actionAbout_triggered()
 
 void MainMenu::on_actionCheck_for_updates_automatically_triggered()
 {
-    qDebug() << "check automatically:" << ui.actionCheck_for_updates_automatically->isChecked();
+    tikzit->setCheckForUpdates(ui.actionCheck_for_updates_automatically->isChecked());
 }
 
 void MainMenu::on_actionCheck_now_triggered()
 {
-    qDebug() << "check now";
+    tikzit->checkForUpdates();
 }

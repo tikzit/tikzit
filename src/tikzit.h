@@ -49,7 +49,7 @@
 #ifndef TIKZIT_H
 #define TIKZIT_H
 
-#define TIKZIT_VERSION "2.0-rc1"
+#define TIKZIT_VERSION "2.0-rc3"
 
 #include "mainwindow.h"
 #include "mainmenu.h"
@@ -69,7 +69,7 @@
 #include <QMainWindow>
 #include <QFont>
 #include <QColor>
-#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 // Number of pixels between (0,0) and (1,0) at 100% zoom level. This should be
 // divisible by 8 to avoid rounding errors with e.g. grid-snapping.
