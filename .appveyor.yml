@@ -1,5 +1,8 @@
 version: '{branch}-{build}'
 
+environment:
+  DEPLOY: 1
+
 image:
   - Ubuntu1804
   - Visual Studio 2015
@@ -21,3 +24,7 @@ build_script:
   - cmd: nmake.exe
   - sh: make
 
+after_build:
+  - sh: ./deploy-linux.sh
+  - sh: mv dist/tikzit.tar.gz tikzit-linux.tar.gz
+  - sh: '[[ "$DEPLOY" != 1 ]] || curl -U tikzit-linux.tar.gz https://transfer.sh/tikzit-linux.tar.gz'
