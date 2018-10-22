@@ -13,8 +13,6 @@ test {
 TARGET   = tikzit
 TEMPLATE = app
 
-PREFIX = $$(PREFIX)
-
 isEmpty(PREFIX) {
     PREFIX=/usr/local
 }
