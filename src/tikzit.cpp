@@ -372,7 +372,7 @@ void Tikzit::updateReply(QNetworkReply *reply)
 
     QByteArray data = reply->read(200);
     QString strLatest = QString::fromUtf8(data).simplified();
-    qDebug() << "got response:" << strLatest;
+    //qDebug() << "got response:" << strLatest;
 
     QVersionNumber current = QVersionNumber::fromString(TIKZIT_VERSION).normalized();
     QVersionNumber latest = QVersionNumber::fromString(strLatest).normalized();

@@ -28,3 +28,6 @@ moc_*.h
 ui_*.h
 qrc_*.cpp
 tikzit
+tikzlexer.h
+dist
+
