@@ -11,7 +11,7 @@ To build with Qt Creator, simply click 'Open Project' and navigate to the `.pro`
 
 To install Qt VS Tools in Visual Studio 2017, go to `Tools > Extensions and Updates`, then click "Online" in the sidebar and search for Qt. Configure your Qt install under `Qt VS Tools > Qt Options`. If you installed Qt using the Windows package above, the path to Qt is probably something like `C:\Qt\5.XXX\msvc2017_64`. Once that is done, open the `.pro` file in the TikZiT repo via `Qt VS Tools > Open Qt Project File`.
 
-The only dependency besides Qt itself is flex/bison, which is used to build the TikZ parser. The simplest way to install this is to download <a href="https://github.com/lexxmark/winflexbison">WinFlexBison</a>, then rename or copy `win_flex.exe` and `win_bison.exe` to `flex.exe` and `bison.exe` respectively, and make sure both are in your `%PATH%` so the build tools can find them.
+The only dependency besides Qt itself is flex/bison, which is used to build the TikZ parser. The simplest way to install this is to download <a href="https://github.com/lexxmark/winflexbison">WinFlexBison</a>, then make sure both are in your `%PATH%` so the build tools can find them.
 
 You can alternatively build from the command line with mingw or Visual Studio, and install necessary dependencies via <a href="https://chocolatey.org">Chocolatey</a>. This setup has been tested on Windows 10 with Visual Studio 2015 and Qt 5.11.1. After installing Qt 5.11 and Visual Studio, run the following commands in a `cmd` prompt:
 
@@ -21,7 +21,7 @@ You can alternatively build from the command line with mingw or Visual Studio, a
     call "C:\ProgramFiles (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
     cd C:\path\to\tikzit
     qmake
-    nmake.exe
+    nmake
 
 
 
@@ -41,7 +41,7 @@ Building on other distributions should be similar. For Qt setup, you can find in
 
 ## Building on MacOS
 
-You'll need Qt5 and poppler with Qt5 bindings. Qt5 can be installed using e.g. Homebrew, as follows:
+You'll need developer tools and Qt5 installed. The latter can be installed using e.g. Homebrew, as follows:
 
     $ brew install qt5
 
