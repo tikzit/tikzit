@@ -1,8 +1,15 @@
 version: '{branch}-{build}'
 
-image:
-  - Ubuntu1804
-  - Visual Studio 2015
+matrix:
+  allow_failures:
+    - image: Ubuntu1804
+      artifacts:
+        - path: tikzit-win.zip
+        - name: tikzit
+    - image: Visual Studio 2015
+      artifacts:
+        - path: tikzit-linux.tar.gz
+        - name: tikzit
 
 configuration:
   - release
@@ -27,10 +34,5 @@ after_build:
   - cmd: deploy-win.bat
   - cmd: move dist/tikzit.zip tikzit-win.zip
 
-artifacts:
-  - path: tikzit-win.zip
-    name: tikzit
-  - path: tikzit-linux.tar.gz
-    name: tikzit
 
 
