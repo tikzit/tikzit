@@ -7,13 +7,13 @@ matrix:
     env:
       - FILE=tikzit-osx.dmg
       - QTVER=511
-      - DEPLOY_TIKZIT=0
+      - DEPLOY_TIKZIT=1
   - os: osx
     compiler: clang
     env:
       - FILE=tikzit-osx-mountain.dmg
       - QTVER=56
-      - DEPLOY_TIKZIT=0
+      - DEPLOY_TIKZIT=1
   # - os: linux
   #   dist: trusty
   #   env:

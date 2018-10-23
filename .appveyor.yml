@@ -1,8 +1,5 @@
 version: '{branch}-{build}'
 
-environment:
-  DEPLOY: 1
-
 image:
   - Ubuntu1804
   - Visual Studio 2015
@@ -27,4 +24,15 @@ build_script:
 after_build:
   - sh: ./deploy-linux.sh
   - sh: mv dist/tikzit.tar.gz tikzit-linux.tar.gz
-  - sh: '[[ "$DEPLOY" != 1 ]] || curl -U tikzit-linux.tar.gz https://transfer.sh/tikzit-linux.tar.gz'
+  # - sh: '[[ "$DEPLOY" != 1 ]] || curl -U tikzit-linux.tar.gz https://transfer.sh/tikzit-linux.tar.gz'
+  - cmd: deploy-win.bat
+  - cmd: move dist/tikzit.zip tikzit-win.zip
+  # - cmd: 'if "%DEPLOY%" == "1" curl -U tikzit-win.zip https://transfer.sh/tikzit-win.zip'
+
+artifacts:
+  - file: tikzit-win.zip
+    name: tikzit
+  - file: tikzit-linux.tar.gz
+    name: tikzit
+
+
