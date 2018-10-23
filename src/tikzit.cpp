@@ -363,7 +363,7 @@ void Tikzit::checkForUpdates()
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(updateReply(QNetworkReply*)));
 
-    manager->get(QNetworkRequest(QUrl("https://tikzit.github.io/latest-version.txt")));
+    manager->get(QNetworkRequest(QUrl("http://tikzit.github.io/latest-version.txt")));
 }
 
 void Tikzit::updateReply(QNetworkReply *reply)
@@ -372,9 +372,6 @@ void Tikzit::updateReply(QNetworkReply *reply)
 
     QByteArray data = reply->read(200);
     QString strLatest = QString::fromUtf8(data).simplified();
-
-    QVersionNumber current = QVersionNumber::fromString(TIKZIT_VERSION).normalized();
-    QVersionNumber latest = QVersionNumber::fromString(strLatest).normalized();
 
     // check for valid version string and capture optional RC suffix
     QRegularExpression re("^[1-9]+(\\.[0-9]+)*(-[rR][cC]([0-9]+))?$");
@@ -387,12 +384,17 @@ void Tikzit::updateReply(QNetworkReply *reply)
     m = re.match(strLatest);
 
     if (m.hasMatch()) {
+        QVersionNumber current = QVersionNumber::fromString(TIKZIT_VERSION).normalized();
+        QVersionNumber latest = QVersionNumber::fromString(strLatest).normalized();
+
         int rcLatest = (!m.captured(3).isEmpty()) ? m.captured(3).toInt() : 1000;
 
-        //qDebug() << "latest" << latest << "rc" << rcLatest;
-        //qDebug() << "current" << current << "rc" << rcCurrent;
-
         if (latest > current || (latest == current && rcLatest > rcCurrent)) {
+            // give the version string in standard format
+            strLatest = QString::number(latest.majorVersion()) + "." +
+                QString::number(latest.minorVersion()) + "." +
+                QString::number(latest.microVersion());
+            if (rcLatest != 1000) strLatest += "-rc" + QString::number(rcLatest);
             QMessageBox::information(0,
               tr("Update available"),
               "<p><b>A new version of TikZiT is available!</b></p>"
