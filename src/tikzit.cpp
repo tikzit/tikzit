@@ -363,7 +363,7 @@ void Tikzit::checkForUpdates()
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(updateReply(QNetworkReply*)));
 
-    manager->get(QNetworkRequest(QUrl("http://tikzit.github.io/latest-version.txt")));
+    manager->get(QNetworkRequest(QUrl("https://tikzit.github.io/latest-version.txt")));
 }
 
 void Tikzit::updateReply(QNetworkReply *reply)
