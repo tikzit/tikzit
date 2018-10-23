@@ -1,7 +1,7 @@
 
 # TikZiT
 
-TikZiT is a graphical tool for rapidly creating graphs and diagrams using PGF/TikZ. It was used, for example, to make all of the 2500+ diagrams in <a href="http://cambridge.org/pqp">this book</a>. It is currently undergoing a port to Qt5 for better cross-platform support. As such, the code on this branch, and these instructions are a work in progress.
+TikZiT is a graphical tool for rapidly creating graphs and string diagrams using PGF/TikZ. It was used, for example, to make all of the 2500+ diagrams in <a href="http://cambridge.org/pqp">this book</a>.
 
 ## Building on Windows
 
