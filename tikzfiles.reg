@@ -1,0 +1,19 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\.tikz]
+@="tikzit"
+
+[HKEY_CLASSES_ROOT\tikzit\DefaultIcon]
+@="C:\\tikzit\\icons\\tikzdoc.ico,0"
+
+[HKEY_CLASSES_ROOT\tikzit\shell\open\command]
+@="\"C:\\tikzit\\tikzit.exe\" \"%1\""
+
+[HKEY_CLASSES_ROOT\Applications\tikzit.exe]
+"FriendlyAppName"="TikZiT"
+
+[HKEY_CLASSES_ROOT\Applications\tikzit.exe\shell\open\command]
+@="C:\\tikzit\\tikzit.exe"
+
+[HKEY_CLASSES_ROOT\Applications\tikzit.exe\SupportedTypes]
+".tikz"=""
