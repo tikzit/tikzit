@@ -70,6 +70,10 @@ cp --no-dereference $LIBDIR/libicuuc.so* lib
 cp --no-dereference $LIBDIR/libicui18n.so* lib
 cp --no-dereference $LIBDIR/libicudata.so* lib
 
+# add openssl from the build system, as this seems to create some problems if the wrong version
+cp --no-dereference $LIBDIR/libssl.so* lib
+cp --no-dereference $LIBDIR/libcrypto.so* lib
+
 # add Qt plugins used by TikZiT
 cp -R $PLUGINDIR/platforms plugins
 cp -R $PLUGINDIR/imageformats plugins
