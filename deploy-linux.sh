@@ -42,6 +42,7 @@ update-desktop-database ~/.local/share/applications
 EOF
 chmod +x install-local.sh
 
+
 cat > bin/tikzit << 'EOF'
 #!/bin/bash
 
