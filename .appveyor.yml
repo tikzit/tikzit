@@ -1,5 +1,9 @@
 version: '{branch}-{build}'
 
+branches:
+  only:
+    - master
+
 image:
   - Ubuntu1804
   - Visual Studio 2015
