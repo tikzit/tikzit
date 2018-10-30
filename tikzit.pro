@@ -75,7 +75,8 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/tikzstyles.cpp \
     src/data/style.cpp \
     src/gui/styleeditor.cpp \
-    src/data/stylelist.cpp
+    src/data/stylelist.cpp \
+    src/gui/previewwindow.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -101,13 +102,15 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/tikzstyles.h \
     src/data/style.h \
     src/gui/styleeditor.h \
-    src/data/stylelist.h
+    src/data/stylelist.h \
+    src/gui/previewwindow.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \
     src/gui/mainmenu.ui \
     src/gui/stylepalette.ui \
-    src/gui/styleeditor.ui
+    src/gui/styleeditor.ui \
+    src/gui/previewwindow.ui
 
 INCLUDEPATH += src src/gui src/data
 
