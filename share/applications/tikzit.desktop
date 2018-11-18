@@ -6,3 +6,4 @@ Icon=tikzit
 Terminal=false
 Type=Application
 MimeType=application/x-tikz-document
+Categories=Graphics;Science;
