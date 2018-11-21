@@ -190,7 +190,7 @@ void Tikzit::newTikzStyles()
 
     if (dialog.exec() && !dialog.selectedFiles().isEmpty()) {
         QString fileName = dialog.selectedFiles()[0];
-        TikzStyles *st = new TikzStyles;
+        TikzStyles *st = new TikzStyles(this);
 
         if (st->saveStyles(fileName)) {
             QFileInfo fi(fileName);
@@ -198,7 +198,7 @@ void Tikzit::newTikzStyles()
             _styleFilePath = fi.absoluteFilePath();
             settings.setValue("previous-tikzstyles-file", fileName);
             settings.setValue("previous-tikzstyles-path", fi.absolutePath());
-            delete _styles;
+            _styles->deleteLater();
             _styles = st;
 
             foreach (MainWindow *w, _windows) {
@@ -310,7 +310,7 @@ bool Tikzit::loadStyles(QString fileName)
         if (st->loadStyles(fileName)) {
             _styleFile = fi.fileName();
             _styleFilePath = fi.absoluteFilePath();
-            delete _styles;
+            _styles->deleteLater();
             _styles = st;
 
             foreach (MainWindow *w, _windows) {
