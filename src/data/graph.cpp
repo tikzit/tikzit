@@ -152,8 +152,9 @@ GraphElementData *Graph::data() const
 
 void Graph::setData(GraphElementData *data)
 {
-    delete _data;
+    GraphElementData *oldData = _data;
     _data = data;
+    oldData->deleteLater();
 }
 
 const QVector<Node*> &Graph::nodes()

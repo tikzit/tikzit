@@ -34,7 +34,6 @@ public:
     explicit GraphElementData(QVector<GraphElementProperty> init,
                               QObject *parent = 0);
     explicit GraphElementData(QObject *parent = 0);
-    ~GraphElementData();
     GraphElementData *copy();
     void setProperty(QString key, QString value);
     void unsetProperty(QString key);
@@ -78,7 +77,6 @@ public slots:
 
 private:
     QVector<GraphElementProperty> _properties;
-    GraphElementProperty *root;
 };
 
 #endif // GRAPHELEMENTDATA_H

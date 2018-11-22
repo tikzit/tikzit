@@ -23,18 +23,12 @@
 
 GraphElementData::GraphElementData(QVector<GraphElementProperty> init, QObject *parent) : QAbstractItemModel(parent)
 {
-    root = new GraphElementProperty();
     _properties = init;
 }
 
 GraphElementData::GraphElementData(QObject *parent) : QAbstractItemModel(parent) {
-    root = new GraphElementProperty();
 }
 
-GraphElementData::~GraphElementData()
-{
-    delete root;
-}
 
 GraphElementData *GraphElementData::copy()
 {

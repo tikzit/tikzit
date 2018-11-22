@@ -34,7 +34,6 @@ class TikzDocument : public QObject
     Q_OBJECT
 public:
     explicit TikzDocument(QObject *parent = 0);
-    ~TikzDocument();
 
     Graph *graph() const;
     void setGraph(Graph *graph);

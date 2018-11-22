@@ -26,7 +26,7 @@
 Edge::Edge(Node *s, Node *t, QObject *parent) :
     QObject(parent), _source(s), _target(t)
 {
-    _data = new GraphElementData();
+    _data = new GraphElementData(this);
     _edgeNode = 0;
     _dirty = true;
 
@@ -45,12 +45,6 @@ Edge::Edge(Node *s, Node *t, QObject *parent) :
     }
 	_style = noneEdgeStyle;
     updateControls();
-}
-
-Edge::~Edge()
-{
-    delete _data;
-    delete _edgeNode;
 }
 
 /*!
@@ -103,8 +97,9 @@ GraphElementData *Edge::data() const
 
 void Edge::setData(GraphElementData *data)
 {
-    delete _data;
+    GraphElementData *oldData = _data;
     _data = data;
+    oldData->deleteLater();
     setAttributesFromData();
 }
 
@@ -148,8 +143,9 @@ Node *Edge::edgeNode() const
 
 void Edge::setEdgeNode(Node *edgeNode)
 {
-    if (_edgeNode != 0) delete _edgeNode;
+    Node *oldEdgeNode = _edgeNode;
     _edgeNode = edgeNode;
+    if (oldEdgeNode != 0) oldEdgeNode->deleteLater();
 }
 
 bool Edge::hasEdgeNode()
