@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-
 /*!
   * \file main.cpp
   *
@@ -31,21 +30,17 @@
 #include <QDebug>
 #include <QScreen>
 
-// #ifdef Q_OS_WIN
-// #include <Windows.h>
-// #endif
-
 int main(int argc, char *argv[])
 {
     // #ifdef Q_OS_WIN
     //     SetProcessDPIAware();
     // #endif
-//    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    // QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     // dummy application for detecting DPI
     QApplication *a0 = new QApplication(argc, argv);
-//    qDebug() << "physical DPI" << QApplication::screens()[0]->physicalDotsPerInch();
+    // qDebug() << "physical DPI" << QApplication::screens()[0]->physicalDotsPerInch();
 
     if (QApplication::screens()[0]->physicalDotsPerInch() >= 100) {
         QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -58,14 +53,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
 
-
-
     tikzit = new Tikzit();
     tikzit->init();
 
     qDebug() << a.arguments().length();
 
-	
     if (a.arguments().length() > 1) {
         tikzit->open(a.arguments()[1]);
     }
