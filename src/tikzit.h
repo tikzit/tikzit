@@ -80,6 +80,7 @@
 #define GRID_SEP 10
 #define GRID_SEPF 10.0f
 
+
 inline QPointF toScreen(QPointF src)
 { src.setY(-src.y()); src *= GLOBAL_SCALEF; return src; }
 

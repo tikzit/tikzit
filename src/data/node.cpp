@@ -23,15 +23,11 @@
 
 Node::Node(QObject *parent) : QObject(parent), _tikzLine(-1)
 {
-    _data = new GraphElementData();
+    _data = new GraphElementData(this);
     _style = noneStyle;
     _data->setProperty("style", "none");
 }
 
-Node::~Node()
-{
-    delete _data;
-}
 
 Node *Node::copy() {
     Node *n1 = new Node();
@@ -81,8 +77,9 @@ GraphElementData *Node::data() const
 
 void Node::setData(GraphElementData *data)
 {
-    delete _data;
+    GraphElementData *oldData = _data;
     _data = data;
+    oldData->deleteLater();
 }
 
 QString Node::styleName() const

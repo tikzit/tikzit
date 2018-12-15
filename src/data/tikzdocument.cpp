@@ -34,14 +34,8 @@ TikzDocument::TikzDocument(QObject *parent) : QObject(parent)
     _parseSuccess = true;
     _fileName = "";
     _shortName = "";
-    _undoStack = new QUndoStack();
+    _undoStack = new QUndoStack(this);
     _undoStack->setClean();
-}
-
-TikzDocument::~TikzDocument()
-{
-    delete _graph;
-    delete _undoStack;
 }
 
 QUndoStack *TikzDocument::undoStack() const
@@ -79,11 +73,12 @@ void TikzDocument::open(QString fileName)
     _tikz = in.readAll();
     file.close();
 
+    Graph *oldGraph = _graph;
     Graph *newGraph = new Graph(this);
     TikzAssembler ass(newGraph);
     if (ass.parse(_tikz)) {
-        delete _graph;
         _graph = newGraph;
+        oldGraph->deleteLater();
         foreach (Node *n, _graph->nodes()) n->attachStyle();
         foreach (Edge *e, _graph->edges()) {
             e->attachStyle();
@@ -93,7 +88,7 @@ void TikzDocument::open(QString fileName)
         refreshTikz();
         setClean();
     } else {
-        delete newGraph;
+        newGraph->deleteLater();
         _parseSuccess = false;
     }
 }

@@ -4,6 +4,7 @@ tex/sample/sample.pdf
 *.sublime-*
 src-old
 GeneratedFiles
+build
 .vs
 debug
 release
