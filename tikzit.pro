@@ -110,6 +110,8 @@ FORMS += src/gui/mainwindow.ui \
 
 INCLUDEPATH += src src/gui src/data
 
+LIBS += -lpoppler-qt5
+
 DISTFILES +=
 
 RESOURCES += tikzit.qrc
