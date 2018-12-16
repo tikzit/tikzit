@@ -19,6 +19,7 @@
 #include "tikzit.h"
 #include "tikzassembler.h"
 #include "tikzstyles.h"
+#include "previewwindow.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -126,6 +127,9 @@ void Tikzit::init()
     if (check.toBool()) {
         checkForUpdates();
     }
+
+    PreviewWindow *preview = new PreviewWindow();
+    preview->show();
 }
 
 //QMenuBar *Tikzit::mainMenu() const

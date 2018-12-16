@@ -10,6 +10,11 @@ find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Network)
 find_package(BISON)
 find_package(FLEX)
 
+# use extra-cmake-modules to find poppler library
+find_package(ECM REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_FIND_MODULE_DIR})
+find_package(Poppler REQUIRED COMPONENTS Core Qt5)
+
 include_directories(
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/src
@@ -38,6 +43,7 @@ set(SOURCES
     src/gui/mainmenu.cpp
     src/gui/mainwindow.cpp
     src/gui/nodeitem.cpp
+    src/gui/previewwindow.cpp
     src/gui/propertypalette.cpp
     src/gui/styleeditor.cpp
     src/gui/stylepalette.cpp
@@ -67,6 +73,7 @@ set(HEADERS
     src/gui/mainmenu.h
     src/gui/mainwindow.h
     src/gui/nodeitem.h
+    src/gui/previewwindow.h
     src/gui/propertypalette.h
     src/gui/styleeditor.h
     src/gui/stylepalette.h
@@ -81,6 +88,7 @@ set(HEADERS
 set(FORMS
     src/gui/mainmenu.ui
     src/gui/mainwindow.ui
+    src/gui/previewwindow.ui
     src/gui/propertypalette.ui
     src/gui/styleeditor.ui
     src/gui/stylepalette.ui
@@ -99,4 +107,6 @@ add_executable(tikzit
     ${BISON_PARSER_OUTPUTS}
     ${QT_RESOURCES})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network)
+target_link_libraries(${PROJECT_NAME}
+    Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network
+    ${Poppler_LIBRARIES})
