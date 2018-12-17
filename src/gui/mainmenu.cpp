@@ -228,6 +228,11 @@ void MainMenu::on_actionJump_to_Selection_triggered()
     }
 }
 
+void MainMenu::on_actionRun_LaTeX_triggered()
+{
+    tikzit->makePreview();
+}
+
 
 // View
 void MainMenu::on_actionZoom_In_triggered()

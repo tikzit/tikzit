@@ -8,6 +8,7 @@
         <file>images/refresh.svg</file>
         <file>images/tikzit.png</file>
         <file>images/text-x-generic_with_pencil.svg</file>
+        <file>tex/sample/tikzit.sty</file>
     </qresource>
     <qresource prefix="/qt/etc">
         <file>qt.conf</file>

@@ -72,7 +72,8 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/style.cpp \
     src/gui/styleeditor.cpp \
     src/data/stylelist.cpp \
-    src/gui/previewwindow.cpp
+    src/gui/previewwindow.cpp \
+    src/gui/latexprocess.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -99,7 +100,8 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/style.h \
     src/gui/styleeditor.h \
     src/data/stylelist.h \
-    src/gui/previewwindow.h
+    src/gui/previewwindow.h \
+    src/gui/latexprocess.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \

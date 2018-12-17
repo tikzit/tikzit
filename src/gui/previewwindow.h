@@ -2,6 +2,7 @@
 #define PREVIEWWINDOW_H
 
 #include <QDialog>
+#include <QPlainTextEdit>
 #include <poppler/qt5/poppler-qt5.h>
 
 namespace Ui {
@@ -15,6 +16,11 @@ class PreviewWindow : public QDialog
 public:
     explicit PreviewWindow(QWidget *parent = nullptr);
     ~PreviewWindow();
+    void setPdf(QString file);
+    QString preparePreview(QString tikz);
+    QPlainTextEdit *outputTextEdit();
+
+protected:
     void resizeEvent(QResizeEvent *e);
     void showEvent(QShowEvent *e);
     void closeEvent(QCloseEvent *e);

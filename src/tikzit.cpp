@@ -20,6 +20,7 @@
 #include "tikzassembler.h"
 #include "tikzstyles.h"
 #include "previewwindow.h"
+#include "latexprocess.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -29,6 +30,7 @@
 #include <QRegularExpression>
 #include <QVersionNumber>
 #include <QNetworkAccessManager>
+
 
 // application-level instance of Tikzit
 Tikzit *tikzit;
@@ -107,6 +109,8 @@ void Tikzit::init()
     _windows << new MainWindow();
     _windows[0]->show();
 
+    _styleFile = "";
+    _styleFilePath = "";
     QString styleFile = settings.value("previous-tikzstyles-file").toString();
     if (!styleFile.isEmpty()) loadStyles(styleFile);
 
@@ -128,8 +132,8 @@ void Tikzit::init()
         checkForUpdates();
     }
 
-    PreviewWindow *preview = new PreviewWindow();
-    preview->show();
+    _preview = new PreviewWindow();
+    _latex = nullptr;
 }
 
 //QMenuBar *Tikzit::mainMenu() const
@@ -412,6 +416,31 @@ void Tikzit::updateReply(QNetworkReply *reply)
               tr("Invalid response"),
               "<p>Got invalid version response from "
               "<a href=\"https://tikzit.github.io\">tikzit.github.io</a>.</p>");
+    }
+}
+
+void Tikzit::makePreview()
+{
+    if (activeWindow()) {
+        LatexProcess *oldProc = _latex;
+        _latex = new LatexProcess(_preview, this);
+        if (oldProc != nullptr) {
+            oldProc->kill();
+            oldProc->deleteLater();
+        }
+
+        connect(_latex, SIGNAL(previewFinished()), this, SLOT(cleanupLatex()));
+        _latex->makePreview(activeWindow()->tikzSource());
+        _preview->show();
+    }
+}
+
+void Tikzit::cleanupLatex()
+{
+    LatexProcess *oldProc = _latex;
+    _latex = nullptr;
+    if (oldProc != nullptr) {
+        oldProc->deleteLater();
     }
 }
 

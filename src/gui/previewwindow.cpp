@@ -1,12 +1,18 @@
 #include "previewwindow.h"
 #include "ui_previewwindow.h"
 
+#include "tikzit.h"
+#include "latexprocess.h"
+
 #include <QLabel>
 #include <QImage>
 #include <QPixmap>
 #include <QDebug>
-#include <QRegion>
 #include <QSettings>
+#include <QTemporaryDir>
+#include <QFile>
+#include <QTextStream>
+#include <QStandardPaths>
 #include <cmath>
 
 PreviewWindow::PreviewWindow(QWidget *parent) :
@@ -22,11 +28,11 @@ PreviewWindow::PreviewWindow(QWidget *parent) :
         restoreGeometry(geom.toByteArray());
     }
 
-    _doc = Poppler::Document::load("/home/aleks/ak-algebras.pdf");
-    _doc->setRenderHint(Poppler::Document::Antialiasing);
-    _doc->setRenderHint(Poppler::Document::TextAntialiasing);
-    _doc->setRenderHint(Poppler::Document::TextHinting	);
-    _page = _doc->page(0);
+    _doc = nullptr;
+    _page = nullptr;
+    //setPdf("/home/aleks/ak-algebras.pdf");
+
+    //qDebug() << "preview dir:" << preparePreview("foo");
     
     render();
 }
@@ -36,9 +42,28 @@ PreviewWindow::~PreviewWindow()
     delete ui;
 }
 
+void PreviewWindow::setPdf(QString file)
+{
+    Poppler::Document *oldDoc = _doc;
+    _doc = Poppler::Document::load(file);
+    _doc->setRenderHint(Poppler::Document::Antialiasing);
+    _doc->setRenderHint(Poppler::Document::TextAntialiasing);
+    _doc->setRenderHint(Poppler::Document::TextHinting	);
+    _page = _doc->page(0);
+    render();
+
+    if (oldDoc != nullptr) delete oldDoc;
+}
+
+QPlainTextEdit *PreviewWindow::outputTextEdit()
+{
+    return ui->output;
+}
+
 void PreviewWindow::closeEvent(QCloseEvent *e) {
     QSettings settings("tikzit", "tikzit");
     settings.setValue("geometry-preview", saveGeometry());
+    QDialog::closeEvent(e);
 }
 
 void PreviewWindow::resizeEvent(QResizeEvent *e) {
@@ -52,6 +77,8 @@ void PreviewWindow::showEvent(QShowEvent *e) {
 }
 
 void PreviewWindow::render() {
+    if (_page == nullptr) return;
+
     QSizeF size = _page->pageSizeF();
 
     QRect rect = ui->scrollArea->visibleRegion().boundingRect();

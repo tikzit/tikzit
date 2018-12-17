@@ -60,6 +60,8 @@
 #include "propertypalette.h"
 #include "stylepalette.h"
 #include "tikzstyles.h"
+#include "latexprocess.h"
+#include "previewwindow.h"
 
 #include <QObject>
 #include <QVector>
@@ -137,6 +139,8 @@ public slots:
     void setCheckForUpdates(bool check);
     void checkForUpdates();
     void updateReply(QNetworkReply *reply);
+    void makePreview();
+    void cleanupLatex();
 
 private:
     //    void createMenu();
@@ -153,6 +157,8 @@ private:
     StyleEditor *_styleEditor;
     QStringList _colNames;
     QVector<QColor> _cols;
+    LatexProcess *_latex;
+    PreviewWindow *_preview;
 };
 
 extern Tikzit *tikzit;
