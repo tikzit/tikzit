@@ -13,6 +13,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStandardPaths>
+#include <QMessageBox>
 #include <cmath>
 
 PreviewWindow::PreviewWindow(QWidget *parent) :
@@ -45,7 +46,15 @@ PreviewWindow::~PreviewWindow()
 void PreviewWindow::setPdf(QString file)
 {
     Poppler::Document *oldDoc = _doc;
-    _doc = Poppler::Document::load(file);
+    Poppler::Document *newDoc = Poppler::Document::load(file);
+    if (!newDoc) {
+        QMessageBox::warning(nullptr,
+            "Could not read PDF",
+            "Could not read: '" + file + "'.");
+        return;
+    }
+
+    _doc = newDoc;
     _doc->setRenderHint(Poppler::Document::Antialiasing);
     _doc->setRenderHint(Poppler::Document::TextAntialiasing);
     _doc->setRenderHint(Poppler::Document::TextHinting	);
@@ -82,8 +91,8 @@ void PreviewWindow::render() {
     QSizeF size = _page->pageSizeF();
 
     QRect rect = ui->scrollArea->visibleRegion().boundingRect();
-    int w = rect.width();
-    int h = rect.height();
+    int w = rect.width() - 20;
+    int h = rect.height() - 20;
     qreal scale = fmin(static_cast<qreal>(w) / size.width(),
                        static_cast<qreal>(h) / size.height());
     int dpi = static_cast<int>(scale * 72.0);

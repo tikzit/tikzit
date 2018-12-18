@@ -18,7 +18,7 @@ LatexProcess::LatexProcess(PreviewWindow *preview, QObject *parent) : QObject(pa
     connect(_proc, SIGNAL(finished(int)), this, SLOT(finished(int)));
 
     // for debug purposes
-    _workingDir.setAutoRemove(false);
+    // _workingDir.setAutoRemove(false);
 }
 
 void LatexProcess::makePreview(QString tikz)
@@ -57,9 +57,9 @@ void LatexProcess::makePreview(QString tikz)
     f.open(QIODevice::WriteOnly);
     QTextStream tex(&f);
     tex << "\\documentclass{article}\n";
-    tex << "\\usepackage[active,tightpage]{preview}\n";
-    tex << "\\PreviewEnvironment{tikzpicture}\n";
     tex << "\\usepackage{tikzit}\n";
+    tex << "\\usepackage[graphics,active,tightpage]{preview}\n";
+    tex << "\\PreviewEnvironment{tikzpicture}\n";
     tex << "\\input{" + tikzit->styleFile() + "}\n";
     tex << "\\begin{document}\n\n";
     tex << tikz;
@@ -89,7 +89,7 @@ void LatexProcess::finished(int exitCode)
     if (exitCode == 0) {
         QString pdf = _workingDir.path() + "/preview.pdf";
         _output->appendPlainText("\n\nSUCCESSFULLY GENERATED: " + pdf + "\n");
-        //_preview->setPdf(pdf);
+        _preview->setPdf(pdf);
         emit previewFinished();
     } else {
         _output->appendPlainText("\n\npdflatex RETURNED AN ERROR\n");
