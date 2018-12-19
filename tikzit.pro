@@ -110,9 +110,13 @@ FORMS += src/gui/mainwindow.ui \
     src/gui/styleeditor.ui \
     src/gui/previewwindow.ui
 
-INCLUDEPATH += src src/gui src/data extra
+INCLUDEPATH += src src/gui src/data
 
-LIBS += -L"$$PWD/extra" -lpoppler-qt5
+# link to pre-compiled poppler libs on windows
+win32:INCLUDEPATH += win32-deps/include
+win32:LIBS += -L"$$PWD/win32-deps/bin"
+
+LIBS += -lpoppler-qt5
 
 DISTFILES +=
 
