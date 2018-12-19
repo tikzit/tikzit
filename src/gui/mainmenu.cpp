@@ -265,5 +265,5 @@ void MainMenu::on_actionCheck_for_updates_automatically_triggered()
 
 void MainMenu::on_actionCheck_now_triggered()
 {
-    tikzit->checkForUpdates();
+    tikzit->checkForUpdates(true);
 }

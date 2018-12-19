@@ -110,9 +110,9 @@ FORMS += src/gui/mainwindow.ui \
     src/gui/styleeditor.ui \
     src/gui/previewwindow.ui
 
-INCLUDEPATH += src src/gui src/data
+INCLUDEPATH += src src/gui src/data extra
 
-LIBS += -lpoppler-qt5
+LIBS += -L"$$PWD/extra" -lpoppler-qt5
 
 DISTFILES +=
 

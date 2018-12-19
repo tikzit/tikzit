@@ -106,6 +106,6 @@ void PreviewWindow::render() {
     // qDebug() << "scale:" << scale;
     // qDebug() << "dpi:" << dpi;
 
-    QImage img = _page->renderToImage(dpi,dpi, (w1 - w)/2,  (h1 - h)/2, w, h);
+    QImage img = _page->renderToImage(dpi, dpi, (w1 - w)/2,  (h1 - h)/2, w, h);
     ui->pdf->setPixmap(QPixmap::fromImage(img));
 }

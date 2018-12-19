@@ -137,8 +137,10 @@ public:
 
 public slots:
     void setCheckForUpdates(bool check);
-    void checkForUpdates();
-    void updateReply(QNetworkReply *reply);
+    void checkForUpdates(bool manual);
+    void updateAuto(QNetworkReply *reply);
+    void updateManual(QNetworkReply *reply);
+    void updateReply(QNetworkReply *reply, bool manual);
     void makePreview();
     void cleanupLatex();
 
