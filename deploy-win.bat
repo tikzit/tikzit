@@ -7,7 +7,7 @@ mkdir icons
 copy ..\..\tikzfiles.reg .
 copy ..\..\release\tikzit.exe .
 copy ..\..\images\tikzdoc.ico icons\
-copy ..\..\win32-dist\*.dll .
+copy ..\..\win32-deps\bin\*.dll .
 copy C:\OpenSSL-Win32\bin\libeay32.dll .
 copy C:\OpenSSL-Win32\bin\ssleay32.dll .
 
