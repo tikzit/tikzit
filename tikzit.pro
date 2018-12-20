@@ -113,8 +113,10 @@ FORMS += src/gui/mainwindow.ui \
 INCLUDEPATH += src src/gui src/data
 
 # link to pre-compiled poppler libs on windows
-win32:INCLUDEPATH += win32-deps/include
-win32:LIBS += -L"$$PWD/win32-deps/bin"
+win32 {
+    INCLUDEPATH += win32-deps/include
+    LIBS += -L"$$PWD/win32-deps/bin"
+}    
 
 LIBS += -lpoppler-qt5
 
