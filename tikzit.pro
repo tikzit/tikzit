@@ -71,7 +71,9 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/tikzstyles.cpp \
     src/data/style.cpp \
     src/gui/styleeditor.cpp \
-    src/data/stylelist.cpp
+    src/data/stylelist.cpp \
+    src/gui/previewwindow.cpp \
+    src/gui/latexprocess.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -97,15 +99,26 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/tikzstyles.h \
     src/data/style.h \
     src/gui/styleeditor.h \
-    src/data/stylelist.h
+    src/data/stylelist.h \
+    src/gui/previewwindow.h \
+    src/gui/latexprocess.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \
     src/gui/mainmenu.ui \
     src/gui/stylepalette.ui \
-    src/gui/styleeditor.ui
+    src/gui/styleeditor.ui \
+    src/gui/previewwindow.ui
 
 INCLUDEPATH += src src/gui src/data
+
+# link to pre-compiled poppler libs on windows
+win32 {
+    INCLUDEPATH += win32-deps/include
+    LIBS += -L"$$PWD/win32-deps/bin"
+}    
+
+LIBS += -lpoppler-qt5
 
 DISTFILES +=
 

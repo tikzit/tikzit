@@ -19,6 +19,8 @@
 #include "tikzit.h"
 #include "tikzassembler.h"
 #include "tikzstyles.h"
+#include "previewwindow.h"
+#include "latexprocess.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -28,6 +30,7 @@
 #include <QRegularExpression>
 #include <QVersionNumber>
 #include <QNetworkAccessManager>
+
 
 // application-level instance of Tikzit
 Tikzit *tikzit;
@@ -106,6 +109,8 @@ void Tikzit::init()
     _windows << new MainWindow();
     _windows[0]->show();
 
+    _styleFile = "";
+    _styleFilePath = "";
     QString styleFile = settings.value("previous-tikzstyles-file").toString();
     if (!styleFile.isEmpty()) loadStyles(styleFile);
 
@@ -124,8 +129,11 @@ void Tikzit::init()
     setCheckForUpdates(check.toBool());
 
     if (check.toBool()) {
-        checkForUpdates();
+        checkForUpdates(false);
     }
+
+    _preview = new PreviewWindow();
+    _latex = nullptr;
 }
 
 //QMenuBar *Tikzit::mainMenu() const
@@ -357,16 +365,32 @@ void Tikzit::setCheckForUpdates(bool check)
     }
 }
 
-void Tikzit::checkForUpdates()
+void Tikzit::checkForUpdates(bool manual)
 {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(updateReply(QNetworkReply*)));
+
+    if (manual) {
+        connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(updateManual(QNetworkReply*)));
+    } else {
+        connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(updateAuto(QNetworkReply*)));
+    }
 
     manager->get(QNetworkRequest(QUrl("https://tikzit.github.io/latest-version.txt")));
 }
 
-void Tikzit::updateReply(QNetworkReply *reply)
+void Tikzit::updateAuto(QNetworkReply *reply)
+{
+    updateReply(reply, false);
+}
+
+void Tikzit::updateManual(QNetworkReply *reply)
+{
+    updateReply(reply, true);
+}
+
+void Tikzit::updateReply(QNetworkReply *reply, bool manual)
 {
     if (!reply->isReadable()) return;
 
@@ -395,7 +419,7 @@ void Tikzit::updateReply(QNetworkReply *reply)
                 QString::number(latest.minorVersion()) + "." +
                 QString::number(latest.microVersion());
             if (rcLatest != 1000) strLatest += "-rc" + QString::number(rcLatest);
-            QMessageBox::information(0,
+            QMessageBox::information(nullptr,
               tr("Update available"),
               "<p><b>A new version of TikZiT is available!</b></p>"
               "<p><i>current version: " TIKZIT_VERSION "<br />"
@@ -404,10 +428,38 @@ void Tikzit::updateReply(QNetworkReply *reply)
               "<a href=\"https://tikzit.github.io\">tikzit.github.io</a>.</p>");
         }
     } else {
-        QMessageBox::warning(0,
+        // don't complain of invalid response for auto update check
+        if (manual) {
+            QMessageBox::warning(nullptr,
               tr("Invalid response"),
               "<p>Got invalid version response from "
               "<a href=\"https://tikzit.github.io\">tikzit.github.io</a>.</p>");
+        }
+    }
+}
+
+void Tikzit::makePreview()
+{
+    if (activeWindow()) {
+        LatexProcess *oldProc = _latex;
+        _latex = new LatexProcess(_preview, this);
+        if (oldProc != nullptr) {
+            oldProc->kill();
+            oldProc->deleteLater();
+        }
+
+        connect(_latex, SIGNAL(previewFinished()), this, SLOT(cleanupLatex()));
+        _latex->makePreview(activeWindow()->tikzSource());
+        _preview->show();
+    }
+}
+
+void Tikzit::cleanupLatex()
+{
+    LatexProcess *oldProc = _latex;
+    _latex = nullptr;
+    if (oldProc != nullptr) {
+        oldProc->deleteLater();
     }
 }
 

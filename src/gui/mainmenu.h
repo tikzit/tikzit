@@ -67,6 +67,7 @@ public slots:
     void on_actionParse_triggered();
     void on_actionRevert_triggered();
     void on_actionJump_to_Selection_triggered();
+    void on_actionRun_LaTeX_triggered();
 
     // View
     void on_actionZoom_In_triggered();

@@ -74,6 +74,7 @@
    <addaction name="actionParse"/>
    <addaction name="actionRevert"/>
    <addaction name="actionJump_to_Selection"/>
+   <addaction name="actionRun_LaTeX"/>
   </widget>
   <widget class="QMenu" name="menuView">
    <property name="title">
@@ -333,6 +334,14 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionRun_LaTeX">
+   <property name="text">
+    <string>Run LaTeX</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
   <addaction name="menuFile"/>

@@ -228,6 +228,11 @@ void MainMenu::on_actionJump_to_Selection_triggered()
     }
 }
 
+void MainMenu::on_actionRun_LaTeX_triggered()
+{
+    tikzit->makePreview();
+}
+
 
 // View
 void MainMenu::on_actionZoom_In_triggered()
@@ -260,5 +265,5 @@ void MainMenu::on_actionCheck_for_updates_automatically_triggered()
 
 void MainMenu::on_actionCheck_now_triggered()
 {
-    tikzit->checkForUpdates();
+    tikzit->checkForUpdates(true);
 }

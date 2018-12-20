@@ -13,11 +13,14 @@ configuration:
 
 install:
   - cmd: choco install winflexbison
-  - cmd: 'C:\Qt\5.11.2\msvc2015_64\bin\qtenv2.bat'
-  - cmd: call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
+  - cmd: 'C:\Qt\5.11.2\mingw53_32\bin\qtenv2.bat'
   - cmd: cd C:\projects\tikzit
   - sh: sudo apt-get update
-  - sh: sudo apt-get -y install flex bison qt5-default
+  - sh: sudo apt-get -y install flex bison qt5-default poppler
+
+before_build:
+  - ps: (new-object net.webclient).DownloadFile('http://tikzit.github.io/download/win32-deps.zip', 'c:\projects\tikzit\win32-deps.zip')
+  - cmd: 7z x win32-deps.zip
 
 build_script:
   - qmake -v
