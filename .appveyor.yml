@@ -16,7 +16,7 @@ install:
   - cmd: 'C:\Qt\5.11.2\mingw53_32\bin\qtenv2.bat'
   - cmd: cd C:\projects\tikzit
   - sh: sudo apt-get update
-  - sh: sudo apt-get -y install flex bison qt5-default poppler
+  - sh: sudo apt-get -y install flex bison qt5-default libpoppler-dev libpoppler-qt5-1
 
 before_build:
   - ps: (new-object net.webclient).DownloadFile('http://tikzit.github.io/download/win32-deps.zip', 'c:\projects\tikzit\win32-deps.zip')
@@ -25,7 +25,7 @@ before_build:
 build_script:
   - qmake -v
   - qmake
-  - cmd: nmake.exe
+  - cmd: mingw32-make
   - sh: make
 
 after_build:

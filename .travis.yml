@@ -12,12 +12,12 @@ matrix:
       - FILE=tikzit-osx.dmg
       - QTVER=511
       - DEPLOY_TIKZIT=1
-  - os: osx
-    compiler: clang
-    env:
-      - FILE=tikzit-osx-mountain.dmg
-      - QTVER=56
-      - DEPLOY_TIKZIT=1
+  # - os: osx
+  #   compiler: clang
+  #   env:
+  #     - FILE=tikzit-osx-mountain.dmg
+  #     - QTVER=56
+  #     - DEPLOY_TIKZIT=1
 
 before_install:
   # - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 56 ]] || curl https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci > macports-ci'
