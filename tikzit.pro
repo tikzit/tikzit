@@ -116,7 +116,12 @@ INCLUDEPATH += src src/gui src/data
 win32 {
     INCLUDEPATH += win32-deps/include
     LIBS += -L"$$PWD/win32-deps/bin"
-}    
+}
+
+macx {
+    INCLUDEPATH += /usr/local/opt/poppler/include
+    LIBS += -L/usr/local/opt/poppler/lib
+}   
 
 LIBS += -lpoppler-qt5
 
