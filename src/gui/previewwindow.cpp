@@ -15,6 +15,7 @@
 #include <QStandardPaths>
 #include <QMessageBox>
 #include <cmath>
+#include <QMovie>
 
 PreviewWindow::PreviewWindow(QWidget *parent) :
     QDialog(parent),
@@ -31,10 +32,15 @@ PreviewWindow::PreviewWindow(QWidget *parent) :
 
     _doc = nullptr;
     _page = nullptr;
-    //setPdf("/home/aleks/ak-algebras.pdf");
 
-    //qDebug() << "preview dir:" << preparePreview("foo");
+    _loader = new QLabel(this);
+    _loader->setMinimumSize(QSize(16,16));
+    _loader->setMaximumSize(QSize(16,16));
+    ui->tabWidget->tabBar()->setTabButton(1, QTabBar::RightSide, _loader);
     
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)),
+            this, SLOT(render()));
+
     render();
 }
 
@@ -74,6 +80,37 @@ void PreviewWindow::setPdf(QString file)
 QPlainTextEdit *PreviewWindow::outputTextEdit()
 {
     return ui->output;
+}
+
+void PreviewWindow::setStatus(PreviewWindow::Status status)
+{
+    QMovie *oldMovie = _loader->movie();
+    if (status == PreviewWindow::Running) {
+        // loader.gif and loader@2x.gif derived from:
+        //   https://commons.wikimedia.org/wiki/Throbbers#/media/File:Linux_Ubuntu_Loader.gif
+        // licensed GNU Free Documentation License v1.2
+        QMovie *movie = new QMovie(
+                    (devicePixelRatioF() > 1.0) ? ":images/loader@2x.gif" : ":images/loader.gif",
+                    QByteArray(), _loader);
+        _loader->setPixmap(QPixmap());
+        _loader->setMovie(movie);
+        movie->start();
+    } else if (status == PreviewWindow::Success) {
+        _loader->setMovie(nullptr);
+        QPixmap accept(":images/dialog-accept.svg");
+        accept.setDevicePixelRatio(devicePixelRatio());
+        _loader->setPixmap(accept);
+    } else if (status == PreviewWindow::Failed) {
+        _loader->setMovie(nullptr);
+        QPixmap error(":images/dialog-error.svg");
+        error.setDevicePixelRatio(devicePixelRatio());
+        _loader->setPixmap(error);
+    }
+
+    if (oldMovie != nullptr) oldMovie->deleteLater();
+
+
+    _loader->repaint();
 }
 
 void PreviewWindow::closeEvent(QCloseEvent *e) {

@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QStandardPaths>
 #include <QTemporaryDir>
+#include <QStringList>
 
 LatexProcess::LatexProcess(PreviewWindow *preview, QObject *parent) : QObject(parent)
 {
@@ -23,6 +24,7 @@ LatexProcess::LatexProcess(PreviewWindow *preview, QObject *parent) : QObject(pa
 
 void LatexProcess::makePreview(QString tikz)
 {
+    _preview->setStatus(PreviewWindow::Running);
     _output->clear();
 
     if (!_workingDir.isValid()) {
@@ -38,8 +40,28 @@ void LatexProcess::makePreview(QString tikz)
 
     QString pdflatex = QStandardPaths::findExecutable("pdflatex");
     if (pdflatex.isEmpty()) {
-        _output->appendPlainText("pdflatex NOT FOUND, ABORTING.\n");
-        return;
+        // if pdflatex is not in PATH, we are probably on mac or windows, so try common
+        // install directories.
+        _output->appendPlainText("NOT FOUND IN PATH, TRYING:");
+
+        QStringList texDirs;
+        // common macOS tex directories:
+        texDirs << "/Library/TeX/texbin";
+        texDirs << "/usr/texbin";
+        texDirs << "/usr/local/bin";
+        texDirs << "/sw/bin";
+
+        // common windows tex directories
+        texDirs << "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin";
+        texDirs << "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64";
+
+        _output->appendPlainText(texDirs.join(":"));
+        pdflatex = QStandardPaths::findExecutable("pdflatex", texDirs);
+
+        if (pdflatex.isEmpty()) {
+            _output->appendPlainText("pdflatex NOT FOUND, ABORTING.\n");
+            return;
+        }
     }
 
     _output->appendPlainText("FOUND: " + pdflatex + "\n");
@@ -66,7 +88,7 @@ void LatexProcess::makePreview(QString tikz)
     tex << "\n\n\\end{document}\n";
 
     f.close();
-    _proc->start(pdflatex, QStringList() << "preview.tex");
+    _proc->start(pdflatex, QStringList() << "-interaction=nonstopmode" << "preview.tex");
 
 }
 
@@ -90,9 +112,11 @@ void LatexProcess::finished(int exitCode)
         QString pdf = _workingDir.path() + "/preview.pdf";
         _output->appendPlainText("\n\nSUCCESSFULLY GENERATED: " + pdf + "\n");
         _preview->setPdf(pdf);
+        _preview->setStatus(PreviewWindow::Success);
         emit previewFinished();
     } else {
         _output->appendPlainText("\n\npdflatex RETURNED AN ERROR\n");
+        _preview->setStatus(PreviewWindow::Failed);
         emit previewFinished();
     }
 }

@@ -9,6 +9,10 @@
         <file>images/tikzit.png</file>
         <file>images/text-x-generic_with_pencil.svg</file>
         <file>tex/sample/tikzit.sty</file>
+        <file>images/loader.gif</file>
+        <file>images/loader@2x.gif</file>
+        <file>images/dialog-accept.svg</file>
+        <file>images/dialog-error.svg</file>
     </qresource>
     <qresource prefix="/qt/etc">
         <file>qt.conf</file>

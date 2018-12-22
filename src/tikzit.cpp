@@ -31,14 +31,13 @@
 #include <QVersionNumber>
 #include <QNetworkAccessManager>
 
-
 // application-level instance of Tikzit
 Tikzit *tikzit;
 
 // font to use for node labels
 QFont Tikzit::LABEL_FONT("Courrier", 9);
 
-Tikzit::Tikzit() : _styleFile("[no styles]"), _activeWindow(0)
+Tikzit::Tikzit() : _styleFile("[no styles]"), _activeWindow(nullptr)
 {
 }
 
@@ -116,7 +115,7 @@ void Tikzit::init()
 
     QVariant check = settings.value("check-for-updates");
     if (check.isNull()) {
-        int resp = QMessageBox::question(0,
+        int resp = QMessageBox::question(nullptr,
           tr("Check for updates"),
           tr("Would you like TikZiT to check for updates automatically?"
              " (You can always change this later in the Help menu.)"),
@@ -213,7 +212,7 @@ void Tikzit::newTikzStyles()
                 w->tikzScene()->reloadStyles();
             }
         } else {
-            QMessageBox::warning(0,
+            QMessageBox::warning(nullptr,
                 "Could not write to style file.",
                 "Could not write to: '" + fileName + "'. Check file permissions or choose a new location.");
         }
@@ -252,7 +251,7 @@ void Tikzit::removeWindow(MainWindow *w)
     _windows.removeAll(w);
     if (_activeWindow == w) {
         if (_windows.isEmpty()) {
-            _activeWindow = 0;
+            _activeWindow = nullptr;
             // TODO: check if we should quit when last window closed
             quit();
         } else _activeWindow = _windows[0];
@@ -262,7 +261,7 @@ void Tikzit::removeWindow(MainWindow *w)
 void Tikzit::open()
 {
     QSettings settings("tikzit", "tikzit");
-    QString fileName = QFileDialog::getOpenFileName(0,
+    QString fileName = QFileDialog::getOpenFileName(nullptr,
                 tr("Open File"),
                 settings.value("previous-file-path").toString(),
                 tr("TiKZ Files (*.tikz)"),
@@ -293,7 +292,7 @@ void Tikzit::open(QString fileName)
 
 void Tikzit::openTikzStyles() {
     QSettings settings("tikzit", "tikzit");
-    QString fileName = QFileDialog::getOpenFileName(0,
+    QString fileName = QFileDialog::getOpenFileName(nullptr,
                 tr("Open File"),
                 settings.value("previous-tikzstyles-path").toString(),
                 tr("TiKZ Style Files (*.tikzstyles)"),
@@ -326,7 +325,7 @@ bool Tikzit::loadStyles(QString fileName)
             }
             return true;
         } else {
-            QMessageBox::warning(0,
+            QMessageBox::warning(nullptr,
                 "Bad style file.",
                 "Bad style file: '" + fileName + "'. Check the file is properly formatted and try to load it again.");
             return false;
@@ -334,7 +333,8 @@ bool Tikzit::loadStyles(QString fileName)
 
     } else {
         //settings.setValue("previous-tikzstyles-file", "");
-        QMessageBox::warning(0, "Style file not found.", "Could not open style file: '" + fileName + "'.");
+        QMessageBox::warning(nullptr,
+            "Style file not found.", "Could not open style file: '" + fileName + "'.");
         return false;
     }
 }
