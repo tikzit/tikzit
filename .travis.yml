@@ -36,7 +36,7 @@ script:
   - qmake -v
   - qmake -r
   - make
-  - '[[ "$TRAVIS_OS_NAME" != osx ]] || (macdeployqt tikzit.app -dmg && mv tikzit.dmg $FILE)'
+  - '[[ "$TRAVIS_OS_NAME" != osx ]] || (chmod +x deploy-osx.sh && ./deploy-osx.sh && mv tikzit.dmg $FILE)'
   - '[[ "$DEPLOY_TIKZIT" != 1 ]] || curl --upload-file $FILE https://transfer.sh/$FILE'
 
 notifications:
