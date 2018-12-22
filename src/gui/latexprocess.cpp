@@ -60,6 +60,7 @@ void LatexProcess::makePreview(QString tikz)
 
         if (pdflatex.isEmpty()) {
             _output->appendPlainText("pdflatex NOT FOUND, ABORTING.\n");
+            _preview->setStatus(PreviewWindow::Failed);
             return;
         }
     }
