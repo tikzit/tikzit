@@ -52,6 +52,8 @@ public:
     bool isClean() const;
     void setClean();
 
+    QString fileName() const;
+
 private:
     Graph *_graph;
     QString _tikz;
@@ -59,6 +61,7 @@ private:
     QString _shortName;
     QUndoStack *_undoStack;
     bool _parseSuccess;
+    void addToRecentFiles();
 
 signals:
 

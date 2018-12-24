@@ -276,16 +276,28 @@ void Tikzit::open(QString fileName)
 	if (!fileName.isEmpty()) {
 		if (_windows.size() == 1 &&
 			_windows[0]->tikzDocument()->isClean() &&
-			_windows[0]->tikzDocument()->shortName().isEmpty())
-		{
+            _windows[0]->tikzDocument()->shortName().isEmpty())
+        {
 			_windows[0]->open(fileName);
 			_windows[0]->show();
-		}
-		else {
-			MainWindow *w = new MainWindow();
-			w->show();
-			w->open(fileName);
-			_windows << w;
+        }
+        else
+        {
+            bool found = false;
+            foreach (MainWindow *w, _windows) {
+                if (w->tikzDocument()->fileName() == fileName) {
+                    w->raise();
+                    w->activateWindow();
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                MainWindow *w = new MainWindow();
+                _windows << w;
+                w->show();
+                w->open(fileName);
+            }
 		}
 	}
 }
@@ -352,6 +364,20 @@ QString Tikzit::styleFile() const
 QString Tikzit::styleFilePath() const
 {
     return _styleFilePath;
+}
+
+void Tikzit::updateRecentFiles()
+{
+    foreach (MainWindow *w, _windows) {
+        w->menu()->updateRecentFiles();
+    }
+}
+
+void Tikzit::clearRecentFiles()
+{
+    QSettings settings("tikzit", "tikzit");
+    settings.setValue("recent-files", QStringList());
+    updateRecentFiles();
 }
 
 void Tikzit::setCheckForUpdates(bool check)

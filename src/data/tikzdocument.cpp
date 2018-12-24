@@ -69,6 +69,8 @@ void TikzDocument::open(QString fileName)
         return;
     }
 
+    addToRecentFiles();
+
     QTextStream in(&file);
     _tikz = in.readAll();
     file.close();
@@ -98,10 +100,10 @@ bool TikzDocument::save() {
         return saveAs();
     } else {
         MainWindow *win = tikzit->activeWindow();
-        if (win != 0 && !win->tikzScene()->enabled()) {
+        if (win != nullptr && !win->tikzScene()->enabled()) {
             win->tikzScene()->parseTikz(win->tikzSource());
             if (!win->tikzScene()->enabled()) {
-                auto resp = QMessageBox::question(0,
+                auto resp = QMessageBox::question(nullptr,
                   tr("Tikz failed to parse"),
                   tr("Cannot save file with invalid TiKZ source. Revert changes and save?"));
                 if (resp == QMessageBox::Yes) win->tikzScene()->setEnabled(true);
@@ -123,7 +125,8 @@ bool TikzDocument::save() {
             setClean();
             return true;
         } else {
-            QMessageBox::warning(0, "Save Failed", "Could not open file: '" + _fileName + "' for writing.");
+            QMessageBox::warning(nullptr,
+                "Save Failed", "Could not open file: '" + _fileName + "' for writing.");
         }
     }
 
@@ -140,6 +143,29 @@ void TikzDocument::setClean()
     _undoStack->setClean();
 }
 
+QString TikzDocument::fileName() const
+{
+    return _fileName;
+}
+
+void TikzDocument::addToRecentFiles()
+{
+    QSettings settings("tikzit", "tikzit");
+    if (!_fileName.isEmpty()) {
+        QStringList recentFiles = settings.value("recent-files").toStringList();
+
+        // if the file is in the list already, shift it to the top. Otherwise, add it.
+        recentFiles.removeAll(_fileName);
+        recentFiles.prepend(_fileName);
+
+        // keep max 10 files
+        while (recentFiles.size() > 10) recentFiles.removeLast();
+
+        settings.setValue("recent-files", recentFiles);
+        tikzit->updateRecentFiles();
+    }
+}
+
 void TikzDocument::setGraph(Graph *graph)
 {
     _graph = graph;
@@ -148,10 +174,10 @@ void TikzDocument::setGraph(Graph *graph)
 
 bool TikzDocument::saveAs() {
     MainWindow *win = tikzit->activeWindow();
-    if (win != 0 && !win->tikzScene()->enabled()) {
+    if (win != nullptr && !win->tikzScene()->enabled()) {
         win->tikzScene()->parseTikz(win->tikzSource());
         if (!win->tikzScene()->enabled()) {
-            auto resp = QMessageBox::question(0,
+            auto resp = QMessageBox::question(nullptr,
               tr("Tikz failed to parse"),
               tr("Cannot save file with invalid TiKZ source. Revert changes and save?"));
             if (resp == QMessageBox::Yes) win->tikzScene()->setEnabled(true);
@@ -170,19 +196,13 @@ bool TikzDocument::saveAs() {
     dialog.setDirectory(settings.value("previous-file-path").toString());
     dialog.setOption(QFileDialog::DontUseNativeDialog);
 
-//    QString fileName = QFileDialog::getSaveFileName(tikzit->activeWindow(),
-//                tr("Save File As"),
-//                settings.value("previous-file-path").toString(),
-//                tr("TiKZ Files (*.tikz)"),
-//                nullptr,
-//                QFileDialog::DontUseNativeDialog);
-
     if (dialog.exec() && !dialog.selectedFiles().isEmpty()) {
         QString fileName = dialog.selectedFiles()[0];
         _fileName = fileName;
         if (save()) {
             // clean state might not change, so update title bar manually
             tikzit->activeWindow()->updateFileName();
+            addToRecentFiles();
             return true;
         }
     }

@@ -134,8 +134,10 @@ public:
     //StylePalette *stylePalette() const;
 
     QString styleFilePath() const;
+    void updateRecentFiles();
 
 public slots:
+    void clearRecentFiles();
     void setCheckForUpdates(bool check);
     void checkForUpdates(bool manual);
     void updateAuto(QNetworkReply *reply);

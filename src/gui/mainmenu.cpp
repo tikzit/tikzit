@@ -33,6 +33,8 @@ MainMenu::MainMenu()
         ui.actionCheck_for_updates_automatically->setChecked(settings.value("check-for-updates").toBool());
         ui.actionCheck_for_updates_automatically->blockSignals(false);
     }
+
+    updateRecentFiles();
 }
 
 void MainMenu::addDocks(QMenu *m)
@@ -46,6 +48,32 @@ void MainMenu::addDocks(QMenu *m)
 QAction *MainMenu::updatesAction()
 {
     return ui.actionCheck_for_updates_automatically;
+}
+
+void MainMenu::updateRecentFiles()
+{
+    QSettings settings("tikzit", "tikzit");
+    ui.menuOpen_Recent->clear();
+
+    QStringList recentFiles = settings.value("recent-files").toStringList();
+    //qDebug() << "update:" << recentFiles;
+
+    QAction *action;
+    foreach (QString f, recentFiles) {
+        QFileInfo fi(f);
+        action = new QAction(fi.fileName(), ui.menuOpen_Recent);
+        action->setData(f);
+        ui.menuOpen_Recent->addAction(action);
+        connect(action, SIGNAL(triggered()),
+                this, SLOT(openRecent()));
+    }
+
+    ui.menuOpen_Recent->addSeparator();
+    action = new QAction("Clear List", ui.menuOpen_Recent);
+    connect(action, SIGNAL(triggered()),
+            tikzit, SLOT(clearRecentFiles()));
+    ui.menuOpen_Recent->addAction(action);
+    ui.menuOpen_Recent->repaint();
 }
 
 // File
@@ -80,6 +108,15 @@ void MainMenu::on_actionSave_As_triggered()
 void MainMenu::on_actionExit_triggered()
 {
     tikzit->quit();
+}
+
+void MainMenu::openRecent()
+{
+    if (sender() != nullptr) {
+        if (QAction *action = dynamic_cast<QAction*>(sender())) {
+            tikzit->open(action->data().toString());
+        }
+    }
 }
 
 

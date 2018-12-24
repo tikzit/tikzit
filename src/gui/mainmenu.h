@@ -30,6 +30,7 @@ public:
     MainMenu();
     void addDocks(QMenu *m);
     QAction *updatesAction();
+    void updateRecentFiles();
 
 private:
     Ui::MainMenu ui;
@@ -42,6 +43,8 @@ public slots:
     void on_actionSave_triggered();
     void on_actionSave_As_triggered();
     void on_actionExit_triggered();
+
+    void openRecent();
 
     // Edit
     void on_actionUndo_triggered();
