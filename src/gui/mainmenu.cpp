@@ -73,7 +73,6 @@ void MainMenu::updateRecentFiles()
     connect(action, SIGNAL(triggered()),
             tikzit, SLOT(clearRecentFiles()));
     ui.menuOpen_Recent->addAction(action);
-    ui.menuOpen_Recent->repaint();
 }
 
 // File
