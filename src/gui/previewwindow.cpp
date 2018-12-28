@@ -98,12 +98,12 @@ void PreviewWindow::setStatus(PreviewWindow::Status status)
     } else if (status == PreviewWindow::Success) {
         _loader->setMovie(nullptr);
         QPixmap accept(":images/dialog-accept.svg");
-        accept.setDevicePixelRatio(devicePixelRatio());
+        accept.setDevicePixelRatio(3.0);
         _loader->setPixmap(accept);
     } else if (status == PreviewWindow::Failed) {
         _loader->setMovie(nullptr);
         QPixmap error(":images/dialog-error.svg");
-        error.setDevicePixelRatio(devicePixelRatio());
+        error.setDevicePixelRatio(3.0);
         _loader->setPixmap(error);
     }
 
