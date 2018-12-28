@@ -97,14 +97,14 @@ void PreviewWindow::setStatus(PreviewWindow::Status status)
         movie->start();
     } else if (status == PreviewWindow::Success) {
         _loader->setMovie(nullptr);
-        QPixmap accept(":images/dialog-accept.svg");
-        accept.setDevicePixelRatio(3.0);
-        _loader->setPixmap(accept);
+        QIcon accept(":images/dialog-accept.svg");
+        //accept.setDevicePixelRatio(devicePixelRatio());
+        _loader->setPixmap(accept.pixmap(QSize(16,16)));
     } else if (status == PreviewWindow::Failed) {
         _loader->setMovie(nullptr);
-        QPixmap error(":images/dialog-error.svg");
-        error.setDevicePixelRatio(3.0);
-        _loader->setPixmap(error);
+        QIcon error(":images/dialog-error.svg");
+        //error.setDevicePixelRatio(devicePixelRatio());
+        _loader->setPixmap(error.pixmap(QSize(16,16)));
     }
 
     if (oldMovie != nullptr) oldMovie->deleteLater();
