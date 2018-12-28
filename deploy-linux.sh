@@ -65,15 +65,24 @@ cp --no-dereference $LIBDIR/libQt5Svg.so* lib
 cp --no-dereference $LIBDIR/libQt5Network.so* lib
 cp --no-dereference $LIBDIR/libQt5Gui.so* lib
 cp --no-dereference $LIBDIR/libQt5XcbQpa.so* lib
+cp --no-dereference $LIBDIR/libQt5Xml.so* lib
 
 # add libicu, which is required by Qt5 for unicode support
 cp --no-dereference $LIBDIR/libicuuc.so* lib
 cp --no-dereference $LIBDIR/libicui18n.so* lib
 cp --no-dereference $LIBDIR/libicudata.so* lib
 
+# add a couple of libraries which are not installed by default on Ubuntu
+cp --no-dereference $LIBDIR/libdouble-conversion.so* lib
+cp --no-dereference $LIBDIR/libxcb-xinerama.so* lib
+
 # add openssl from the build system, as this seems to create some problems if the wrong version
 cp --no-dereference $LIBDIR/libssl.so* lib
 cp --no-dereference $LIBDIR/libcrypto.so* lib
+
+# add poppler libs
+cp --no-dereference $LIBDIR/libpoppler.so* lib
+cp --no-dereference $LIBDIR/libpoppler-qt5.so* lib
 
 # add Qt plugins used by TikZiT
 cp -R $PLUGINDIR/platforms plugins
