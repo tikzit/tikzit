@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Export Image</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
@@ -54,17 +54,17 @@
       <widget class="QComboBox" name="fileFormat">
        <item>
         <property name="text">
-         <string>Portable Network Graphics (PNG)</string>
+         <string>Portable Network Graphics (*.png)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Jpeg Image (JPG)</string>
+         <string>Jpeg Image (*.jpg)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Original (PDF)</string>
+         <string>Original (*.pdf)</string>
         </property>
        </item>
       </widget>

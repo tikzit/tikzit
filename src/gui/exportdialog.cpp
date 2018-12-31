@@ -3,6 +3,9 @@
 
 #include "tikzit.h"
 
+#include <QFileDialog>
+#include <QSettings>
+
 ExportDialog::ExportDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ExportDialog)
@@ -70,11 +73,44 @@ void ExportDialog::on_keepAspect_stateChanged(int state)
 
 void ExportDialog::on_browseButton_clicked()
 {
+    QSettings settings("tikzit", "tikzit");
 
+    QString suffix;
+    switch (ui->fileFormat->currentIndex()) {
+        case PNG: suffix = "png"; break;
+        case JPG: suffix = "jpg"; break;
+        case PDF: suffix = "pdf"; break;
+    }
+
+    QFileDialog dialog;
+    dialog.setDefaultSuffix(suffix);
+    dialog.setWindowTitle(tr("Export File Path"));
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setNameFilter(ui->fileFormat->currentText());
+    dialog.setFileMode(QFileDialog::AnyFile);
+    if (!settings.value("previous-export-file-path").isNull())
+        dialog.setDirectory(settings.value("previous-export-file-path").toString());
+    dialog.setOption(QFileDialog::DontUseNativeDialog);
+
+    if (dialog.exec()) {
+        ui->filePath->setText(QDir::toNativeSeparators(dialog.selectedFiles()[0]));
+    }
 }
 
 void ExportDialog::on_fileFormat_currentIndexChanged(int f)
 {
     ui->width->setEnabled(f != PDF);
     ui->height->setEnabled(f != PDF);
+
+    QString path = ui->filePath->text();
+    if (!path.isEmpty()) {
+        QRegularExpression re("\\.[^.]*$");
+        switch (f) {
+            case PNG: path.replace(re, ".png"); break;
+            case JPG: path.replace(re, ".jpg"); break;
+            case PDF: path.replace(re, ".pdf"); break;
+        }
+
+        ui->filePath->setText(path);
+    }
 }
