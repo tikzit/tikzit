@@ -1,6 +1,6 @@
 # CONFIG += debug
 
-QT += core gui widgets network
+QT += core gui widgets network svg
 
 test {
     CONFIG += testcase
@@ -73,7 +73,9 @@ SOURCES += src/gui/mainwindow.cpp \
     src/gui/styleeditor.cpp \
     src/data/stylelist.cpp \
     src/gui/previewwindow.cpp \
-    src/gui/latexprocess.cpp
+    src/gui/latexprocess.cpp \
+    src/data/pdfdocument.cpp \
+    src/gui/exportdialog.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -101,14 +103,17 @@ HEADERS  += src/gui/mainwindow.h \
     src/gui/styleeditor.h \
     src/data/stylelist.h \
     src/gui/previewwindow.h \
-    src/gui/latexprocess.h
+    src/gui/latexprocess.h \
+    src/data/pdfdocument.h \
+    src/gui/exportdialog.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \
     src/gui/mainmenu.ui \
     src/gui/stylepalette.ui \
     src/gui/styleeditor.ui \
-    src/gui/previewwindow.ui
+    src/gui/previewwindow.ui \
+    src/gui/exportdialog.ui
 
 INCLUDEPATH += src src/gui src/data
 

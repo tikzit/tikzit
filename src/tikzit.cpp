@@ -489,6 +489,11 @@ void Tikzit::cleanupLatex()
     }
 }
 
+PreviewWindow *Tikzit::previewWindow() const
+{
+    return _preview;
+}
+
 //StylePalette *Tikzit::stylePalette() const
 //{
 //    return _stylePalette;

@@ -19,7 +19,7 @@ LatexProcess::LatexProcess(PreviewWindow *preview, QObject *parent) : QObject(pa
     connect(_proc, SIGNAL(finished(int)), this, SLOT(finished(int)));
 
     // for debug purposes
-    // _workingDir.setAutoRemove(false);
+    _workingDir.setAutoRemove(false);
 }
 
 void LatexProcess::makePreview(QString tikz)

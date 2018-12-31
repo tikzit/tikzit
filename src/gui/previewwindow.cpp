@@ -3,6 +3,7 @@
 
 #include "tikzit.h"
 #include "latexprocess.h"
+#include "exportdialog.h"
 
 #include <QLabel>
 #include <QImage>
@@ -16,6 +17,7 @@
 #include <QMessageBox>
 #include <cmath>
 #include <QMovie>
+#include <QAction>
 
 PreviewWindow::PreviewWindow(QWidget *parent) :
     QDialog(parent),
@@ -31,7 +33,6 @@ PreviewWindow::PreviewWindow(QWidget *parent) :
     }
 
     _doc = nullptr;
-    _page = nullptr;
 
     _loader = new QLabel(ui->tabWidget->tabBar());
     _loader->setMinimumSize(QSize(16,16));
@@ -44,6 +45,27 @@ PreviewWindow::PreviewWindow(QWidget *parent) :
     render();
 }
 
+void PreviewWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu menu(this);
+    QAction *act;
+
+    act = new QAction("Export Image...");
+    connect(act, SIGNAL(triggered()), this, SLOT(exportImage()));
+    menu.addAction(act);
+
+    act = new QAction("Copy to Clipboard");
+    connect(act, SIGNAL(triggered()), this, SLOT(copyImageToClipboard()));
+    menu.addAction(act);
+
+    menu.exec(event->globalPos());
+}
+
+PdfDocument *PreviewWindow::doc() const
+{
+    return _doc;
+}
+
 PreviewWindow::~PreviewWindow()
 {
     delete ui;
@@ -51,30 +73,24 @@ PreviewWindow::~PreviewWindow()
 
 void PreviewWindow::setPdf(QString file)
 {
-    Poppler::Document *oldDoc = _doc;
-
     // use loadFromData to avoid holding a lock on the PDF file in windows
-    QFile f(file);
-    f.open(QFile::ReadOnly);
-    QByteArray data = f.readAll();
-    f.close();
-    Poppler::Document *newDoc = Poppler::Document::loadFromData(data);
+    //QFile f(file);
+    //f.open(QFile::ReadOnly);
+    //QByteArray data = f.readAll();
+    //f.close();
+    PdfDocument *newDoc = new PdfDocument(file, this);
 
-    if (!newDoc) {
+    if (newDoc->isValid()) {
+        PdfDocument *oldDoc = _doc;
+        _doc = newDoc;
+        if (oldDoc != nullptr) delete oldDoc;
+        render();
+    } else {
         QMessageBox::warning(nullptr,
             "Could not read PDF",
             "Could not read: '" + file + "'.");
-        return;
+        delete newDoc;
     }
-
-    _doc = newDoc;
-    _doc->setRenderHint(Poppler::Document::Antialiasing);
-    _doc->setRenderHint(Poppler::Document::TextAntialiasing);
-    _doc->setRenderHint(Poppler::Document::TextHinting	);
-    _page = _doc->page(0);
-    render();
-
-    if (oldDoc != nullptr) delete oldDoc;
 }
 
 QPlainTextEdit *PreviewWindow::outputTextEdit()
@@ -130,30 +146,28 @@ void PreviewWindow::showEvent(QShowEvent *e) {
 }
 
 void PreviewWindow::render() {
-    if (_page == nullptr) return;
-
-    QSizeF size = _page->pageSizeF();
-
-    qreal ratio = devicePixelRatioF();
-    QRect rect = ui->scrollArea->visibleRegion().boundingRect();
-    int w = static_cast<int>(ratio * (rect.width() - 20));
-    int h = static_cast<int>(ratio * (rect.height() - 20));
-    qreal scale = fmin(static_cast<qreal>(w) / size.width(),
-                       static_cast<qreal>(h) / size.height());
-
-
-    int dpi = static_cast<int>(scale * 72.0);
-    int w1 = static_cast<int>(scale * size.width());
-    int h1 = static_cast<int>(scale * size.height());
-
-    // qDebug() << "visible width:" << w;
-    // qDebug() << "visible height:" << h;
-    // qDebug() << "doc width:" << size.width();
-    // qDebug() << "doc height:" << size.height();
-    // qDebug() << "scale:" << scale;
-    // qDebug() << "dpi:" << dpi;
-
-    QPixmap pm = QPixmap::fromImage(_page->renderToImage(dpi, dpi, (w1 - w)/2,  (h1 - h)/2, w, h));
-    pm.setDevicePixelRatio(ratio);
-    ui->pdf->setPixmap(pm);
+    if (_doc != nullptr) {
+        _doc->renderTo(ui->pdf,
+                       ui->scrollArea->visibleRegion().boundingRect());
+        ui->pdf->repaint();
+    }
 }
+
+void PreviewWindow::exportImage()
+{
+    if (_doc == nullptr) return;
+    ExportDialog *d = new ExportDialog(this);
+    int ret = d->exec();
+    if (ret == QDialog::Accepted) {
+        qDebug() << "save accepted";
+    }
+}
+
+void PreviewWindow::copyImageToClipboard()
+{
+    if (_doc != nullptr) {
+        _doc->copyImageToClipboard(_doc->size() * 4);
+    }
+}
+
+

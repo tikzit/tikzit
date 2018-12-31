@@ -1,10 +1,12 @@
 #ifndef PREVIEWWINDOW_H
 #define PREVIEWWINDOW_H
 
+#include "pdfdocument.h"
 
 #include <QDialog>
 #include <QLabel>
 #include <QPlainTextEdit>
+#include <QContextMenuEvent>
 #include <poppler/qt5/poppler-qt5.h>
 
 namespace Ui {
@@ -20,24 +22,27 @@ public:
         Running, Success, Failed
     };
     explicit PreviewWindow(QWidget *parent = nullptr);
-    ~PreviewWindow();
+    ~PreviewWindow() override;
     void setPdf(QString file);
     QString preparePreview(QString tikz);
     QPlainTextEdit *outputTextEdit();
     void setStatus(Status status);
 
+    PdfDocument *doc() const;
+
 public slots:
     void render();
+    void exportImage();
+    void copyImageToClipboard();
 
 protected:
-    void resizeEvent(QResizeEvent *e);
-    void showEvent(QShowEvent *e);
-    void closeEvent(QCloseEvent *e);
-
+    void resizeEvent(QResizeEvent *e) override;
+    void showEvent(QShowEvent *e) override;
+    void closeEvent(QCloseEvent *e) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
 private:
     Ui::PreviewWindow *ui;
-    Poppler::Document *_doc;
-    Poppler::Page *_page;
+    PdfDocument *_doc;
     QLabel *_loader;
 };
 

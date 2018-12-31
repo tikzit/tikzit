@@ -136,6 +136,8 @@ public:
     QString styleFilePath() const;
     void updateRecentFiles();
 
+    PreviewWindow *previewWindow() const;
+
 public slots:
     void clearRecentFiles();
     void setCheckForUpdates(bool check);
