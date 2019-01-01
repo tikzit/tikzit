@@ -37,6 +37,7 @@ PreviewWindow::PreviewWindow(QWidget *parent) :
     _loader = new QLabel(ui->tabWidget->tabBar());
     _loader->setMinimumSize(QSize(16,16));
     _loader->setMaximumSize(QSize(16,16));
+    _loader->setAutoFillBackground(false);
     ui->tabWidget->tabBar()->setTabButton(1, QTabBar::RightSide, _loader);
     
     connect(ui->tabWidget, SIGNAL(currentChanged(int)),

@@ -2,6 +2,8 @@
 
 QT += core gui widgets network svg
 
+VERSION = 2.1
+
 test {
     CONFIG += testcase
 }
@@ -24,6 +26,8 @@ win32:RC_ICONS += images/tikzit.ico
 win32:RC_ICONS += images/tikzdoc.ico
 macx:ICON = images/tikzit.icns
 # linux-g++:QMAKE_CXXFLAGS += -Wsuggest-override
+
+QMAKE_INFO_PLIST = Info.plist
 
 # Qt 5.8 and above drop support for Mountain Lion
 contains(QT_VERSION, ^5\\.[5-7].*) {
