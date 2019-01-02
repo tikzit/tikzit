@@ -4,6 +4,7 @@
 
 #include "tikzit.h"
 #include "styleeditor.h"
+#include "delimitedstringvalidator.h"
 #include "ui_styleeditor.h"
 
 StyleEditor::StyleEditor(QWidget *parent) :
@@ -17,6 +18,9 @@ StyleEditor::StyleEditor(QWidget *parent) :
         ui->shape << ui->hasTikzitShape << ui->tikzitShape <<
         ui->leftArrow << ui->rightArrow <<
         ui->properties;
+
+    DelimitedStringValidator *v = new DelimitedStringValidator(this);
+    ui->name->setValidator(v);
 
     setWindowIcon(QIcon(":/images/tikzit.png"));
     _styles = nullptr;
