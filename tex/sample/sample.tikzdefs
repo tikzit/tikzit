@@ -1,0 +1,6 @@
+% Optional: use this file for definitions that should be used by TikZiT  to generate
+% LaTeX preview. It can also be included in the paper.
+
+\usepackage{bm}
+
+\newcommand{\anglevec}[1]{\ensuremath{\vec{\bm{#1}}}}

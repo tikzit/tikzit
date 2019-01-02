@@ -67,11 +67,6 @@ void LatexProcess::makePreview(QString tikz)
 
     _output->appendPlainText("FOUND: " + pdflatex + "\n");
 
-    // copy active *.tikzstyles file to preview dir
-    if (!tikzit->styleFile().isEmpty() && QFile::exists(tikzit->styleFilePath())) {
-        QFile::copy(tikzit->styleFilePath(), _workingDir.path() + "/" + tikzit->styleFile());
-    }
-
     // copy tikzit.sty to preview dir
     QFile::copy(":/tex/sample/tikzit.sty", _workingDir.path() + "/tikzit.sty");
 
@@ -83,7 +78,22 @@ void LatexProcess::makePreview(QString tikz)
     tex << "\\usepackage{tikzit}\n";
     tex << "\\usepackage[graphics,active,tightpage]{preview}\n";
     tex << "\\PreviewEnvironment{tikzpicture}\n";
-    tex << "\\input{" + tikzit->styleFile() + "}\n";
+
+    // copy active *.tikzstyles file to preview dir
+    if (!tikzit->styleFile().isEmpty() && QFile::exists(tikzit->styleFilePath())) {
+        QFile::copy(tikzit->styleFilePath(), _workingDir.path() + "/" + tikzit->styleFile());
+        tex << "\\input{" + tikzit->styleFile() + "}\n";
+
+        // if there is a *.tikzdefs file with the same basename, copy and include it as well
+        QFileInfo fi(tikzit->styleFilePath());
+        QString defFile = fi.baseName() + ".tikzdefs";
+        QString defFilePath = fi.absolutePath() + "/" + defFile;
+        if (QFile::exists(defFilePath)) {
+            QFile::copy(defFilePath, _workingDir.path() + "/" + defFile);
+            tex << "\\input{" + defFile + "}\n";
+        }
+    }
+
     tex << "\\begin{document}\n\n";
     tex << tikz;
     tex << "\n\n\\end{document}\n";

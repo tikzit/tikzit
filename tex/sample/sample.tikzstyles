@@ -4,9 +4,9 @@
 % \tikzstyle{NAME}=[PROPERTY LIST]
 
 % Node styles
-\tikzstyle{red node}=[fill=red, tikzit category=nodes]
-\tikzstyle{blue node}=[fill=blue]
-\tikzstyle{blue node 2}=[tikzit fill=green, fill=blue]
+\tikzstyle{red node}=[fill=red, tikzit category=nodes, shape=circle, draw=black]
+\tikzstyle{blue node}=[fill=blue, shape=circle, draw=black]
+\tikzstyle{blue node 2}=[tikzit fill=green, fill=blue, shape=circle, draw=black]
 \tikzstyle{yellow square}=[draw=black, fill=yellow, shape=rectangle]
 
 % Edge styles

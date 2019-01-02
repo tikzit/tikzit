@@ -3,7 +3,7 @@
 		\node [style=red node] (0) at (0, 1) {};
 		\node [style=blue node 2] (1) at (1, 0) {};
 		\node [style=blue node] (2) at (-1, 0) {};
-		\node [style=yellow square] (3) at (0, -1) {foo};
+		\node [style=yellow square] (3) at (0, -1) {\anglevec{\alpha}};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}
 		\draw [in=-90, out=0] (3) to (1);
