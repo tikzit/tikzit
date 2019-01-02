@@ -99,7 +99,11 @@ void LatexProcess::makePreview(QString tikz)
     tex << "\n\n\\end{document}\n";
 
     f.close();
-    _proc->start(pdflatex, QStringList() << "-interaction=nonstopmode" << "preview.tex");
+    _proc->start(pdflatex,
+                 QStringList()
+                 << "-interaction=nonstopmode"
+                 << "-halt-on-error"
+                 << "preview.tex");
 
 }
 
