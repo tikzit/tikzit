@@ -279,6 +279,7 @@ Graph *Graph::copyOfSubgraphWithNodes(QSet<Node *> nds)
 {
     Graph *g = new Graph();
     g->setData(_data->copy());
+    g->data()->setAtom("tikzfig");
     QMap<Node*,Node*> nodeTable;
     foreach (Node *n, nodes()) {
         if (nds.contains(n)) {

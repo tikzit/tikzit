@@ -1,4 +1,4 @@
-\begin{tikzpicture}
+\begin{tikzpicture}[tikzfig]
 	\begin{pgfonlayer}{nodelayer}
 		\node [style=red node] (0) at (0, 1) {};
 		\node [style=blue node 2] (1) at (1, 0) {};
@@ -6,9 +6,9 @@
 		\node [style=yellow square] (3) at (0, -1) {foo};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}
-		\draw [in=-90, out=0] (3.center) to (1.center);
-		\draw [bend right=45, looseness=1.25] (3.center) to (2.center);
-		\draw (2.center) to (0.center);
-		\draw (0.center) to (1.center);
+		\draw [in=-90, out=0] (3) to (1);
+		\draw [bend right] (3) to (2);
+		\draw (2) to (0);
+		\draw (0) to (1);
 	\end{pgfonlayer}
 \end{tikzpicture}
