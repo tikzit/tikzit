@@ -16,6 +16,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*!
+ * A list of GraphElementProperty objects, which convenience methods
+ * for lookup, deletion, re-ordering, etc. It inherits QAbstractItemModel
+ * so it can be used as the model for a QTreeView in the StyleEditor.
+ */
+
 #ifndef GRAPHELEMENTDATA_H
 #define GRAPHELEMENTDATA_H
 

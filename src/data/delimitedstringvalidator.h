@@ -19,6 +19,10 @@
 /*!
   * A string validator which keeps curly braces matched. Used in various places
   * to ensure the user doesn't make non-parseable .tikz or .tikzstyles files.
+  *
+  * Its validation function will return Acceptable if all curly braces are matched
+  * properly, Intermediate if all braces are matched except for possibly some opening
+  * curly braces, and Invalid if there are unmatched closing curly braces.
   */
 
 #ifndef DELIMITEDSTRINGVALIDATOR_H
@@ -34,8 +38,18 @@ class DelimitedStringValidator : public QValidator
 public:
     DelimitedStringValidator(QObject *parent);
     QValidator::State validate(QString &input, int &/*pos*/) const override;
+
+    /*!
+     * \brief fixup adds curly braces until all braces are matched (if possible)
+     * \param input
+     */
     void fixup(QString &input) const override;
 private:
+    /*!
+     * \brief braceDepth computes the final (non-escaped) curly-brace depth of a given string
+     * \param input a string
+     * \return the final brace depth, or -1 if the depth *ever* drops below 0
+     */
     int braceDepth(QString input) const;
 };
 

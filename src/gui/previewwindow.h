@@ -16,6 +16,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*!
+ * Displays a LaTeX-generated PDF preview using Poppler. The right-click
+ * menu has options for exporting to file or clipboard.
+ */
+
 #ifndef PREVIEWWINDOW_H
 #define PREVIEWWINDOW_H
 

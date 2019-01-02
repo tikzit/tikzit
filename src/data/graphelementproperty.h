@@ -16,6 +16,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*!
+ * A class which holds either a single key/value pair (i.e. a proper property)
+ * or simply a key with no value (i.e. an atom).
+ */
+
 #ifndef GRAPHELEMENTPROPERTY_H
 #define GRAPHELEMENTPROPERTY_H
 
@@ -26,13 +31,19 @@ class GraphElementProperty
 public:
     GraphElementProperty();
 
-    // full constructor
     GraphElementProperty(QString key, QString value, bool atom);
 
-    // construct a proper property
+    /*!
+     * \brief GraphElementProperty constructs a proper property with the given key/value
+     * \param key
+     * \param value
+     */
     GraphElementProperty(QString key, QString value);
 
-    // construct an atom
+    /*!
+     * \brief GraphElementProperty constructs an atom with the given key
+     * \param key
+     */
     GraphElementProperty(QString key);
 
     QString key() const;
@@ -40,9 +51,29 @@ public:
     QString value() const;
     void setValue(const QString &value);
     bool atom() const;
+
+    /*!
+     * \brief operator == returns true for atoms if the keys match and for properties
+     * if the keys and values match. Note a property is never equal to an atom.
+     * \param p
+     * \return
+     */
     bool operator==(const GraphElementProperty &p);
 
+    /*!
+     * \brief tikzEscape prepares a property key or value for export to tikz code. If
+     * the property only contains numbers, letters, whitespace, or the characters (<,>,-)
+     * this method does nothing. Otherwise, wrap the property in curly braces.
+     * \param str
+     * \return
+     */
     static QString tikzEscape(QString str);
+
+    /*!
+     * \brief tikz escapes the key/value of a propery or atom and outputs it as "key=value"
+     * for properties and "key" for atoms.
+     * \return
+     */
     QString tikz();
 
 signals:

@@ -16,6 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*!
+ * A GUI editor for .tikzstyles files.
+ */
+
 #ifndef STYLEEDITOR_H
 #define STYLEEDITOR_H
 
@@ -35,8 +39,8 @@ class StyleEditor : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit StyleEditor(QWidget *parent = 0);
-    ~StyleEditor();
+    explicit StyleEditor(QWidget *parent = nullptr);
+    ~StyleEditor() override;
 
     void open();
     void save();

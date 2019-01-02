@@ -16,6 +16,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*!
+ * Run pdflatex and dump its output to the appropriate tab of
+ * the PreviewWindow.
+ */
+
 #ifndef LATEXPROCESS_H
 #define LATEXPROCESS_H
 

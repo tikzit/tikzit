@@ -16,6 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*!
+ * A dialog for exporting a LaTeX-generated preview to PNG, JPG, or PDF.
+ */
+
 #ifndef EXPORTDIALOG_H
 #define EXPORTDIALOG_H
 

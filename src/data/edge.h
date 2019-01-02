@@ -16,6 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*!
+ * Class representing an edge in a Graph.
+ */
+
 #ifndef EDGE_H
 #define EDGE_H
 
@@ -30,8 +34,8 @@ class Edge : public QObject
 {
     Q_OBJECT
 public:
-    explicit Edge(Node *s, Node *t, QObject *parent = 0);
-    Edge *copy(QMap<Node *, Node *> *nodeTable = 0);
+    explicit Edge(Node *s, Node *t, QObject *parent = nullptr);
+    Edge *copy(QMap<Node *, Node *> *nodeTable = nullptr);
 
     Node *source() const;
     Node *target() const;
