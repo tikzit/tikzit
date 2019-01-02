@@ -3,30 +3,40 @@
 \usetikzlibrary{arrows}
 \usetikzlibrary{shapes,shapes.geometric,shapes.misc}
 
-\tikzstyle{every picture}=[baseline=-0.25em,scale=0.5]
+% this style is applied by default to any tikzpicture included via \tikzfig
+\tikzstyle{tikzfig}=[baseline=-0.25em,scale=0.5]
 
+% these are dummy properties used by TikZiT, but ignored by LaTex
 \pgfkeys{/tikz/tikzit fill/.initial=0}
 \pgfkeys{/tikz/tikzit draw/.initial=0}
 \pgfkeys{/tikz/tikzit shape/.initial=0}
 \pgfkeys{/tikz/tikzit category/.initial=0}
 
+% standard layers used in .tikz files
+\pgfdeclarelayer{edgelayer}
+\pgfdeclarelayer{nodelayer}
+\pgfsetlayers{background,edgelayer,nodelayer,main}
+
+% style for blank nodes
+\tikzstyle{none}=[inner sep=0mm]
+
+% include a .tikz file
 \newcommand{\tikzfig}[1]{%
+{\tikzstyle{every picture}=[tikzfig]
 \IfFileExists{#1.tikz}
   {\input{#1.tikz}}
   {%
     \IfFileExists{./figures/#1.tikz}
       {\input{./figures/#1.tikz}}
       {\tikz[baseline=-0.5em]{\node[draw=red,font=\color{red},fill=red!10!white] {\textit{#1}};}}%
-  }%
+  }}%
 }
+
+% the same as \tikzfig, but in a {center} environment
 \newcommand{\ctikzfig}[1]{%
 \begin{center}\rm
   \tikzfig{#1}
 \end{center}}
 
-\pgfdeclarelayer{edgelayer}
-\pgfdeclarelayer{nodelayer}
-\pgfsetlayers{background,edgelayer,nodelayer,main}
-\tikzstyle{none}=[inner sep=0mm]
+% fix strange self-loops, which are PGF/TikZ default
 \tikzstyle{every loop}=[]
-\tikzstyle{mark coordinate}=[inner sep=0pt,outer sep=0pt,minimum size=3pt,fill=black,circle]
