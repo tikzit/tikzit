@@ -5,11 +5,13 @@
 
 #include <QFileDialog>
 #include <QSettings>
+#include <QStandardPaths>
 
 ExportDialog::ExportDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ExportDialog)
 {
+    QSettings settings("tikzit", "tikzit");
     ui->setupUi(this);
 
     QIntValidator *v = new QIntValidator(this);
@@ -31,11 +33,62 @@ ExportDialog::ExportDialog(QWidget *parent) :
         ui->width->blockSignals(false);
         ui->height->blockSignals(false);
     }
+
+    if (!settings.value("previous-export-file-format").isNull()) {
+        ui->fileFormat->setCurrentIndex(settings.value("previous-export-file-format").toInt());
+    }
+
+    // set a default export file
+    QString path = (!settings.value("previous-export-file-path").isNull()) ?
+        settings.value("previous-export-file-path").toString() :
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+
+    QString suffix;
+    switch (ui->fileFormat->currentIndex()) {
+        case PNG: suffix = ".png"; break;
+        case JPG: suffix = ".jpg"; break;
+        case PDF: suffix = ".pdf"; break;
+    }
+
+    QString fileName;
+    int i = 0;
+    bool exists = true;
+    while (exists) {
+        fileName = path + "/tikzit_image" + QString::number(i) + suffix;
+        exists = QFileInfo::exists(fileName);
+        ++i;
+    }
+    ui->filePath->setText(QDir::toNativeSeparators(fileName));
 }
 
 ExportDialog::~ExportDialog()
 {
     delete ui;
+}
+
+QString ExportDialog::filePath()
+{
+    return ui->filePath->text();
+}
+
+QSize ExportDialog::size()
+{
+    return QSize(ui->width->text().toInt(),
+                 ui->height->text().toInt());
+}
+
+ExportDialog::Format ExportDialog::fileFormat()
+{
+    return static_cast<Format>(ui->fileFormat->currentIndex());
+}
+
+void ExportDialog::accept()
+{
+    QSettings settings("tikzit", "tikzit");
+    QFileInfo fi(filePath());
+    settings.setValue("previous-export-file-path", fi.absolutePath());
+    settings.setValue("previous-export-file-format", fileFormat());
+    QDialog::accept();
 }
 
 void ExportDialog::setHeightFromWidth()
@@ -88,8 +141,14 @@ void ExportDialog::on_browseButton_clicked()
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     dialog.setNameFilter(ui->fileFormat->currentText());
     dialog.setFileMode(QFileDialog::AnyFile);
-    if (!settings.value("previous-export-file-path").isNull())
-        dialog.setDirectory(settings.value("previous-export-file-path").toString());
+    dialog.setLabelText(QFileDialog::Accept, "Select");
+
+    QFileInfo fi(ui->filePath->text());
+    if (!fi.absolutePath().isEmpty()) {
+        dialog.setDirectory(fi.absolutePath());
+        dialog.selectFile(fi.baseName());
+    }
+
     dialog.setOption(QFileDialog::DontUseNativeDialog);
 
     if (dialog.exec()) {
@@ -101,6 +160,7 @@ void ExportDialog::on_fileFormat_currentIndexChanged(int f)
 {
     ui->width->setEnabled(f != PDF);
     ui->height->setEnabled(f != PDF);
+    ui->keepAspect->setEnabled(f != PDF);
 
     QString path = ui->filePath->text();
     if (!path.isEmpty()) {

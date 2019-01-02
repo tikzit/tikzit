@@ -13,12 +13,17 @@ class ExportDialog : public QDialog
 
 public:
     explicit ExportDialog(QWidget *parent = nullptr);
-    ~ExportDialog();
+    ~ExportDialog() override;
     enum Format {
         PNG = 0,
         JPG = 1,
         PDF = 2
     };
+    QString filePath();
+    QSize size();
+    Format fileFormat();
+public slots:
+    void accept() override;
 
 protected slots:
     void setHeightFromWidth();

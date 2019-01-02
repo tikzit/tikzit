@@ -156,11 +156,27 @@ void PreviewWindow::render() {
 
 void PreviewWindow::exportImage()
 {
+    QSettings settings("tikzit", "tikzit");
     if (_doc == nullptr) return;
     ExportDialog *d = new ExportDialog(this);
     int ret = d->exec();
     if (ret == QDialog::Accepted) {
-        qDebug() << "save accepted";
+        bool success;
+        if (d->fileFormat() == ExportDialog::PDF) {
+            success = _doc->exportPdf(d->filePath());
+        } else {
+            success = _doc->exportImage(
+                        d->filePath(),
+                        (d->fileFormat() == ExportDialog::PNG) ? "PNG" : "JPG",
+                        d->size());
+        }
+
+        if (!success) {
+            QMessageBox::warning(this,
+                "Error",
+                "Could not write to: '" + d->filePath() +
+                   "'. Check file permissions or choose a new location.");
+        }
     }
 }
 
