@@ -3,8 +3,6 @@
 #include <QFile>
 #include <QByteArray>
 #include <QDebug>
-#include <QSvgGenerator>
-#include <QPainter>
 #include <QApplication>
 #include <QClipboard>
 
@@ -126,6 +124,8 @@ QSize PdfDocument::size()
 {
     if (isValid()) {
         return _page->pageSize();
+    } else {
+        return QSize();
     }
 }
 
