@@ -28,6 +28,7 @@
 #include <QClipboard>
 #include <QInputDialog>
 #include <cmath>
+#include <delimitedstringvalidator.h>
 
 
 TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
@@ -664,16 +665,23 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             }
 			break;
         } else if (NodeItem *ni = dynamic_cast<NodeItem*>(it)) {
-            bool ok;
-            QString newLabel = QInputDialog::getText(views()[0], tr("Node label"),
-                                                     tr("Label:"), QLineEdit::Normal,
-                                                     ni->node()->label(), &ok);
-            if (ok) {
+            QInputDialog *d = new QInputDialog(views()[0]);
+            d->setLabelText(tr("Label:"));
+            d->setTextValue(ni->node()->label());
+            d->setWindowTitle(tr("Node label"));
+
+            if (QLineEdit *le = d->findChild<QLineEdit*>()) {
+                le->setValidator(new DelimitedStringValidator(le));
+            }
+
+            if (d->exec()) {
                 QMap<Node*,QString> oldLabels;
                 oldLabels.insert(ni->node(), ni->node()->label());
-                ChangeLabelCommand *cmd = new ChangeLabelCommand(this, oldLabels, newLabel);
+                ChangeLabelCommand *cmd = new ChangeLabelCommand(this, oldLabels, d->textValue());
                 _tikzDocument->undoStack()->push(cmd);
             }
+
+            d->deleteLater();
 			break;
         }
     }
