@@ -39,9 +39,11 @@ void PdfDocument::renderTo(QLabel *label, QRect rect)
     //QRect rect = ui->scrollArea->visibleRegion().boundingRect();
     int w = static_cast<int>(ratio * (rect.width() - 20));
     int h = static_cast<int>(ratio * (rect.height() - 20));
-    qreal scale = fmin(static_cast<qreal>(w) / pageSize.width(),
-                       static_cast<qreal>(h) / pageSize.height());
 
+    // not all platforms have fmin, compute the min by hand
+    qreal hscale = static_cast<qreal>(w) / pageSize.width();
+    qreal vscale = static_cast<qreal>(h) / pageSize.height();
+    qreal scale = (hscale < vscale) ? hscale : vscale;
 
     int dpi = static_cast<int>(scale * 72.0);
     int w1 = static_cast<int>(scale * pageSize.width());

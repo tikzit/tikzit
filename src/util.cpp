@@ -79,3 +79,4 @@ QString floatToString(qreal f) {
     if (almostZero(f)) return "0";
     else return QString::number(f);
 }
+
