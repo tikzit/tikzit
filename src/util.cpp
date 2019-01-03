@@ -19,31 +19,31 @@
 #include "util.h"
 
 
-float bezierInterpolate(float dist, float c0, float c1, float c2, float c3) {
-    float distp = 1 - dist;
+qreal bezierInterpolate(qreal dist, qreal c0, qreal c1, qreal c2, qreal c3) {
+    qreal distp = 1 - dist;
     return	(distp*distp*distp) * c0 +
             3 * (distp*distp) * dist * c1 +
             3 * (dist*dist) * distp * c2 +
             (dist*dist*dist) * c3;
 }
 
-QPointF bezierInterpolateFull (float dist, QPointF c0, QPointF c1, QPointF c2, QPointF c3) {
+QPointF bezierInterpolateFull (qreal dist, QPointF c0, QPointF c1, QPointF c2, QPointF c3) {
     return QPointF(bezierInterpolate (dist, c0.x(), c1.x(), c2.x(), c3.x()),
                    bezierInterpolate (dist, c0.y(), c1.y(), c2.y(), c3.y()));
 }
 
 
-float roundToNearest(float stepSize, float val) {
-    if (stepSize==0.0f) return val;
+qreal roundToNearest(qreal stepSize, qreal val) {
+    if (stepSize==0.0) return val;
     else return round(val/stepSize)*stepSize;
 }
 
-float radiansToDegrees (float radians) {
-    return (radians * 180.0f) / M_PI;
+qreal radiansToDegrees (qreal radians) {
+    return (radians * 180.0) / M_PI;
 }
 
-float degreesToRadians(float degrees) {
-    return (degrees * M_PI) / 180.0f;
+qreal degreesToRadians(qreal degrees) {
+    return (degrees * M_PI) / 180.0;
 }
 
 int normaliseAngleDeg (int degrees) {
@@ -56,7 +56,7 @@ int normaliseAngleDeg (int degrees) {
     return degrees;
 }
 
-float normaliseAngleRad (float rads) {
+qreal normaliseAngleRad (qreal rads) {
     while (rads > M_PI) {
         rads -= 2 * M_PI;
     }
@@ -66,8 +66,16 @@ float normaliseAngleRad (float rads) {
     return rads;
 }
 
-// convert float to string, squashing very small floats to zero
-QString floatToString(float f) {
-    if (f >= -0.000001 && f <= 0.000001) return "0";
+bool almostZero(qreal f) {
+    return (f >= -0.000001 && f <= 0.000001);
+}
+
+bool almostEqual(qreal f1, qreal f2) {
+    return almostZero(f1 - f2);
+}
+
+// convert qreal to string, squashing very small qreals to zero
+QString floatToString(qreal f) {
+    if (almostZero(f)) return "0";
     else return QString::number(f);
 }

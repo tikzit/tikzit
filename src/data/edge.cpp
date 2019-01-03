@@ -27,7 +27,7 @@ Edge::Edge(Node *s, Node *t, QObject *parent) :
     QObject(parent), _source(s), _target(t)
 {
     _data = new GraphElementData(this);
-    _edgeNode = 0;
+    _edgeNode = nullptr;
     _dirty = true;
 
     if (s != t) {
@@ -35,13 +35,13 @@ Edge::Edge(Node *s, Node *t, QObject *parent) :
         _bend = 0;
         _inAngle = 0;
         _outAngle = 0;
-        _weight = 0.4f;
+        _weight = 0.4;
     } else {
         _basicBendMode = false;
         _bend = 0;
         _inAngle = 135;
         _outAngle = 45;
-        _weight = 1.0f;
+        _weight = 1.0;
     }
 	_style = noneEdgeStyle;
     updateControls();
@@ -57,7 +57,7 @@ Edge::Edge(Node *s, Node *t, QObject *parent) :
 Edge *Edge::copy(QMap<Node*,Node*> *nodeTable)
 {
     Edge *e;
-    if (nodeTable == 0) e = new Edge(_source, _target);
+    if (nodeTable == nullptr) e = new Edge(_source, _target);
     else e = new Edge(nodeTable->value(_source), nodeTable->value(_target));
     e->setData(_data->copy());
     e->setBasicBendMode(_basicBendMode);
@@ -145,12 +145,12 @@ void Edge::setEdgeNode(Node *edgeNode)
 {
     Node *oldEdgeNode = _edgeNode;
     _edgeNode = edgeNode;
-    if (oldEdgeNode != 0) oldEdgeNode->deleteLater();
+    if (oldEdgeNode != nullptr) oldEdgeNode->deleteLater();
 }
 
 bool Edge::hasEdgeNode()
 {
-    return _edgeNode != 0;
+    return _edgeNode != nullptr;
 }
 
 void Edge::updateControls() {
@@ -158,22 +158,22 @@ void Edge::updateControls() {
     QPointF src = _source->point();
     QPointF targ = _target->point();
 
-    float dx = (targ.x() - src.x());
-    float dy = (targ.y() - src.y());
+    qreal dx = (targ.x() - src.x());
+    qreal dy = (targ.y() - src.y());
 
-    float outAngleR = 0.0f;
-    float inAngleR = 0.0f;
+    qreal outAngleR = 0.0;
+    qreal inAngleR = 0.0;
 
     if (_basicBendMode) {
-        float angle = std::atan2(dy, dx);
-        float bnd = (float)_bend * (M_PI / 180.0f);
+        qreal angle = std::atan2(dy, dx);
+        qreal bnd = static_cast<qreal>(_bend) * (M_PI / 180.0);
         outAngleR = angle - bnd;
         inAngleR = M_PI + angle + bnd;
-        _outAngle = outAngleR * (180.f / M_PI);
-        _inAngle = inAngleR * (180.f / M_PI);
+        _outAngle = static_cast<int>(round(outAngleR * (180.0 / M_PI)));
+        _inAngle = static_cast<int>(round(inAngleR * (180.0 / M_PI)));
     } else {
-        outAngleR = (float)_outAngle * (M_PI / 180.0f);
-        inAngleR = (float)_inAngle * (M_PI / 180.0f);
+        outAngleR = static_cast<qreal>(_outAngle) * (M_PI / 180.0);
+        inAngleR = static_cast<qreal>(_inAngle) * (M_PI / 180.0);
     }
 
     // TODO: calculate head and tail properly, not just for circles
@@ -192,7 +192,7 @@ void Edge::updateControls() {
     }
 
     // give a default distance for self-loops
-    _cpDist = (dx==0.0f && dy==0.0f) ? _weight : std::sqrt(dx*dx + dy*dy) * _weight;
+    _cpDist = (almostZero(dx) && almostZero(dy)) ? _weight : std::sqrt(dx*dx + dy*dy) * _weight;
 
     _cp1 = QPointF(src.x() + (_cpDist * std::cos(outAngleR)),
                    src.y() + (_cpDist * std::sin(outAngleR)));
@@ -200,9 +200,9 @@ void Edge::updateControls() {
     _cp2 = QPointF(targ.x() + (_cpDist * std::cos(inAngleR)),
                    targ.y() + (_cpDist * std::sin(inAngleR)));
 
-    _mid = bezierInterpolateFull (0.5f, _tail, _cp1, _cp2, _head);
-    _tailTangent = bezierTangent(0.0f, 0.1f);
-    _headTangent = bezierTangent(1.0f, 0.9f);
+    _mid = bezierInterpolateFull (0.5, _tail, _cp1, _cp2, _head);
+    _tailTangent = bezierTangent(0.0, 0.1);
+    _headTangent = bezierTangent(1.0, 0.9);
 }
 
 void Edge::setAttributesFromData()
@@ -214,16 +214,16 @@ void Edge::setAttributesFromData()
         _bend = -30;
     } else if (_data->atom("bend right")) {
         _bend = 30;
-    } else if (_data->property("bend left") != 0) {
+    } else if (_data->property("bend left") != nullptr) {
         _bend = -_data->property("bend left").toInt(&ok);
         if (!ok) _bend = -30;
-    } else if (_data->property("bend right") != 0) {
+    } else if (_data->property("bend right") != nullptr) {
         _bend = _data->property("bend right").toInt(&ok);
         if (!ok) _bend = 30;
     } else {
         _bend = 0;
 
-        if (_data->property("in") != 0 && _data->property("out") != 0) {
+        if (_data->property("in") != nullptr && _data->property("out") != nullptr) {
             _basicBendMode = false;
             _inAngle = _data->property("in").toInt(&ok);
             if (!ok) _inAngle = 0;
@@ -233,10 +233,10 @@ void Edge::setAttributesFromData()
     }
 
     if (!_data->property("looseness").isNull()) {
-        _weight = _data->property("looseness").toFloat(&ok) / 2.5f;
-        if (!ok) _weight = 0.4f;
+        _weight = _data->property("looseness").toDouble(&ok) / 2.5;
+        if (!ok) _weight = 0.4;
     } else {
-        _weight = (isSelfLoop()) ? 1.0f : 0.4f;
+        _weight = (isSelfLoop()) ? 1.0 : 0.4;
     }
 
     //qDebug() << "bend: " << _bend << " in: " << _inAngle << " out: " << _outAngle;
@@ -280,8 +280,8 @@ void Edge::updateData()
     }
 
     if (_source == _target) _data->setAtom("loop");
-    if (!isSelfLoop() && !isStraight() && _weight != 0.4f)
-        _data->setProperty("looseness", QString::number(_weight*2.5f, 'f', 2));
+    if (!isSelfLoop() && !isStraight() && almostEqual(_weight, 0.4))
+        _data->setProperty("looseness", QString::number(_weight*2.5, 'f', 2));
     if (_source->isBlankNode()) _sourceAnchor = "center";
     else _sourceAnchor = "";
     if (_target->isBlankNode()) _targetAnchor = "center";
@@ -325,7 +325,7 @@ int Edge::outAngle() const
     return _outAngle;
 }
 
-float Edge::weight() const
+qreal Edge::weight() const
 {
     return _weight;
 }
@@ -335,7 +335,7 @@ bool Edge::basicBendMode() const
     return _basicBendMode;
 }
 
-float Edge::cpDist() const
+qreal Edge::cpDist() const
 {
     return _cpDist;
 }
@@ -360,7 +360,7 @@ void Edge::setOutAngle(int outAngle)
     _outAngle = outAngle;
 }
 
-void Edge::setWeight(float weight)
+void Edge::setWeight(qreal weight)
 {
     _weight = weight;
 }
@@ -402,18 +402,18 @@ Style *Edge::style() const
 	return _style;
 }
 
-QPointF Edge::bezierTangent(float start, float end) const
+QPointF Edge::bezierTangent(qreal start, qreal end) const
 {
-	float dx = bezierInterpolate(end, _tail.x(), _cp1.x(), _cp2.x(), _head.x()) -
+	qreal dx = bezierInterpolate(end, _tail.x(), _cp1.x(), _cp2.x(), _head.x()) -
 		bezierInterpolate(start, _tail.x(), _cp1.x(), _cp2.x(), _head.x());
-	float dy = bezierInterpolate(end, _tail.y(), _cp1.y(), _cp2.y(), _head.y()) -
+	qreal dy = bezierInterpolate(end, _tail.y(), _cp1.y(), _cp2.y(), _head.y()) -
 		bezierInterpolate(start, _tail.y(), _cp1.y(), _cp2.y(), _head.y());
 
 	// normalise
-	float len = sqrt(dx*dx + dy * dy);
-	if (len != 0) {
-		dx = (dx / len) * 0.1f;
-		dy = (dy / len) * 0.1f;
+	qreal len = sqrt(dx*dx + dy*dy);
+	if (almostZero(len)) {
+		dx = (dx / len) * 0.1;
+		dy = (dy / len) * 0.1;
 	}
 
 	return QPointF(dx, dy);

@@ -33,17 +33,19 @@
 #endif
 
 // interpolate on a cubic bezier curve
-float bezierInterpolate(float dist, float c0, float c1, float c2, float c3);
-QPointF bezierInterpolateFull (float dist, QPointF c0, QPointF c1, QPointF c2, QPointF c3);
+qreal bezierInterpolate(qreal dist, qreal c0, qreal c1, qreal c2, qreal c3);
+QPointF bezierInterpolateFull (qreal dist, QPointF c0, QPointF c1, QPointF c2, QPointF c3);
 
 // rounding
-float roundToNearest(float stepSize, float val);
-float radiansToDegrees (float radians);
-QString floatToString(float f);
+qreal roundToNearest(qreal stepSize, qreal val);
+qreal radiansToDegrees (qreal radians);
+bool almostZero(qreal f);
+bool almostEqual(qreal f1, qreal f2);
+QString floatToString(qreal f);
 
 // angles
-float degreesToRadians(float degrees);
+qreal degreesToRadians(qreal degrees);
 int normaliseAngleDeg (int degrees);
-float normaliseAngleRad (float rads);
+qreal normaliseAngleRad (qreal rads);
 
 #endif // UTIL_H

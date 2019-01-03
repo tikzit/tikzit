@@ -36,7 +36,7 @@
 class GraphUpdateCommand : public QUndoCommand {
 public:
     explicit GraphUpdateCommand(TikzScene *scene,
-                                QUndoCommand *parent = 0);
+                                QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 protected:
@@ -49,7 +49,7 @@ public:
     explicit MoveCommand(TikzScene *scene,
                          QMap<Node*,QPointF> oldNodePositions,
                          QMap<Node*,QPointF> newNodePositions,
-                         QUndoCommand *parent = 0);
+                         QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -61,18 +61,18 @@ class EdgeBendCommand : public GraphUpdateCommand
 {
 public:
     explicit EdgeBendCommand(TikzScene *scene, Edge *edge,
-                             float oldWeight, int oldBend,
+                             qreal oldWeight, int oldBend,
                              int oldInAngle, int oldOutAngle,
-                             QUndoCommand *parent = 0);
+                             QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
     Edge *_edge;
-    float _oldWeight;
+    qreal _oldWeight;
     int _oldBend;
     int _oldInAngle;
     int _oldOutAngle;
-    float _newWeight;
+    qreal _newWeight;
     int _newBend;
     int _newInAngle;
     int _newOutAngle;
@@ -85,7 +85,7 @@ public:
                            QMap<int,Node*> deleteNodes,
                            QMap<int,Edge*> deleteEdges,
                            QSet<Edge*> selEdges,
-                           QUndoCommand *parent = 0);
+                           QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -98,7 +98,7 @@ class AddNodeCommand : public GraphUpdateCommand
 {
 public:
     explicit AddNodeCommand(TikzScene *scene, Node *node, QRectF newBounds,
-                            QUndoCommand *parent = 0);
+                            QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -110,7 +110,7 @@ private:
 class AddEdgeCommand : public GraphUpdateCommand
 {
 public:
-    explicit AddEdgeCommand(TikzScene *scene, Edge *edge, QUndoCommand *parent = 0);
+    explicit AddEdgeCommand(TikzScene *scene, Edge *edge, QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -120,7 +120,7 @@ private:
 class ChangeEdgeModeCommand : public GraphUpdateCommand
 {
 public:
-    explicit ChangeEdgeModeCommand(TikzScene *scene, Edge *edge, QUndoCommand *parent = 0);
+    explicit ChangeEdgeModeCommand(TikzScene *scene, Edge *edge, QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -130,7 +130,7 @@ private:
 class ApplyStyleToNodesCommand : public GraphUpdateCommand
 {
 public:
-    explicit ApplyStyleToNodesCommand(TikzScene *scene, QString style, QUndoCommand *parent = 0);
+    explicit ApplyStyleToNodesCommand(TikzScene *scene, QString style, QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -141,7 +141,7 @@ private:
 class ApplyStyleToEdgesCommand : public GraphUpdateCommand
 {
 public:
-	explicit ApplyStyleToEdgesCommand(TikzScene *scene, QString style, QUndoCommand *parent = 0);
+	explicit ApplyStyleToEdgesCommand(TikzScene *scene, QString style, QUndoCommand *parent = nullptr);
 	void undo() override;
 	void redo() override;
 private:
@@ -152,7 +152,7 @@ private:
 class PasteCommand : public GraphUpdateCommand
 {
 public:
-    explicit PasteCommand(TikzScene *scene, Graph *graph, QUndoCommand *parent = 0);
+    explicit PasteCommand(TikzScene *scene, Graph *graph, QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -167,7 +167,7 @@ public:
     explicit ChangeLabelCommand(TikzScene *scene,
                                 QMap<Node*,QString> oldLabels,
                                 QString newLabel,
-                                QUndoCommand *parent = 0);
+                                QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -181,7 +181,7 @@ public:
     explicit ReplaceGraphCommand(TikzScene *scene,
                                  Graph *oldGraph,
                                  Graph *newGraph,
-                                 QUndoCommand *parent = 0);
+                                 QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -195,7 +195,7 @@ public:
     explicit ReflectNodesCommand(TikzScene *scene,
                                  QSet<Node*> nodes,
                                  bool horizontal,
-                                 QUndoCommand *parent = 0);
+                                 QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -209,7 +209,7 @@ public:
     explicit RotateNodesCommand(TikzScene *scene,
                                 QSet<Node*> nodes,
                                 bool clockwise,
-                                QUndoCommand *parent = 0);
+                                QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
@@ -225,7 +225,7 @@ public:
                             const QVector<Node*> &newNodeOrder,
                             const QVector<Edge*> &oldEdgeOrder,
                             const QVector<Edge*> &newEdgeOrder,
-                            QUndoCommand *parent = 0);
+                            QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:

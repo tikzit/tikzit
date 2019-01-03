@@ -71,15 +71,15 @@ public:
     int bend() const;
     int inAngle() const;
     int outAngle() const;
-    float weight() const;
+    qreal weight() const;
     bool basicBendMode() const;
-    float cpDist() const;
+    qreal cpDist() const;
 
     void setBasicBendMode(bool mode);
     void setBend(int bend);
     void setInAngle(int inAngle);
     void setOutAngle(int outAngle);
-    void setWeight(float weight);
+    void setWeight(qreal weight);
 
     int tikzLine() const;
     void setTikzLine(int tikzLine);
@@ -95,7 +95,7 @@ signals:
 public slots:
 
 private:
-	QPointF bezierTangent(float start, float end) const;
+	QPointF bezierTangent(qreal start, qreal end) const;
     QString _sourceAnchor;
     QString _targetAnchor;
 
@@ -115,8 +115,8 @@ private:
     int _bend;
     int _inAngle;
     int _outAngle;
-    float _weight;
-    float _cpDist;
+    qreal _weight;
+    qreal _cpDist;
 
     QPointF _head;
     QPointF _tail;

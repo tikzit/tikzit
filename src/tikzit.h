@@ -76,8 +76,8 @@
 // Number of pixels between (0,0) and (1,0) at 100% zoom level. This should be
 // divisible by 8 to avoid rounding errors with e.g. grid-snapping.
 #define GLOBAL_SCALE 40
-#define GLOBAL_SCALEF 40.0f
-#define GLOBAL_SCALEF_INV 0.025f
+#define GLOBAL_SCALEF 40.0
+#define GLOBAL_SCALEF_INV 0.025
 #define GRID_N 4
 #define GRID_SEP 10
 #define GRID_SEPF 10.0f

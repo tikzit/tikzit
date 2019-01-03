@@ -34,8 +34,8 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
                      StylePalette *styles, QObject *parent) :
     QGraphicsScene(parent), _tikzDocument(tikzDocument), _tools(tools), _styles(styles)
 {
-    _modifyEdgeItem = 0;
-    _edgeStartNodeItem = 0;
+    _modifyEdgeItem = nullptr;
+    _edgeStartNodeItem = nullptr;
     _drawEdgeItem = new QGraphicsLineItem();
     _rubberBandItem = new QGraphicsRectItem();
     _enabled = true;
@@ -43,7 +43,7 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
     setSceneRect(-1000,-1000,2000,2000);
 
     QPen pen;
-    pen.setColor(QColor::fromRgbF(0.5f, 0.0f, 0.5f));
+    pen.setColor(QColor::fromRgbF(0.5, 0.0, 0.5));
     //pen.setWidth(3.0f);
     pen.setCosmetic(true);
     _drawEdgeItem->setPen(pen);
@@ -51,7 +51,7 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
     _drawEdgeItem->setVisible(false);
     addItem(_drawEdgeItem);
 
-    pen.setColor(QColor::fromRgbF(0.6f, 0.6f, 0.8f));
+    pen.setColor(QColor::fromRgbF(0.6, 0.6, 0.8));
     //pen.setWidth(3.0f);
     //QVector<qreal> dash;
     //dash << 4.0 << 4.0;
@@ -110,7 +110,7 @@ void TikzScene::graphReplaced()
 void TikzScene::extendSelectionUp()
 {
     bool found = false;
-    float m = 0.0f;
+    qreal m = 0.0;
     foreach (Node *n, getSelectedNodes()) {
         if (!found) {
             m = n->point().y();
@@ -128,7 +128,7 @@ void TikzScene::extendSelectionUp()
 void TikzScene::extendSelectionDown()
 {
     bool found = false;
-    float m = 0.0f;
+    qreal m = 0.0;
     foreach (Node *n, getSelectedNodes()) {
         if (!found) {
             m = n->point().y();
@@ -146,7 +146,7 @@ void TikzScene::extendSelectionDown()
 void TikzScene::extendSelectionLeft()
 {
     bool found = false;
-    float m = 0.0f;
+    qreal m = 0.0;
     foreach (Node *n, getSelectedNodes()) {
         if (!found) {
             m = n->point().x();
@@ -164,7 +164,7 @@ void TikzScene::extendSelectionLeft()
 void TikzScene::extendSelectionRight()
 {
     bool found = false;
-    float m = 0.0f;
+    qreal m = 0.0;
     foreach (Node *n, getSelectedNodes()) {
         if (!found) {
             m = n->point().x();
@@ -266,7 +266,7 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             }
         }
 
-        if (_modifyEdgeItem != 0) {
+        if (_modifyEdgeItem != nullptr) {
             // store for undo purposes
             Edge *e = _modifyEdgeItem->edge();
             _oldBend = e->bend();
@@ -337,15 +337,15 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     switch (_tools->currentTool()) {
     case ToolPalette::SELECT:
-        if (_modifyEdgeItem != 0) {
+        if (_modifyEdgeItem != nullptr) {
             Edge *e = _modifyEdgeItem->edge();
 
             // dragging a control point
             QPointF src = toScreen(e->source()->point());
             QPointF targ = toScreen(e->target()->point());
-            float dx1 = targ.x() - src.x();
-            float dy1 = targ.y() - src.y();
-            float dx2, dy2;
+            qreal dx1 = targ.x() - src.x();
+            qreal dy1 = targ.y() - src.y();
+            qreal dx2, dy2;
             if (_firstControlPoint) {
                 dx2 = mousePos.x() - src.x();
                 dy2 = mousePos.y() - src.y();
@@ -354,25 +354,26 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 dy2 = mousePos.y() - targ.y();
             }
 
-            float baseDist = sqrt(dx1*dx1 + dy1*dy1);
-            float handleDist = sqrt(dx2*dx2 + dy2*dy2);
-            float wcoarseness = 0.1f;
+            qreal baseDist = sqrt(dx1*dx1 + dy1*dy1);
+            qreal handleDist = sqrt(dx2*dx2 + dy2*dy2);
+            qreal wcoarseness = 0.1;
 
             if (!e->isSelfLoop()) {
-                if (baseDist != 0) {
+                if (baseDist != 0.0) {
                     e->setWeight(roundToNearest(wcoarseness, handleDist/baseDist));
                 } else {
                     e->setWeight(roundToNearest(wcoarseness, handleDist/GLOBAL_SCALEF));
                 }
             }
 
-            float control_angle = atan2(-dy2, dx2);
+            qreal control_angle = atan2(-dy2, dx2);
 
             int bcoarseness = 15;
+            qreal bcoarsenessi = 1.0/15.0;
 
             if(e->basicBendMode()) {
-                float bnd;
-                float base_angle = atan2(-dy1, dx1);
+                qreal bnd;
+                qreal base_angle = atan2(-dy1, dx1);
                 if (_firstControlPoint) {
                     bnd = base_angle - control_angle;
                 } else {
@@ -380,12 +381,10 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                     if (bnd > M_PI) bnd -= 2*M_PI;
                 }
 
-                e->setBend(round(bnd * (180.0f / M_PI) * (1.0f / (float)bcoarseness)) * bcoarseness);
+                e->setBend(static_cast<int>(round(bnd * (180.0 / M_PI) * bcoarsenessi)) * bcoarseness);
 
             } else {
-                int bnd = round(control_angle * (180.0f / M_PI) *
-                                (1.0f / (float)bcoarseness)) *
-                          bcoarseness;
+                int bnd = static_cast<int>(round(control_angle * (180.0 / M_PI) * bcoarsenessi)) * bcoarseness;
                 if (_firstControlPoint) {
                     // TODO: enable moving both control points
 //                    if ([theEvent modifierFlags] & NSAlternateKeyMask) {
@@ -428,7 +427,7 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 NodeItem *ni = _nodeItems[n];
 
 				// in (rare) cases, the graph can change while we are dragging
-				if (ni != 0) {
+				if (ni != nullptr) {
 					ni->setPos(toScreen(_oldNodePositions[n]) + shift);
 					ni->writePos();
 				}
@@ -454,7 +453,7 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         break;
     case ToolPalette::EDGE:
         if (_drawEdgeItem->isVisible()) {
-            _edgeEndNodeItem = 0;
+            _edgeEndNodeItem = nullptr;
             foreach (QGraphicsItem *gi, items(mousePos)) {
                 if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)){
                     _edgeEndNodeItem = ni;
@@ -462,7 +461,7 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 }
             }
             QPointF p1 = _drawEdgeItem->line().p1();
-            QPointF p2 = (_edgeEndNodeItem != 0) ? toScreen(_edgeEndNodeItem->node()->point()) : mousePos;
+            QPointF p2 = (_edgeEndNodeItem != nullptr) ? toScreen(_edgeEndNodeItem->node()->point()) : mousePos;
             QLineF line(p1, p2);
 
             _drawEdgeItem->setLine(line);
@@ -482,11 +481,11 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     switch (_tools->currentTool()) {
     case ToolPalette::SELECT:
-        if (_modifyEdgeItem != 0) {
+        if (_modifyEdgeItem != nullptr) {
             // finished dragging a control point
             Edge *e = _modifyEdgeItem->edge();
 
-            if (_oldWeight != e->weight() ||
+            if (!almostEqual(_oldWeight, e->weight()) ||
                 _oldBend != e->bend() ||
                 _oldInAngle != e->inAngle() ||
                 _oldOutAngle != e->outAngle())
@@ -495,7 +494,7 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 _tikzDocument->undoStack()->push(cmd);
             }
 
-            _modifyEdgeItem = 0;
+            _modifyEdgeItem = nullptr;
         } else {
             // otherwise, process mouse move normally
             QGraphicsScene::mouseReleaseEvent(event);
@@ -517,7 +516,7 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 QPointF shift = mousePos - _mouseDownPos;
                 shift = QPointF(round(shift.x()/GRID_SEP)*GRID_SEP, round(shift.y()/GRID_SEP)*GRID_SEP);
 
-                if (shift.x() != 0 || shift.y() != 0) {
+                if (shift.x() != 0.0 || shift.y() != 0.0) {
                     QMap<Node*,QPointF> newNodePositions;
 
                     foreach (QGraphicsItem *gi, selectedItems()) {
@@ -557,14 +556,14 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         break;
     case ToolPalette::EDGE:
         // add an edge
-        if (_edgeStartNodeItem != 0 && _edgeEndNodeItem != 0) {
+        if (_edgeStartNodeItem != nullptr && _edgeEndNodeItem != nullptr) {
             Edge *e = new Edge(_edgeStartNodeItem->node(), _edgeEndNodeItem->node(), _tikzDocument);
 			e->setStyleName(_styles->activeEdgeStyleName());
             AddEdgeCommand *cmd = new AddEdgeCommand(this, e);
             _tikzDocument->undoStack()->push(cmd);
         }
-        _edgeStartNodeItem = 0;
-        _edgeEndNodeItem = 0;
+        _edgeStartNodeItem = nullptr;
+        _edgeEndNodeItem = nullptr;
         _drawEdgeItem->setVisible(false);
         break;
     case ToolPalette::CROP:
@@ -613,19 +612,19 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
 
     if (event->modifiers() & Qt::ControlModifier) {
         QPointF delta(0,0);
-        float shift = (event->modifiers() & Qt::ShiftModifier) ? 1.0f : 10.0f;
+        qreal shift = (event->modifiers() & Qt::ShiftModifier) ? 1.0 : 10.0;
         switch(event->key()) {
         case Qt::Key_Left:
-            delta.setX(-0.025f * shift);
+            delta.setX(-0.025 * shift);
             break;
         case Qt::Key_Right:
-            delta.setX(0.025f * shift);
+            delta.setX(0.025 * shift);
             break;
         case Qt::Key_Up:
-            delta.setY(0.025f * shift);
+            delta.setY(0.025 * shift);
             break;
         case Qt::Key_Down:
-            delta.setY(-0.025f * shift);
+            delta.setY(-0.025 * shift);
             break;
         }
 
@@ -767,7 +766,7 @@ void TikzScene::pasteFromClipboard()
 
         QRectF srcRect = g->realBbox();
         QRectF tgtRect = graph()->realBbox();
-        QPointF shift(tgtRect.right() - srcRect.left(), 0.0f);
+        QPointF shift(tgtRect.right() - srcRect.left(), 0.0);
 
         if (shift.x() > 0) {
             foreach (Node *n, g->nodes()) {
@@ -890,7 +889,7 @@ void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
 		EdgeItem *ei = _edgeItems[e];
 
 		// the list "nodes" can be out of date, e.g. if the graph changes while dragging
-		if (ei != 0) {
+		if (ei != nullptr) {
 			if (nodes.contains(ei->edge()->source()) || nodes.contains(ei->edge()->target())) {
 				ei->edge()->updateControls();
 				ei->readPos();

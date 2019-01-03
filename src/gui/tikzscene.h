@@ -44,7 +44,7 @@ class TikzScene : public QGraphicsScene
     Q_OBJECT
 public:
    TikzScene(TikzDocument *tikzDocument, ToolPalette *tools, StylePalette *styles, QObject *parent);
-    ~TikzScene();
+    ~TikzScene() override;
     Graph *graph();
     QMap<Node*,NodeItem*> &nodeItems();
     QMap<Edge*,EdgeItem*> &edgeItems();
@@ -108,7 +108,7 @@ private:
     bool _draggingNodes;
 
     QMap<Node*,QPointF> _oldNodePositions;
-    float _oldWeight;
+    qreal _oldWeight;
     int _oldBend;
     int _oldInAngle;
     int _oldOutAngle;

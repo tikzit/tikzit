@@ -80,7 +80,7 @@ void MoveCommand::redo()
 }
 
 EdgeBendCommand::EdgeBendCommand(TikzScene *scene, Edge *edge,
-                                 float oldWeight, int oldBend,
+                                 qreal oldWeight, int oldBend,
                                  int oldInAngle, int oldOutAngle, QUndoCommand *parent) :
     GraphUpdateCommand(scene, parent),
     _edge(edge),
@@ -405,7 +405,7 @@ void ChangeLabelCommand::undo()
     foreach (Node *n, _oldLabels.keys()) {
         n->setLabel(_oldLabels[n]);
 		NodeItem *ni = _scene->nodeItems()[n];
-		if (ni != 0) ni->updateBounds();
+		if (ni != nullptr) ni->updateBounds();
     }
 
     GraphUpdateCommand::undo();
@@ -416,7 +416,7 @@ void ChangeLabelCommand::redo()
     foreach (Node *n, _oldLabels.keys()) {
         n->setLabel(_newLabel);
 		NodeItem *ni = _scene->nodeItems()[n];
-		if (ni != 0) ni->updateBounds();
+		if (ni != nullptr) ni->updateBounds();
     }
 
     GraphUpdateCommand::redo();
