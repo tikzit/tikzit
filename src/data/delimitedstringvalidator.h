@@ -35,6 +35,7 @@
 
 class DelimitedStringValidator : public QValidator
 {
+    Q_OBJECT
 public:
     DelimitedStringValidator(QObject *parent);
     QValidator::State validate(QString &input, int &/*pos*/) const override;

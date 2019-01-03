@@ -24,6 +24,7 @@
 #include "styleeditor.h"
 #include "delimitedstringvalidator.h"
 #include "ui_styleeditor.h"
+#include "delimitedstringitemdelegate.h"
 
 StyleEditor::StyleEditor(QWidget *parent) :
     QMainWindow(parent),
@@ -39,6 +40,11 @@ StyleEditor::StyleEditor(QWidget *parent) :
 
     DelimitedStringValidator *v = new DelimitedStringValidator(this);
     ui->name->setValidator(v);
+    ui->category->lineEdit()->setValidator(v);
+    ui->shape->lineEdit()->setValidator(v);
+
+    DelimitedStringItemDelegate *delegate = new DelimitedStringItemDelegate(ui->properties);
+    ui->properties->setItemDelegate(delegate);
 
     setWindowIcon(QIcon(":/images/tikzit.png"));
     _styles = nullptr;

@@ -80,7 +80,8 @@ SOURCES += src/gui/mainwindow.cpp \
     src/gui/latexprocess.cpp \
     src/data/pdfdocument.cpp \
     src/gui/exportdialog.cpp \
-    src/data/delimitedstringvalidator.cpp
+    src/data/delimitedstringvalidator.cpp \
+    src/gui/delimitedstringitemdelegate.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -111,7 +112,8 @@ HEADERS  += src/gui/mainwindow.h \
     src/gui/latexprocess.h \
     src/data/pdfdocument.h \
     src/gui/exportdialog.h \
-    src/data/delimitedstringvalidator.h
+    src/data/delimitedstringvalidator.h \
+    src/gui/delimitedstringitemdelegate.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \
