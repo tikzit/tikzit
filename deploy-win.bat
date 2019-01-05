@@ -11,7 +11,7 @@ copy ..\..\win32-deps\bin\*.dll .
 copy C:\OpenSSL-Win32\bin\libeay32.dll .
 copy C:\OpenSSL-Win32\bin\ssleay32.dll .
 
-windeployqt.exe --no-webkit2 --no-angle --no-opengl-sw --no-system-d3d-compiler --no-translations --no-quick-import .\tikzit.exe
+windeployqt.exe --xml --no-webkit2 --no-angle --no-opengl-sw --no-system-d3d-compiler --no-translations --no-quick-import .\tikzit.exe
 
 cd ..
 7z a -tzip tikzit.zip tikzit
