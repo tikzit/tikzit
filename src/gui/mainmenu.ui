@@ -75,12 +75,14 @@
   </widget>
   <widget class="QMenu" name="menuTikz">
    <property name="title">
-    <string>Tikz</string>
+    <string>Tools</string>
    </property>
    <addaction name="actionParse"/>
    <addaction name="actionRevert"/>
    <addaction name="actionJump_to_Selection"/>
    <addaction name="actionRun_LaTeX"/>
+   <addaction name="separator"/>
+   <addaction name="actionPreferences"/>
   </widget>
   <widget class="QMenu" name="menuView">
    <property name="title">
@@ -204,7 +206,7 @@
   </action>
   <action name="actionParse">
    <property name="text">
-    <string>Parse Tikz</string>
+    <string>Parse TikZ</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
@@ -233,7 +235,10 @@
   </action>
   <action name="actionRevert">
    <property name="text">
-    <string>Revert Tikz</string>
+    <string>Revert TikZ</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+T</string>
    </property>
   </action>
   <action name="actionJump_to_Selection">
@@ -353,6 +358,11 @@
   <action name="actionClear_Menu">
    <property name="text">
     <string>Clear Menu</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>Preferences...</string>
    </property>
   </action>
   <addaction name="menuFile"/>

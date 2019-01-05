@@ -23,6 +23,7 @@
 #include <QStandardPaths>
 #include <QTemporaryDir>
 #include <QStringList>
+#include <QSettings>
 
 LatexProcess::LatexProcess(PreviewWindow *preview, QObject *parent) : QObject(parent)
 {
@@ -42,6 +43,7 @@ LatexProcess::LatexProcess(PreviewWindow *preview, QObject *parent) : QObject(pa
 
 void LatexProcess::makePreview(QString tikz)
 {
+    QSettings settings("tikzit", "tikzit");
     _preview->setStatus(PreviewWindow::Running);
     _output->clear();
 
@@ -51,39 +53,46 @@ void LatexProcess::makePreview(QString tikz)
     }
 
     _output->appendPlainText("USING TEMP DIR: " + _workingDir.path() + "\n");
-    _output->appendPlainText("SEARCHING FOR pdflatex IN:");
-    _output->appendPlainText(qgetenv("PATH"));
-    _output->appendPlainText("\n");
 
+    QString pdflatex;
 
-    QString pdflatex = QStandardPaths::findExecutable("pdflatex");
-    if (pdflatex.isEmpty()) {
-        // if pdflatex is not in PATH, we are probably on mac or windows, so try common
-        // install directories.
-        _output->appendPlainText("NOT FOUND IN PATH, TRYING:");
+    if (settings.value("auto-detect-pdflatex", true).toBool()) {
+        _output->appendPlainText("SEARCHING FOR pdflatex IN:");
+        _output->appendPlainText(qgetenv("PATH"));
+        _output->appendPlainText("\n");
+        pdflatex = QStandardPaths::findExecutable("pdflatex");
+        if (pdflatex.isEmpty()) {
+            // if pdflatex is not in PATH, we are probably on mac or windows, so try common
+            // install directories.
+            _output->appendPlainText("NOT FOUND IN PATH, TRYING:");
 
-        QStringList texDirs;
-        // common macOS tex directories:
-        texDirs << "/Library/TeX/texbin";
-        texDirs << "/usr/texbin";
-        texDirs << "/usr/local/bin";
-        texDirs << "/sw/bin";
+            QStringList texDirs;
+            // common macOS tex directories:
+            texDirs << "/Library/TeX/texbin";
+            texDirs << "/usr/texbin";
+            texDirs << "/usr/local/bin";
+            texDirs << "/sw/bin";
 
-        // common windows tex directories
-        texDirs << "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin";
-        texDirs << "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64";
+            // common windows tex directories
+            texDirs << "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin";
+            texDirs << "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64";
 
-        _output->appendPlainText(texDirs.join(":"));
-        pdflatex = QStandardPaths::findExecutable("pdflatex", texDirs);
+            _output->appendPlainText(texDirs.join(":"));
+            pdflatex = QStandardPaths::findExecutable("pdflatex", texDirs);
+        }
 
         if (pdflatex.isEmpty()) {
             _output->appendPlainText("pdflatex NOT FOUND, ABORTING.\n");
             _preview->setStatus(PreviewWindow::Failed);
             return;
+        } else {
+            _output->appendPlainText("FOUND: " + pdflatex + "\n");
         }
+    } else {
+        _output->appendPlainText("USING pdflatex:\n");
+        pdflatex = settings.value("pdflatex-path", "/usr/bin/pdflatex").toString();
+        _output->appendPlainText(pdflatex + "\n");
     }
-
-    _output->appendPlainText("FOUND: " + pdflatex + "\n");
 
     // copy tikzit.sty to preview dir
     QFile::copy(":/tex/sample/tikzit.sty", _workingDir.path() + "/tikzit.sty");

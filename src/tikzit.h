@@ -149,7 +149,11 @@ public slots:
     void cleanupLatex();
 
 private:
-    //    void createMenu();
+    /*!
+     * \brief initColors initialises a table of xcolor named colors and their associated
+     * QColor values, and adds them as standard colors to the Qt color dialog.
+     */
+    void initColors();
 
     MainMenu *_mainMenu;
     ToolPalette *_toolPalette;

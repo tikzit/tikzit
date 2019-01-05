@@ -17,6 +17,7 @@
 */
 
 #include "mainmenu.h"
+#include "preferencedialog.h"
 #include "tikzit.h"
 
 #include <QDebug>
@@ -267,6 +268,13 @@ void MainMenu::on_actionJump_to_Selection_triggered()
 void MainMenu::on_actionRun_LaTeX_triggered()
 {
     tikzit->makePreview();
+}
+
+void MainMenu::on_actionPreferences_triggered()
+{
+    PreferenceDialog *d = new PreferenceDialog(this);
+    d->exec();
+    d->deleteLater();
 }
 
 

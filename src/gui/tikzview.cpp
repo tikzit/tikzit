@@ -21,6 +21,7 @@
 
 #include <QDebug>
 #include <QScrollBar>
+#include <QSettings>
 
 TikzView::TikzView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -53,6 +54,7 @@ void TikzView::setScene(QGraphicsScene *scene)
 
 void TikzView::drawBackground(QPainter *painter, const QRectF &rect)
 {
+    QSettings settings("tikzit", "tikzit");
     QGraphicsView::drawBackground(painter, rect);
     // draw a gray background if disabled
     TikzScene *sc = static_cast<TikzScene*>(scene());
@@ -63,13 +65,13 @@ void TikzView::drawBackground(QPainter *painter, const QRectF &rect)
     QPen pen1;
     //pen1.setWidthF(0.5);
     pen1.setCosmetic(true);
-    pen1.setColor(QColor(250,250,255));
+    pen1.setColor(settings.value("grid-color-minor", QColor(250,250,255)).value<QColor>());
 
     QPen pen2 = pen1;
-    pen2.setColor(QColor(240,240,250));
+    pen2.setColor(settings.value("grid-color-major", QColor(240,240,250)).value<QColor>());
 
     QPen pen3 = pen1;
-    pen3.setColor(QColor(220,220,240));
+    pen3.setColor(settings.value("grid-color-axes", QColor(220,220,240)).value<QColor>());
 
     painter->setPen(pen1);
 

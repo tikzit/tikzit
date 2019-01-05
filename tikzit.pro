@@ -81,7 +81,8 @@ SOURCES += src/gui/mainwindow.cpp \
     src/data/pdfdocument.cpp \
     src/gui/exportdialog.cpp \
     src/data/delimitedstringvalidator.cpp \
-    src/gui/delimitedstringitemdelegate.cpp
+    src/gui/delimitedstringitemdelegate.cpp \
+    src/gui/preferencedialog.cpp
 
 HEADERS  += src/gui/mainwindow.h \
     src/gui/toolpalette.h \
@@ -113,7 +114,8 @@ HEADERS  += src/gui/mainwindow.h \
     src/data/pdfdocument.h \
     src/gui/exportdialog.h \
     src/data/delimitedstringvalidator.h \
-    src/gui/delimitedstringitemdelegate.h
+    src/gui/delimitedstringitemdelegate.h \
+    src/gui/preferencedialog.h
 
 FORMS += src/gui/mainwindow.ui \
     src/gui/propertypalette.ui \
@@ -121,7 +123,8 @@ FORMS += src/gui/mainwindow.ui \
     src/gui/stylepalette.ui \
     src/gui/styleeditor.ui \
     src/gui/previewwindow.ui \
-    src/gui/exportdialog.ui
+    src/gui/exportdialog.ui \
+    src/gui/preferencedialog.ui
 
 INCLUDEPATH += src src/gui src/data
 

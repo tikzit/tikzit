@@ -30,6 +30,7 @@
 #include <QRegularExpression>
 #include <QVersionNumber>
 #include <QNetworkAccessManager>
+#include <QColorDialog>
 
 // application-level instance of Tikzit
 Tikzit *tikzit;
@@ -45,54 +46,7 @@ void Tikzit::init()
 {
     QSettings settings("tikzit", "tikzit");
 
-	// 19 standard xcolor colours
-    _colNames <<
-		"black" <<
-        "darkgray" <<
-        "gray" <<
-		"lightgray" <<
-		"white" <<
-
-		"red" <<
-		"orange" <<
-		"yellow" <<
-        "green" <<
-		"blue" <<
-		"purple" <<
-
-		"brown" <<
-		"olive" <<
-        "lime" <<
-        "cyan" <<
-        "teal" <<
-
-		"magenta" <<
-		"violet" <<
-		"pink";
-
-    _cols <<
-        QColor::fromRgbF(0,0,0) <<
-        QColor::fromRgbF(0.25,0.25,0.25) <<
-        QColor::fromRgbF(0.5,0.5,0.5) <<
-        QColor::fromRgbF(0.75,0.75,0.75) <<
-        QColor::fromRgbF(1,1,1) <<
-
-        QColor::fromRgbF(1,0,0) <<
-        QColor::fromRgbF(1,0.5,0) <<
-        QColor::fromRgbF(1,1,0) <<
-        QColor::fromRgbF(0,1,0) <<
-        QColor::fromRgbF(0,0,1) <<
-        QColor::fromRgbF(0.75,0,0.25) <<
-
-        QColor::fromRgbF(0.75,0.5,0.25) <<
-        QColor::fromRgbF(0.5,0.5,0) <<
-        QColor::fromRgbF(0.75,1,0) <<
-        QColor::fromRgbF(0,1,1) <<
-        QColor::fromRgbF(0,0.5,0.5) <<
-
-        QColor::fromRgbF(1,0,1) <<
-        QColor::fromRgbF(0.5,0,0.5) <<
-        QColor::fromRgbF(1,0.75,0.75);
+	initColors();
 
     _mainMenu = new MainMenu();
     QMainWindow *dummy = new QMainWindow();
@@ -486,6 +440,90 @@ void Tikzit::cleanupLatex()
     _latex = nullptr;
     if (oldProc != nullptr) {
         oldProc->deleteLater();
+    }
+}
+
+void Tikzit::initColors()
+{
+    // 19 standard xcolor colours
+    _colNames <<
+		"black" <<
+        "darkgray" <<
+        "gray" <<
+		"lightgray" <<
+		"white" <<
+
+		"red" <<
+		"orange" <<
+		"yellow" <<
+        "green" <<
+		"blue" <<
+		"purple" <<
+
+		"brown" <<
+		"olive" <<
+        "lime" <<
+        "cyan" <<
+        "teal" <<
+
+		"magenta" <<
+		"violet" <<
+		"pink";
+
+    _cols <<
+        QColor::fromRgbF(0,0,0) <<
+        QColor::fromRgbF(0.25,0.25,0.25) <<
+        QColor::fromRgbF(0.5,0.5,0.5) <<
+        QColor::fromRgbF(0.75,0.75,0.75) <<
+        QColor::fromRgbF(1,1,1) <<
+
+        QColor::fromRgbF(1,0,0) <<
+        QColor::fromRgbF(1,0.5,0) <<
+        QColor::fromRgbF(1,1,0) <<
+        QColor::fromRgbF(0,1,0) <<
+        QColor::fromRgbF(0,0,1) <<
+        QColor::fromRgbF(0.75,0,0.25) <<
+
+        QColor::fromRgbF(0.75,0.5,0.25) <<
+        QColor::fromRgbF(0.5,0.5,0) <<
+        QColor::fromRgbF(0.75,1,0) <<
+        QColor::fromRgbF(0,1,1) <<
+        QColor::fromRgbF(0,0.5,0.5) <<
+
+        QColor::fromRgbF(1,0,1) <<
+        QColor::fromRgbF(0.5,0,0.5) <<
+        QColor::fromRgbF(1,0.75,0.75);
+
+    for (int i = 0; i < 48; ++i) {
+        QColorDialog::setStandardColor(i, QColor(Qt::white));
+    }
+
+    // grayscale in column 1
+    int pos = 0;
+    for (int i=0; i < 5; ++i) {
+        QColorDialog::setStandardColor(pos, _cols[i]);
+        pos += 1;
+    }
+
+    // rainbow in column 2
+    pos = 6;
+    for (int i=5; i < 11; ++i) {
+        QColorDialog::setStandardColor(pos, _cols[i]);
+        pos += 1;
+    }
+
+    // brown/green/teal spectrum in column 3
+    pos = 12;
+    for (int i=11; i < 16; ++i) {
+        QColorDialog::setStandardColor(pos, _cols[i]);
+        pos += 1;
+    }
+
+    // pinks in column 4
+    pos = 18;
+    for (int i=16; i < 19; ++i) {
+        QColorDialog::setStandardColor(pos, _cols[i]);
+        pos += 1;
     }
 }
 

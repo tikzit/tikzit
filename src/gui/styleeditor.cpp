@@ -72,40 +72,6 @@ StyleEditor::StyleEditor(QWidget *parent) :
             SIGNAL(currentIndexChanged(int)),
             this, SLOT(shapeChanged()));
 
-    // setup the color dialog to display only the named colors that tikzit/xcolor knows
-    // about as "standard colors".
-    for (int i = 0; i < 48; ++i) {
-        QColorDialog::setStandardColor(i, QColor(Qt::white));
-    }
-
-    // grayscale in column 1
-    int pos = 0;
-    for (int i=0; i < 5; ++i) {
-        QColorDialog::setStandardColor(pos, tikzit->colorByIndex(i));
-        pos += 1;
-    }
-
-    // rainbow in column 2
-    pos = 6;
-    for (int i=5; i < 11; ++i) {
-        QColorDialog::setStandardColor(pos, tikzit->colorByIndex(i));
-        pos += 1;
-    }
-
-    // brown/green/teal spectrum in column 3
-    pos = 12;
-    for (int i=11; i < 16; ++i) {
-        QColorDialog::setStandardColor(pos, tikzit->colorByIndex(i));
-        pos += 1;
-    }
-
-    // pinks in column 4
-    pos = 18;
-    for (int i=16; i < 19; ++i) {
-        QColorDialog::setStandardColor(pos, tikzit->colorByIndex(i));
-        pos += 1;
-    }
-
     refreshDisplay();
 }
 
