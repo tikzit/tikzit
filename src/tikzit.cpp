@@ -429,7 +429,14 @@ void Tikzit::makePreview()
         }
 
         connect(_latex, SIGNAL(previewFinished()), this, SLOT(cleanupLatex()));
-        _latex->makePreview(activeWindow()->tikzSource());
+
+        if (activeWindow()->tikzDocument()->isEmpty()) {
+            _latex->makePreview("\\begin{tikzpicture}\n"
+                                "  \\node [style=none] (0) at (0,0) {};\n"
+                                "\\end{tikzpicture}\n");
+        } else {
+            _latex->makePreview(activeWindow()->tikzSource());
+        }
         _preview->show();
     }
 }

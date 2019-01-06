@@ -38,7 +38,7 @@ LatexProcess::LatexProcess(PreviewWindow *preview, QObject *parent) : QObject(pa
     connect(_proc, SIGNAL(finished(int)), this, SLOT(finished(int)));
 
     // for debug purposes
-    _workingDir.setAutoRemove(false);
+    //_workingDir.setAutoRemove(false);
 }
 
 void LatexProcess::makePreview(QString tikz)
@@ -76,6 +76,10 @@ void LatexProcess::makePreview(QString tikz)
             // common windows tex directories
             texDirs << "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin";
             texDirs << "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64";
+            texDirs << "C:\\Program Files\\MiKTeX 2.8\\miktex\\bin";
+            texDirs << "C:\\Program Files\\MiKTeX 2.8\\miktex\\bin\\x64";
+            texDirs << "C:\\Program Files\\MiKTeX 2.7\\miktex\\bin";
+            texDirs << "C:\\Program Files\\MiKTeX 2.7\\miktex\\bin\\x64";
 
             _output->appendPlainText(texDirs.join(":"));
             pdflatex = QStandardPaths::findExecutable("pdflatex", texDirs);

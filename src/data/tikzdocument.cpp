@@ -148,6 +148,11 @@ QString TikzDocument::fileName() const
     return _fileName;
 }
 
+bool TikzDocument::isEmpty()
+{
+    return _graph->nodes().isEmpty();
+}
+
 void TikzDocument::addToRecentFiles()
 {
     QSettings settings("tikzit", "tikzit");

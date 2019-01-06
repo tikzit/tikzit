@@ -54,6 +54,8 @@ public:
 
     QString fileName() const;
 
+    bool isEmpty();
+
 private:
     Graph *_graph;
     QString _tikz;
