@@ -97,7 +97,8 @@ bool GraphElementData::hasProperty(QString key)
 
 bool GraphElementData::atom(QString atom)
 {
-    return (indexOfKey(atom) != -1);
+    int idx = indexOfKey(atom);
+    return (idx != -1 && _properties[idx].atom());
 }
 
 int GraphElementData::indexOfKey(QString key)

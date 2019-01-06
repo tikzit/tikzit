@@ -254,8 +254,6 @@ void Edge::updateData()
     _data->unsetProperty("bend right");
     _data->unsetProperty("looseness");
 
-    // TODO: style handling?
-
     if (_basicBendMode) {
         if (_bend != 0) {
             QString bendKey;
@@ -280,7 +278,7 @@ void Edge::updateData()
     }
 
     if (_source == _target) _data->setAtom("loop");
-    if (!isSelfLoop() && !isStraight() && almostEqual(_weight, 0.4))
+    if (!isSelfLoop() && !isStraight() && !almostEqual(_weight, 0.4))
         _data->setProperty("looseness", QString::number(_weight*2.5, 'f', 2));
     if (_source->isBlankNode()) _sourceAnchor = "center";
     else _sourceAnchor = "";

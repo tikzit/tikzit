@@ -6,7 +6,7 @@
 % Node styles
 \tikzstyle{red node}=[fill=red, tikzit category=nodes, shape=circle, draw=black]
 \tikzstyle{blue node}=[fill=blue, shape=circle, draw=black, tikzit category=nodes]
-\tikzstyle{blue node 2}=[tikzit fill=green, fill=blue, shape=circle, draw=black, tikzit category=nodes]
+\tikzstyle{green node}=[tikzit fill=green, fill=green, shape=circle, draw=black, tikzit category=nodes]
 \tikzstyle{yellow square}=[draw=black, fill=yellow, shape=rectangle]
 
 % Edge styles

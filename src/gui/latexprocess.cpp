@@ -107,6 +107,7 @@ void LatexProcess::makePreview(QString tikz)
     QTextStream tex(&f);
     tex << "\\documentclass{article}\n";
     tex << "\\usepackage{tikzit}\n";
+    tex << "\\tikzstyle{every picure}=[dotpic]\n";
     tex << "\\usepackage[graphics,active,tightpage]{preview}\n";
     tex << "\\PreviewEnvironment{tikzpicture}\n";
 
