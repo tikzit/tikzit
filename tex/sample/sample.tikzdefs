@@ -2,5 +2,4 @@
 % LaTeX preview. It can also be included in the paper.
 
 \usepackage{bm}
-
-\newcommand{\anglevec}[1]{\ensuremath{\vec{\bm{#1}}}}
+\newcommand{\param}[1]{\ensuremath{\vec{\bm{#1}}}}
