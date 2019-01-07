@@ -53,7 +53,7 @@ This doesn't add Qt binaries to the `$PATH` by default, so you may wish either r
 
     $ brew link --force qt5
 
-or add `/usr/local/opt/qt/bin` to your `$PATH`. Once this is done, TikZiT can be build from the command line via:
+or add `/usr/local/opt/qt/bin` to your `$PATH`. Once this is done, TikZiT can be built from the command line via:
 
     $ qmake -r
     $ make
