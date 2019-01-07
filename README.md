@@ -49,7 +49,7 @@ You'll need developer tools, Qt5, and Poppler (with Qt bindings) installed. You 
     $ brew install qt5
     $ brew install poppler --with-qt
 
-This doesn't add Qt binaries to the `$PATH` by default, so you may wish either run:
+This doesn't add Qt binaries to the `$PATH` by default, so you may wish to either run:
 
     $ brew link --force qt5
 
