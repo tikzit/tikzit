@@ -438,6 +438,7 @@ void Tikzit::makePreview()
             _latex->makePreview(activeWindow()->tikzSource());
         }
         _preview->show();
+        _preview->raise();
     }
 }
 
