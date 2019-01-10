@@ -409,7 +409,7 @@ QPointF Edge::bezierTangent(qreal start, qreal end) const
 
 	// normalise
 	qreal len = sqrt(dx*dx + dy*dy);
-	if (almostZero(len)) {
+	if (!almostZero(len)) {
 		dx = (dx / len) * 0.1;
 		dy = (dy / len) * 0.1;
 	}
