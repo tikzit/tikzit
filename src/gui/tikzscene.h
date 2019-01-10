@@ -80,6 +80,7 @@ public:
 
 	void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges);
 	QSet<Node*> getSelectedNodes();
+    void refreshSceneBounds();
 
 public slots:
     void graphReplaced();

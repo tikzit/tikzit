@@ -49,7 +49,7 @@ void TikzView::zoomOut()
 void TikzView::setScene(QGraphicsScene *scene)
 {
     QGraphicsView::setScene(scene);
-    centerOn(QPointF(0.0f,0.0f));
+    centerOn(QPointF(0.0,0.0));
 }
 
 void TikzView::drawBackground(QPainter *painter, const QRectF &rect)

@@ -41,7 +41,8 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
     _rubberBandItem = new QGraphicsRectItem();
     _enabled = true;
     //setSceneRect(-310,-230,620,450);
-    setSceneRect(-1000,-1000,2000,2000);
+    //setSceneRect(-2000,-1500,4000,3000);
+    refreshSceneBounds();
 
     QPen pen;
     pen.setColor(QColor::fromRgbF(0.5, 0.0, 0.5));
@@ -106,6 +107,7 @@ void TikzScene::graphReplaced()
     }
 
     refreshZIndices();
+    refreshSceneBounds();
 }
 
 void TikzScene::extendSelectionUp()
@@ -867,6 +869,28 @@ void TikzScene::reloadStyles()
     foreach (NodeItem *ni, _nodeItems) {
         ni->node()->attachStyle();
         ni->readPos(); // trigger a repaint
+    }
+}
+
+void TikzScene::refreshSceneBounds() {
+    qreal maxX = 30.0, maxY = 30.0;
+    qreal increment = 20.0;
+
+    foreach (Node *n, graph()->nodes()) {
+        while (n->point().x() - increment < -maxX || n->point().x() + increment > maxX) {
+            maxX += increment;
+        }
+
+        while (n->point().y() - increment < -maxY || n->point().y() + increment > maxY) {
+            maxY += increment;
+        }
+    }
+
+    QRectF rect(-GLOBAL_SCALEF * maxX, -GLOBAL_SCALEF * maxY, 2.0 * GLOBAL_SCALEF * maxX, 2.0 * GLOBAL_SCALEF * maxY);
+
+    if (rect != sceneRect()) {
+        setSceneRect(rect);
+        invalidate();
     }
 }
 
