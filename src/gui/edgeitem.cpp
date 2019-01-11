@@ -149,7 +149,7 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 
         painter->setPen(QPen(draw1));
 
-        float r = GLOBAL_SCALEF * _edge->cpDist();
+        qreal r = GLOBAL_SCALEF * _edge->cpDist();
         painter->drawEllipse(toScreen(_edge->source()->point()), r, r);
         painter->drawEllipse(toScreen(_edge->target()->point()), r, r);
 
@@ -158,6 +158,24 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 
         painter->drawLine(toScreen(_edge->tail()), toScreen(_edge->cp1()));
         painter->drawLine(toScreen(_edge->head()), toScreen(_edge->cp2()));
+
+        if (scene()) {
+            TikzScene *sc = static_cast<TikzScene*>(scene());
+
+            painter->setFont(Tikzit::LABEL_FONT);
+            QFontMetrics fm(Tikzit::LABEL_FONT);
+            QRectF rect = fm.boundingRect("<>");
+
+            if (sc->highlightHeads()) {
+                QPointF headMark(_edge->head().x(), _edge->head().y() + _edge->cpDist() - 0.25);
+                rect.moveCenter(toScreen(headMark));
+                painter->drawText(rect, Qt::AlignCenter, "<>");
+            } else if (sc->highlightTails()) {
+                QPointF tailMark(_edge->tail().x(), _edge->tail().y() + _edge->cpDist() - 0.25);
+                rect.moveCenter(toScreen(tailMark));
+                painter->drawText(rect, Qt::AlignCenter, "<>");
+            }
+        }
 
         //painter->drawEllipse(toScreen(_edge->cp1()), r, r);
         //painter->drawEllipse(toScreen(_edge->cp2()), r, r);

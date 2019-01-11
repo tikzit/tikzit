@@ -82,6 +82,10 @@ public:
 	QSet<Node*> getSelectedNodes();
     void refreshSceneBounds();
 
+    bool highlightHeads() const;
+
+    bool highlightTails() const;
+
 public slots:
     void graphReplaced();
     void refreshZIndices();
@@ -114,6 +118,9 @@ private:
     int _oldInAngle;
     int _oldOutAngle;
     bool _enabled;
+
+    bool _highlightHeads;
+    bool _highlightTails;
 };
 
 #endif // TIKZSCENE_H

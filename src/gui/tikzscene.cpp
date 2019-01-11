@@ -583,6 +583,18 @@ void TikzScene::keyReleaseEvent(QKeyEvent *event)
 {
     if (!_enabled) return;
 
+    // clear highlighting for edge bends (if there was any)
+    if (event->modifiers() & Qt::ControlModifier) {
+        // it could be the case the user has released shift and is still holding control
+        bool head = !(event->modifiers() & Qt::ShiftModifier);
+        _highlightHeads = head;
+        _highlightTails = !head;
+    } else {
+        _highlightHeads = false;
+        _highlightTails = false;
+    }
+
+
     if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
         deleteSelectedItems();
     } else if (event->modifiers() == Qt::NoModifier) {
@@ -602,6 +614,8 @@ void TikzScene::keyReleaseEvent(QKeyEvent *event)
             break;
         }
     }
+
+    foreach (QGraphicsItem *it, selectedItems()) it->update();
 }
 
 void TikzScene::keyPressEvent(QKeyEvent *event)
@@ -614,42 +628,113 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
     }
 
     if (event->modifiers() & Qt::ControlModifier) {
-        QPointF delta(0,0);
-        qreal shift = (event->modifiers() & Qt::ShiftModifier) ? 1.0 : 10.0;
-        switch(event->key()) {
-        case Qt::Key_Left:
-            delta.setX(-0.025 * shift);
-            break;
-        case Qt::Key_Right:
-            delta.setX(0.025 * shift);
-            break;
-        case Qt::Key_Up:
-            delta.setY(0.025 * shift);
-            break;
-        case Qt::Key_Down:
-            delta.setY(-0.025 * shift);
-            break;
-        }
+        QSet<Node*> selNodes;
+        QSet<Edge*> selEdges;
+        getSelection(selNodes, selEdges);
 
-        if (!delta.isNull()) {
-            capture = true;
-            QMap<Node*,QPointF> oldNodePositions;
-            QMap<Node*,QPointF> newNodePositions;
-            QPointF pos;
-
-            foreach (QGraphicsItem *gi, selectedItems()) {
-                if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) {
-                    pos = ni->node()->point();
-                    oldNodePositions.insert(ni->node(), pos);
-                    newNodePositions.insert(ni->node(), pos + delta);
-                }
+        if (!selNodes.isEmpty()) {
+            QPointF delta(0,0);
+            qreal shift = (event->modifiers() & Qt::ShiftModifier) ? 1.0 : 10.0;
+            switch(event->key()) {
+            case Qt::Key_Left:
+                delta.setX(-0.025 * shift);
+                break;
+            case Qt::Key_Right:
+                delta.setX(0.025 * shift);
+                break;
+            case Qt::Key_Up:
+                delta.setY(0.025 * shift);
+                break;
+            case Qt::Key_Down:
+                delta.setY(-0.025 * shift);
+                break;
             }
 
-            MoveCommand *cmd = new MoveCommand(this, oldNodePositions, newNodePositions);
-            _tikzDocument->undoStack()->push(cmd);
+            if (!delta.isNull()) {
+                capture = true;
+                QMap<Node*,QPointF> oldNodePositions;
+                QMap<Node*,QPointF> newNodePositions;
+                QPointF pos;
+
+                foreach (QGraphicsItem *gi, selectedItems()) {
+                    if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) {
+                        pos = ni->node()->point();
+                        oldNodePositions.insert(ni->node(), pos);
+                        newNodePositions.insert(ni->node(), pos + delta);
+                    }
+                }
+
+                MoveCommand *cmd = new MoveCommand(this, oldNodePositions, newNodePositions);
+                _tikzDocument->undoStack()->push(cmd);
+            }
+        } else if (!selEdges.isEmpty()) {
+            int deltaAngle = 0;
+
+            bool head = !(event->modifiers() & Qt::ShiftModifier);
+            _highlightHeads = head;
+            _highlightTails = !head;
+
+            switch(event->key()) {
+            case Qt::Key_Left:
+                deltaAngle = 15;
+                //head = true;
+                break;
+            case Qt::Key_Right:
+                deltaAngle = -15;
+                //head = true;
+                break;
+//            case Qt::Key_Down:
+//                deltaAngle = -15;
+//                head = false;
+//                break;
+//            case Qt::Key_Up:
+//                deltaAngle = 15;
+//                head = false;
+//                break;
+            }
+
+            if (deltaAngle != 0) {
+                capture = true;
+                _tikzDocument->undoStack()->beginMacro("Bend edges");
+
+                // shift bend by deltaAngle or -deltaAngle (see below)
+                int sign = 1;
+
+                foreach (Edge *e, selEdges) {
+                    if (e->basicBendMode()) {
+                        _tikzDocument->undoStack()->push(new ChangeEdgeModeCommand(this, e));
+                    }
+
+                    if (head) {
+                        int oldInAngle = e->inAngle();
+                        e->setInAngle(oldInAngle + sign * deltaAngle);
+                        EdgeBendCommand *cmd = new EdgeBendCommand(this, e,
+                                                                   e->weight(),
+                                                                   e->bend(),
+                                                                   oldInAngle,
+                                                                   e->outAngle());
+                        _tikzDocument->undoStack()->push(cmd);
+                    } else {
+                        int oldOutAngle = e->outAngle();
+                        e->setOutAngle(oldOutAngle + sign * deltaAngle);
+                        EdgeBendCommand *cmd = new EdgeBendCommand(this, e,
+                                                                   e->weight(),
+                                                                   e->bend(),
+                                                                   e->inAngle(),
+                                                                   oldOutAngle);
+                        _tikzDocument->undoStack()->push(cmd);
+                    }
+
+                    // in the special case where 2 edges are selected, bend in opposite directions
+                    if (selEdges.size() == 2) sign *= -1;
+                }
+
+                _tikzDocument->undoStack()->endMacro();
+            }
         }
     }
 
+    foreach (QGraphicsItem *it, selectedItems()) it->update();
     if (!capture) QGraphicsScene::keyPressEvent(event);
 }
 
@@ -687,6 +772,16 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 			break;
         }
     }
+}
+
+bool TikzScene::highlightTails() const
+{
+    return _highlightTails;
+}
+
+bool TikzScene::highlightHeads() const
+{
+    return _highlightHeads;
 }
 
 bool TikzScene::enabled() const
