@@ -29,6 +29,7 @@
 #include <QInputDialog>
 #include <cmath>
 #include <delimitedstringvalidator.h>
+#include <QSettings>
 
 
 TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
@@ -227,6 +228,7 @@ void TikzScene::refreshZIndices()
 
 void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    QSettings settings("tikzit", "tikzit");
     if (!_enabled) return;
 
     // current mouse position, in scene coordinates
@@ -238,7 +240,19 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     qreal cpR = GLOBAL_SCALEF * (0.1);
     qreal cpR2 = cpR * cpR;
 
-
+    if (event->button() == Qt::RightButton &&
+        _tools->currentTool() == ToolPalette::SELECT &&
+        settings.value("smart-tool-enabled", true).toBool())
+    {
+        _smartTool = true;
+        if (!items(_mouseDownPos).isEmpty() &&
+            dynamic_cast<NodeItem*>(items(_mouseDownPos)[0]))
+        {
+            _tools->setCurrentTool(ToolPalette::EDGE);
+        } else {
+            _tools->setCurrentTool(ToolPalette::VERTEX);
+        }
+    }
 
     switch (_tools->currentTool()) {
     case ToolPalette::SELECT:
@@ -570,6 +584,12 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     case ToolPalette::CROP:
         break;
     }
+
+    if (_smartTool) {
+        _tools->setCurrentTool(ToolPalette::SELECT);
+    }
+
+    _smartTool = false;
 
     // clear artefacts from rubber band selection
     invalidate(QRect(), QGraphicsScene::BackgroundLayer);
