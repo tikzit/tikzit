@@ -893,7 +893,13 @@ void TikzScene::selectAllNodes()
 
 void TikzScene::deselectAll()
 {
-    selectedItems().clear();
+    foreach (NodeItem *ni, _nodeItems.values()) {
+        ni->setSelected(false);
+    }
+
+    foreach (EdgeItem *ei, _edgeItems.values()) {
+        ei->setSelected(false);
+    }
 }
 
 bool TikzScene::parseTikz(QString tikz)
