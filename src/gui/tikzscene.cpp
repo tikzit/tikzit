@@ -751,13 +751,16 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
 
                 foreach (Edge *e, selEdges) {
                     qreal oldWeight = e->weight();
-                    e->setWeight(oldWeight + deltaWeight);
-                    EdgeBendCommand *cmd = new EdgeBendCommand(this, e,
-                                                               oldWeight,
-                                                               e->bend(),
-                                                               e->inAngle(),
-                                                               e->outAngle());
-                    _tikzDocument->undoStack()->push(cmd);
+                    // don't let weight drop below 0.1
+                    if (oldWeight + deltaWeight > 0.099) {
+                        e->setWeight(oldWeight + deltaWeight);
+                        EdgeBendCommand *cmd = new EdgeBendCommand(this, e,
+                                                                   oldWeight,
+                                                                   e->bend(),
+                                                                   e->inAngle(),
+                                                                   e->outAngle());
+                        _tikzDocument->undoStack()->push(cmd);
+                    }
                 }
 
                 _tikzDocument->undoStack()->endMacro();
