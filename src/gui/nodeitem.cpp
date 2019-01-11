@@ -72,7 +72,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
         QVector<qreal> p;
         p << 1.0 << 2.0;
         pen.setDashPattern(p);
-		pen.setWidthF(2.0f);
+		pen.setWidthF(2.0);
         painter->setPen(pen);
         painter->setBrush(Qt::NoBrush);
         painter->drawPath(shape());
@@ -135,10 +135,10 @@ void NodeItem::updateBounds()
 	prepareGeometryChange();
 	QString label = _node->label();
 	if (label != "") {
-		QFontMetrics fm(Tikzit::LABEL_FONT);
-		QRectF labelRect = fm.boundingRect(label);
-		labelRect.moveCenter(QPointF(0, 0));
-		_boundingRect = labelRect.united(shape().boundingRect()).adjusted(-4, -4, 4, 4);
+		//QFontMetrics fm(Tikzit::LABEL_FONT);
+		//QRectF labelRect = fm.boundingRect(label);
+		//labelRect.moveCenter(QPointF(0, 0));
+		_boundingRect = labelRect().united(shape().boundingRect()).adjusted(-4, -4, 4, 4);
 	} else {
 		_boundingRect = shape().boundingRect().adjusted(-4, -4, 4, 4);
 	}

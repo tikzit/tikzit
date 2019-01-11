@@ -169,8 +169,10 @@ void Edge::updateControls() {
         qreal bnd = static_cast<qreal>(_bend) * (M_PI / 180.0);
         outAngleR = angle - bnd;
         inAngleR = M_PI + angle + bnd;
-        _outAngle = static_cast<int>(round(outAngleR * (180.0 / M_PI)));
-        _inAngle = static_cast<int>(round(inAngleR * (180.0 / M_PI)));
+
+        // keep _inAngle and _outAngle snapped to increments of 15 degrees
+        _outAngle = static_cast<int>(roundToNearest(15.0, outAngleR * (180.0 / M_PI)));
+        _inAngle = static_cast<int>(roundToNearest(15.0, inAngleR * (180.0 / M_PI)));
     } else {
         outAngleR = static_cast<qreal>(_outAngle) * (M_PI / 180.0);
         inAngleR = static_cast<qreal>(_inAngle) * (M_PI / 180.0);
