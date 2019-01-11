@@ -234,13 +234,11 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     _draggingNodes = false;
 
-    // disable rubber band drag, which will clear the selection. Only re-enable it
-    // for the SELECT tool, and when no control point has been clicked.
-    //views()[0]->setDragMode(QGraphicsView::NoDrag);
-
     // radius of a control point for bezier edges, in scene coordinates
     qreal cpR = GLOBAL_SCALEF * (0.1);
     qreal cpR2 = cpR * cpR;
+
+
 
     switch (_tools->currentTool()) {
     case ToolPalette::SELECT:
@@ -669,6 +667,7 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
             }
         } else if (!selEdges.isEmpty()) {
             int deltaAngle = 0;
+            qreal deltaWeight = 0.0;
 
             bool head = !(event->modifiers() & Qt::ShiftModifier);
             _highlightHeads = head;
@@ -677,20 +676,16 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
             switch(event->key()) {
             case Qt::Key_Left:
                 deltaAngle = 15;
-                //head = true;
                 break;
             case Qt::Key_Right:
                 deltaAngle = -15;
-                //head = true;
                 break;
-//            case Qt::Key_Down:
-//                deltaAngle = -15;
-//                head = false;
-//                break;
-//            case Qt::Key_Up:
-//                deltaAngle = 15;
-//                head = false;
-//                break;
+            case Qt::Key_Down:
+                deltaWeight = -0.1;
+                break;
+            case Qt::Key_Up:
+                deltaWeight = 0.1;
+                break;
             }
 
             if (deltaAngle != 0) {
@@ -727,6 +722,22 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
 
                     // in the special case where 2 edges are selected, bend in opposite directions
                     if (selEdges.size() == 2) sign *= -1;
+                }
+
+                _tikzDocument->undoStack()->endMacro();
+            } else if (!almostZero(deltaWeight)) {
+                capture = true;
+                _tikzDocument->undoStack()->beginMacro("Adjust edges");
+
+                foreach (Edge *e, selEdges) {
+                    qreal oldWeight = e->weight();
+                    e->setWeight(oldWeight + deltaWeight);
+                    EdgeBendCommand *cmd = new EdgeBendCommand(this, e,
+                                                               oldWeight,
+                                                               e->bend(),
+                                                               e->inAngle(),
+                                                               e->outAngle());
+                    _tikzDocument->undoStack()->push(cmd);
                 }
 
                 _tikzDocument->undoStack()->endMacro();
