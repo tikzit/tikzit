@@ -167,11 +167,11 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
             QRectF rect = fm.boundingRect("<>");
 
             if (sc->highlightHeads()) {
-                QPointF headMark(_edge->head().x(), _edge->head().y() + _edge->cpDist() - 0.25);
+                QPointF headMark(_edge->target()->point().x(), _edge->target()->point().y() + _edge->cpDist() - 0.25);
                 rect.moveCenter(toScreen(headMark));
                 painter->drawText(rect, Qt::AlignCenter, "<>");
             } else if (sc->highlightTails()) {
-                QPointF tailMark(_edge->tail().x(), _edge->tail().y() + _edge->cpDist() - 0.25);
+                QPointF tailMark(_edge->source()->point().x(), _edge->source()->point().y() + _edge->cpDist() - 0.25);
                 rect.moveCenter(toScreen(tailMark));
                 painter->drawText(rect, Qt::AlignCenter, "<>");
             }
