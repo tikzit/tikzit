@@ -26,6 +26,7 @@ before_install:
 
 
 install:
+  - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 511 ]] || brew update'
   - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 511 ]] || brew install qt5'
   - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 511 ]] || brew link --force qt5'
   - '[[ "$TRAVIS_OS_NAME" != osx || "$QTVER" != 511 ]] || brew install poppler --with-qt'
