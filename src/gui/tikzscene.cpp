@@ -212,6 +212,25 @@ void TikzScene::reorderSelection(bool toFront)
     _tikzDocument->undoStack()->push(cmd);
 }
 
+void TikzScene::reverseSelectedEdges()
+{
+    // grab all the edges which are either selected themselves, or where
+    // both their source and target nodes are selected
+    QSet<Edge*> es;
+    foreach (Edge *e, graph()->edges()) {
+        if ((_edgeItems[e] && _edgeItems[e]->isSelected()) ||
+            (_nodeItems[e->source()] && _nodeItems[e->target()] &&
+             _nodeItems[e->source()]->isSelected() &&
+             _nodeItems[e->target()]->isSelected()))
+        {
+            es << e;
+        }
+    }
+
+    ReverseEdgesCommand *cmd = new ReverseEdgesCommand(this, es);
+    _tikzDocument->undoStack()->push(cmd);
+}
+
 void TikzScene::refreshZIndices()
 {
     qreal z = 0.0;

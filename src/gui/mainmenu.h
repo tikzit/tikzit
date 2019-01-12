@@ -65,6 +65,7 @@ public slots:
     void on_actionExtendDown_triggered();
     void on_actionExtendLeft_triggered();
     void on_actionExtendRight_triggered();
+    void on_actionReverse_Edge_Direction_triggered();
 
     // Tools
     void on_actionParse_triggered();

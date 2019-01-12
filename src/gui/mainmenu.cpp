@@ -227,6 +227,12 @@ void MainMenu::on_actionExtendRight_triggered()
         tikzit->activeWindow()->tikzScene()->extendSelectionRight();
 }
 
+void MainMenu::on_actionReverse_Edge_Direction_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->reverseSelectedEdges();
+}
+
 
 // Tikz
 void MainMenu::on_actionParse_triggered()

@@ -81,6 +81,8 @@ public:
     void setOutAngle(int outAngle);
     void setWeight(qreal weight);
 
+    void reverse();
+
     int tikzLine() const;
     void setTikzLine(int tikzLine);
 

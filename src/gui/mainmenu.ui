@@ -72,6 +72,7 @@
    <addaction name="separator"/>
    <addaction name="menuReorder"/>
    <addaction name="menuTransform"/>
+   <addaction name="actionReverse_Edge_Direction"/>
   </widget>
   <widget class="QMenu" name="menuTikz">
    <property name="title">
@@ -363,6 +364,14 @@
   <action name="actionPreferences">
    <property name="text">
     <string>Preferences...</string>
+   </property>
+  </action>
+  <action name="actionReverse_Edge_Direction">
+   <property name="text">
+    <string>Reverse Edge Direction</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+/</string>
    </property>
   </action>
   <addaction name="menuFile"/>

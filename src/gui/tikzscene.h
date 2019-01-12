@@ -77,6 +77,8 @@ public:
 
     void reorderSelection(bool toFront);
 
+    void reverseSelectedEdges();
+
 
 	void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges);
 	QSet<Node*> getSelectedNodes();

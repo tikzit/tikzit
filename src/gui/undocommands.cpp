@@ -539,3 +539,33 @@ void ReorderCommand::redo()
     _scene->refreshZIndices();
     GraphUpdateCommand::redo();
 }
+
+ReverseEdgesCommand::ReverseEdgesCommand(TikzScene *scene,
+                                         QSet<Edge *> edgeSet,
+                                         QUndoCommand *parent) :
+    GraphUpdateCommand(scene, parent), _edgeSet(edgeSet)
+{
+}
+
+void ReverseEdgesCommand::undo()
+{
+    EdgeItem *ei;
+    foreach (Edge *e, _edgeSet) {
+        e->reverse();
+        ei = _scene->edgeItems()[e];
+        if (ei) ei->readPos();
+    }
+    GraphUpdateCommand::undo();
+}
+
+void ReverseEdgesCommand::redo()
+{
+    EdgeItem *ei;
+    foreach (Edge *e, _edgeSet) {
+        e->reverse();
+        ei = _scene->edgeItems()[e];
+        if (ei) ei->readPos();
+    }
+    GraphUpdateCommand::redo();
+}
+

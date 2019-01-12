@@ -78,6 +78,17 @@ private:
     int _newOutAngle;
 };
 
+class ReverseEdgesCommand : public GraphUpdateCommand
+{
+public:
+    explicit ReverseEdgesCommand(TikzScene *scene, QSet<Edge*> edgeSet,
+                                 QUndoCommand *parent = nullptr);
+    void undo() override;
+    void redo() override;
+private:
+    QSet<Edge*> _edgeSet;
+};
+
 class DeleteCommand : public GraphUpdateCommand
 {
 public:

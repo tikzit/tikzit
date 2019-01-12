@@ -365,6 +365,18 @@ void Edge::setWeight(qreal weight)
     _weight = weight;
 }
 
+void Edge::reverse()
+{
+    Node *n = _source;
+    _source = _target;
+    _target = n;
+    int a = _inAngle;
+    _inAngle = _outAngle;
+    _outAngle = a;
+    _bend = -_bend;
+    updateData();
+}
+
 int Edge::tikzLine() const
 {
     return _tikzLine;
