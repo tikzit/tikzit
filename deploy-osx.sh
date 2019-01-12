@@ -4,18 +4,23 @@
 # copy in libraries and set (most) library paths
 macdeployqt tikzit.app
 
-# macdeployqt misses this path for some reason, so fix it
+# macdeployqt doesn't fix the path to libpoppler for some reason, so we do it by hand
 cd tikzit.app/Contents/Frameworks
 
 POPPLER_QT=`ls libpoppler-qt*`
-POPPLER_PATH=`otool -L $POPPLER_QT | sed -e 's!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\1!p'`
-POPPLER_LIB=`otool -L $POPPLER_QT | sed -e 's!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\2!p'`
+POPPLER_PATH=`otool -L $POPPLER_QT | sed -n 's!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\1!p'`
+POPPLER_LIB=`otool -L $POPPLER_QT | sed -n 's!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\2!p'`
 
 echo "Found $POPPLER_QT and $POPPLER_LIB"
-echo "Replacing $POPPLER_PATH with relative path..."
 
-install_name_tool -id "@executable_path/../Frameworks/$POPPLER_LIB" $POPPLER_LIB
-install_name_tool -change $POPPLER_PATH "@executable_path/../Frameworks/$POPPLER_LIB" $POPPLER_QT
+if [ "$POPPLER_PATH" != "" ]; then
+  echo "Replacing $POPPLER_PATH with relative path..."
+  install_name_tool -id "@executable_path/../Frameworks/$POPPLER_LIB" $POPPLER_LIB
+  install_name_tool -change $POPPLER_PATH "@executable_path/../Frameworks/$POPPLER_LIB" $POPPLER_QT
+else
+  echo "Poppler already has relative path, so nothing to do."
+fi
+
 
 cd ../../..
 
