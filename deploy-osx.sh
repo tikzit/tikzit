@@ -6,8 +6,17 @@ macdeployqt tikzit.app
 
 # macdeployqt misses this path for some reason, so fix it
 cd tikzit.app/Contents/Frameworks
-install_name_tool -id "@executable_path/../Frameworks/libpoppler.83.dylib" libpoppler.83.dylib
-install_name_tool -change /usr/local/Cellar/poppler/0.72.0/lib/libpoppler.83.dylib "@executable_path/../Frameworks/libpoppler.83.dylib" libpoppler-qt5.1.dylib
+
+POPPLER_QT=`ls libpoppler-qt*`
+POPPLER_PATH=`otool -L $POPPLER_QT | sed -e 'm!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\1!p'`
+POPPLER_LIB=`otool -L $POPPLER_QT | sed -e 'm!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\2!p'`
+
+echo "Found $POPPLER_QT and $POPPLER_LIB"
+echo "Replacing $POPPLER_PATH with relative path..."
+
+install_name_tool -id "@executable_path/../Frameworks/$POPPLER_LIB" $POPPLER_LIB
+install_name_tool -change $POPPLER_PATH "@executable_path/../Frameworks/$POPPLER_LIB" $POPPLER_QT
+
 cd ../../..
 
 # create DMG
