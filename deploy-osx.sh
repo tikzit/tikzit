@@ -8,8 +8,8 @@ macdeployqt tikzit.app
 cd tikzit.app/Contents/Frameworks
 
 POPPLER_QT=`ls libpoppler-qt*`
-POPPLER_PATH=`otool -L $POPPLER_QT | sed -e 'm!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\1!p'`
-POPPLER_LIB=`otool -L $POPPLER_QT | sed -e 'm!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\2!p'`
+POPPLER_PATH=`otool -L $POPPLER_QT | sed -e 's!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\1!p'`
+POPPLER_LIB=`otool -L $POPPLER_QT | sed -e 's!.*\(/usr.*\(libpoppler\..*dylib\)\).*!\2!p'`
 
 echo "Found $POPPLER_QT and $POPPLER_LIB"
 echo "Replacing $POPPLER_PATH with relative path..."
