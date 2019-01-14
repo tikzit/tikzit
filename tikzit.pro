@@ -2,7 +2,7 @@
 
 QT += core gui widgets network
 
-VERSION = 2.1.2
+VERSION = 2.1.3
 
 test {
     CONFIG += testcase
