@@ -13,11 +13,11 @@ if tok == '':
 def pr(j): print(json.dumps(j, indent=2))
 
 # call GitHub API with curl
-def gh(s, args=[], quiet=True, parse=True):
+def gh(s, args=[], quiet=True, parse=True, auth=True):
     cmd = (["curl"] +
            (["-s"] if quiet else []) +
            args +
-           ["-H", "Authorization: token " + tok] +
+           (["-H", "Authorization: token " + tok] if auth else []) +
            [s if 'https://' in s else api_url + '/' + s])
     # ONLY UN-COMMENT FOR TESTING:
     # print(' '.join(cmd))
