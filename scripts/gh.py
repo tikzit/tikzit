@@ -13,15 +13,18 @@ if tok == '':
 def pr(j): print(json.dumps(j, indent=2))
 
 # call GitHub API with curl
-def gh(s, args=[]):
-    cmd = (["curl", "-s"] + args +
+def gh(s, args=[], quiet=True, parse=True):
+    cmd = (["curl"] +
+           (["-s"] if quiet else []) +
+           args +
            ["-H", "Authorization: token " + tok] +
            [s if 'https://' in s else api_url + '/' + s])
     # ONLY UN-COMMENT FOR TESTING:
     # print(' '.join(cmd))
     p = Popen(cmd, stdout=PIPE)
     resp = p.stdout.read()
-    return json.loads(resp if resp else '{}')
+    if parse: return json.loads(resp if resp else '{}')
+    else: return resp
 
 def get_release(n):
   rs = [r for r in gh('releases') if r['name'] == n]
