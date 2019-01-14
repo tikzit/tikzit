@@ -51,12 +51,18 @@ void NodeItem::writePos()
 
 QRectF NodeItem::labelRect() const {
     QString label = _node->label();
-    //QFont f("Courier", 9);
     QFontMetrics fm(Tikzit::LABEL_FONT);
-
     QRectF rect = fm.boundingRect(label);
-    //rect.adjust(-2,-2,2,2);
     rect.moveCenter(QPointF(0,0));
+    return rect;
+}
+
+QRectF NodeItem::outerLabelRect() const {
+    QString label = _node->data()->property("label");
+    label.replace(QRegularExpression("^[^:]*:"), "");
+    QFontMetrics fm(Tikzit::LABEL_FONT);
+    QRectF rect = fm.boundingRect(label);
+    rect.moveCenter(QPointF(0, -0.5 * GLOBAL_SCALEF));
     return rect;
 }
 
@@ -99,6 +105,24 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
         painter->drawText(rect, Qt::AlignCenter, _node->label());
     }
 
+    if (_node->data()->hasProperty("label")) {
+        QString label = _node->data()->property("label");
+        label.replace(QRegularExpression("^[^:]*:"), "");
+
+        QRectF rect = outerLabelRect();
+        QPen pen(QColor(0,0,200,120));
+        QVector<qreal> d;
+        d << 2.0 << 2.0;
+        pen.setDashPattern(d);
+        painter->setPen(pen);
+        painter->setBrush(QBrush(QColor(100,255,255,120)));
+        painter->drawRect(rect);
+
+        painter->setPen(QPen(Qt::black));
+        painter->setFont(Tikzit::LABEL_FONT);
+        painter->drawText(rect, Qt::AlignCenter, label);
+    }
+
     if (isSelected()) {
         QPainterPath sh = shape();
         QPainterPathStroker stroker;
@@ -134,14 +158,11 @@ void NodeItem::updateBounds()
 {
 	prepareGeometryChange();
 	QString label = _node->label();
-	if (label != "") {
-		//QFontMetrics fm(Tikzit::LABEL_FONT);
-		//QRectF labelRect = fm.boundingRect(label);
-		//labelRect.moveCenter(QPointF(0, 0));
-		_boundingRect = labelRect().united(shape().boundingRect()).adjusted(-4, -4, 4, 4);
-	} else {
-		_boundingRect = shape().boundingRect().adjusted(-4, -4, 4, 4);
-	}
+    QString outerLabel = _node->data()->property("label");
+    QRectF rect = shape().boundingRect();
+	if (label != "") rect = rect.united(labelRect());
+    if (outerLabel != "") rect = rect.united(outerLabelRect());
+    _boundingRect = rect.adjusted(-4, -4, 4, 4);
 }
 
 Node *NodeItem::node() const

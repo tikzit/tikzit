@@ -45,6 +45,7 @@ public:
 private:
     Node *_node;
     QRectF labelRect() const;
+    QRectF outerLabelRect() const;
 	QRectF _boundingRect;
 };
 
