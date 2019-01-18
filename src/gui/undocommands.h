@@ -121,11 +121,14 @@ private:
 class AddEdgeCommand : public GraphUpdateCommand
 {
 public:
-    explicit AddEdgeCommand(TikzScene *scene, Edge *edge, QUndoCommand *parent = nullptr);
+    explicit AddEdgeCommand(TikzScene *scene, Edge *edge, bool selectEdge, QSet<Node *> selNodes, QSet<Edge *> selEdges, QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
+    bool _selectEdge;
     Edge *_edge;
+    QSet<Node*> _selNodes;
+    QSet<Edge*> _selEdges;
 };
 
 class ChangeEdgeModeCommand : public GraphUpdateCommand

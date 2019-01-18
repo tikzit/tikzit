@@ -67,6 +67,9 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
 
     _rubberBandItem->setVisible(false);
     addItem(_rubberBandItem);
+
+    _highlightHeads = false;
+    _highlightTails = false;
 }
 
 TikzScene::~TikzScene() {
@@ -509,6 +512,7 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!_enabled) return;
+    QSettings settings("tikzit", "tikzit");
 
     // current mouse position, in scene coordinates
     QPointF mousePos = event->scenePos();
@@ -593,7 +597,13 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         if (_edgeStartNodeItem != nullptr && _edgeEndNodeItem != nullptr) {
             Edge *e = new Edge(_edgeStartNodeItem->node(), _edgeEndNodeItem->node(), _tikzDocument);
 			e->setStyleName(_styles->activeEdgeStyleName());
-            AddEdgeCommand *cmd = new AddEdgeCommand(this, e);
+
+            bool selectEdge = settings.value("select-new-edges", false).toBool();
+            QSet<Node*> selNodes;
+            QSet<Edge*> selEdges;
+            if (selectEdge) getSelection(selNodes, selEdges);
+            AddEdgeCommand *cmd = new AddEdgeCommand(this, e, selectEdge,
+                                                     selNodes, selEdges);
             _tikzDocument->undoStack()->push(cmd);
         }
         _edgeStartNodeItem = nullptr;
@@ -618,12 +628,17 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void TikzScene::keyReleaseEvent(QKeyEvent *event)
 {
+    //qDebug() << "keyrelease:" << QString::number(event->key(), 16);
+    //qDebug() << "modifiers:" << QString::number(QApplication::queryKeyboardModifiers(), 16);
     if (!_enabled) return;
 
+    // slower, but seems to be more reliable than event->modifiers()
+    Qt::KeyboardModifiers mod = QApplication::queryKeyboardModifiers();
+
     // clear highlighting for edge bends (if there was any)
-    if (event->modifiers() & Qt::ControlModifier) {
+    if (mod & Qt::ControlModifier) {
         // it could be the case the user has released shift and is still holding control
-        bool head = !(event->modifiers() & Qt::ShiftModifier);
+        bool head = !(mod & Qt::ShiftModifier);
         _highlightHeads = head;
         _highlightTails = !head;
     } else {
@@ -634,7 +649,7 @@ void TikzScene::keyReleaseEvent(QKeyEvent *event)
 
     if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
         deleteSelectedItems();
-    } else if (event->modifiers() == Qt::NoModifier) {
+    } else if (mod == Qt::NoModifier) {
         switch(event->key()) {
         case Qt::Key_S:
             tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::SELECT);
@@ -657,21 +672,26 @@ void TikzScene::keyReleaseEvent(QKeyEvent *event)
 
 void TikzScene::keyPressEvent(QKeyEvent *event)
 {
+    //qDebug() << "keypress:" << QString::number(event->key(), 16);
+    //qDebug() << "modifiers:" << QString::number(QApplication::queryKeyboardModifiers(), 16);
     bool capture = false;
+
+    // slower, but seems to be more reliable than event->modifiers()
+    Qt::KeyboardModifiers mod = QApplication::queryKeyboardModifiers();
 
     if (event->key() == Qt::Key_QuoteLeft) {
         capture = true;
         _styles->nextNodeStyle();
     }
 
-    if (event->modifiers() & Qt::ControlModifier) {
+    if (mod & Qt::ControlModifier) {
         QSet<Node*> selNodes;
         QSet<Edge*> selEdges;
         getSelection(selNodes, selEdges);
 
         if (!selNodes.isEmpty()) {
             QPointF delta(0,0);
-            qreal shift = (event->modifiers() & Qt::ShiftModifier) ? 1.0 : 10.0;
+            qreal shift = (mod & Qt::ShiftModifier) ? 1.0 : 10.0;
             switch(event->key()) {
             case Qt::Key_Left:
                 delta.setX(-0.025 * shift);
@@ -708,7 +728,7 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
             int deltaAngle = 0;
             qreal deltaWeight = 0.0;
 
-            bool head = !(event->modifiers() & Qt::ShiftModifier);
+            bool head = !(mod & Qt::ShiftModifier);
             _highlightHeads = head;
             _highlightTails = !head;
 
@@ -829,12 +849,12 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 bool TikzScene::highlightTails() const
 {
-    return _highlightTails;
+    return _highlightTails && getSelectedNodes().isEmpty();
 }
 
 bool TikzScene::highlightHeads() const
 {
-    return _highlightHeads;
+    return _highlightHeads && getSelectedNodes().isEmpty();
 }
 
 bool TikzScene::enabled() const
@@ -983,7 +1003,7 @@ void TikzScene::rotateNodes(bool clockwise)
 }
 
 
-void TikzScene::getSelection(QSet<Node *> &selNodes, QSet<Edge *> &selEdges)
+void TikzScene::getSelection(QSet<Node *> &selNodes, QSet<Edge *> &selEdges) const
 {
     foreach (QGraphicsItem *gi, selectedItems()) {
         if (NodeItem *ni = dynamic_cast<NodeItem*>(gi)) selNodes << ni->node();
@@ -991,7 +1011,7 @@ void TikzScene::getSelection(QSet<Node *> &selNodes, QSet<Edge *> &selEdges)
     }
 }
 
-QSet<Node *> TikzScene::getSelectedNodes()
+QSet<Node *> TikzScene::getSelectedNodes() const
 {
     QSet<Node*> selNodes;
     foreach (QGraphicsItem *gi, selectedItems()) {

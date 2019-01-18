@@ -20,6 +20,7 @@
 #include "nodeitem.h"
 #include "edgeitem.h"
 
+#include <QApplication>
 #include <QGraphicsView>
 
 GraphUpdateCommand::GraphUpdateCommand(TikzScene *scene, QUndoCommand *parent) : QUndoCommand(parent), _scene(scene)
@@ -217,8 +218,14 @@ void AddNodeCommand::redo()
     GraphUpdateCommand::redo();
 }
 
-AddEdgeCommand::AddEdgeCommand(TikzScene *scene, Edge *edge, QUndoCommand *parent) :
-    GraphUpdateCommand(scene, parent), _edge(edge)
+AddEdgeCommand::AddEdgeCommand(TikzScene *scene,
+                               Edge *edge,
+                               bool selectEdge,
+                               QSet<Node*> selNodes,
+                               QSet<Edge*> selEdges,
+                               QUndoCommand *parent) :
+    GraphUpdateCommand(scene, parent), _edge(edge),
+    _selectEdge(selectEdge), _selNodes(selNodes), _selEdges(selEdges)
 {
 }
 
@@ -231,24 +238,38 @@ void AddEdgeCommand::undo()
 
     _scene->graph()->removeEdge(_edge);
     _scene->refreshZIndices();
+
+    if (_selectEdge) {
+        foreach (NodeItem *ni, _scene->nodeItems()) {
+            ni->setSelected(_selNodes.contains(ni->node()));
+        }
+
+        foreach (EdgeItem *ei, _scene->edgeItems()) {
+            ei->setSelected(_selEdges.contains(ei->edge()));
+        }
+    }
+
     GraphUpdateCommand::undo();
 }
 
 void AddEdgeCommand::redo()
 {
-	_edge->attachStyle(); // do for every redo, in case styles have changed
+    _edge->attachStyle(); // do for every redo, in case styles have changed
     _scene->graph()->addEdge(_edge);
     EdgeItem *ei = new EdgeItem(_edge);
     _scene->edgeItems().insert(_edge, ei);
     _scene->addItem(ei);
 
-	// TODO: deal consistently with stacking order
-    // edges should always be stacked below nodes
     if (!_scene->graph()->nodes().isEmpty()) {
         ei->stackBefore(_scene->nodeItems()[_scene->graph()->nodes().first()]);
     }
 
     _scene->refreshZIndices();
+
+    if (_selectEdge) {
+        _scene->clearSelection();
+        ei->setSelected(true);
+    }
     GraphUpdateCommand::redo();
 }
 

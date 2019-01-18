@@ -26,10 +26,11 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     setColor(ui->minorColor, settings.value("grid-color-minor",
       QColor(250,250,255)).value<QColor>());
 
-
     connect(ui->axesColor, SIGNAL(clicked()), this, SLOT(colorClick()));
     connect(ui->majorColor, SIGNAL(clicked()), this, SLOT(colorClick()));
     connect(ui->minorColor, SIGNAL(clicked()), this, SLOT(colorClick()));
+
+    ui->selectNewEdges->setChecked(settings.value("select-new-edges", false).toBool());
 }
 
 PreferenceDialog::~PreferenceDialog()
@@ -45,6 +46,7 @@ void PreferenceDialog::accept()
     settings.setValue("grid-color-axes", color(ui->axesColor));
     settings.setValue("grid-color-major", color(ui->majorColor));
     settings.setValue("grid-color-minor", color(ui->minorColor));
+    settings.setValue("select-new-edges", ui->selectNewEdges->isChecked());
     QDialog::accept();
 }
 

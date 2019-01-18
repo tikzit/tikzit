@@ -80,8 +80,9 @@ public:
     void reverseSelectedEdges();
 
 
-	void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges);
-	QSet<Node*> getSelectedNodes();
+    void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges) const;
+    QSet<Node*> getSelectedNodes() const;
+
     void refreshSceneBounds();
 
     bool highlightHeads() const;
