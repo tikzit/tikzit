@@ -1,3 +1,4 @@
+scripts/*.pyc
 tex/sample/Output
 tex/sample/sample.pdf
 *.synctex.gz
