@@ -57,8 +57,14 @@ Edge::Edge(Node *s, Node *t, QObject *parent) :
 Edge *Edge::copy(QMap<Node*,Node*> *nodeTable)
 {
     Edge *e;
-    if (nodeTable == nullptr) e = new Edge(_source, _target);
-    else e = new Edge(nodeTable->value(_source), nodeTable->value(_target));
+    if (nodeTable == nullptr) {
+        e = new Edge(_source, _target);
+    } else {
+        Node *s = nodeTable->value(_source);
+        Node *t = nodeTable->value(_target);
+        e = new Edge((s != nullptr) ? s : _source,
+                     (t != nullptr) ? t : _target);
+    }
     e->setData(_data->copy());
     e->setBasicBendMode(_basicBendMode);
     e->setBend(_bend);

@@ -75,6 +75,8 @@ public:
     void extendSelectionLeft();
     void extendSelectionRight();
 
+    void mergeNodes();
+
     void reorderSelection(bool toFront);
 
     void reverseSelectedEdges();
@@ -86,7 +88,6 @@ public:
     void refreshSceneBounds();
 
     bool highlightHeads() const;
-
     bool highlightTails() const;
 
 public slots:

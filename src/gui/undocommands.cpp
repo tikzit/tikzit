@@ -128,9 +128,12 @@ void EdgeBendCommand::redo()
 DeleteCommand::DeleteCommand(TikzScene *scene,
                              QMap<int, Node *> deleteNodes,
                              QMap<int, Edge *> deleteEdges,
-                             QSet<Edge *> selEdges, QUndoCommand *parent) :
+                             QSet<Node *> selNodes,
+                             QSet<Edge *> selEdges,
+                             QUndoCommand *parent) :
     GraphUpdateCommand(scene, parent),
-    _deleteNodes(deleteNodes), _deleteEdges(deleteEdges), _selEdges(selEdges)
+    _deleteNodes(deleteNodes), _deleteEdges(deleteEdges),
+    _selNodes(selNodes), _selEdges(selEdges)
 {}
 
 void DeleteCommand::undo()
@@ -142,7 +145,7 @@ void DeleteCommand::undo()
         NodeItem *ni = new NodeItem(n);
         _scene->nodeItems().insert(n, ni);
         _scene->addItem(ni);
-        ni->setSelected(true);
+        if (_selNodes.contains(n)) ni->setSelected(true);
     }
 
     for (auto it = _deleteEdges.begin(); it != _deleteEdges.end(); ++it) {
@@ -228,6 +231,7 @@ AddEdgeCommand::AddEdgeCommand(TikzScene *scene,
     _selectEdge(selectEdge), _selNodes(selNodes), _selEdges(selEdges)
 {
 }
+
 
 void AddEdgeCommand::undo()
 {

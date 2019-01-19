@@ -233,6 +233,12 @@ void MainMenu::on_actionReverse_Edge_Direction_triggered()
         tikzit->activeWindow()->tikzScene()->reverseSelectedEdges();
 }
 
+void MainMenu::on_actionMerge_Nodes_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->mergeNodes();
+}
+
 
 // Tikz
 void MainMenu::on_actionParse_triggered()

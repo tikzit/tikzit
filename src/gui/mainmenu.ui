@@ -73,6 +73,7 @@
    <addaction name="menuReorder"/>
    <addaction name="menuTransform"/>
    <addaction name="actionReverse_Edge_Direction"/>
+   <addaction name="actionMerge_Nodes"/>
   </widget>
   <widget class="QMenu" name="menuTikz">
    <property name="title">
@@ -372,6 +373,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+/</string>
+   </property>
+  </action>
+  <action name="actionMerge_Nodes">
+   <property name="text">
+    <string>Merge Nodes</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
    </property>
   </action>
   <addaction name="menuFile"/>

@@ -95,6 +95,7 @@ public:
     explicit DeleteCommand(TikzScene *scene,
                            QMap<int,Node*> deleteNodes,
                            QMap<int,Edge*> deleteEdges,
+                           QSet<Node*> selNodes,
                            QSet<Edge*> selEdges,
                            QUndoCommand *parent = nullptr);
     void undo() override;
@@ -102,6 +103,7 @@ public:
 private:
     QMap<int,Node*> _deleteNodes;
     QMap<int,Edge*> _deleteEdges;
+    QSet<Node*> _selNodes;
     QSet<Edge*> _selEdges;
 };
 
@@ -121,12 +123,16 @@ private:
 class AddEdgeCommand : public GraphUpdateCommand
 {
 public:
-    explicit AddEdgeCommand(TikzScene *scene, Edge *edge, bool selectEdge, QSet<Node *> selNodes, QSet<Edge *> selEdges, QUndoCommand *parent = nullptr);
+    explicit AddEdgeCommand(TikzScene *scene, Edge *edge,
+                            bool selectEdge=false,
+                            QSet<Node *> selNodes=QSet<Node*>(),
+                            QSet<Edge *> selEdges=QSet<Edge*>(),
+                            QUndoCommand *parent = nullptr);
     void undo() override;
     void redo() override;
 private:
-    bool _selectEdge;
     Edge *_edge;
+    bool _selectEdge;
     QSet<Node*> _selNodes;
     QSet<Edge*> _selEdges;
 };

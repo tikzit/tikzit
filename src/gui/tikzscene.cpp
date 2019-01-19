@@ -186,6 +186,66 @@ void TikzScene::extendSelectionRight()
     }
 }
 
+void TikzScene::mergeNodes()
+{
+    refreshZIndices();
+    QSet<Node*> selNodes;
+    QSet<Edge*> selEdges;
+    getSelection(selNodes, selEdges);
+
+    // build a map from locations to a chosen node at that location
+    QMap<QPair<int,int>,Node*> m;
+    foreach (Node *n, selNodes) {
+        // used fixed precision for hashing/comparing locations
+        QPair<int,int> fpPoint(
+          static_cast<int>(n->point().x() * 1000.0),
+          static_cast<int>(n->point().y() * 1000.0));
+        if (!m.contains(fpPoint) ||
+            _nodeItems[m[fpPoint]]->zValue() < _nodeItems[n]->zValue())
+        {
+            m.insert(fpPoint, n);
+        }
+    }
+
+    // build a second map from nodes to the node they will be merged with
+    QMap<Node*,Node*> m1;
+    foreach (Node *n, graph()->nodes()) {
+        QPair<int,int> fpPoint(
+          static_cast<int>(n->point().x() * 1000.0),
+          static_cast<int>(n->point().y() * 1000.0));
+        Node *n1 = m[fpPoint];
+        if (n1 != nullptr && n1 != n) m1.insert(n, n1);
+    }
+
+    _tikzDocument->undoStack()->beginMacro("Merge nodes");
+
+    // copy adjacent edges from nodes that will be deleted
+    foreach (Edge *e, graph()->edges()) {
+        if (m1.contains(e->source()) || m1.contains(e->target())) {
+            Edge *e1 = e->copy(&m1);
+            AddEdgeCommand *cmd = new AddEdgeCommand(this, e1);
+            _tikzDocument->undoStack()->push(cmd);
+        }
+    }
+
+    // delete nodes
+    QMap<int,Node*> delNodes;
+    QMap<int,Edge*> delEdges;
+    for (int i = 0; i < _tikzDocument->graph()->nodes().length(); ++i) {
+        Node *n = _tikzDocument->graph()->nodes()[i];
+        if (m1.contains(n)) delNodes.insert(i, n);
+    }
+    for (int i = 0; i < _tikzDocument->graph()->edges().length(); ++i) {
+        Edge *e = _tikzDocument->graph()->edges()[i];
+        if (m1.contains(e->source()) || m1.contains(e->target())) delEdges.insert(i, e);
+    }
+    DeleteCommand *cmd = new DeleteCommand(this, delNodes, delEdges,
+                                           selNodes, selEdges);
+    _tikzDocument->undoStack()->push(cmd);
+
+    _tikzDocument->undoStack()->endMacro();
+}
+
 void TikzScene::reorderSelection(bool toFront)
 {
     QVector<Node*> nodeOrd, nodeOrd1;
@@ -911,7 +971,8 @@ void TikzScene::deleteSelectedItems()
 
     //qDebug() << "nodes:" << deleteNodes;
     //qDebug() << "edges:" << deleteEdges;
-    DeleteCommand *cmd = new DeleteCommand(this, deleteNodes, deleteEdges, selEdges);
+    DeleteCommand *cmd = new DeleteCommand(this, deleteNodes, deleteEdges,
+                                           selNodes, selEdges);
     _tikzDocument->undoStack()->push(cmd);
 }
 
