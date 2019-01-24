@@ -31,6 +31,7 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     connect(ui->minorColor, SIGNAL(clicked()), this, SLOT(colorClick()));
 
     ui->selectNewEdges->setChecked(settings.value("select-new-edges", false).toBool());
+    ui->shiftToScroll->setChecked(settings.value("shift-to-scroll", false).toBool());
 }
 
 PreferenceDialog::~PreferenceDialog()
@@ -47,6 +48,7 @@ void PreferenceDialog::accept()
     settings.setValue("grid-color-major", color(ui->majorColor));
     settings.setValue("grid-color-minor", color(ui->minorColor));
     settings.setValue("select-new-edges", ui->selectNewEdges->isChecked());
+    settings.setValue("shift-to-scroll", ui->shiftToScroll->isChecked());
     QDialog::accept();
 }
 

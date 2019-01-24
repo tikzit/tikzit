@@ -134,10 +134,16 @@ void TikzView::drawBackground(QPainter *painter, const QRectF &rect)
 
 void TikzView::wheelEvent(QWheelEvent *event)
 {
-    if (event->modifiers() & Qt::ShiftModifier) {
+    QSettings settings("tikzit", "tikzit");
+    bool shiftScroll = settings.value("shift-to-scroll", false).toBool();
+    if ((!shiftScroll && event->modifiers() == Qt::NoModifier) ||
+        (shiftScroll && (event->modifiers() == Qt::ShiftModifier)))
+    {
         event->setModifiers(Qt::NoModifier);
         QGraphicsView::wheelEvent(event);
-    } else if (event->modifiers() & Qt::ControlModifier) {
+    }
+
+    if (event->modifiers() & Qt::ControlModifier) {
         if (event->angleDelta().y() > 0) {
             zoomIn();
         } else if (event->angleDelta().y() < 0) {
