@@ -35,15 +35,6 @@ StylePalette::StylePalette(QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    QSettings settings("tikzit", "tikzit");
-//    QVariant geom = settings.value("style-palette-geometry");
-//    if (geom != QVariant()) {
-//        restoreGeometry(geom.toByteArray());
-//    }
-
-//    _nodeModel = new QStandardItemModel(this);
-//    _edgeModel = new QStandardItemModel(this);
-
     ui->styleListView->setModel(tikzit->styles()->nodeStyles());
     ui->styleListView->setViewMode(QListView::IconMode);
     ui->styleListView->setMovement(QListView::Static);
@@ -180,12 +171,6 @@ void StylePalette::on_currentCategory_currentTextChanged(const QString &cat)
 //    if (tikzit->activeWindow() != 0) tikzit->activeWindow()->tikzScene()->applyActiveStyleToNodes();
 //}
 
-void StylePalette::closeEvent(QCloseEvent *event)
-{
-    QSettings settings("tikzit", "tikzit");
-    settings.setValue("style-palette-geometry", saveGeometry());
-    QDockWidget::closeEvent(event);
-}
 
 void StylePalette::resizeEvent(QResizeEvent *event)
 {

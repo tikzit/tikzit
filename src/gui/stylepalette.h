@@ -56,7 +56,6 @@ private:
     Ui::StylePalette *ui;
 
 protected:
-    void closeEvent(QCloseEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 };
 

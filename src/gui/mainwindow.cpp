@@ -46,8 +46,8 @@ MainWindow::MainWindow(QWidget *parent) :
     _menu->setParent(this);
     setMenuBar(_menu);
 
-    QVariant geom = settings.value("geometry-main");
-    QVariant state = settings.value("windowState-main");
+    QVariant geom = settings.value(QString("geometry-main-qt") + qVersion());
+    QVariant state = settings.value(QString("windowState-main-qt") + qVersion());
 
     if (geom.isValid()) {
         restoreGeometry(geom.toByteArray());
@@ -108,11 +108,10 @@ QSplitter *MainWindow::splitter() const {
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    //qDebug() << "got close event";
-
+    // store qt version in window geometry keys to avoid strange behaviour w/ multiple Qt's on one system
     QSettings settings("tikzit", "tikzit");
-    settings.setValue("geometry-main", saveGeometry());
-    settings.setValue("windowState-main", saveState(2));
+    settings.setValue(QString("geometry-main-qt") + qVersion(), saveGeometry());
+    settings.setValue(QString("windowState-main-qt") + qVersion(), saveState(2));
 
     if (!_tikzDocument->isClean()) {
         QString nm = _tikzDocument->shortName();

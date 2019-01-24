@@ -44,7 +44,7 @@ PreviewWindow::PreviewWindow(QWidget *parent) :
     QSettings settings("tikzit", "tikzit");
     ui->setupUi(this);
 
-    QVariant geom = settings.value("geometry-preview");
+    QVariant geom = settings.value(QString("geometry-preview-qt") + qVersion());
 
     if (geom.isValid()) {
         restoreGeometry(geom.toByteArray());
@@ -150,7 +150,7 @@ void PreviewWindow::setStatus(PreviewWindow::Status status)
 
 void PreviewWindow::closeEvent(QCloseEvent *e) {
     QSettings settings("tikzit", "tikzit");
-    settings.setValue("geometry-preview", saveGeometry());
+    settings.setValue(QString("geometry-preview-qt") + qVersion(), saveGeometry());
     QDialog::closeEvent(e);
 }
 
