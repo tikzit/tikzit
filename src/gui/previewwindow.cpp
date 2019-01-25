@@ -41,15 +41,10 @@ PreviewWindow::PreviewWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PreviewWindow)
 {
-    QSettings settings("tikzit", "tikzit");
+
     ui->setupUi(this);
 
-    QVariant geom = settings.value(QString("geometry-preview-qt") + qVersion());
-
-    if (geom.isValid()) {
-        restoreGeometry(geom.toByteArray());
-    }
-
+    _positionRestored = false;
     _doc = nullptr;
 
     _loader = new QLabel(ui->tabWidget->tabBar());
@@ -88,6 +83,20 @@ PdfDocument *PreviewWindow::doc() const
 PreviewWindow::~PreviewWindow()
 {
     delete ui;
+}
+
+void PreviewWindow::restorePosition()
+{
+    // only restore position 1 time
+    if (_positionRestored) return;
+
+    QSettings settings("tikzit", "tikzit");
+    QVariant geom = settings.value(QString("geometry-preview-qt") + qVersion());
+
+    if (geom.isValid()) {
+        restoreGeometry(geom.toByteArray());
+    }
+    _positionRestored = true;
 }
 
 void PreviewWindow::setPdf(QString file)

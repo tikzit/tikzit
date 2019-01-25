@@ -29,6 +29,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void restorePosition();
     void open(QString fileName);
     int windowId() const;
     TikzView *tikzView() const;

@@ -46,19 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _menu->setParent(this);
     setMenuBar(_menu);
 
-    QVariant geom = settings.value(QString("geometry-main-qt") + qVersion());
-    QVariant state = settings.value(QString("windowState-main-qt") + qVersion());
 
-    if (geom.isValid()) {
-        restoreGeometry(geom.toByteArray());
-    }
-
-    if (state.isValid()) {
-        restoreState(state.toByteArray(), 2);
-    } else {
-        addDockWidget(Qt::RightDockWidgetArea, _stylePalette);
-        resizeDocks({_stylePalette}, {130}, Qt::Horizontal);
-    }
 
     // initially, the source view should be collapsed
     QList<int> sz = ui->splitter->sizes();
@@ -76,12 +64,33 @@ MainWindow::MainWindow(QWidget *parent) :
 #else
     ui->tikzSource->setTabStopWidth(20);
 #endif
+
+
+    QVariant state = settings.value(QString("windowState-main-qt") + qVersion());
+    if (state.isValid()) {
+        restoreState(state.toByteArray(), 2);
+    } else {
+        addDockWidget(Qt::RightDockWidgetArea, _stylePalette);
+        resizeDocks({_stylePalette}, {130}, Qt::Horizontal);
+    }
 }
 
 MainWindow::~MainWindow()
 {
     tikzit->removeWindow(this);
     delete ui;
+}
+
+void MainWindow::restorePosition()
+{
+    QSettings settings("tikzit", "tikzit");
+    QVariant geom = settings.value(QString("geometry-main-qt") + qVersion());
+
+    if (geom.isValid()) {
+        restoreGeometry(geom.toByteArray());
+    }
+
+
 }
 
 void MainWindow::open(QString fileName)

@@ -61,6 +61,7 @@ void Tikzit::init()
     //_stylePalette->show();
     _windows << new MainWindow();
     _windows[0]->show();
+    _windows[0]->restorePosition();
 
     _styleFile = "";
     _styleFilePath = "";
@@ -187,6 +188,7 @@ void Tikzit::newDoc()
 {
     MainWindow *w = new MainWindow();
     w->show();
+    w->restorePosition();
     _windows << w;
 }
 
@@ -250,6 +252,7 @@ void Tikzit::open(QString fileName)
                 MainWindow *w = new MainWindow();
                 _windows << w;
                 w->show();
+                w->restorePosition();
                 w->open(fileName);
             }
 		}
@@ -437,7 +440,12 @@ void Tikzit::makePreview()
         } else {
             _latex->makePreview(activeWindow()->tikzSource());
         }
+
         _preview->show();
+
+        // restores position from settings the first time this is called, otherwise
+        // do nothing.
+        _preview->restorePosition();
         _preview->raise();
     }
 }

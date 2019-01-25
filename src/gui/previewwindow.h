@@ -46,6 +46,7 @@ public:
     };
     explicit PreviewWindow(QWidget *parent = nullptr);
     ~PreviewWindow() override;
+    void restorePosition();
     void setPdf(QString file);
     QString preparePreview(QString tikz);
     QPlainTextEdit *outputTextEdit();
@@ -67,6 +68,7 @@ private:
     Ui::PreviewWindow *ui;
     PdfDocument *_doc;
     QLabel *_loader;
+    bool _positionRestored;
 };
 
 #endif // PREVIEWWINDOW_H
