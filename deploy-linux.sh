@@ -94,8 +94,6 @@ cp --no-dereference $LIBDIR/libpoppler-qt5.so* lib
 
 # add dependencies of poppler that are on Ubuntu 18.04,
 # but maybe not other distros...
-cp --no-dereference $LIBDIR/libfontconfig.so.1* lib
-cp --no-dereference $LIBDIR/libfreetype.so.6* lib
 cp --no-dereference $LIBDIR/libgraphite2.so.3* lib
 cp --no-dereference $LIBDIR/libharfbuzz.so.0* lib
 cp --no-dereference $LIBDIR/libjbig.so.0* lib
