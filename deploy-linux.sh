@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Deployment script for Linux x64 portable binary. This
+# script is tested on a clean Ubuntu 18.04, after running:
+# 
+# apt-get -y install \
+#  flex bison qt5-default libpoppler-dev \
+#  libpoppler-qt5-dev
+#
+
 # directory where libQt5XXX.so files can be found
 LIBDIR=/usr/lib/x86_64-linux-gnu
 
@@ -15,7 +23,7 @@ mkdir -p plugins
 
 # add README file
 cat > README << 'EOF'
-This is a portable version of TikZiT 2.0. To launch TikZiT, simply run
+This is a portable version of TikZiT 2.1. To launch TikZiT, simply run
 'bin/tikzit'. To install launcher and icons for the current user, make
 sure the 'bin' sub-directory is in your $PATH and run:
 
@@ -83,6 +91,18 @@ cp --no-dereference $LIBDIR/libcrypto.so* lib
 # add poppler libs
 cp --no-dereference $LIBDIR/libpoppler.so* lib
 cp --no-dereference $LIBDIR/libpoppler-qt5.so* lib
+
+# add dependencies of poppler that are on Ubuntu 18.04,
+# but maybe not other distros...
+cp --no-dereference $LIBDIR/libfontconfig.so.1* lib
+cp --no-dereference $LIBDIR/libfreetype.so.6* lib
+cp --no-dereference $LIBDIR/libgraphite2.so.3* lib
+cp --no-dereference $LIBDIR/libharfbuzz.so.0* lib
+cp --no-dereference $LIBDIR/libjbig.so.0* lib
+cp --no-dereference $LIBDIR/libjpeg.so.8* lib
+cp --no-dereference $LIBDIR/liblcms2.so.2* lib
+cp --no-dereference $LIBDIR/libpng16.so.16* lib
+
 
 # add Qt plugins used by TikZiT
 cp -R $PLUGINDIR/platforms plugins
