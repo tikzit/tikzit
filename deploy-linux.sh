@@ -8,8 +8,11 @@
 #  libpoppler-qt5-dev
 #
 
-# directory where libQt5XXX.so files can be found
-LIBDIR=/usr/lib/x86_64-linux-gnu
+# system library directory
+SYSLIBDIR=/lib/x86_64-linux-gnu
+
+# userspace library directory
+LIBDIR=/usr$SYSLIBDIR
 
 # directory where Qt plugins can be found
 PLUGINDIR=$LIBDIR/qt5/plugins
@@ -100,7 +103,7 @@ cp --no-dereference $LIBDIR/libjbig.so.0* lib
 cp --no-dereference $LIBDIR/libjpeg.so.8* lib
 cp --no-dereference $LIBDIR/liblcms2.so.2* lib
 cp --no-dereference $LIBDIR/libpng16.so.16* lib
-
+cp --no-dereference $SYSLIBDIR/libz.so.1* lib
 
 # add Qt plugins used by TikZiT
 cp -R $PLUGINDIR/platforms plugins
