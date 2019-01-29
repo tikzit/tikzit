@@ -25,7 +25,9 @@ include_directories(
 BISON_TARGET(PARSER src/data/tikzparser.y ${CMAKE_CURRENT_BINARY_DIR}/tikzparser.parser.cpp)
 FLEX_TARGET(LEXER src/data/tikzlexer.l ${CMAKE_CURRENT_BINARY_DIR}/tikzlexer.lexer.cpp)
 ADD_FLEX_BISON_DEPENDENCY(LEXER PARSER)
-cmake_policy(SET CMP0071 NEW) # run AUTOXXX on generated files ('NEW' default behaviour)
+
+
+#cmake_policy(SET CMP0071 NEW) # run AUTOXXX on generated files ('NEW' default behaviour)
 
 set(SOURCES
     src/data/delimitedstringvalidator.cpp
@@ -39,8 +41,6 @@ set(SOURCES
     src/data/stylelist.cpp
     src/data/tikzassembler.cpp
     src/data/tikzdocument.cpp
-    src/data/tikzlexer.lexer.cpp
-    src/data/tikzparser.parser.cpp
     src/data/tikzstyles.cpp
     src/gui/commands.cpp
     src/gui/delimitedstringitemdelegate.cpp
@@ -60,10 +60,6 @@ set(SOURCES
     src/gui/toolpalette.cpp
     src/gui/undocommands.cpp
     src/main.cpp
-    src/test/testmain.cpp
-    src/test/testparser.cpp
-    src/test/testtest.cpp
-    src/test/testtikzoutput.cpp
     src/tikzit.cpp
     src/util.cpp
 )
@@ -98,9 +94,6 @@ set(HEADERS
     src/gui/tikzview.h
     src/gui/toolpalette.h
     src/gui/undocommands.h
-    src/test/testparser.h
-    src/test/testtest.h
-    src/test/testtikzoutput.h
     src/tikzit.h
     src/util.h
 )
@@ -132,3 +125,5 @@ add_executable(tikzit
 target_link_libraries(${PROJECT_NAME}
     Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network
     ${Poppler_LIBRARIES})
+
+install (TARGETS tikzit DESTINATION bin)
