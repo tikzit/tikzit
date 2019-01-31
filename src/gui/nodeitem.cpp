@@ -19,6 +19,7 @@
 #include "tikzit.h"
 #include "nodeitem.h"
 #include "tikzscene.h"
+#include "util.h"
 #include <cmath>
 
 #include <QPen>
@@ -50,7 +51,7 @@ void NodeItem::writePos()
 }
 
 QRectF NodeItem::labelRect() const {
-    QString label = _node->label();
+    QString label = replaceTexConstants(_node->label());
     QFontMetrics fm(Tikzit::LABEL_FONT);
     QRectF rect = fm.boundingRect(label);
     rect.moveCenter(QPointF(0,0));
@@ -58,7 +59,7 @@ QRectF NodeItem::labelRect() const {
 }
 
 QRectF NodeItem::outerLabelRect() const {
-    QString label = _node->data()->property("label");
+    QString label = replaceTexConstants(_node->data()->property("label"));
     label.replace(QRegularExpression("^[^:]*:"), "");
     QFontMetrics fm(Tikzit::LABEL_FONT);
     QRectF rect = fm.boundingRect(label);
@@ -102,11 +103,11 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 
         painter->setPen(QPen(Qt::black));
         painter->setFont(Tikzit::LABEL_FONT);
-        painter->drawText(rect, Qt::AlignCenter, _node->label());
+        painter->drawText(rect, Qt::AlignCenter, replaceTexConstants(_node->label()));
     }
 
     if (_node->data()->hasProperty("label")) {
-        QString label = _node->data()->property("label");
+        QString label = replaceTexConstants(_node->data()->property("label"));
         label.replace(QRegularExpression("^[^:]*:"), "");
 
         QRectF rect = outerLabelRect();

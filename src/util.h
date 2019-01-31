@@ -48,4 +48,8 @@ qreal degreesToRadians(qreal degrees);
 int normaliseAngleDeg (int degrees);
 qreal normaliseAngleRad (qreal rads);
 
+// strings
+void initTexConstants();
+QString replaceTexConstants(QString s);
+
 #endif // UTIL_H

@@ -21,6 +21,7 @@
 #include "tikzstyles.h"
 #include "previewwindow.h"
 #include "latexprocess.h"
+#include "util.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -47,6 +48,7 @@ void Tikzit::init()
     QSettings settings("tikzit", "tikzit");
 
 	initColors();
+    initTexConstants();
 
     _mainMenu = new MainMenu();
     QMainWindow *dummy = new QMainWindow();
