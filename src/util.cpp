@@ -88,82 +88,46 @@ static QList<QString> texModifierNames;
 
 void initTexConstants() {
     texConstantNames
-        << "\\alpha"
-        << "\\beta"
-        << "\\gamma"
-        << "\\delta"
-        << "\\epsilon"
-        << "\\zeta"
-        << "\\eta"
-        << "\\theta"
-        << "\\iota"
-        << "\\kappa"
-        << "\\lambda"
-        << "\\mu"
-        << "\\nu"
-        << "\\xi"
-        << "\\pi"
-        << "\\rho"
-        << "\\sigma"
-        << "\\tau"
-        << "\\upsilon"
-        << "\\phi"
-        << "\\chi"
-        << "\\psi"
-        << "\\omega"
-        << "\\Gamma"
-        << "\\Delta"
-        << "\\Theta"
-        << "\\Lambda"
-        << "\\Xi"
-        << "\\Pi"
-        << "\\Sigma"
-        << "\\Upsilon"
-        << "\\Phi"
-        << "\\Psi"
+        << "\\alpha"  << "\\beta"  << "\\gamma" << "\\delta"   << "\\epsilon"
+        << "\\zeta"   << "\\eta"   << "\\theta" << "\\iota"    << "\\kappa"
+        << "\\lambda" << "\\mu"    << "\\nu"    << "\\xi"      << "\\pi"
+        << "\\rho"    << "\\sigma" << "\\tau"   << "\\upsilon" << "\\phi"
+        << "\\chi"    << "\\psi"   << "\\omega"
+
+        << "\\Gamma"  << "\\Delta" << "\\Theta"   << "\\Lambda" << "\\Xi"
+        << "\\Pi"     << "\\Sigma" << "\\Upsilon" << "\\Phi"    << "\\Psi"
         << "\\Omega"
-        << "\\pm"
-        << "\\to"
-        << "\\Rightarrow"
-        << "\\Leftrightarrow"
-        << "\\forall"
-        << "\\partial"
-        << "\\exists"
-        << "\\emptyset"
-        << "\\nabla"
-        << "\\in"
-        << "\\notin"
-        << "\\prod"
-        << "\\sum"
-        << "\\surd"
-        << "\\infty"
-        << "\\wedge"
-        << "\\vee"
-        << "\\cap"
-        << "\\cup"
-        << "\\int"
-        << "\\approx"
-        << "\\neq"
-        << "\\equiv"
-        << "\\leq"
-        << "\\geq"
-        << "\\subset"
-        << "\\supset"
-        << "\\cdot"
-        << "\\ldots";
 
-    texConstantCodes <<
-        "\u03b1" << "\u03b2" << "\u03b3" << "\u03b4" << "\u03b5" << "\u03b6" << "\u03b7" <<
-        "\u03b8" << "\u03b9" << "\u03ba" << "\u03bb" << "\u03bc" << "\u03bd" << "\u03be" <<
-        "\u03c0" << "\u03c1" << "\u03c3" << "\u03c4" << "\u03c5" << "\u03c6" << "\u03c7" <<
-        "\u03c8" << "\u03c9" << "\u0393" << "\u0394" << "\u0398" << "\u039b" << "\u039e" <<
-        "\u03a0" << "\u03a3" << "\u03a5" << "\u03a6" << "\u03a8" << "\u03a9" <<
+        << "\\pm" << "\\to" << "\\Rightarrow" << "\\Leftrightarrow" << "\\forall"
+        << "\\partial" << "\\exists" << "\\emptyset" << "\\nabla" << "\\in"
+        << "\\notin" << "\\prod" << "\\sum" << "\\surd" << "\\infty"
+        << "\\wedge" << "\\vee" << "\\cap" << "\\cup" << "\\int"
+        << "\\approx" << "\\neq" << "\\equiv" << "\\leq" << "\\geq"
+        << "\\subset" << "\\supset"
 
-        "\u00b1" << "\u2192" << "\u21d2" << "\u21d4" << "\u2200" << "\u2202" << "\u2203" <<
-        "\u2205" << "\u2207" << "\u2208" << "\u2209" << "\u220f" << "\u2211" << "\u221a" <<
-        "\u221e" << "\u2227" << "\u2228" << "\u2229" << "\u222a" << "\u222b" << "\u2248" <<
-        "\u2260" << "\u2261" << "\u2264" << "\u2265" << "\u2282" << "\u2283" << "\u22c5" <<
-        "\u2026";
+        << "\\ldots" << "\\vdots" << "\\cdots" << "\\ddots" << "\\iddots"
+        << "\\cdot";
+
+    texConstantCodes
+        << "\u03b1" << "\u03b2" << "\u03b3" << "\u03b4" << "\u03b5"
+        << "\u03b6" << "\u03b7" << "\u03b8" << "\u03b9" << "\u03ba"
+        << "\u03bb" << "\u03bc" << "\u03bd" << "\u03be" << "\u03c0"
+        << "\u03c1" << "\u03c3" << "\u03c4" << "\u03c5" << "\u03c6"
+        << "\u03c7" << "\u03c8" << "\u03c9"
+
+        << "\u0393" << "\u0394" << "\u0398" << "\u039b" << "\u039e"
+        << "\u03a0" << "\u03a3" << "\u03a5" << "\u03a6" << "\u03a8"
+        << "\u03a9"
+
+        << "\u00b1" << "\u2192" << "\u21d2" << "\u21d4" << "\u2200"
+        << "\u2202" << "\u2203" << "\u2205" << "\u2207" << "\u2208"
+        << "\u2209" << "\u220f" << "\u2211" << "\u221a" << "\u221e"
+        << "\u2227" << "\u2228" << "\u2229" << "\u222a" << "\u222b"
+        << "\u2248" << "\u2260" << "\u2261" << "\u2264" << "\u2265"
+        << "\u2282" << "\u2283"
+
+        << "\u2026" << "\u22ee" << "\u22ef" << "\u22f1" << "\u22f0"
+        << "\u22c5";
 
     texModifierNames
         << "\\tiny"
