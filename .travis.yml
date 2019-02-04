@@ -15,7 +15,7 @@ install:
 - brew update
 - brew install qt5
 - brew link --force qt5
-- brew install poppler --with-qt
+- brew install poppler
 script:
 - qmake -v
 - qmake -r
