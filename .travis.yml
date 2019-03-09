@@ -10,12 +10,9 @@ matrix:
     - FILE=tikzit-osx.dmg
     - QTVER=511
     - DEPLOY_TIKZIT=1
-before_install: 
-install:
-- brew update
-- brew install qt5
-- brew link --force qt5
-- brew install poppler
+addons:
+  homebrew:
+    brewfile: true
 script:
 - qmake -v
 - qmake -r
