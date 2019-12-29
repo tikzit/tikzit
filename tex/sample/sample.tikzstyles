@@ -8,6 +8,7 @@
 \tikzstyle{blue node}=[fill=blue, shape=circle, draw=black, tikzit category=nodes]
 \tikzstyle{green node}=[tikzit fill=green, fill=green, shape=circle, draw=black, tikzit category=nodes]
 \tikzstyle{yellow square}=[draw=black, fill=yellow, shape=rectangle]
+\tikzstyle{blue node 2}=[fill={rgb,255: red,128; green,0; blue,128}, draw=black, shape=circle, tikzit fill=blue]
 
 % Edge styles
 \tikzstyle{dashed edge}=[<->, dashed]
