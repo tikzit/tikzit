@@ -12,6 +12,7 @@ matrix:
     - DEPLOY_TIKZIT=1
 addons:
   homebrew:
+    update: true
     brewfile: true
 script:
 - qmake -v
