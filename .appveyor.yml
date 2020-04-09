@@ -13,7 +13,7 @@ configuration:
 
 install:
   - cmd: choco install winflexbison
-  - cmd: 'C:\Qt\5.11.2\mingw53_32\bin\qtenv2.bat'
+  - cmd: 'C:\Qt\5.12\mingw73_32\bin\qtenv2.bat'
   - cmd: cd C:\projects\tikzit
   - sh: sudo apt-get update
   - sh: sudo apt-get -y install flex bison qt5-default libpoppler-dev libpoppler-qt5-dev
