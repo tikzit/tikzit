@@ -11,31 +11,47 @@ image:
 configuration:
   - release
 
-install:
-  - cmd: choco install winflexbison
-  - cmd: 'C:\Qt\5.12\mingw73_32\bin\qtenv2.bat'
-  - cmd: cd C:\projects\tikzit
-  - sh: sudo apt-get update
-  - sh: sudo apt-get -y install flex bison qt5-default libpoppler-dev libpoppler-qt5-dev
+for:
+-
+  matrix:
+    only:
+      - image: Ubuntu1804
 
-before_build:
-  - ps: (new-object net.webclient).DownloadFile('http://tikzit.github.io/download/win32-deps.zip', 'c:\projects\tikzit\win32-deps.zip')
-  - cmd: 7z x win32-deps.zip
+  install:
+    - sudo apt-get update
+    - sudo apt-get -y install flex bison qt5-default libpoppler-dev libpoppler-qt5-dev
 
-build_script:
-  - qmake -v
-  - qmake
-  - cmd: mingw32-make
-  - sh: make
+  build_script:
+    - qmake -v
+    - qmake
+    - make
 
-after_build:
-  - sh: ./deploy-linux.sh
-  - sh: mv dist/tikzit.tar.gz tikzit-linux.tar.gz
-  #- sh: appveyor PushArtifact tikzit-linux.tar.gz
-  - sh: python scripts/gh-push.py tikzit-linux.tar.gz
-  - cmd: deploy-win.bat
-  - cmd: move dist\tikzit.zip tikzit-win.zip
-  - cmd: python scripts\gh-push.py tikzit-win.zip
-  #- cmd: appveyor PushArtifact tikzit-win.zip
+  after_build:
+    - ./deploy-linux.sh
+    - mv dist/tikzit.tar.gz tikzit-linux.tar.gz
+    - python scripts/gh-push.py tikzit-linux.tar.gz
+-
+  matrix:
+    only:
+      - image: Visual Studio 2015
+
+  install:
+    - choco install winflexbison
+    - 'C:\Qt\5.12\mingw73_32\bin\qtenv2.bat'
+    - cd C:\projects\tikzit
+
+  before_build:
+    - ps: (new-object net.webclient).DownloadFile('http://tikzit.github.io/download/win32-deps.zip', 'c:\projects\tikzit\win32-deps.zip')
+    - 7z x win32-deps.zip
+
+  build_script:
+    - qmake -v
+    - qmake
+    - mingw32-make
+
+  after_build:
+    - deploy-win.bat
+    - move dist\tikzit.zip tikzit-win.zip
+    - python scripts\gh-push.py tikzit-win.zip
 
 
