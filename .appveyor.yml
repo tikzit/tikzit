@@ -5,6 +5,7 @@ branches:
     - master
 
 image:
+  - macos
   - Ubuntu1804
   - Visual Studio 2015
 
@@ -12,6 +13,25 @@ configuration:
   - release
 
 for:
+-
+  matrix:
+    only:
+      - image: macos
+
+  install:
+    - brew update
+    - brew install qt5
+    - brew link --force qt5
+    - brew install poppler
+
+  build_script:
+    - qmake -v
+    - qmake -r
+    - make
+
+  after_build:
+    - '(chmod +x deploy-osx.sh && ./deploy-osx.sh && mv tikzit.dmg tikzit-osx.dmg)'
+    - python scripts/gh-push.py tikzit-osx.dmg
 -
   matrix:
     only:
