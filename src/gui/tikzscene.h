@@ -90,6 +90,9 @@ public:
     bool highlightHeads() const;
     bool highlightTails() const;
 
+    bool drawNodeLabels() const;
+    void setDrawNodeLabels(bool drawNodeLabels);
+
 public slots:
     void graphReplaced();
     void refreshZIndices();
@@ -115,6 +118,7 @@ private:
     bool _firstControlPoint;
     QPointF _mouseDownPos;
     bool _draggingNodes;
+    bool _drawNodeLabels;
 
     QMap<Node*,QPointF> _oldNodePositions;
     qreal _oldWeight;

@@ -91,7 +91,13 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
         painter->drawPath(shape());
     }
 
-    if (_node->label() != "") {
+    bool drawLabel = _node->label() != "";
+    if (scene()) {
+        TikzScene *sc = static_cast<TikzScene*>(scene());
+        drawLabel= drawLabel && sc->drawNodeLabels();
+    }
+
+    if (drawLabel) {
         QRectF rect = labelRect();
         QPen pen(QColor(200,0,0,120));
         QVector<qreal> d;

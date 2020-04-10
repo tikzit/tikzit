@@ -78,6 +78,7 @@ public slots:
     // View
     void on_actionZoom_In_triggered();
     void on_actionZoom_Out_triggered();
+    void on_actionShow_Node_Labels_triggered();
 
     // Help
     void on_actionAbout_triggered();

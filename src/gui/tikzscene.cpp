@@ -38,6 +38,7 @@ TikzScene::TikzScene(TikzDocument *tikzDocument, ToolPalette *tools,
 {
     _modifyEdgeItem = nullptr;
     _edgeStartNodeItem = nullptr;
+    _drawNodeLabels = true;
     _drawEdgeItem = new QGraphicsLineItem();
     _rubberBandItem = new QGraphicsRectItem();
     _enabled = true;
@@ -905,6 +906,16 @@ void TikzScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 			break;
         }
     }
+}
+
+bool TikzScene::drawNodeLabels() const
+{
+    return _drawNodeLabels;
+}
+
+void TikzScene::setDrawNodeLabels(bool drawNodeLabels)
+{
+    _drawNodeLabels = drawNodeLabels;
 }
 
 bool TikzScene::highlightTails() const

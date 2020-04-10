@@ -301,6 +301,12 @@ void MainMenu::on_actionZoom_Out_triggered()
     if (tikzit->activeWindow() != 0) tikzit->activeWindow()->tikzView()->zoomOut();
 }
 
+void MainMenu::on_actionShow_Node_Labels_triggered()
+{
+    tikzit->activeWindow()->tikzScene()->setDrawNodeLabels(ui.actionShow_Node_Labels->isChecked());
+    tikzit->activeWindow()->tikzScene()->invalidate();
+}
+
 void MainMenu::on_actionAbout_triggered()
 {
     QMessageBox::about(this,

@@ -92,6 +92,7 @@
    </property>
    <addaction name="actionZoom_In"/>
    <addaction name="actionZoom_Out"/>
+   <addaction name="actionShow_Node_Labels"/>
   </widget>
   <widget class="QMenu" name="menuHelp">
    <property name="title">
@@ -381,6 +382,20 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="actionShow_Node_Labels">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Node Labels</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+L</string>
    </property>
   </action>
   <addaction name="menuFile"/>
