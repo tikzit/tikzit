@@ -708,25 +708,6 @@ void TikzScene::keyReleaseEvent(QKeyEvent *event)
     }
 
 
-    if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
-        deleteSelectedItems();
-    } else if (mod == Qt::NoModifier) {
-        switch(event->key()) {
-        case Qt::Key_S:
-            tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::SELECT);
-            break;
-        case Qt::Key_V:
-        case Qt::Key_N:
-            tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::VERTEX);
-            break;
-        case Qt::Key_E:
-            tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::EDGE);
-            break;
-        case Qt::Key_B:
-            tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::CROP);
-            break;
-        }
-    }
 
     foreach (QGraphicsItem *it, selectedItems()) it->update();
 }
@@ -859,6 +840,26 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
                 }
 
                 _tikzDocument->undoStack()->endMacro();
+            }
+        }
+    } else { // no CTRL key
+        if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
+            deleteSelectedItems();
+        } else if (!event->isAutoRepeat()) {
+            switch(event->key()) {
+            case Qt::Key_S:
+                tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::SELECT);
+                break;
+            case Qt::Key_V:
+            case Qt::Key_N:
+                tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::VERTEX);
+                break;
+            case Qt::Key_E:
+                tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::EDGE);
+                break;
+            case Qt::Key_B:
+                tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::CROP);
+                break;
             }
         }
     }

@@ -130,6 +130,8 @@ private:
     bool _highlightHeads;
     bool _highlightTails;
     bool _smartTool;
+
+    bool _ctrlWasPressed;
 };
 
 #endif // TIKZSCENE_H
