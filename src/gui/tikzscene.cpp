@@ -740,11 +740,6 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
     // slower, but seems to be more reliable than event->modifiers()
     Qt::KeyboardModifiers mod = QApplication::queryKeyboardModifiers();
 
-    if (event->key() == Qt::Key_QuoteLeft) {
-        capture = true;
-        _styles->nextNodeStyle();
-    }
-
     if (mod & Qt::ControlModifier) {
         QSet<Node*> selNodes;
         QSet<Edge*> selEdges;

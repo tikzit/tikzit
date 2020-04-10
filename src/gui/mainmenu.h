@@ -73,6 +73,12 @@ public slots:
     void on_actionRevert_triggered();
     void on_actionJump_to_Selection_triggered();
     void on_actionRun_LaTeX_triggered();
+    void on_actionPrevious_Node_Style_triggered();
+    void on_actionNext_Node_Style_triggered();
+    void on_actionClear_Node_Style_triggered();
+    void on_actionPrevious_Edge_Style_triggered();
+    void on_actionNext_Edge_Style_triggered();
+    void on_actionClear_Edge_Style_triggered();
     void on_actionPreferences_triggered();
 
     // View

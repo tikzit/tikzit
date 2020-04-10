@@ -79,10 +79,24 @@
    <property name="title">
     <string>Tools</string>
    </property>
+   <widget class="QMenu" name="menuNode_Style">
+    <property name="title">
+     <string>Set Style</string>
+    </property>
+    <addaction name="actionPrevious_Node_Style"/>
+    <addaction name="actionNext_Node_Style"/>
+    <addaction name="actionClear_Node_Style"/>
+    <addaction name="separator"/>
+    <addaction name="actionPrevious_Edge_Style"/>
+    <addaction name="actionNext_Edge_Style"/>
+    <addaction name="actionClear_Edge_Style"/>
+   </widget>
    <addaction name="actionParse"/>
    <addaction name="actionRevert"/>
    <addaction name="actionJump_to_Selection"/>
    <addaction name="actionRun_LaTeX"/>
+   <addaction name="separator"/>
+   <addaction name="menuNode_Style"/>
    <addaction name="separator"/>
    <addaction name="actionPreferences"/>
   </widget>
@@ -396,6 +410,54 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+L</string>
+   </property>
+  </action>
+  <action name="actionPrevious_Node_Style">
+   <property name="text">
+    <string>Previous Node Style</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+,</string>
+   </property>
+  </action>
+  <action name="actionNext_Node_Style">
+   <property name="text">
+    <string>Next Node Style</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+.</string>
+   </property>
+  </action>
+  <action name="actionClear_Node_Style">
+   <property name="text">
+    <string>Clear Node Style</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Space</string>
+   </property>
+  </action>
+  <action name="actionPrevious_Edge_Style">
+   <property name="text">
+    <string>Previous Edge Style</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+,</string>
+   </property>
+  </action>
+  <action name="actionNext_Edge_Style">
+   <property name="text">
+    <string>Next Edge Style</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+.</string>
+   </property>
+  </action>
+  <action name="actionClear_Edge_Style">
+   <property name="text">
+    <string>Clear Edge Style</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Space</string>
    </property>
   </action>
   <addaction name="menuFile"/>

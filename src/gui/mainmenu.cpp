@@ -282,6 +282,36 @@ void MainMenu::on_actionRun_LaTeX_triggered()
     tikzit->makePreview();
 }
 
+void MainMenu::on_actionPrevious_Node_Style_triggered()
+{
+    tikzit->activeWindow()->stylePalette()->previousNodeStyle();
+}
+
+void MainMenu::on_actionNext_Node_Style_triggered()
+{
+    tikzit->activeWindow()->stylePalette()->nextNodeStyle();
+}
+
+void MainMenu::on_actionClear_Node_Style_triggered()
+{
+    tikzit->activeWindow()->stylePalette()->toggleClearNodeStyle();
+}
+
+void MainMenu::on_actionPrevious_Edge_Style_triggered()
+{
+    tikzit->activeWindow()->stylePalette()->previousEdgeStyle();
+}
+
+void MainMenu::on_actionNext_Edge_Style_triggered()
+{
+    tikzit->activeWindow()->stylePalette()->nextEdgeStyle();
+}
+
+void MainMenu::on_actionClear_Edge_Style_triggered()
+{
+    tikzit->activeWindow()->stylePalette()->toggleClearEdgeStyle();
+}
+
 void MainMenu::on_actionPreferences_triggered()
 {
     PreferenceDialog *d = new PreferenceDialog(this);

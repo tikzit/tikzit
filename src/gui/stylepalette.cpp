@@ -34,6 +34,8 @@ StylePalette::StylePalette(QWidget *parent) :
     ui(new Ui::StylePalette)
 {
     ui->setupUi(this);
+    _lastStyleIndex = 0;
+    _lastEdgeStyleIndex = 0;
 
     ui->styleListView->setModel(tikzit->styles()->nodeStyles());
     ui->styleListView->setViewMode(QListView::IconMode);
@@ -73,31 +75,95 @@ void StylePalette::reloadStyles()
 		ui->currentCategory->addItems(tikzit->styles()->categories());
 		ui->currentCategory->setCurrentText(cat);
 	}
+
+    clearNodeStyle();
+    clearEdgeStyle();
 }
 
-void StylePalette::changeNodeStyle(int increment)
+int StylePalette::styleIndex()
 {
     QModelIndexList i = ui->styleListView->selectionModel()->selectedIndexes();
-    int row = 0;
-    if (!i.isEmpty()) {
-        int row = (i[0].row()+increment)% tikzit->styles()->nodeStyles()->numInCategory();
-        if (row < 0) row += tikzit->styles()->nodeStyles()->numInCategory();
+    if (!i.isEmpty()) return i[0].row();
+    else return 0;
+}
+
+void StylePalette::setStyleIndex(int i)
+{
+    _lastStyleIndex = styleIndex();
+    if (i < 0) {
+        i = 0;
+    } else {
+        int max = tikzit->styles()->nodeStyles()->numInCategory();
+        if (i >= max) i = max - 1;
     }
 
-    //QModelIndex i1 = ui->styleListView->rootIndex().child(row, 0);
-    QModelIndex i1 =tikzit->styles()->nodeStyles()->index(row,0);
+    QModelIndex i1 =tikzit->styles()->nodeStyles()->index(i,0);
     ui->styleListView->selectionModel()->select(i1, QItemSelectionModel::ClearAndSelect);
     ui->styleListView->scrollTo(i1);
 }
 
+int StylePalette::edgeStyleIndex()
+{
+    QModelIndexList i = ui->edgeStyleListView->selectionModel()->selectedIndexes();
+    if (!i.isEmpty()) return i[0].row();
+    else return 0;
+}
+
+void StylePalette::setEdgeStyleIndex(int i)
+{
+    _lastEdgeStyleIndex = edgeStyleIndex();
+    if (i < 0) {
+        i = 0;
+    } else {
+        int max = tikzit->styles()->edgeStyles()->numInCategory();
+        if (i >= max) i = max - 1;
+    }
+
+    QModelIndex i1 =tikzit->styles()->edgeStyles()->index(i,0);
+    ui->edgeStyleListView->selectionModel()->select(i1, QItemSelectionModel::ClearAndSelect);
+    ui->edgeStyleListView->scrollTo(i1);
+}
+
 void StylePalette::nextNodeStyle()
 {
-    changeNodeStyle(1);
+    setStyleIndex(styleIndex()+1);
 }
 
 void StylePalette::previousNodeStyle()
 {
-    changeNodeStyle(-1);
+    setStyleIndex(styleIndex()-1);
+}
+
+void StylePalette::clearNodeStyle()
+{
+    setStyleIndex(0);
+}
+
+void StylePalette::toggleClearNodeStyle()
+{
+    if (styleIndex() == 0) setStyleIndex(_lastStyleIndex);
+    else setStyleIndex(0);
+}
+
+void StylePalette::nextEdgeStyle()
+{
+    setEdgeStyleIndex(edgeStyleIndex()+1);
+}
+
+void StylePalette::previousEdgeStyle()
+{
+    setEdgeStyleIndex(edgeStyleIndex()-1);
+}
+
+void StylePalette::clearEdgeStyle()
+{
+    setEdgeStyleIndex(0);
+}
+
+void StylePalette::toggleClearEdgeStyle()
+{
+    if (edgeStyleIndex() == 0) setEdgeStyleIndex(_lastEdgeStyleIndex);
+    else setEdgeStyleIndex(0);
 }
 
 QString StylePalette::activeNodeStyleName()
@@ -164,6 +230,7 @@ void StylePalette::on_currentCategory_currentTextChanged(const QString &cat)
 {
     //tikzit->styles()->refreshModels(_nodeModel, _edgeModel, cat);
     tikzit->styles()->nodeStyles()->setCategory(cat);
+    clearNodeStyle();
 }
 
 //void StylePalette::on_buttonApplyNodeStyle_clicked()

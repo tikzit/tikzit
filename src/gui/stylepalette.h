@@ -36,10 +36,14 @@ public:
     void reloadStyles();
     void nextNodeStyle();
     void previousNodeStyle();
+    void clearNodeStyle();
+    void toggleClearNodeStyle();
+    void nextEdgeStyle();
+    void previousEdgeStyle();
+    void clearEdgeStyle();
+    void toggleClearEdgeStyle();
     QString activeNodeStyleName();
 	QString activeEdgeStyleName();
-
-
 public slots:
     void nodeStyleDoubleClicked(const QModelIndex &);
     void edgeStyleDoubleClicked(const QModelIndex &);
@@ -51,7 +55,12 @@ public slots:
     //void on_buttonApplyNodeStyle_clicked();
 
 private:
-    void changeNodeStyle(int increment);
+    int _lastStyleIndex;
+    int _lastEdgeStyleIndex;
+    int styleIndex();
+    void setStyleIndex(int i);
+    int edgeStyleIndex();
+    void setEdgeStyleIndex(int i);
 
     Ui::StylePalette *ui;
 
