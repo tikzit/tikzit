@@ -1,3 +1,4 @@
+*.pro.user*
 scripts/*.pyc
 tex/sample/Output
 tex/sample/sample.pdf
