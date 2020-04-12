@@ -110,6 +110,14 @@ int GraphElementData::indexOfKey(QString key)
     return -1;
 }
 
+void GraphElementData::mergeData(GraphElementData *d)
+{
+    GraphElementProperty p;
+    foreach (p, d->properties()) {
+        if (!hasProperty(p.key())) add(p);
+    }
+}
+
 bool GraphElementData::removeRows(int row, int /*count*/, const QModelIndex &parent)
 {
     if (row >= 0 && row < _properties.length()) {

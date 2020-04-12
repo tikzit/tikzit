@@ -25,6 +25,7 @@
 
 #include "node.h"
 #include "edge.h"
+#include "path.h"
 #include "graphelementdata.h"
 
 #include <QObject>

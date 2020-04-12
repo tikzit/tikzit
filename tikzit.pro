@@ -53,6 +53,7 @@ include(flex.pri)
 include(bison.pri)
 
 SOURCES += src/gui/mainwindow.cpp \
+    src/data/path.cpp \
     src/gui/toolpalette.cpp \
     src/gui/tikzscene.cpp \
     src/data/graph.cpp \
@@ -85,6 +86,7 @@ SOURCES += src/gui/mainwindow.cpp \
     src/gui/preferencedialog.cpp
 
 HEADERS  += src/gui/mainwindow.h \
+    src/data/path.h \
     src/gui/toolpalette.h \
     src/gui/tikzscene.h \
     src/data/graph.h \

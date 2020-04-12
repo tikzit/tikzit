@@ -46,6 +46,17 @@ public:
     bool isTikzStyles() const;
 
 
+    Node *currentEdgeSource() const;
+    void setCurrentEdgeSource(Node *currentEdgeSource);
+
+    GraphElementData *currentEdgeData() const;
+    void setCurrentEdgeData(GraphElementData *currentEdgeData);
+
+    QString currentEdgeSourceAnchor() const;
+    void setCurrentEdgeSourceAnchor(const QString &currentEdgeSourceAnchor);
+
+    void finishCurrentPath();
+
 signals:
 
 public slots:
@@ -54,6 +65,9 @@ private:
     QHash<QString,Node*> _nodeMap;
     Graph *_graph;
     TikzStyles *_tikzStyles;
+    Node *_currentEdgeSource;
+    GraphElementData *_currentEdgeData;
+    QString _currentEdgeSourceAnchor;
     void *scanner;
 };
 

@@ -49,6 +49,7 @@ public:
     bool hasProperty(QString key);
     bool atom(QString atom);
     int indexOfKey(QString key);
+    void mergeData(GraphElementData *d);
     bool removeRows(int row, int count, const QModelIndex &parent) override;
     bool moveRows(const QModelIndex &sourceParent,
                   int sourceRow, int,

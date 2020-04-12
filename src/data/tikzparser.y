@@ -32,13 +32,13 @@
 /* we use features added to bison 2.4 */
 %require "2.3"
 
-%error-verbose
+%define parse.error verbose
 /* enable maintaining locations for better error messages */
 %locations
 /* the name of the header file */
 /*%defines "common/tikzparser.h"*/
 /* make it re-entrant (no global variables) */
-%pure-parser
+%define api.pure
 /* We use a pure (re-entrant) lexer.  This means yylex
    will take a void* (opaque) type to maintain its state */
 %lex-param {void *scanner}
@@ -214,10 +214,13 @@ noderef: "(" REFSTRING optanchor ")"
         $$.node = assembler->nodeWithName(QString($2));
         free($2);
         $$.anchor = $3;
+        $$.loop = false;
+        $$.cycle = false;
 	};
 optnoderef:
-	noderef { $$ = $1; }
-	| "(" ")" { $$.node = 0; $$.anchor = 0; }
+    noderef { $$ = $1; }
+    | "(" ")" { $$.node = 0; $$.anchor = 0; $$.loop = true; $$.cycle = false; }
+    | "cycle" { $$.node = 0; $$.anchor = 0; $$.loop = false; $$.cycle = true; }
 optedgenode:
 	{ $$ = 0; }
 	| "node" optproperties DELIMITEDSTRING
@@ -228,45 +231,68 @@ optedgenode:
         $$->setLabel(QString($3));
         free($3);
 	}
-edge: "\\draw" optproperties noderef "to" optedgenode optnoderef ";"
-	{
-        Node *s;
-        Node *t;
-		
-        s = $3.node;
 
-        if ($6.node) {
-            t = $6.node;
+edgesource: optproperties noderef {
+        assembler->setCurrentEdgeSource($2.node);
+        if ($2.anchor) {
+            assembler->setCurrentEdgeSourceAnchor(QString($2.anchor));
+            free($2.anchor);
         } else {
-            t = s;
+            assembler->setCurrentEdgeSourceAnchor(QString());
+        }
+        assembler->setCurrentEdgeData($1);
+    }
+
+optedgetargets: edgetarget optedgetargets |
+
+edgetarget: "to" optproperties optedgenode optnoderef {
+        Node *s = assembler->currentEdgeSource();;
+        Node *t;
+
+        if ($4.loop) {
+            t = assembler->currentEdgeSource();
+        } else if ($4.cycle) {
+            // TODO: should be source of first edge in path
+            t = assembler->currentEdgeSource();
+        } else {
+            t = $4.node;
         }
 
-        // if the source or the target of the edge doesn't exist, quietly ignore it.
-        if (s != 0 && t != 0) {
-            Edge *edge = new Edge(s, t);
-            if ($2) {
-                edge->setData($2);
-                edge->setAttributesFromData();
+        if (s != 0 && t != 0) { // if source or target don't exist, quietly ignore edge
+            Edge *e = new Edge(s, t);
+            assembler->setCurrentEdgeSource(t);
+
+            if (!assembler->currentEdgeSourceAnchor().isEmpty()) {
+                e->setSourceAnchor(assembler->currentEdgeSourceAnchor());
             }
 
-            if ($5)
-                edge->setEdgeNode($5);
-            if ($3.anchor) {
-                edge->setSourceAnchor(QString($3.anchor));
-                free($3.anchor);
-            }
-
-            if ($6.node) {
-                if ($6.anchor) {
-                    edge->setTargetAnchor(QString($6.anchor));
-                    free($6.anchor);
-                }
+            if ($4.anchor) {
+                QString a($4.anchor);
+                free($4.anchor);
+                e->setTargetAnchor(a);
+                assembler->setCurrentEdgeSourceAnchor(a);
             } else {
-                edge->setTargetAnchor(edge->sourceAnchor());
+                assembler->setCurrentEdgeSourceAnchor(QString());
             }
 
-            assembler->graph()->addEdge(edge);
+            if ($3) e->setEdgeNode($3);
+
+            GraphElementData *cd = assembler->currentEdgeData();
+            if ($2) {
+                if (cd) $2->mergeData(cd);
+                 e->setData($2);
+            } else {
+                if (cd) e->setData(cd->copy());
+            }
+            e->setAttributesFromData();
+            assembler->graph()->addEdge(e);
         }
+    }
+
+
+edge: "\\draw" edgesource edgetarget optedgetargets ";"
+	{
+        assembler->finishCurrentPath();
 	};
 
 ignoreprop: val | val "=" val;

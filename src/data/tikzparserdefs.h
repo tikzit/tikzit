@@ -33,6 +33,8 @@
 struct noderef {
     Node *node;
     char *anchor;
+    bool cycle;
+    bool loop;
 };
 
 inline int isatty(int) { return 0; }
