@@ -289,5 +289,6 @@ bool GraphElementData::isPathProperty(QString key)
     return (key == "bend left" ||
             key == "bend right" ||
             key == "in" ||
-            key == "out");
+            key == "out" ||
+            key == "looseness");
 }

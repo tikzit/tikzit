@@ -248,12 +248,11 @@ QString Graph::tikz()
     Edge *e;
     Path *p;
     foreach (e, _edges) {
-        e->setTikzLine(line);
-        e->updateData();
-
         p = e->path();
         if (p) { // if edge is part of a path
             if (p->edges().first() == e) { // only add tikz code once per path
+                e->setTikzLine(line);
+                e->updateData();
                 code << "\t\t\\draw ";
 
                 GraphElementData *npd = e->data()->nonPathData();
@@ -270,8 +269,10 @@ QString Graph::tikz()
                 code << ")";
 
                 foreach (Edge *e1, p->edges()) {
+                    e1->setTikzLine(line);
                     e1->updateData();
-                    code << " to ";
+                    code << "\n\t\t\t to ";
+                    line++;
 
                     GraphElementData *pd = e1->data()->pathData();
                     if (!pd->isEmpty())
@@ -301,6 +302,8 @@ QString Graph::tikz()
                 line++;
             }
         } else { // edge is not part of a path
+            e->setTikzLine(line);
+            e->updateData();
             code << "\t\t\\draw ";
 
             if (!e->data()->isEmpty())
