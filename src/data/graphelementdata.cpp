@@ -265,3 +265,29 @@ QVector<GraphElementProperty> GraphElementData::properties() const
 {
     return _properties;
 }
+
+GraphElementData *GraphElementData::pathData() const
+{
+    GraphElementData *d = new GraphElementData();
+    foreach(GraphElementProperty p, _properties) {
+        if (isPathProperty(p.key())) d->add(p);
+    }
+    return d;
+}
+
+GraphElementData *GraphElementData::nonPathData() const
+{
+    GraphElementData *d = new GraphElementData();
+    foreach(GraphElementProperty p, _properties) {
+        if (!isPathProperty(p.key())) d->add(p);
+    }
+    return d;
+}
+
+bool GraphElementData::isPathProperty(QString key)
+{
+    return (key == "bend left" ||
+            key == "bend right" ||
+            key == "in" ||
+            key == "out");
+}

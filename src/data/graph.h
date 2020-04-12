@@ -47,6 +47,8 @@ public:
     void addEdge(Edge *e);
     void addEdge(Edge *e, int index);
     void removeEdge(Edge *e);
+    void addPath(Path *p);
+    void removePath(Path *p);
     int maxIntName();
     void reorderNodes(const QVector<Node*> &newOrder);
     void reorderEdges(const QVector<Edge*> &newOrder);
@@ -65,6 +67,7 @@ public:
 
     const QVector<Node *> &nodes();
     const QVector<Edge*> &edges();
+    const QVector<Path*> &paths();
 
     QRectF bbox() const;
     void setBbox(const QRectF &bbox);
@@ -122,6 +125,7 @@ public slots:
 private:
     QVector<Node*> _nodes;
     QVector<Edge*> _edges;
+    QVector<Path*> _paths;
     //QMultiHash<Node*,Edge*> inEdges;
     //QMultiHash<Node*,Edge*> outEdges;
     GraphElementData *_data;

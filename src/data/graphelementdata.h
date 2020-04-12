@@ -78,12 +78,16 @@ public:
     bool isEmpty();
     QVector<GraphElementProperty> properties() const;
 
+    GraphElementData *pathData() const;
+    GraphElementData *nonPathData() const;
+
 signals:
 
 public slots:
 
 private:
     QVector<GraphElementProperty> _properties;
+    static bool isPathProperty(QString key);
 };
 
 #endif // GRAPHELEMENTDATA_H

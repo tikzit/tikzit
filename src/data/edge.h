@@ -27,6 +27,8 @@
 #include "node.h"
 #include "style.h"
 
+class Path;
+
 #include <QObject>
 #include <QPointF>
 
@@ -92,12 +94,15 @@ public:
 	void setStyleName(const QString & styleName);
     Style *style() const;
 
+    Path *path() const;
+    void setPath(Path *path);
+
 signals:
 
 public slots:
 
 private:
-	QPointF bezierTangent(qreal start, qreal end) const;
+    QPointF bezierTangent(qreal start, qreal end) const;
     QString _sourceAnchor;
     QString _targetAnchor;
 
@@ -108,6 +113,7 @@ private:
     // referenced
     Node *_source;
     Node *_target;
+    Path *_path;
 
 
     Style *_style;

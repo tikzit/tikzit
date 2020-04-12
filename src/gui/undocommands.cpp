@@ -488,7 +488,7 @@ void ReflectNodesCommand::undo()
         }
     }
 
-    _scene->refreshAdjacentEdges(_nodes.toList());
+    _scene->refreshAdjacentEdges(_nodes.values());
     GraphUpdateCommand::undo();
 }
 
@@ -501,7 +501,7 @@ void ReflectNodesCommand::redo()
         }
     }
 
-    _scene->refreshAdjacentEdges(_nodes.toList());
+    _scene->refreshAdjacentEdges(_nodes.values());
     GraphUpdateCommand::redo();
 }
 
@@ -520,7 +520,7 @@ void RotateNodesCommand::undo()
         }
     }
 
-    _scene->refreshAdjacentEdges(_nodes.toList());
+    _scene->refreshAdjacentEdges(_nodes.values());
     GraphUpdateCommand::undo();
 }
 
@@ -533,7 +533,7 @@ void RotateNodesCommand::redo()
         }
     }
 
-    _scene->refreshAdjacentEdges(_nodes.toList());
+    _scene->refreshAdjacentEdges(_nodes.values());
     GraphUpdateCommand::redo();
 }
 

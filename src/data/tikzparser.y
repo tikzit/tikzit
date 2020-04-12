@@ -96,6 +96,7 @@ void yyerror(YYLTYPE *yylloc, void * /*scanner*/, const char *str) {
 %token NODE "node"
 %token AT "at"
 %token TO "to"
+%token CYCLE "cycle"
 %token SEMICOLON ";"
 %token COMMA ","
 
@@ -252,8 +253,8 @@ edgetarget: "to" optproperties optedgenode optnoderef {
         if ($4.loop) {
             t = assembler->currentEdgeSource();
         } else if ($4.cycle) {
-            // TODO: should be source of first edge in path
-            t = assembler->currentEdgeSource();
+            t = assembler->currentPathSource();
+            if (!t) t = s;
         } else {
             t = $4.node;
         }
@@ -285,7 +286,7 @@ edgetarget: "to" optproperties optedgenode optnoderef {
                 if (cd) e->setData(cd->copy());
             }
             e->setAttributesFromData();
-            assembler->graph()->addEdge(e);
+            assembler->addEdge(e);
         }
     }
 

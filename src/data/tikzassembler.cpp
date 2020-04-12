@@ -30,6 +30,7 @@ TikzAssembler::TikzAssembler(Graph *graph, QObject *parent) :
     yylex_init(&scanner);
     yyset_extra(this, scanner);
     _currentEdgeData = nullptr;
+    _currentPath = nullptr;
 }
 
 TikzAssembler::TikzAssembler(TikzStyles *tikzStyles, QObject *parent) :
@@ -38,6 +39,7 @@ TikzAssembler::TikzAssembler(TikzStyles *tikzStyles, QObject *parent) :
     yylex_init(&scanner);
     yyset_extra(this, scanner);
     _currentEdgeData = nullptr;
+    _currentPath = nullptr;
 }
 
 void TikzAssembler::addNodeToMap(Node *n) { _nodeMap.insert(n->name(), n); }
@@ -82,6 +84,15 @@ void TikzAssembler::setCurrentEdgeSource(Node *currentEdgeSource)
     _currentEdgeSource = currentEdgeSource;
 }
 
+Node *TikzAssembler::currentPathSource() const
+{
+    if (_currentPath && _currentPath->length() > 0) {
+        return _currentPath->edges()[0]->source();
+    } else {
+        return nullptr;
+    }
+}
+
 GraphElementData *TikzAssembler::currentEdgeData() const
 {
     return _currentEdgeData;
@@ -102,12 +113,31 @@ void TikzAssembler::setCurrentEdgeSourceAnchor(const QString &currentEdgeSourceA
     _currentEdgeSourceAnchor = currentEdgeSourceAnchor;
 }
 
+void TikzAssembler::addEdge(Edge *e)
+{
+    if (!_currentPath) _currentPath = new Path();
+    _currentPath->addEdge(e);
+    _graph->addEdge(e);
+}
+
 void TikzAssembler::finishCurrentPath()
 {
     if (_currentEdgeData) {
-        delete _currentEdgeData;
+        GraphElementData *d = _currentEdgeData;
         _currentEdgeData = nullptr;
+        delete d;
     }
-    // TODO: create a path and add it to graph
+
+    if (_currentPath) {
+        if (_currentPath->length() < 2) {
+            _currentPath->removeEdges();
+            Path *p = _currentPath;
+            _currentPath = nullptr;
+            delete p;
+        } else {
+            _graph->addPath(_currentPath);
+            _currentPath = nullptr;
+        }
+    }
 }
 

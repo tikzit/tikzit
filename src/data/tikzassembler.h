@@ -23,7 +23,6 @@
 #ifndef TIKZASSEMBLER_H
 #define TIKZASSEMBLER_H
 
-#include "node.h"
 #include "graph.h"
 #include "tikzstyles.h"
 
@@ -49,12 +48,15 @@ public:
     Node *currentEdgeSource() const;
     void setCurrentEdgeSource(Node *currentEdgeSource);
 
+    Node *currentPathSource() const;
+
     GraphElementData *currentEdgeData() const;
     void setCurrentEdgeData(GraphElementData *currentEdgeData);
 
     QString currentEdgeSourceAnchor() const;
     void setCurrentEdgeSourceAnchor(const QString &currentEdgeSourceAnchor);
 
+    void addEdge(Edge *e);
     void finishCurrentPath();
 
 signals:
@@ -65,6 +67,7 @@ private:
     QHash<QString,Node*> _nodeMap;
     Graph *_graph;
     TikzStyles *_tikzStyles;
+    Path *_currentPath;
     Node *_currentEdgeSource;
     GraphElementData *_currentEdgeData;
     QString _currentEdgeSourceAnchor;

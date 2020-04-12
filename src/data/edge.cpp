@@ -28,6 +28,7 @@ Edge::Edge(Node *s, Node *t, QObject *parent) :
 {
     _data = new GraphElementData(this);
     _edgeNode = nullptr;
+    _path = nullptr;
     _dirty = true;
 
     if (s != t) {
@@ -435,4 +436,14 @@ QPointF Edge::bezierTangent(qreal start, qreal end) const
 	}
 
 	return QPointF(dx, dy);
+}
+
+Path *Edge::path() const
+{
+    return _path;
+}
+
+void Edge::setPath(Path *path)
+{
+    _path = path;
 }

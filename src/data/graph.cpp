@@ -73,6 +73,17 @@ void Graph::removeEdge(Edge *e)
     _edges.removeOne(e);
 }
 
+void Graph::addPath(Path *p)
+{
+    p->setParent(this);
+    _paths << p;
+}
+
+void Graph::removePath(Path *p)
+{
+    _paths.removeOne(p);
+}
+
 int Graph::maxIntName()
 {
     int max = -1;
@@ -167,6 +178,11 @@ const QVector<Edge*> &Graph::edges()
     return _edges;
 }
 
+const QVector<Path *> &Graph::paths()
+{
+    return _paths;
+}
+
 QRectF Graph::bbox() const
 {
     return _bbox;
@@ -230,37 +246,90 @@ QString Graph::tikz()
 
 
     Edge *e;
+    Path *p;
     foreach (e, _edges) {
         e->setTikzLine(line);
         e->updateData();
-        code << "\t\t\\draw ";
 
-        if (!e->data()->isEmpty())
-            code << e->data()->tikz() << " ";
+        p = e->path();
+        if (p) { // if edge is part of a path
+            if (p->edges().first() == e) { // only add tikz code once per path
+                code << "\t\t\\draw ";
 
-        code << "(" << e->source()->name();
-        if (e->sourceAnchor() != "")
-            code << "." << e->sourceAnchor();
-        code << ") to ";
+                GraphElementData *npd = e->data()->nonPathData();
+                if (!npd->isEmpty())
+                    code << npd->tikz() << " ";
+                delete npd;
 
-        if (e->hasEdgeNode()) {
-            code << "node ";
-            if (!e->edgeNode()->data()->isEmpty())
-                code << e->edgeNode()->data()->tikz() << " ";
-            code << "{" << e->edgeNode()->label() << "} ";
+                code << "(" << e->source()->name();
+                if (e->sourceAnchor() != "") {
+                    code << "." << e->sourceAnchor();
+                } else if (p->isCycle()) {
+                    code << ".center";
+                }
+                code << ")";
+
+                foreach (Edge *e1, p->edges()) {
+                    e1->updateData();
+                    code << " to ";
+
+                    GraphElementData *pd = e1->data()->pathData();
+                    if (!pd->isEmpty())
+                        code << pd->tikz() << " ";
+                    delete pd;
+
+                    if (e1->hasEdgeNode()) {
+                        code << "node ";
+                        if (!e1->edgeNode()->data()->isEmpty())
+                            code << e1->edgeNode()->data()->tikz() << " ";
+                        code << "{" << e1->edgeNode()->label() << "} ";
+                    }
+
+                    if (e->source() == e1->target()) {
+                        code << "cycle";
+                    } else {
+                        code << "(" << e1->target()->name();
+                        if (e1->targetAnchor() != "") {
+                            code << "." << e1->targetAnchor();
+                        } else if (e1 != p->edges().last()) {
+                            code << ".center";
+                        }
+                        code << ")";
+                    }
+                }
+                code << ";\n";
+                line++;
+            }
+        } else { // edge is not part of a path
+            code << "\t\t\\draw ";
+
+            if (!e->data()->isEmpty())
+                code << e->data()->tikz() << " ";
+
+            code << "(" << e->source()->name();
+            if (e->sourceAnchor() != "")
+                code << "." << e->sourceAnchor();
+            code << ") to ";
+
+            if (e->hasEdgeNode()) {
+                code << "node ";
+                if (!e->edgeNode()->data()->isEmpty())
+                    code << e->edgeNode()->data()->tikz() << " ";
+                code << "{" << e->edgeNode()->label() << "} ";
+            }
+
+            if (e->source() == e->target()) {
+                code << "()";
+            } else {
+                code << "(" << e->target()->name();
+                if (e->targetAnchor() != "")
+                    code << "." << e->targetAnchor();
+                code << ")";
+            }
+
+            code << ";\n";
+            line++;
         }
-
-        if (e->source() == e->target()) {
-            code << "()";
-        } else {
-            code << "(" << e->target()->name();
-            if (e->targetAnchor() != "")
-                code << "." << e->targetAnchor();
-            code << ")";
-        }
-
-        code << ";\n";
-        line++;
     }
 
     if (!_edges.isEmpty()) {

@@ -82,6 +82,7 @@ FLOAT \-?[0-9]*(\.[0-9]+)?
 <INITIAL>node                  {  return NODE; }
 <INITIAL>at                    {  return AT; }
 <INITIAL>to                    {  return TO; }
+<INITIAL>cycle                 {  return CYCLE; }
 
 \([ ]*{FLOAT}[ ]*,[ ]*{FLOAT}[ ]*\) {
 	yylloc->last_column = yylloc->first_column + 1;
