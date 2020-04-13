@@ -27,6 +27,7 @@
 #include "graph.h"
 #include "nodeitem.h"
 #include "edgeitem.h"
+#include "pathitem.h"
 #include "tikzdocument.h"
 #include "toolpalette.h"
 #include "stylepalette.h"
@@ -48,6 +49,7 @@ public:
     Graph *graph();
     QMap<Node*,NodeItem*> &nodeItems();
     QMap<Edge*,EdgeItem*> &edgeItems();
+    QMap<Path*,PathItem*> &pathItems();
     void refreshAdjacentEdges(QList<Node*> nodes);
 //    void setBounds(QRectF bounds);
 
@@ -112,6 +114,7 @@ private:
     StylePalette *_styles;
     QMap<Node*,NodeItem*> _nodeItems;
     QMap<Edge*,EdgeItem*> _edgeItems;
+    QMap<Path*,PathItem*> _pathItems;
     QGraphicsLineItem *_drawEdgeItem;
     QGraphicsRectItem *_rubberBandItem;
     EdgeItem *_modifyEdgeItem;

@@ -97,12 +97,25 @@ void TikzScene::graphReplaced()
     }
     _edgeItems.clear();
 
+    foreach (PathItem *pi, _pathItems) {
+        removeItem(pi);
+        delete pi;
+    }
+    _pathItems.clear();
+
     foreach (Edge *e, graph()->edges()) {
 		//e->attachStyle();
         //e->updateControls();
         EdgeItem *ei = new EdgeItem(e);
         _edgeItems.insert(e, ei);
         addItem(ei);
+
+        Path *p = e->path();
+        if (p && p->edges().first() == e) {
+            PathItem *pi = new PathItem(p);
+            _pathItems.insert(p, pi);
+            addItem(pi);
+        }
     }
 
     foreach (Node *n, graph()->nodes()) {
@@ -393,7 +406,12 @@ void TikzScene::refreshZIndices()
 {
     qreal z = 0.0;
     foreach (Edge *e, graph()->edges()) {
-        edgeItems()[e]->setZValue(z);
+        if (e->path() && e == e->path()->edges().first()) {
+            pathItems()[e->path()]->setZValue(z);
+            edgeItems()[e]->setZValue(z + 0.1);
+        } else {
+            edgeItems()[e]->setZValue(z);
+        }
         z += 1.0;
     }
 
@@ -606,6 +624,8 @@ void TikzScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             }
 
             _modifyEdgeItem->readPos();
+            Path *p = _modifyEdgeItem->edge()->path();
+            if (p) pathItems()[p]->readPos();
 
         } else if (_draggingNodes) { // nodes being dragged
             QGraphicsScene::mouseMoveEvent(event);
@@ -1253,6 +1273,8 @@ void TikzScene::refreshSceneBounds() {
 void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
 {
     if (nodes.empty()) return;
+
+    QSet<Path*> paths;
     foreach (Edge *e, _edgeItems.keys()) {
 		EdgeItem *ei = _edgeItems[e];
 
@@ -1263,6 +1285,13 @@ void TikzScene::refreshAdjacentEdges(QList<Node*> nodes)
 				ei->readPos();
 			}
 		}
+
+        // only update paths once
+        Path *p = ei->edge()->path();
+        if (p && !paths.contains(p)) {
+            pathItems()[p]->readPos();
+            paths << p;
+        }
     }
 }
 
@@ -1288,4 +1317,9 @@ QMap<Node*,NodeItem *> &TikzScene::nodeItems()
 QMap<Edge*,EdgeItem*> &TikzScene::edgeItems()
 {
     return _edgeItems;
+}
+
+QMap<Path *, PathItem *> &TikzScene::pathItems()
+{
+    return _pathItems;
 }

@@ -102,6 +102,9 @@ void EdgeBendCommand::undo()
     foreach(EdgeItem *ei, _scene->edgeItems()) {
         if (ei->edge() == _edge) {
             ei->readPos();
+
+            Path *p = ei->edge()->path();
+            if (p) _scene->pathItems()[p]->readPos();
             break;
         }
     }
@@ -118,6 +121,9 @@ void EdgeBendCommand::redo()
     foreach(EdgeItem *ei, _scene->edgeItems()) {
         if (ei->edge() == _edge) {
             ei->readPos();
+
+            Path *p = ei->edge()->path();
+            if (p) _scene->pathItems()[p]->readPos();
             break;
         }
     }
@@ -287,6 +293,9 @@ void ChangeEdgeModeCommand::undo()
     // FIXME: this act strangely sometimes
 	_edge->setBasicBendMode(!_edge->basicBendMode());
     _scene->edgeItems()[_edge]->readPos();
+    Path *p = _edge->path();
+    if (p) _scene->pathItems()[p]->readPos();
+
     GraphUpdateCommand::undo();
 }
 
@@ -294,6 +303,9 @@ void ChangeEdgeModeCommand::redo()
 {
     _edge->setBasicBendMode(!_edge->basicBendMode());
     _scene->edgeItems()[_edge]->readPos();
+    Path *p = _edge->path();
+    if (p) _scene->pathItems()[p]->readPos();
+
     GraphUpdateCommand::redo();
 }
 
@@ -607,6 +619,12 @@ MakePathCommand::MakePathCommand(TikzScene *scene,
 void MakePathCommand::undo()
 {
     Path *p = _edgeList.first()->path();
+
+    PathItem *pi = _scene->pathItems()[p];
+    _scene->removeItem(pi);
+    _scene->pathItems().remove(p);
+    delete pi;
+
     p->removeEdges();
     _scene->graph()->removePath(p);
 
@@ -617,6 +635,7 @@ void MakePathCommand::undo()
         }
     }
 
+    _scene->refreshZIndices();
     GraphUpdateCommand::undo();
 }
 
@@ -640,5 +659,11 @@ void MakePathCommand::redo()
 
     _scene->graph()->addPath(p);
 
+    PathItem *pi = new PathItem(p);
+    _scene->addItem(pi);
+    _scene->pathItems().insert(p, pi);
+    pi->readPos();
+
+    _scene->refreshZIndices();
     GraphUpdateCommand::redo();
 }
