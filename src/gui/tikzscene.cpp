@@ -389,7 +389,6 @@ void TikzScene::makePath()
     foreach (Edge *e, p) {
         if (e != p.first()) oldEdgeData[e] = e->data()->copy();
     }
-    qDebug() << oldEdgeData;
 
     _tikzDocument->undoStack()->beginMacro("Make Path");
     _tikzDocument->undoStack()->push(new ReverseEdgesCommand(this, flip));
@@ -448,6 +447,7 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     _mouseDownPos = event->scenePos();
 
     _draggingNodes = false;
+    _selectingEdge = nullptr;
 
     // radius of a control point for bezier edges, in scene coordinates
     qreal cpR = GLOBAL_SCALEF * (0.1);
@@ -528,9 +528,19 @@ void TikzScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 }
             }
 
-            auto its = items(_mouseDownPos);
-            if (!its.isEmpty() && dynamic_cast<NodeItem*>(its[0]))
-                _draggingNodes = true;
+            QList<QGraphicsItem*> its = items(_mouseDownPos);
+            if (!its.isEmpty()) {
+                if (dynamic_cast<NodeItem*>(its[0])) {
+                    _draggingNodes = true;
+                } else {
+                    foreach (QGraphicsItem *gi, its) {
+                        if (EdgeItem *ei = dynamic_cast<EdgeItem*>(gi)) {
+                            _selectingEdge = ei->edge();
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         break;
@@ -729,6 +739,22 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         } else {
             // otherwise, process mouse move normally
             QGraphicsScene::mouseReleaseEvent(event);
+
+            if (_selectingEdge) {
+                bool sel = edgeItems()[_selectingEdge]->isSelected();
+                Path *p = _selectingEdge->path();
+                if (p) {
+                    foreach (Edge *e, p->edges()) {
+                        if (e != _selectingEdge)
+                            edgeItems()[e]->setSelected(sel);
+                        nodeItems()[e->source()]->setSelected(sel);
+                        nodeItems()[e->target()]->setSelected(sel);
+                    }
+                } else {
+                    nodeItems()[_selectingEdge->source()]->setSelected(sel);
+                    nodeItems()[_selectingEdge->target()]->setSelected(sel);
+                }
+            }
 
             if (_rubberBandItem->isVisible()) {
                 QPainterPath sel;

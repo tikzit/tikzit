@@ -118,6 +118,7 @@ private:
     QGraphicsLineItem *_drawEdgeItem;
     QGraphicsRectItem *_rubberBandItem;
     EdgeItem *_modifyEdgeItem;
+    Edge *_selectingEdge;
     NodeItem *_edgeStartNodeItem;
     NodeItem *_edgeEndNodeItem;
     bool _firstControlPoint;

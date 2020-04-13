@@ -62,7 +62,9 @@ QColor Style::fillColor(bool tikzitOverride) const
 
 QBrush Style::brush() const
 {
-    return QBrush(fillColor());
+    QString col = propertyWithDefault("fill", "none", true);
+    if (col == "none") return Qt::NoBrush;
+    else return QBrush(tikzit->colorByName(col));
 }
 
 QString Style::shape(bool tikzitOverride) const
