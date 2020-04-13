@@ -399,7 +399,25 @@ void TikzScene::makePath()
 
 void TikzScene::splitPath()
 {
-    // TODO: stub
+    QSet<Node*> selNodes;
+    QSet<Edge*> edges;
+    getSelection(selNodes, edges);
+
+    // if no edges are selected, try to infer edges from nodes
+    if (edges.isEmpty()) {
+        foreach(Edge *e, graph()->edges()) {
+            if (selNodes.contains(e->source()) && selNodes.contains(e->target()))
+                edges << e;
+        }
+    }
+
+    QVector<Path*> paths;
+    foreach (Edge *e, edges) {
+        Path *p = e->path();
+        if (p && !paths.contains(p)) paths << p;
+    }
+
+    _tikzDocument->undoStack()->push(new SplitPathCommand(this, paths));
 }
 
 void TikzScene::refreshZIndices()

@@ -271,4 +271,19 @@ private:
     QMap<Edge*,GraphElementData*> _oldEdgeData;
 };
 
+class SplitPathCommand : public GraphUpdateCommand
+{
+public:
+    explicit SplitPathCommand(TikzScene *scene,
+                              const QVector<Path*> &paths,
+                              QUndoCommand *parent = nullptr);
+    void undo() override;
+    void redo() override;
+private:
+    QVector<Path*> _paths;
+
+    // keep a copy of the edge lists so they can be added back to each path in undo()
+    QVector<QVector<Edge*>> _edgeLists;
+};
+
 #endif // UNDOCOMMANDS_H

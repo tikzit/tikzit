@@ -667,3 +667,47 @@ void MakePathCommand::redo()
     _scene->refreshZIndices();
     GraphUpdateCommand::redo();
 }
+
+SplitPathCommand::SplitPathCommand(TikzScene *scene,
+                                   const QVector<Path *> &paths,
+                                   QUndoCommand *parent) :
+    GraphUpdateCommand(scene, parent), _paths(paths)
+{
+    foreach (Path *p, paths) _edgeLists << p->edges();
+}
+
+void SplitPathCommand::undo()
+{
+    for (int i = 0; i < _paths.length(); ++i) {
+        Path *p = _paths[i];
+        foreach (Edge *e, _edgeLists[i]) {
+            p->addEdge(e);
+        }
+
+        _scene->graph()->addPath(p);
+
+        PathItem *pi = new PathItem(p);
+        _scene->addItem(pi);
+        _scene->pathItems().insert(p, pi);
+        pi->readPos();
+    }
+
+    _scene->refreshZIndices();
+    GraphUpdateCommand::undo();
+}
+
+void SplitPathCommand::redo()
+{
+    foreach (Path *p, _paths) {
+        PathItem *pi = _scene->pathItems()[p];
+        _scene->removeItem(pi);
+        _scene->pathItems().remove(p);
+        delete pi;
+
+        p->removeEdges();
+        _scene->graph()->removePath(p);
+    }
+
+    _scene->refreshZIndices();
+    GraphUpdateCommand::redo();
+}
