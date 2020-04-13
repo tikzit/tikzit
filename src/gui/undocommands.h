@@ -255,4 +255,20 @@ private:
     QVector<Edge*> _newEdgeOrder;
 };
 
+class MakePathCommand : public GraphUpdateCommand
+{
+public:
+    explicit MakePathCommand(TikzScene *scene,
+                             const QVector<Edge*> &edgeList,
+                             const QMap<Edge*,GraphElementData*> &oldEdgeData,
+                             QUndoCommand *parent = nullptr);
+    void undo() override;
+    void redo() override;
+private:
+    QVector<Edge*> _edgeList;
+
+    // creating path clobbers data on all but first edge
+    QMap<Edge*,GraphElementData*> _oldEdgeData;
+};
+
 #endif // UNDOCOMMANDS_H

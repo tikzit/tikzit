@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <QClipboard>
 #include <QInputDialog>
+#include <QMessageBox>
 #include <cmath>
 #include <delimitedstringvalidator.h>
 #include <QSettings>
@@ -293,6 +294,99 @@ void TikzScene::reverseSelectedEdges()
 
     ReverseEdgesCommand *cmd = new ReverseEdgesCommand(this, es);
     _tikzDocument->undoStack()->push(cmd);
+}
+
+void TikzScene::makePath()
+{
+    QSet<Node*> selNodes;
+    QSet<Edge*> edges;
+    getSelection(selNodes, edges);
+
+    // if no edges are selected, try to infer edges from nodes
+    if (edges.isEmpty()) {
+        foreach(Edge *e, graph()->edges()) {
+            if (selNodes.contains(e->source()) && selNodes.contains(e->target()))
+                edges << e;
+        }
+    }
+
+    if (edges.size() < 2) {
+        //QMessageBox::warning(nullptr, "Error", "Paths must contain at least 2 edges.");
+        return;
+    }
+
+    foreach (Edge *e, edges) {
+        if (e->path() != nullptr) {
+            //QMessageBox::warning(nullptr, "Error", "Edges must not already be in another path.");
+            // TODO: maybe we want to automatically split paths if edges are in a path already?
+            return;
+        }
+    }
+
+    // try to turn selected edges into one contiguous chain or cycle, recording
+    // which edges need to be flipped.
+
+    // n.b. this is O(n^2) in path length. This could be optimised by saving
+    // vertex neighbourhoods, but probably doesn't win anything for n < 100.
+
+    QSet<Edge*> flip;
+    QVector<Edge*> p;
+    int pLen = -1;
+
+    // keep going as long as 'p' grows
+    while (pLen < p.length()) {
+        pLen = p.length();
+        Edge *e = nullptr;
+        foreach (e, edges) {
+            Node *s = e->source();
+            Node *t = e->target();
+            if (p.isEmpty()) {
+                p.append(e);
+                break;
+            }
+
+            Node *head = (flip.contains(p.first())) ? p.first()->target() : p.first()->source();
+            Node *tail = (flip.contains(p.last())) ? p.last()->source() : p.last()->target();
+
+            if (s == head || t == head) {
+                if (s == head) flip << e;
+                p.prepend(e);
+                break;
+            }
+
+            if (s == tail || t == tail) {
+                if (t == tail) flip << e;
+                p.append(e);
+                break;
+            }
+        }
+
+        if (e) edges.remove(e);
+    }
+
+    if (!edges.isEmpty()) {
+        QMessageBox::warning(nullptr, "Error", "Selected edges do not form a path.");
+        return;
+    }
+
+    //qDebug() << p;
+    //qDebug() << flip;
+
+    QMap<Edge*, GraphElementData*> oldEdgeData;
+    foreach (Edge *e, p) {
+        if (e != p.first()) oldEdgeData[e] = e->data()->copy();
+    }
+    qDebug() << oldEdgeData;
+
+    _tikzDocument->undoStack()->beginMacro("Make Path");
+    _tikzDocument->undoStack()->push(new ReverseEdgesCommand(this, flip));
+    _tikzDocument->undoStack()->push(new MakePathCommand(this, p, oldEdgeData));
+    _tikzDocument->undoStack()->endMacro();
+}
+
+void TikzScene::splitPath()
+{
+    // TODO: stub
 }
 
 void TikzScene::refreshZIndices()

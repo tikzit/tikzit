@@ -90,6 +90,7 @@ void TikzDocument::open(QString fileName)
         refreshTikz();
         setClean();
     } else {
+        // TODO: should not quietly fail to open
         newGraph->deleteLater();
         _parseSuccess = false;
     }

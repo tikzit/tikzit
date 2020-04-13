@@ -239,6 +239,18 @@ void MainMenu::on_actionMerge_Nodes_triggered()
         tikzit->activeWindow()->tikzScene()->mergeNodes();
 }
 
+void MainMenu::on_actionMake_Path_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->makePath();
+}
+
+void MainMenu::on_actionSplit_Path_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->splitPath();
+}
+
 
 // Tikz
 void MainMenu::on_actionParse_triggered()
@@ -333,8 +345,10 @@ void MainMenu::on_actionZoom_Out_triggered()
 
 void MainMenu::on_actionShow_Node_Labels_triggered()
 {
-    tikzit->activeWindow()->tikzScene()->setDrawNodeLabels(ui.actionShow_Node_Labels->isChecked());
-    tikzit->activeWindow()->tikzScene()->invalidate();
+    if (tikzit->activeWindow() != 0) {
+        tikzit->activeWindow()->tikzScene()->setDrawNodeLabels(ui.actionShow_Node_Labels->isChecked());
+        tikzit->activeWindow()->tikzScene()->invalidate();
+    }
 }
 
 void MainMenu::on_actionAbout_triggered()

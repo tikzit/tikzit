@@ -269,10 +269,10 @@ QString Graph::tikz()
                 code << ")";
 
                 foreach (Edge *e1, p->edges()) {
-                    e1->setTikzLine(line);
-                    e1->updateData();
                     code << "\n\t\t\t to ";
                     line++;
+                    e1->setTikzLine(line);
+                    e1->updateData();
 
                     GraphElementData *pd = e1->data()->pathData();
                     if (!pd->isEmpty())

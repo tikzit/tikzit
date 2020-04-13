@@ -58,6 +58,13 @@
     <addaction name="actionRotateCW"/>
     <addaction name="actionRotateCCW"/>
    </widget>
+   <widget class="QMenu" name="menuPath">
+    <property name="title">
+     <string>Path</string>
+    </property>
+    <addaction name="actionMake_Path"/>
+    <addaction name="actionSplit_Path"/>
+   </widget>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
@@ -74,6 +81,8 @@
    <addaction name="menuTransform"/>
    <addaction name="actionReverse_Edge_Direction"/>
    <addaction name="actionMerge_Nodes"/>
+   <addaction name="separator"/>
+   <addaction name="menuPath"/>
   </widget>
   <widget class="QMenu" name="menuTikz">
    <property name="title">
@@ -458,6 +467,22 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+Space</string>
+   </property>
+  </action>
+  <action name="actionMake_Path">
+   <property name="text">
+    <string>Make Path</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionSplit_Path">
+   <property name="text">
+    <string>Split Path</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+P</string>
    </property>
   </action>
   <addaction name="menuFile"/>

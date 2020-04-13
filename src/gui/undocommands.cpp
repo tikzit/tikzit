@@ -594,3 +594,51 @@ void ReverseEdgesCommand::redo()
     GraphUpdateCommand::redo();
 }
 
+
+MakePathCommand::MakePathCommand(TikzScene *scene,
+                                 const QVector<Edge *> &edgeList,
+                                 const QMap<Edge *, GraphElementData *> &oldEdgeData,
+                                 QUndoCommand *parent) :
+    GraphUpdateCommand(scene, parent),
+    _edgeList(edgeList), _oldEdgeData(oldEdgeData)
+{
+}
+
+void MakePathCommand::undo()
+{
+    Path *p = _edgeList.first()->path();
+    p->removeEdges();
+    _scene->graph()->removePath(p);
+
+    foreach (Edge *e, _edgeList) {
+        if (e != _edgeList.first()) {
+            // setData transfers ownership, so make a copy
+            e->setData(_oldEdgeData[e]->copy());
+        }
+    }
+
+    GraphUpdateCommand::undo();
+}
+
+void MakePathCommand::redo()
+{
+    GraphElementData *npd = _edgeList.first()->data()->nonPathData();
+    GraphElementData *d;
+
+    Path *p = new Path();
+    foreach (Edge *e, _edgeList) {
+        p->addEdge(e);
+
+        if (e != _edgeList.first()) {
+            d = e->data()->pathData();
+            d->mergeData(npd);
+            e->setData(d);
+        }
+    }
+
+    delete npd;
+
+    _scene->graph()->addPath(p);
+
+    GraphUpdateCommand::redo();
+}

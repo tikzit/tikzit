@@ -67,6 +67,8 @@ public slots:
     void on_actionExtendRight_triggered();
     void on_actionReverse_Edge_Direction_triggered();
     void on_actionMerge_Nodes_triggered();
+    void on_actionMake_Path_triggered();
+    void on_actionSplit_Path_triggered();
 
     // Tools
     void on_actionParse_triggered();
