@@ -250,13 +250,18 @@ void TikzScene::mergeNodes()
         Node *n = _tikzDocument->graph()->nodes()[i];
         if (m1.contains(n)) delNodes.insert(i, n);
     }
+
+    QSet<Path*> delPaths;
     for (int i = 0; i < _tikzDocument->graph()->edges().length(); ++i) {
         Edge *e = _tikzDocument->graph()->edges()[i];
-        if (m1.contains(e->source()) || m1.contains(e->target())) delEdges.insert(i, e);
+        if (m1.contains(e->source()) || m1.contains(e->target())) {
+            delEdges.insert(i, e);
+            if (e->path()) delPaths << e->path();
+        }
     }
-    DeleteCommand *cmd = new DeleteCommand(this, delNodes, delEdges,
-                                           selNodes, selEdges);
-    _tikzDocument->undoStack()->push(cmd);
+    _tikzDocument->undoStack()->push(new SplitPathCommand(this, delPaths));
+    _tikzDocument->undoStack()->push(new DeleteCommand(this, delNodes, delEdges,
+                                                       selNodes, selEdges));
 
     _tikzDocument->undoStack()->endMacro();
 }
@@ -410,10 +415,9 @@ void TikzScene::splitPath()
         }
     }
 
-    QVector<Path*> paths;
+    QSet<Path*> paths;
     foreach (Edge *e, edges) {
-        Path *p = e->path();
-        if (p && !paths.contains(p)) paths << p;
+        if (e->path()) paths << e->path();
     }
 
     _tikzDocument->undoStack()->push(new SplitPathCommand(this, paths));
@@ -1121,6 +1125,7 @@ void TikzScene::deleteSelectedItems()
 
     QMap<int,Node*> deleteNodes;
     QMap<int,Edge*> deleteEdges;
+    QSet<Path*> deletePaths;
 
     for (int i = 0; i < _tikzDocument->graph()->nodes().length(); ++i) {
         Node *n = _tikzDocument->graph()->nodes()[i];
@@ -1131,14 +1136,20 @@ void TikzScene::deleteSelectedItems()
         Edge *e = _tikzDocument->graph()->edges()[i];
         if (selEdges.contains(e) ||
             selNodes.contains(e->source()) ||
-            selNodes.contains(e->target())) deleteEdges.insert(i, e);
+            selNodes.contains(e->target()))
+        {
+            if (e->path()) deletePaths << e->path();
+            deleteEdges.insert(i, e);
+        }
     }
 
     //qDebug() << "nodes:" << deleteNodes;
     //qDebug() << "edges:" << deleteEdges;
-    DeleteCommand *cmd = new DeleteCommand(this, deleteNodes, deleteEdges,
-                                           selNodes, selEdges);
-    _tikzDocument->undoStack()->push(cmd);
+    _tikzDocument->undoStack()->beginMacro("Delete");
+    _tikzDocument->undoStack()->push(new SplitPathCommand(this, deletePaths));
+    _tikzDocument->undoStack()->push(new DeleteCommand(this, deleteNodes, deleteEdges,
+                                                       selNodes, selEdges));
+    _tikzDocument->undoStack()->endMacro();
 }
 
 void TikzScene::copyToClipboard()

@@ -685,18 +685,17 @@ void MakePathCommand::redo()
 }
 
 SplitPathCommand::SplitPathCommand(TikzScene *scene,
-                                   const QVector<Path *> &paths,
+                                   const QSet<Path *> &paths,
                                    QUndoCommand *parent) :
     GraphUpdateCommand(scene, parent), _paths(paths)
 {
-    foreach (Path *p, paths) _edgeLists << p->edges();
+    foreach (Path *p, paths) _edgeLists[p] = p->edges();
 }
 
 void SplitPathCommand::undo()
 {
-    for (int i = 0; i < _paths.length(); ++i) {
-        Path *p = _paths[i];
-        foreach (Edge *e, _edgeLists[i]) {
+    foreach (Path *p, _paths) {
+        foreach (Edge *e, _edgeLists[p]) {
             p->addEdge(e);
         }
 
