@@ -381,6 +381,16 @@ void PasteCommand::undo()
 {
     _scene->clearSelection();
 
+    foreach (Path *p, _graph->paths()) {
+        PathItem *pi = _scene->pathItems()[p];
+        _scene->pathItems().remove(p);
+        _scene->removeItem(pi);
+        delete pi;
+
+        p->removeEdges();
+        _scene->graph()->removePath(p);
+    }
+
     foreach (Edge *e, _graph->edges()) {
         EdgeItem *ei = _scene->edgeItems()[e];
         _scene->edgeItems().remove(e);
@@ -410,6 +420,12 @@ void PasteCommand::redo()
 {
     _scene->clearSelection();
     _scene->graph()->insertGraph(_graph);
+
+    foreach (Path *p, _graph->paths()) {
+        PathItem *pi = new PathItem(p);
+        _scene->pathItems().insert(p, pi);
+        _scene->addItem(pi);
+    }
 
     foreach (Edge *e, _graph->edges()) {
 		e->attachStyle(); // in case styles have changed

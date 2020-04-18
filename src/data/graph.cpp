@@ -360,9 +360,33 @@ Graph *Graph::copyOfSubgraphWithNodes(QSet<Node *> nds)
             g->addNode(n1);
         }
     }
+
+    QMap<Edge*,Edge*> edgeTable;
     foreach (Edge *e, edges()) {
         if (nds.contains(e->source()) && nds.contains(e->target())) {
-            g->addEdge(e->copy(&nodeTable));
+            Edge *e1 = e->copy(&nodeTable);
+            g->addEdge(e1);
+            edgeTable.insert(e,e1);
+        }
+    }
+
+    // add a copy of a path to the new graph if all of the edges are there
+    foreach (Path *p, paths()) {
+        bool allEdges = true;
+        Path *p1 = new Path();
+        foreach (Edge *e1, p->edges()) {
+            if (edgeTable.contains(e1)) {
+                p1->addEdge(edgeTable[e1]);
+            } else {
+                allEdges = false;
+                break;
+            }
+        }
+        if (allEdges) {
+            g->addPath(p1);
+        } else {
+            p1->removeEdges();
+            delete p1;
         }
     }
 
