@@ -4,6 +4,7 @@
 % \tikzstyle{NAME}=[PROPERTY LIST]
 
 % Node styles
+\tikzstyle{test}=[fill=none, draw=black, shape=circle]
 
 % Edge styles
 \tikzstyle{bg}=[-, line width=0.5mm, fill={rgb,255: red,217; green,217; blue,217}]

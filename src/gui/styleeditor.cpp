@@ -32,8 +32,8 @@ StyleEditor::StyleEditor(QWidget *parent) :
 {
     ui->setupUi(this);
     _formWidgets << ui->name << ui->category <<
-        ui->fillColor << ui->hasTikzitFillColor << ui->tikzitFillColor <<
-        ui->drawColor << ui->hasTikzitDrawColor << ui->tikzitDrawColor <<
+        ui->fillColor << ui->noFill << ui->hasTikzitFillColor << ui->tikzitFillColor <<
+        ui->drawColor << ui->noDraw << ui->hasTikzitDrawColor << ui->tikzitDrawColor <<
         ui->shape << ui->hasTikzitShape << ui->tikzitShape <<
         ui->leftArrow << ui->rightArrow <<
         ui->properties;
@@ -283,8 +283,16 @@ void StyleEditor::refreshDisplay()
         // draw
         QColor realDraw = s->strokeColor(false);
         QColor draw = s->strokeColor();
-        ui->drawColor->setEnabled(true);
-        setColor(ui->drawColor, realDraw);
+
+        ui->noDraw->setEnabled(true);
+        if (s->hasStroke()) {
+            ui->drawColor->setEnabled(true);
+            setColor(ui->drawColor, realDraw);
+            ui->noDraw->setChecked(false);
+        } else {
+            ui->noDraw->setChecked(true);
+            ui->drawColor->setEnabled(false);
+        }
 
         // tikzit draw
         bool drawOverride = s->data()->hasProperty("tikzit draw");
@@ -294,25 +302,33 @@ void StyleEditor::refreshDisplay()
         ui->tikzitDrawColor->setEnabled(drawOverride);
         if (drawOverride) setColor(ui->tikzitDrawColor, draw);
 
+        // fill
+        QColor realFill = s->fillColor(false);
+        QColor fill = s->fillColor();
+
+        ui->noFill->setEnabled(true);
+        if (s->hasFill()) {
+            ui->fillColor->setEnabled(true);
+            setColor(ui->fillColor, realFill);
+            ui->noFill->setChecked(false);
+        } else {
+            ui->noFill->setChecked(true);
+            ui->fillColor->setEnabled(false);
+        }
+
+        // tikzit fill
+        bool fillOverride = s->data()->hasProperty("tikzit fill");
+        ui->hasTikzitFillColor->setEnabled(true);
+        ui->hasTikzitFillColor->setChecked(fillOverride);
+        ui->tikzitFillColor->setEnabled(fillOverride);
+        if (fillOverride) setColor(ui->tikzitFillColor, fill);
+
         if (!s->isEdgeStyle()) {
 //            qDebug() << "node style update";
             // category
             ui->category->setEnabled(true);
             ui->category->setCurrentText(
                 s->propertyWithDefault("tikzit category", "", false));
-
-            // fill
-            QColor realFill = s->fillColor(false);
-            QColor fill = s->fillColor();
-            ui->fillColor->setEnabled(true);
-            setColor(ui->fillColor, realFill);
-
-            // tikzit fill
-            bool fillOverride = s->data()->hasProperty("tikzit fill");
-            ui->hasTikzitFillColor->setEnabled(true);
-            ui->hasTikzitFillColor->setChecked(fillOverride);
-            ui->tikzitFillColor->setEnabled(fillOverride);
-            if (fillOverride) setColor(ui->tikzitFillColor, fill);
 
             // shape
             QString realShape = s->propertyWithDefault("shape", "", false);
@@ -327,13 +343,6 @@ void StyleEditor::refreshDisplay()
             ui->tikzitShape->setEnabled(shapeOverride);
             if (shapeOverride) ui->tikzitShape->setCurrentText(shape);
         } else {
-//            qDebug() << "edge style update";
-
-            // set fill to gray (disabled)
-            ui->fillColor->setEnabled(false);
-            ui->tikzitFillColor->setEnabled(false);
-            ui->hasTikzitFillColor->setEnabled(false);
-
             ui->shape->setEnabled(false);
             ui->tikzitShape->setEnabled(false);
             ui->hasTikzitShape->setEnabled(false);
@@ -420,6 +429,30 @@ void StyleEditor::on_hasTikzitDrawColor_stateChanged(int state)
     if (s != nullptr) {
         if (state == Qt::Checked) s->data()->setProperty("tikzit draw", s->data()->property("draw"));
         else s->data()->unsetProperty("tikzit draw");
+        refreshDisplay();
+        setDirty(true);
+    }
+}
+
+void StyleEditor::on_noFill_stateChanged(int state)
+{
+    Style *s = activeStyle();
+    if (s != nullptr) {
+        if (state == Qt::Checked) s->data()->setProperty("fill", "none");
+        else s->data()->setProperty("fill", "white");
+        refreshActiveStyle();
+        refreshDisplay();
+        setDirty(true);
+    }
+}
+
+void StyleEditor::on_noDraw_stateChanged(int state)
+{
+    Style *s = activeStyle();
+    if (s != nullptr) {
+        if (state == Qt::Checked) s->data()->setProperty("draw", "none");
+        else s->data()->setProperty("draw", "black");
+        refreshActiveStyle();
         refreshDisplay();
         setDirty(true);
     }

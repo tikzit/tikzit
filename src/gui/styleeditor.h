@@ -68,6 +68,8 @@ public slots:
     void on_tikzitDrawColor_clicked();
     void on_hasTikzitFillColor_stateChanged(int state);
     void on_hasTikzitDrawColor_stateChanged(int state);
+    void on_noFill_stateChanged(int state);
+    void on_noDraw_stateChanged(int state);
 
     void on_hasTikzitShape_stateChanged(int state);
     void on_tikzitShape_currentIndexChanged(int);

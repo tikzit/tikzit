@@ -67,6 +67,16 @@ QBrush Style::brush() const
     else return QBrush(tikzit->colorByName(col));
 }
 
+bool Style::hasFill() const
+{
+    return (propertyWithDefault("fill", "none") != "none");
+}
+
+bool Style::hasStroke() const
+{
+    return (propertyWithDefault("draw", "none") != "none");
+}
+
 QString Style::shape(bool tikzitOverride) const
 {
     return propertyWithDefault("shape", "circle", tikzitOverride);

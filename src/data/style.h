@@ -57,18 +57,21 @@ public:
     void setName(const QString &name);
     QString propertyWithDefault(QString prop, QString def, bool tikzitOverride=true) const;
     QString tikz() const;
-    void setArrowAtom(QString atom);
-
-    // only relevant for node styles
     QColor fillColor(bool tikzitOverride=true) const;
     QBrush brush() const;
+    bool hasFill() const;
+    bool hasStroke() const;
+
+    // only relevant for node styles
     QString shape(bool tikzitOverride=true) const;
+    QString category() const;
 
     // only relevant for edge styles
     Style::ArrowTipStyle arrowHead() const;
     Style::ArrowTipStyle arrowTail() const;
     Style::DrawStyle drawStyle() const;
-    QString category() const;
+    void setArrowAtom(QString atom);
+
 
 protected:
     QString _name;
