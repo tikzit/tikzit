@@ -33,8 +33,11 @@ void PathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 {
     Style *st = _path->edges().first()->style();
     QPen pen = st->pen();
-    painter->setPen(st->pen());
-    painter->setBrush(st->brush());
+    QBrush brush = st->brush();
+    QColor c = brush.color();
+    brush.setColor(QColor(c.red(),c.green(),c.blue(),200));
+    painter->setPen(pen);
+    painter->setBrush(brush);
     painter->drawPath(painterPath());
 }
 

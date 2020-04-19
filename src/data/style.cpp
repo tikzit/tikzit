@@ -62,9 +62,11 @@ QColor Style::fillColor(bool tikzitOverride) const
 
 QBrush Style::brush() const
 {
-    QString col = propertyWithDefault("fill", "none", true);
-    if (col == "none") return Qt::NoBrush;
-    else return QBrush(tikzit->colorByName(col));
+    if (hasFill()) {
+        return QBrush(fillColor());
+    } else {
+        return Qt::NoBrush;
+    }
 }
 
 bool Style::hasFill() const
@@ -74,7 +76,8 @@ bool Style::hasFill() const
 
 bool Style::hasStroke() const
 {
-    return (propertyWithDefault("draw", "none") != "none");
+    if (isEdgeStyle()) return propertyWithDefault("draw", "black") != "none";
+    else return (propertyWithDefault("draw", "none") != "none");
 }
 
 QString Style::shape(bool tikzitOverride) const
@@ -164,24 +167,28 @@ Style::DrawStyle Style::drawStyle() const
 
 QPen Style::pen() const
 {
-    QPen p(strokeColor());
-    p.setWidthF((float)strokeThickness() * 2.0f);
+    if (hasStroke()) {
+        QPen p(strokeColor());
+        p.setWidthF((float)strokeThickness() * 2.0f);
 
-    QVector<qreal> pat;
-    switch (drawStyle()) {
-    case Dashed:
-        pat << 3.0 << 3.0;
-        p.setDashPattern(pat);
-        break;
-    case Dotted:
-        pat << 1.0 << 1.0;
-        p.setDashPattern(pat);
-        break;
-    case Solid:
-        break;
+        QVector<qreal> pat;
+        switch (drawStyle()) {
+        case Dashed:
+            pat << 3.0 << 3.0;
+            p.setDashPattern(pat);
+            break;
+        case Dotted:
+            pat << 1.0 << 1.0;
+            p.setDashPattern(pat);
+            break;
+        case Solid:
+            break;
+        }
+
+        return p;
+    } else {
+        return Qt::NoPen;
     }
-
-    return p;
 }
 
 QPainterPath Style::path() const
@@ -237,18 +244,26 @@ QIcon Style::icon() const
         px.fill(Qt::transparent);
         QPainter painter(&px);
 
-        if (_data == 0) {
-            QPen pen(Qt::black);
-            pen.setWidth(3);
-        } else {
-            painter.setPen(pen());
+//        if (_data == 0) {
+//            QPen pen(Qt::black);
+//            pen.setWidth(3);
+//        } else {
+//            painter.setPen(pen());
+//        }
+
+        QPen pn = pen();
+        painter.setPen(pn);
+
+        if (hasFill()) {
+            painter.fillRect(10,50,80,30,brush());
         }
 
         painter.drawLine(10, 50, 90, 50);
 
-        QPen pn = pen();
         pn.setStyle(Qt::SolidLine);
         painter.setPen(pn);
+
+
 
         switch (arrowHead()) {
         case Pointer:
