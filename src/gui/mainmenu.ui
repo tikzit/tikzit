@@ -64,6 +64,7 @@
     </property>
     <addaction name="actionMake_Path"/>
     <addaction name="actionSplit_Path"/>
+    <addaction name="actionMake_Path_as_Background"/>
    </widget>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
@@ -483,6 +484,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+P</string>
+   </property>
+  </action>
+  <action name="actionMake_Path_as_Background">
+   <property name="text">
+    <string>Make Path as Background</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
    </property>
   </action>
   <addaction name="menuFile"/>

@@ -314,11 +314,14 @@ void TikzScene::reverseSelectedEdges()
     _tikzDocument->undoStack()->push(cmd);
 }
 
-void TikzScene::makePath()
+void TikzScene::makePath(bool duplicateEdges)
 {
     QSet<Node*> selNodes;
+    QSet<Edge*> selEdges;
     QSet<Edge*> edges;
-    getSelection(selNodes, edges);
+    getSelection(selNodes, selEdges);
+
+    edges = selEdges;
 
     // if no edges are selected, try to infer edges from nodes
     if (edges.isEmpty()) {
@@ -334,11 +337,27 @@ void TikzScene::makePath()
     }
 
     foreach (Edge *e, edges) {
-        if (e->path() != nullptr) {
+        if (e->path() != nullptr && !duplicateEdges) {
             //QMessageBox::warning(nullptr, "Error", "Edges must not already be in another path.");
             // TODO: maybe we want to automatically split paths if edges are in a path already?
             return;
         }
+    }
+
+    _tikzDocument->undoStack()->beginMacro("Make Path");
+    
+    QVector<Edge *> oldEdgeOrder = graph()->edges();
+    QSet<Edge *> oldEdges, newEdges;
+    oldEdges = edges;
+
+    if (duplicateEdges) {
+        foreach (Edge *e, edges) {
+            Edge *e1 = e->copy();
+            _tikzDocument->undoStack()->push(new AddEdgeCommand(this, e1, false, selNodes, selEdges));
+            newEdges << e1;
+            oldEdgeOrder << e1;
+        }
+        edges = newEdges;
     }
 
     // try to turn selected edges into one contiguous chain or cycle, recording
@@ -387,16 +406,33 @@ void TikzScene::makePath()
         return;
     }
 
-    //qDebug() << p;
-    //qDebug() << flip;
+    _tikzDocument->undoStack()->push(new ReverseEdgesCommand(this, flip));
+
+    // order all of the edges together, and in the case of
+    // duplicate edges, just below the first original.
+    QVector<Edge*> newEdgeOrder;
+    bool firstEdge = true;
+    foreach (Edge *e, oldEdgeOrder) {
+        if (oldEdges.contains(e)) {
+            if (firstEdge) {
+                newEdgeOrder += p;
+                firstEdge = false;
+            }
+
+            if (duplicateEdges) newEdgeOrder << e;
+        } else if (!newEdges.contains(e)) {
+            newEdgeOrder << e;
+        }
+    }
+
+    _tikzDocument->undoStack()->push(new ReorderCommand(this,
+        graph()->nodes(), graph()->nodes(), oldEdgeOrder, newEdgeOrder));
 
     QMap<Edge*, GraphElementData*> oldEdgeData;
     foreach (Edge *e, p) {
         if (e != p.first()) oldEdgeData[e] = e->data()->copy();
     }
 
-    _tikzDocument->undoStack()->beginMacro("Make Path");
-    _tikzDocument->undoStack()->push(new ReverseEdgesCommand(this, flip));
     _tikzDocument->undoStack()->push(new MakePathCommand(this, p, oldEdgeData));
     _tikzDocument->undoStack()->endMacro();
 }
@@ -754,10 +790,11 @@ void TikzScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                         nodeItems()[e->source()]->setSelected(sel);
                         nodeItems()[e->target()]->setSelected(sel);
                     }
-                } else {
-                    nodeItems()[_selectingEdge->source()]->setSelected(sel);
-                    nodeItems()[_selectingEdge->target()]->setSelected(sel);
                 }
+//                else {
+//                    nodeItems()[_selectingEdge->source()]->setSelected(sel);
+//                    nodeItems()[_selectingEdge->target()]->setSelected(sel);
+//                }
             }
 
             if (_rubberBandItem->isVisible()) {

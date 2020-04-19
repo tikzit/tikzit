@@ -242,7 +242,13 @@ void MainMenu::on_actionMerge_Nodes_triggered()
 void MainMenu::on_actionMake_Path_triggered()
 {
     if (tikzit->activeWindow() != 0)
-        tikzit->activeWindow()->tikzScene()->makePath();
+        tikzit->activeWindow()->tikzScene()->makePath(false);
+}
+
+void MainMenu::on_actionMake_Path_as_Background_triggered()
+{
+    if (tikzit->activeWindow() != 0)
+        tikzit->activeWindow()->tikzScene()->makePath(true);
 }
 
 void MainMenu::on_actionSplit_Path_triggered()

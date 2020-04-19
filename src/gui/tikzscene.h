@@ -83,7 +83,7 @@ public:
 
     void reverseSelectedEdges();
 
-    void makePath();
+    void makePath(bool duplicateEdges);
     void splitPath();
 
     void getSelection(QSet<Node*> &selNodes, QSet<Edge*> &selEdges) const;

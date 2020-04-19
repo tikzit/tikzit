@@ -4,9 +4,12 @@
 % \tikzstyle{NAME}=[PROPERTY LIST]
 
 % Node styles
-\tikzstyle{test}=[fill=none, draw=black, shape=circle]
+\tikzstyle{white dot}=[fill=white, draw=black, shape=circle]
 
 % Edge styles
 \tikzstyle{bg}=[-, line width=0.5mm, fill={rgb,255: red,217; green,217; blue,217}]
 \tikzstyle{fg}=[-, fill=black]
 \tikzstyle{dir}=[->]
+\tikzstyle{region A}=[-, draw=none, fill={rgb,255: red,255; green,160; blue,162}, opacity=0.8]
+\tikzstyle{region B}=[-, draw=none, fill={rgb,255: red,190; green,185; blue,255}, opacity=0.8]
+\tikzstyle{region C}=[-, fill={rgb,255: red,179; green,255; blue,192}, draw=none, opacity=0.8]
