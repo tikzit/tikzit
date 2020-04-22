@@ -32,13 +32,13 @@
 /* we use features added to bison 2.4 */
 %require "2.3"
 
-%define parse.error verbose
+%error-verbose
 /* enable maintaining locations for better error messages */
 %locations
 /* the name of the header file */
 /*%defines "common/tikzparser.h"*/
 /* make it re-entrant (no global variables) */
-%define api.pure
+%pure-parser
 /* We use a pure (re-entrant) lexer.  This means yylex
    will take a void* (opaque) type to maintain its state */
 %lex-param {void *scanner}
