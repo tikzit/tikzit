@@ -1,0 +1,36 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (0, 2) {};
+		\node [style=none] (1) at (0, 0) {};
+		\node [style=none] (2) at (1, -2) {};
+		\node [style=none] (3) at (2, -2) {};
+		\node [style=none] (4) at (2, 2) {};
+		\node [style=none] (5) at (0, 2) {};
+		\node [style=none] (6) at (0, 0) {};
+		\node [style=none] (7) at (-1, -2) {};
+		\node [style=none] (8) at (-2, -2) {};
+		\node [style=none] (9) at (-2, 2) {};
+		\node [style=white dot] (10) at (0, 0) {$\mu$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=region B] (3.center)
+			 to (4.center)
+			 to (0.center)
+			 to (1.center)
+			 to [bend left] (2.center)
+			 to cycle;
+		\draw [style=region A] (8.center)
+			 to (9.center)
+			 to (5.center)
+			 to (6.center)
+			 to [bend right] (7.center)
+			 to cycle;
+		\draw [style=region C] (6.center)
+			 to [bend right] (7.center)
+			 to (2.center)
+			 to [bend right] cycle;
+		\draw [bend left] (7.center) to (6.center);
+		\draw [bend right] (2.center) to (6.center);
+		\draw (6.center) to (5.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

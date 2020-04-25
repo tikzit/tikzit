@@ -1,0 +1,72 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (0, -3.25) {};
+		\node [style=none] (1) at (0, -1.5) {};
+		\node [style=none] (2) at (0, 1.5) {};
+		\node [style=none] (3) at (0, 3.25) {};
+		\node [style=none] (4) at (2.25, -3.25) {};
+		\node [style=none] (5) at (2.25, 3.25) {};
+		\node [style=none] (6) at (-2.25, -3.25) {};
+		\node [style=none] (7) at (-2.25, 3.25) {};
+		\node [style=white dot] (8) at (0, -1.5) {};
+		\node [style=white dot] (9) at (0, 1.5) {};
+		\node [style=none] (10) at (1, -2.5) {};
+		\node [style=none] (11) at (1, -0.75) {};
+		\node [style=none] (12) at (1, 2.25) {};
+		\node [style=none] (13) at (1, 4) {};
+		\node [style=none] (14) at (3.25, -2.5) {};
+		\node [style=none] (15) at (3.25, 4) {};
+		\node [style=none] (16) at (-1.25, -2.5) {};
+		\node [style=none] (17) at (-1.25, 4) {};
+		\node [style=white dot] (18) at (1, -0.75) {};
+		\node [style=white dot] (19) at (1, 2.25) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=region B] (3.center)
+			 to (5.center)
+			 to (4.center)
+			 to (0.center)
+			 to (1.center)
+			 to [bend right=45, looseness=1.25] (2.center)
+			 to cycle;
+		\draw [style=region A] (7.center)
+			 to (6.center)
+			 to (0.center)
+			 to (1.center)
+			 to [bend left=45, looseness=1.25] (2.center)
+			 to (3.center)
+			 to cycle;
+		\draw (0.center) to (1.center);
+		\draw [style=region C] (2.center)
+			 to [bend left=45, looseness=1.25] (1.center)
+			 to [bend left=45, looseness=1.25] cycle;
+		\draw [bend right=45, looseness=1.25] (1.center) to (2.center);
+		\draw (2.center) to (3.center);
+		\draw [bend left=45, looseness=1.25] (1.center) to (2.center);
+		\draw [style=region C, in=135, out=45, loop] (1.center) to ();
+		\draw [style=region C, in=135, out=45, loop] (1.center) to ();
+		\draw [style=region B] (13.center)
+			 to (15.center)
+			 to (14.center)
+			 to (10.center)
+			 to (11.center)
+			 to [bend right=45, looseness=1.25] (12.center)
+			 to cycle;
+		\draw [style=region A] (17.center)
+			 to (16.center)
+			 to (10.center)
+			 to (11.center)
+			 to [bend left=45, looseness=1.25] (12.center)
+			 to (13.center)
+			 to cycle;
+		\draw (10.center) to (11.center);
+		\draw [style=region C] (12.center)
+			 to [bend left=45, looseness=1.25] (11.center)
+			 to [bend left=45, looseness=1.25] cycle;
+		\draw [bend right=45, looseness=1.25] (11.center) to (12.center);
+		\draw (12.center) to (13.center);
+		\draw [bend left=45, looseness=1.25] (11.center) to (12.center);
+		\draw [style=region C, in=135, out=45, loop] (11.center) to ();
+		\draw [style=region C, in=135, out=45, loop] (11.center) to ();
+	\end{pgfonlayer}
+\end{tikzpicture}

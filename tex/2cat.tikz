@@ -1,0 +1,40 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (0, 2.75) {};
+		\node [style=none] (1) at (2, 2.75) {};
+		\node [style=none] (2) at (2, -2.75) {};
+		\node [style=none] (3) at (0, -2.75) {};
+		\node [style=none] (4) at (0, -1.25) {};
+		\node [style=none] (5) at (0, 1.25) {};
+		\node [style=none] (6) at (-2, -2.75) {};
+		\node [style=none] (7) at (-2, 2.75) {};
+		\node [style=white dot] (8) at (0, 1.25) {$\mu$};
+		\node [style=white dot] (9) at (0, -1.25) {$\delta$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=region B] (5.center)
+			 to (0.center)
+			 to (1.center)
+			 to (2.center)
+			 to (3.center)
+			 to (4.center)
+			 to [bend right=60, looseness=1.25] cycle;
+		\draw [style=region B] (3.center) to (4.center);
+		\draw [style=region B, bend right=60, looseness=1.25] (4.center) to (5.center);
+		\draw [style=region B] (5.center) to (0.center);
+		\draw [style=region A] (0.center)
+			 to (5.center)
+			 to [bend right=60, looseness=1.25] (4.center)
+			 to (3.center)
+			 to (6.center)
+			 to (7.center)
+			 to cycle;
+		\draw [style=region C] (4.center)
+			 to [bend left=60, looseness=1.25] (5.center)
+			 to [bend left=60, looseness=1.25] cycle;
+		\draw (3.center) to (4.center);
+		\draw [bend left=60, looseness=1.25] (4.center) to (5.center);
+		\draw (5.center) to (0.center);
+		\draw [bend right=60, looseness=1.25] (4.center) to (5.center);
+	\end{pgfonlayer}
+\end{tikzpicture}
