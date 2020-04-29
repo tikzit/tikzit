@@ -149,6 +149,8 @@ void TikzView::wheelEvent(QWheelEvent *event)
         } else if (event->angleDelta().y() < 0) {
             zoomOut();
         }
+    } else if (event->modifiers() & Qt::ShiftModifier) {
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() - event->angleDelta().y());
     }
 }
 
