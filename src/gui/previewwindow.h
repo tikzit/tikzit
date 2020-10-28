@@ -60,6 +60,7 @@ public slots:
     void copyImageToClipboard();
 
 protected:
+    void changeEvent(QEvent* e) override;
     void resizeEvent(QResizeEvent *e) override;
     void showEvent(QShowEvent *e) override;
     void closeEvent(QCloseEvent *e) override;

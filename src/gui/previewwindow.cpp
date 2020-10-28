@@ -157,6 +157,13 @@ void PreviewWindow::setStatus(PreviewWindow::Status status)
     _loader->repaint();
 }
 
+void PreviewWindow::changeEvent(QEvent * event) {
+    if (event->type() == QEvent::ActivationChange && isActiveWindow()) {
+        tikzit->setDialogStatus(true);
+    }
+    QDialog::changeEvent(event);
+}
+
 void PreviewWindow::closeEvent(QCloseEvent *e) {
     QSettings settings("tikzit", "tikzit");
     settings.setValue(QString("geometry-preview-qt") + qVersion(), saveGeometry());
