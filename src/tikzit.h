@@ -109,8 +109,10 @@ public:
     PropertyPalette *propertyPalette() const;
 
     MainWindow *activeWindow() const;
+    bool dialogStatus() const;
     void setActiveWindow(MainWindow *activeWindow);
     void removeWindow(MainWindow *w);
+    void setDialogStatus(bool active);
 
     static QFont LABEL_FONT;
 
@@ -169,6 +171,8 @@ private:
     QVector<QColor> _cols;
     LatexProcess *_latex;
     PreviewWindow *_preview;
+    // _activeWidget to further determine which widget (MainWindow/QDialog) to delete when invoking close shortcut, for Mac, invoking CMD+W should only removes the first top window.
+    bool _dialog_active;
 };
 
 extern Tikzit *tikzit;

@@ -89,8 +89,12 @@ void MainMenu::on_actionOpen_triggered()
 
 void MainMenu::on_actionClose_triggered()
 {
-    if (tikzit->activeWindow() != 0)
+    // Close dialog if it is active.
+    if (tikzit->dialogStatus()) {
+        tikzit->previewWindow()->close();
+    } else if (tikzit->activeWindow() != 0) {
         tikzit->activeWindow()->close();
+    }
 }
 
 void MainMenu::on_actionSave_triggered()
