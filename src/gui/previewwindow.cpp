@@ -167,6 +167,7 @@ void PreviewWindow::changeEvent(QEvent * event) {
 void PreviewWindow::closeEvent(QCloseEvent *e) {
     QSettings settings("tikzit", "tikzit");
     settings.setValue(QString("geometry-preview-qt") + qVersion(), saveGeometry());
+    tikzit->setDialogStatus(false);
     QDialog::closeEvent(e);
 }
 
