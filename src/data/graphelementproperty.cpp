@@ -18,7 +18,7 @@
 
 #include "graphelementproperty.h"
 
-#include <QRegExp>
+#include <QRegularExpression>
 
 GraphElementProperty::GraphElementProperty ():
     _key(""), _value(""), _atom(false)
@@ -57,8 +57,8 @@ bool GraphElementProperty::operator==(const GraphElementProperty &p)
 
 QString GraphElementProperty::tikzEscape(QString str)
 {
-    QRegExp re("[0-9a-zA-Z<> \\-'.]*");
-    if (re.exactMatch(str)) return str;
+    QRegularExpression re("^[0-9a-zA-Z<> \\-'.]*$");
+    if (re.match(str).hasMatch()) return str;
     else return "{" + str + "}";
 }
 

@@ -36,19 +36,19 @@ int main(int argc, char *argv[])
     //     SetProcessDPIAware();
     // #endif
     // QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    // QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     // dummy application for detecting DPI
-    QApplication *a0 = new QApplication(argc, argv);
+    // QApplication *a0 = new QApplication(argc, argv);
     // qDebug() << "physical DPI" << QApplication::screens()[0]->physicalDotsPerInch();
 
-    if (QApplication::screens()[0]->physicalDotsPerInch() >= 100) {
-        QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    } else {
-        QApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
-    }
+    // if (QApplication::screens()[0]->physicalDotsPerInch() >= 100) {
+    //     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    // } else {
+    //     QApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+    // }
 
-    delete a0;
+    // delete a0;
 
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
