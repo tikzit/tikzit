@@ -30,6 +30,11 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     connect(ui->majorColor, SIGNAL(clicked()), this, SLOT(colorClick()));
     connect(ui->minorColor, SIGNAL(clicked()), this, SLOT(colorClick()));
 
+    if (!settings.value("style-icon-spacing").isNull())
+        ui->styleIconSpacing->setText(settings.value("style-icon-spacing").toString());
+    else
+        ui->styleIconSpacing->setText("48");
+
     ui->selectNewEdges->setChecked(settings.value("select-new-edges", false).toBool());
     ui->shiftToScroll->setChecked(settings.value("shift-to-scroll", false).toBool());
 }
@@ -42,8 +47,14 @@ PreferenceDialog::~PreferenceDialog()
 void PreferenceDialog::accept()
 {
     QSettings settings("tikzit", "tikzit");
+    bool ok;
+    int i;
+
     settings.setValue("auto-detect-pdflatex", ui->autoPdflatex->isChecked());
     settings.setValue("pdflatex-path", ui->pdflatexPath->text());
+    i = ui->styleIconSpacing->text().toInt(&ok);
+    if (ok) settings.setValue("style-icon-spacing", i);
+
     settings.setValue("grid-color-axes", color(ui->axesColor));
     settings.setValue("grid-color-major", color(ui->majorColor));
     settings.setValue("grid-color-minor", color(ui->minorColor));

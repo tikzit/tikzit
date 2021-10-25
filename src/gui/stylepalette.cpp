@@ -34,19 +34,23 @@ StylePalette::StylePalette(QWidget *parent) :
     ui(new Ui::StylePalette)
 {
     ui->setupUi(this);
+    QSettings settings("tikzit", "tikzit");
+    bool ok;
+    int space = settings.value("style-icon-spacing").toInt(&ok);
+    if (!ok) space = 48;
     _lastStyleIndex = 0;
     _lastEdgeStyleIndex = 0;
 
     ui->styleListView->setModel(tikzit->styles()->nodeStyles());
     ui->styleListView->setViewMode(QListView::IconMode);
     ui->styleListView->setMovement(QListView::Static);
-    ui->styleListView->setGridSize(QSize(48,48));
+    ui->styleListView->setGridSize(QSize(space,space));
 
 
     ui->edgeStyleListView->setModel(tikzit->styles()->edgeStyles());
     ui->edgeStyleListView->setViewMode(QListView::IconMode);
     ui->edgeStyleListView->setMovement(QListView::Static);
-    ui->edgeStyleListView->setGridSize(QSize(48,48));
+    ui->edgeStyleListView->setGridSize(QSize(space,space));
 
     reloadStyles();
 
@@ -242,6 +246,10 @@ void StylePalette::on_currentCategory_currentTextChanged(const QString &cat)
 void StylePalette::resizeEvent(QResizeEvent *event)
 {
     QDockWidget::resizeEvent(event);
-    ui->styleListView->setGridSize(QSize(48,48));
-    ui->edgeStyleListView->setGridSize(QSize(48,48));
+    QSettings settings("tikzit", "tikzit");
+    bool ok;
+    int space = settings.value("style-icon-spacing").toInt(&ok);
+    if (!ok) space = 48;
+    ui->styleListView->setGridSize(QSize(space,space));
+    ui->edgeStyleListView->setGridSize(QSize(space,space));
 }

@@ -19,6 +19,7 @@
 #include <QColorDialog>
 #include <QDebug>
 #include <QMessageBox>
+#include <QSettings>
 
 #include "tikzit.h"
 #include "styleeditor.h"
@@ -31,6 +32,11 @@ StyleEditor::StyleEditor(QWidget *parent) :
     ui(new Ui::StyleEditor)
 {
     ui->setupUi(this);
+    QSettings settings("tikzit", "tikzit");
+    bool ok;
+    int space = settings.value("style-icon-spacing").toInt(&ok);
+    if (!ok) space = 48;
+
     _formWidgets << ui->name << ui->category <<
         ui->fillColor << ui->noFill << ui->hasTikzitFillColor << ui->tikzitFillColor <<
         ui->drawColor << ui->noDraw << ui->hasTikzitDrawColor << ui->tikzitDrawColor <<
@@ -52,11 +58,11 @@ StyleEditor::StyleEditor(QWidget *parent) :
 
     ui->styleListView->setViewMode(QListView::IconMode);
     ui->styleListView->setMovement(QListView::Static);
-    ui->styleListView->setGridSize(QSize(48,48));
+    ui->styleListView->setGridSize(QSize(space,space));
 
     ui->edgeStyleListView->setViewMode(QListView::IconMode);
     ui->edgeStyleListView->setMovement(QListView::Static);
-    ui->edgeStyleListView->setGridSize(QSize(48,48));
+    ui->edgeStyleListView->setGridSize(QSize(space,space));
 
     connect(ui->category->lineEdit(),
             SIGNAL(editingFinished()),
@@ -804,18 +810,23 @@ Style *StyleEditor::activeStyle()
 void StyleEditor::refreshActiveStyle()
 {
     if (_styles != nullptr) {
+        QSettings settings("tikzit", "tikzit");
+        bool ok;
+        int space = settings.value("style-icon-spacing").toInt(&ok);
+        if (!ok) space = 48;
+
         if (_nodeStyleIndex.isValid()) {
             emit _styles->nodeStyles()->dataChanged(_nodeStyleIndex, _nodeStyleIndex);
 
             // force a re-layout
-            ui->styleListView->setGridSize(QSize(48,48));
+            ui->styleListView->setGridSize(QSize(space,space));
         }
 
         if (_edgeStyleIndex.isValid()) {
             emit _styles->edgeStyles()->dataChanged(_edgeStyleIndex, _edgeStyleIndex);
 
             // force a re-layout
-            ui->edgeStyleListView->setGridSize(QSize(48,48));
+            ui->edgeStyleListView->setGridSize(QSize(space,space));
         }
     }
 }

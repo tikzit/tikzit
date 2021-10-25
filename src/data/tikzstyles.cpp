@@ -95,7 +95,7 @@ void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel
         it->setData(noneStyle->name());
         nodeModel->appendRow(it);
         it->setTextAlignment(Qt::AlignCenter);
-        it->setSizeHint(QSize(48,48));
+        //it->setSizeHint(QSize(48,48));
     }
 
     Style *s;
@@ -106,7 +106,7 @@ void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel
             it = new QStandardItem(s->icon(), s->name());
             it->setEditable(false);
             it->setData(s->name());
-            it->setSizeHint(QSize(48,48));
+            //it->setSizeHint(QSize(48,48));
             nodeModel->appendRow(it);
         }
     }
@@ -123,7 +123,7 @@ void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel
         it = new QStandardItem(s->icon(), s->name());
         it->setEditable(false);
         it->setData(s->name());
-        it->setSizeHint(QSize(48,48));
+        //it->setSizeHint(QSize(48,48));
         edgeModel->appendRow(it);
     }
 }
