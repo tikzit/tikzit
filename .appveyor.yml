@@ -19,10 +19,10 @@ for:
       - image: macos
 
   install:
-    # - brew update
+    - brew update
     # - brew install qt5
     # - brew link --force qt5
-    - brew install poppler --with-qt
+    - brew install poppler-qt5
 
   build_script:
     - 'export PATH="$HOME/Qt/5.15/clang_64/bin:$PATH"'
