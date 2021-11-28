@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red node] (0) at (0, 1) {};
+		\node [style=green node] (1) at (0, -1) {\param\alpha};
+		\node [style=none] (2) at (0, -2.25) {};
+		\node [style=none] (3) at (0, 2.25) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (2.center) to (1);
+		\draw [bend left=45] (1) to (0);
+		\draw (0) to (3.center);
+		\draw [bend right=45] (1) to (0);
+	\end{pgfonlayer}
+\end{tikzpicture}

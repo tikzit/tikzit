@@ -1,5 +1,6 @@
 *.pro.user*
 scripts/*.pyc
+scripts/__pycache__
 tex/sample/Output
 tex/sample/sample.pdf
 *.synctex.gz
@@ -33,4 +34,5 @@ qrc_*.cpp
 tikzit
 tikzlexer.h
 dist
+win32-deps
 
