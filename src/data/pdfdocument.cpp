@@ -77,10 +77,9 @@ bool PdfDocument::exportImage(QString file, const char *format, QSize outputSize
 bool PdfDocument::exportPdf(QString file)
 {
     if (!isValid()) return false;
-    Poppler::PDFConverter *conv = _doc->pdfConverter();
+    std::unique_ptr<Poppler::PDFConverter> conv = _doc->pdfConverter();
     conv->setOutputFileName(file);
     bool success = conv->convert();
-    delete conv;
     return success;
 }
 

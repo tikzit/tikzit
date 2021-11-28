@@ -108,20 +108,20 @@ QColor Tikzit::colorByName(QString name)
         if (_colNames[i] == name) return _cols[i];
     }
 
-    QRegExp re(
-      "rgb\\s*,\\s*255\\s*:\\s*"
+    QRegularExpression re(
+      "^rgb\\s*,\\s*255\\s*:\\s*"
       "red\\s*,\\s*([0-9]+)\\s*;\\s*"
       "green\\s*,\\s*([0-9]+)\\s*;\\s*"
-      "blue\\s*,\\s*([0-9]+)\\s*"
+      "blue\\s*,\\s*([0-9]+)\\s*$"
     );
 
-    if (re.exactMatch(name)) {
-        QStringList cap = re.capturedTexts();
-        //qDebug() << cap;
+    QRegularExpressionMatch m = re.match(name);
+
+    if (m.hasMatch()) {
         return QColor(
-                cap[1].toInt(),
-                cap[2].toInt(),
-                cap[3].toInt());
+                m.captured(1).toInt(),
+                m.captured(2).toInt(),
+                m.captured(3).toInt());
     }
 
     return QColor();

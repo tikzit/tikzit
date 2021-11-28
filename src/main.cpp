@@ -26,7 +26,6 @@
 
 #include <QApplication>
 #include <QMenuBar>
-#include <QDesktopWidget>
 #include <QDebug>
 #include <QScreen>
 
