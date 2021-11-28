@@ -20,12 +20,12 @@ for:
 
   install:
     - brew update
-    # - brew install qt5
+    - brew install qt5
     # - brew link --force qt5
     - brew install poppler-qt5
 
   build_script:
-    - 'export PATH="$HOME/Qt/5.15/clang_64/bin:$PATH"'
+    - 'export PATH="/usr/local/opt/qt@5/bin:$PATH"'
     - qmake -v
     - qmake -r
     - make
