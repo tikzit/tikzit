@@ -5,7 +5,7 @@
 #include <QString>
 #include <QLabel>
 
-#include <poppler/qt6/poppler-qt6.h>
+/* #include <poppler/qt6/poppler-qt6.h> */
 
 class PdfDocument : public QObject
 {
@@ -21,8 +21,8 @@ public:
     QImage asImage(QSize outputSize=QSize());
     QSize size();
 private:
-    std::unique_ptr<Poppler::Document> _doc;
-    std::unique_ptr<Poppler::Page> _page;
+    /* std::unique_ptr<Poppler::Document> _doc; */
+    /* std::unique_ptr<Poppler::Page> _page; */
 };
 
 #endif // PDFDOCUMENT_H

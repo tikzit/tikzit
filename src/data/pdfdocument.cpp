@@ -9,11 +9,11 @@
 PdfDocument::PdfDocument(QString file, QObject *parent) : QObject(parent)
 {
     // use loadFromData to avoid holding a lock on the PDF file in windows
-    QFile f(file);
+/*    QFile f(file);
     if (f.open(QFile::ReadOnly)) {
         QByteArray data = f.readAll();
         f.close();
-        _doc = Poppler::Document::loadFromData(data);
+        // _doc = Poppler::Document::loadFromData(data);
     } else {
         _doc = nullptr;
     }
@@ -22,21 +22,20 @@ PdfDocument::PdfDocument(QString file, QObject *parent) : QObject(parent)
         _doc = nullptr;
         _page = nullptr;
     } else {
-        _doc->setRenderHint(Poppler::Document::Antialiasing);
-        _doc->setRenderHint(Poppler::Document::TextAntialiasing);
-        _doc->setRenderHint(Poppler::Document::TextHinting);
-        _page = _doc->page(0);
-    }
+        // _doc->setRenderHint(Poppler::Document::Antialiasing);
+        // _doc->setRenderHint(Poppler::Document::TextAntialiasing);
+        // _doc->setRenderHint(Poppler::Document::TextHinting);
+        // _page = _doc->page(0);
+    }*/
 }
 
 void PdfDocument::renderTo(QLabel *label, QRect rect)
 {
     if (!isValid()) return;
-
+/*
     QSizeF pageSize = _page->pageSizeF();
 
     qreal ratio = label->devicePixelRatioF();
-    //QRect rect = ui->scrollArea->visibleRegion().boundingRect();
     int w = static_cast<int>(ratio * (rect.width() - 20));
     int h = static_cast<int>(ratio * (rect.height() - 20));
 
@@ -60,11 +59,12 @@ void PdfDocument::renderTo(QLabel *label, QRect rect)
     QPixmap pm = QPixmap::fromImage(_page->renderToImage(dpi, dpi, (w1 - w)/2,  (h1 - h)/2, w, h));
     pm.setDevicePixelRatio(ratio);
     label->setPixmap(pm);
+    */
 }
 
 bool PdfDocument::isValid()
 {
-    return (_page != nullptr);
+    /* return (_page != nullptr); */
 }
 
 bool PdfDocument::exportImage(QString file, const char *format, QSize outputSize)
@@ -77,10 +77,11 @@ bool PdfDocument::exportImage(QString file, const char *format, QSize outputSize
 bool PdfDocument::exportPdf(QString file)
 {
     if (!isValid()) return false;
-    std::unique_ptr<Poppler::PDFConverter> conv = _doc->pdfConverter();
+    return false;
+    /*std::unique_ptr<Poppler::PDFConverter> conv = _doc->pdfConverter();
     conv->setOutputFileName(file);
     bool success = conv->convert();
-    return success;
+    return success;*/
 }
 
 void PdfDocument::copyImageToClipboard(QSize outputSize)
@@ -93,14 +94,15 @@ void PdfDocument::copyImageToClipboard(QSize outputSize)
 
 QImage PdfDocument::asImage(QSize outputSize)
 {
-    if (!isValid()) return QImage();
+    return QImage();
+    /*if (!isValid()) return QImage();
     if (outputSize.isNull()) outputSize = size();
     QSize pageSize = _page->pageSize();
     int dpix = (72 * outputSize.width()) / pageSize.width();
     int dpiy = (72 * outputSize.width()) / pageSize.width();
     QImage img = _page->renderToImage(dpix, dpiy, 0,  0,
                                       outputSize.width(), outputSize.height());
-    return img;
+    return img;*/
 }
 
 // CRASHES TikZiT when figures contain text, due to limitations of Arthur backend
@@ -124,7 +126,7 @@ QImage PdfDocument::asImage(QSize outputSize)
 QSize PdfDocument::size()
 {
     if (isValid()) {
-        return _page->pageSize();
+        return QSize();//_page->pageSize();
     } else {
         return QSize();
     }

@@ -30,7 +30,6 @@
 #include <QLabel>
 #include <QPlainTextEdit>
 #include <QContextMenuEvent>
-#include <poppler/qt5/poppler-qt5.h>
 
 namespace Ui {
 class PreviewWindow;

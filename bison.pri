@@ -2,7 +2,11 @@ bison.name = Bison ${QMAKE_FILE_IN}
 bison.input = BISONSOURCES
 bison.output = ${QMAKE_FILE_PATH}/${QMAKE_FILE_BASE}.parser.cpp
 
-bison.commands = bison -d -o ${QMAKE_FILE_PATH}/${QMAKE_FILE_BASE}.parser.cpp ${QMAKE_FILE_IN}
+win32 {
+    bison.commands = win_bison.exe -d -o ${QMAKE_FILE_PATH}/${QMAKE_FILE_BASE}.parser.cpp ${QMAKE_FILE_IN}
+} else {
+    bison.commands = bison -d -o ${QMAKE_FILE_PATH}/${QMAKE_FILE_BASE}.parser.cpp ${QMAKE_FILE_IN}
+}
 
 
 bison.CONFIG += target_predeps
