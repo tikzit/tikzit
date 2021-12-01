@@ -6,8 +6,20 @@
 #include <QApplication>
 #include <QClipboard>
 
+#include <poppler/cpp/poppler-page-renderer.h>
+#include <poppler/cpp/poppler-image.h>
+
+using namespace poppler;
+
 PdfDocument::PdfDocument(QString file, QObject *parent) : QObject(parent)
 {
+    _doc = document::load_from_file(file.toStdString());
+    if (_doc != nullptr && _doc->pages() > 0) {
+        _page = _doc->create_page(0);
+    } else {
+        _page = nullptr;
+        _renderer = nullptr;
+    }
     // use loadFromData to avoid holding a lock on the PDF file in windows
 /*    QFile f(file);
     if (f.open(QFile::ReadOnly)) {
@@ -32,6 +44,26 @@ PdfDocument::PdfDocument(QString file, QObject *parent) : QObject(parent)
 void PdfDocument::renderTo(QLabel *label, QRect rect)
 {
     if (!isValid()) return;
+    qreal w0 = _page->page_rect().right() - _page->page_rect().left();
+    qreal h0 = _page->page_rect().bottom() - _page->page_rect().top();
+    qreal ratio = label->devicePixelRatioF();
+    int w = static_cast<int>(ratio * (rect.width() - 20));
+    int h = static_cast<int>(ratio * (rect.height() - 20));
+
+    // not all platforms have fmin, compute the min by hand
+    qreal hscale = static_cast<qreal>(w) / w0;
+    qreal vscale = static_cast<qreal>(h) / h0;
+    qreal scale = (hscale < vscale) ? hscale : vscale;
+
+    int dpi = static_cast<int>(scale * 72.0);
+    int w1 = static_cast<int>(scale * w0);
+    int h1 = static_cast<int>(scale * h0);
+
+    page_renderer renderer;
+    renderer.set_render_hint(page_renderer::render_hint::antialiasing, true);
+    renderer.set_render_hint(page_renderer::render_hint::text_antialiasing, true);
+    renderer.set_render_hint(page_renderer::render_hint::text_hinting, true);
+    image img = renderer.render_page(_page, dpi, dpi, (w1 - w)/2,  (h1 - h)/2, w, h);
 /*
     QSizeF pageSize = _page->pageSizeF();
 
@@ -64,7 +96,7 @@ void PdfDocument::renderTo(QLabel *label, QRect rect)
 
 bool PdfDocument::isValid()
 {
-    /* return (_page != nullptr); */
+    return (_page != nullptr);
 }
 
 bool PdfDocument::exportImage(QString file, const char *format, QSize outputSize)

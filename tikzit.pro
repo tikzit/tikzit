@@ -143,7 +143,7 @@ macx {
     LIBS += -L/usr/local/opt/poppler/lib
 }   
 
-# LIBS += -lpoppler-qt6
+LIBS += -lpoppler-cpp
 
 DISTFILES +=
 
