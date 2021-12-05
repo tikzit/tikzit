@@ -39,7 +39,7 @@ for:
 
   install:
     - sudo apt-get update
-    - sudo apt-get -y install flex bison libpoppler-cpp-dev
+    - sudo apt-get -y install flex bison libpoppler-cpp-dev libgl-dev
 
   build_script:
     - 'export PATH="$HOME/Qt/5.15/gcc_64/bin:$PATH"'
