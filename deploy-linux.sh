@@ -16,8 +16,11 @@ SYSLIBDIR=/lib/x86_64-linux-gnu
 # userspace library directory
 LIBDIR=/usr$SYSLIBDIR
 
+# qt library directory (requires QTDIR to be set)
+QTLIBDIR=$QTDIR/lib
+
 # directory where Qt plugins can be found
-PLUGINDIR=$LIBDIR/qt5/plugins
+PLUGINDIR=$QTLIBDIR/plugins
 
 mkdir -p dist/tikzit
 cd dist/tikzit
@@ -71,14 +74,14 @@ cp ../../tikzit opt
 cp -R ../../share .
 
 # add Qt libs. Keep shortened lib names as symlinks.
-cp --no-dereference $LIBDIR/libQt5Core.so* lib
-cp --no-dereference $LIBDIR/libQt5DBus.so* lib
-cp --no-dereference $LIBDIR/libQt5Widgets.so* lib
-cp --no-dereference $LIBDIR/libQt5Svg.so* lib
-cp --no-dereference $LIBDIR/libQt5Network.so* lib
-cp --no-dereference $LIBDIR/libQt5Gui.so* lib
-cp --no-dereference $LIBDIR/libQt5XcbQpa.so* lib
-cp --no-dereference $LIBDIR/libQt5Xml.so* lib
+cp --no-dereference $QTLIBDIR/libQt5Core.so* lib
+cp --no-dereference $QTLIBDIR/libQt5DBus.so* lib
+cp --no-dereference $QTLIBDIR/libQt5Widgets.so* lib
+cp --no-dereference $QTLIBDIR/libQt5Svg.so* lib
+cp --no-dereference $QTLIBDIR/libQt5Network.so* lib
+cp --no-dereference $QTLIBDIR/libQt5Gui.so* lib
+cp --no-dereference $QTLIBDIR/libQt5XcbQpa.so* lib
+cp --no-dereference $QTLIBDIR/libQt5Xml.so* lib
 
 # add libicu, which is required by Qt5 for unicode support
 cp --no-dereference $LIBDIR/libicuuc.so* lib

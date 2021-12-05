@@ -42,7 +42,8 @@ for:
     - sudo apt-get -y install flex bison libpoppler-cpp-dev libgl-dev
 
   build_script:
-    - 'export PATH="$HOME/Qt/5.15/gcc_64/bin:$PATH"'
+    - 'export QTDIR="$HOME/Qt/5.15/gcc_64"'
+    - 'export PATH="$QTDIR/bin:$PATH"'
     - qmake -v
     - qmake
     - make
