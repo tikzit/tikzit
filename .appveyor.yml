@@ -59,7 +59,6 @@ for:
 
   install:
     - choco install winflexbison
-    - choco install poppler
     - 'C:\Qt\5.15\msvc2019\bin\qtenv2.bat'
     - cd C:\projects\tikzit
 

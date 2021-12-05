@@ -136,6 +136,7 @@ INCLUDEPATH += src src/gui src/data
 win32 {
     INCLUDEPATH += poppler-21.11.0/Library/include
     LIBS += -L"$$PWD/poppler-21.11.0/Library/bin"
+    LIBS += -L"$$PWD/poppler-21.11.0/Library/lib"
 }
 
 macx {
