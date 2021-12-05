@@ -2,12 +2,16 @@ cmake_minimum_required(VERSION 3.16)
 
 project(tikzit LANGUAGES CXX)
 
+if (NOT QT_VER)
+    set (QT_VER "Qt5")
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 #set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network)
+find_package(${QT_VER} REQUIRED COMPONENTS Core Gui Widgets Network)
 find_package(BISON)
 find_package(FLEX)
 
@@ -114,8 +118,13 @@ set(FORMS
     src/gui/stylepalette.ui
 )
 
-qt6_wrap_ui(FORM_HEADERS ${FORMS})
-qt6_add_resources(QT_RESOURCES tikzit.qrc)
+if (${QT_VER} STREQUAL "Qt6")
+    qt6_wrap_ui(FORM_HEADERS ${FORMS})
+    qt6_add_resources(QT_RESOURCES tikzit.qrc)
+else()
+    qt5_wrap_ui(FORM_HEADERS ${FORMS})
+    qt5_add_resources(QT_RESOURCES tikzit.qrc)
+endif()
 
 
 
@@ -128,7 +137,10 @@ add_executable(tikzit
     ${QT_RESOURCES})
 
 target_link_libraries(${PROJECT_NAME}
-    Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Network poppler-cpp)
-    #${Poppler_LIBRARIES})
+    "${QT_VER}::Core"
+    "${QT_VER}::Gui"
+    "${QT_VER}::Widgets"
+    "${QT_VER}::Network"
+    poppler-cpp)
 
 install (TARGETS tikzit DESTINATION bin)
