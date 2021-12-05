@@ -26,7 +26,6 @@ public:
 private:
     poppler::document *_doc;
     poppler::page *_page;
-    poppler::page_renderer *_renderer;
 };
 
 #endif // PDFDOCUMENT_H

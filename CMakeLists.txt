@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.16)
 
 project(tikzit LANGUAGES CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 #set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network Pdf)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network)
 find_package(BISON)
 find_package(FLEX)
 
@@ -32,6 +33,7 @@ ADD_FLEX_BISON_DEPENDENCY(LEXER PARSER)
 set(SOURCES
     src/data/delimitedstringvalidator.cpp
     src/data/edge.cpp
+    src/data/path.cpp
     src/data/graph.cpp
     src/data/graphelementdata.cpp
     src/data/graphelementproperty.cpp
@@ -45,6 +47,7 @@ set(SOURCES
     src/gui/commands.cpp
     src/gui/delimitedstringitemdelegate.cpp
     src/gui/edgeitem.cpp
+    src/gui/pathitem.cpp
     src/gui/exportdialog.cpp
     src/gui/latexprocess.cpp
     src/gui/mainmenu.cpp
@@ -66,6 +69,7 @@ set(SOURCES
 
 set(HEADERS
     src/data/edge.h
+    src/data/path.h
     src/data/graph.h
     src/data/graphelementdata.h
     src/data/graphelementproperty.h
@@ -80,6 +84,7 @@ set(HEADERS
     src/gui/commands.h
     src/gui/delimitedstringitemdelegate.h
     src/gui/edgeitem.h
+    src/gui/pathitem.h
     src/gui/exportdialog.h
     src/gui/latexprocess.h
     src/gui/mainmenu.h
@@ -123,7 +128,7 @@ add_executable(tikzit
     ${QT_RESOURCES})
 
 target_link_libraries(${PROJECT_NAME}
-    Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Network Qt6::Pdf)
+    Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Network poppler-cpp)
     #${Poppler_LIBRARIES})
 
 install (TARGETS tikzit DESTINATION bin)

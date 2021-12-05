@@ -11,6 +11,15 @@
 
 using namespace poppler;
 
+struct image_wrapper {
+    image img;
+};
+
+static void poppler_cleanup(void *data) {
+    image_wrapper *iw = static_cast<image_wrapper*>(data);
+    delete(iw);
+}
+
 PdfDocument::PdfDocument(QString file, QObject *parent) : QObject(parent)
 {
     _doc = document::load_from_file(file.toStdString());
@@ -18,27 +27,7 @@ PdfDocument::PdfDocument(QString file, QObject *parent) : QObject(parent)
         _page = _doc->create_page(0);
     } else {
         _page = nullptr;
-        _renderer = nullptr;
     }
-    // use loadFromData to avoid holding a lock on the PDF file in windows
-/*    QFile f(file);
-    if (f.open(QFile::ReadOnly)) {
-        QByteArray data = f.readAll();
-        f.close();
-        // _doc = Poppler::Document::loadFromData(data);
-    } else {
-        _doc = nullptr;
-    }
-
-    if (!_doc) {
-        _doc = nullptr;
-        _page = nullptr;
-    } else {
-        // _doc->setRenderHint(Poppler::Document::Antialiasing);
-        // _doc->setRenderHint(Poppler::Document::TextAntialiasing);
-        // _doc->setRenderHint(Poppler::Document::TextHinting);
-        // _page = _doc->page(0);
-    }*/
 }
 
 void PdfDocument::renderTo(QLabel *label, QRect rect)
@@ -63,7 +52,20 @@ void PdfDocument::renderTo(QLabel *label, QRect rect)
     renderer.set_render_hint(page_renderer::render_hint::antialiasing, true);
     renderer.set_render_hint(page_renderer::render_hint::text_antialiasing, true);
     renderer.set_render_hint(page_renderer::render_hint::text_hinting, true);
-    image img = renderer.render_page(_page, dpi, dpi, (w1 - w)/2,  (h1 - h)/2, w, h);
+    renderer.set_image_format(image::format_argb32);
+    image_wrapper *iw = new image_wrapper();
+    iw->img = renderer.render_page(_page, dpi, dpi, (w1 - w)/2,  (h1 - h)/2, w, h);
+
+    QImage qimg((const uchar*)iw->img.const_data(),
+            iw->img.width(), iw->img.height(), iw->img.bytes_per_row(),
+            QImage::Format_ARGB32,
+            &poppler_cleanup, (void*)iw);
+
+    QPixmap pm = QPixmap::fromImage(qimg);
+    pm.setDevicePixelRatio(ratio);
+    label->setPixmap(pm);
+    // delete(data);
+    // poppler_cleanup(img);
 /*
     QSizeF pageSize = _page->pageSizeF();
 
