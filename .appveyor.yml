@@ -5,9 +5,9 @@ branches:
     - master
 
 image:
-  - macos
   - Ubuntu1804
   - Visual Studio 2015
+  - macos
 
 configuration:
   - release
@@ -25,7 +25,6 @@ for:
     - brew install poppler
 
   build_script:
-    # - 'export PATH="/usr/local/opt/qt@5/bin:$PATH"'
     - qmake -v
     - qmake -r
     - make
@@ -43,6 +42,7 @@ for:
     - sudo apt-get -y install flex bison libpoppler-dev
 
   build_script:
+    - 'export PATH="$HOME/Qt/5.15:$PATH"'
     - qmake -v
     - qmake
     - make
@@ -58,6 +58,7 @@ for:
 
   install:
     - choco install winflexbison
+    - choco install poppler
     - 'C:\Qt\5.12\mingw73_32\bin\qtenv2.bat'
     - cd C:\projects\tikzit
 
