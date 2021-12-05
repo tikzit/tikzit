@@ -115,13 +115,13 @@ QColor Tikzit::colorByName(QString name)
       "blue\\s*,\\s*([0-9]+)\\s*$"
     );
 
-    QRegularExpressionMatch match = re.match(name);
-    if (match.hasMatch()) {
-        //qDebug() << cap;
+    QRegularExpressionMatch m = re.match(name);
+
+    if (m.hasMatch()) {
         return QColor(
-                match.captured(1).toInt(),
-                match.captured(2).toInt(),
-                match.captured(3).toInt());
+                m.captured(1).toInt(),
+                m.captured(2).toInt(),
+                m.captured(3).toInt());
     }
 
     return QColor();

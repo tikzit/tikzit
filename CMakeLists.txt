@@ -1,19 +1,24 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.16)
 
 project(tikzit LANGUAGES CXX)
 
+if (NOT QT_VER)
+    set (QT_VER "Qt5")
+endif()
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 #set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Network)
+find_package(${QT_VER} REQUIRED COMPONENTS Core Gui Widgets Network)
 find_package(BISON)
 find_package(FLEX)
 
 # use extra-cmake-modules to find poppler library
-find_package(ECM REQUIRED NO_MODULE)
-set(CMAKE_MODULE_PATH ${ECM_FIND_MODULE_DIR})
-find_package(Poppler REQUIRED COMPONENTS Core Qt5)
+# find_package(ECM REQUIRED NO_MODULE)
+# set(CMAKE_MODULE_PATH ${ECM_FIND_MODULE_DIR})
+# find_package(Poppler REQUIRED COMPONENTS Core Qt6)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}
@@ -32,6 +37,7 @@ ADD_FLEX_BISON_DEPENDENCY(LEXER PARSER)
 set(SOURCES
     src/data/delimitedstringvalidator.cpp
     src/data/edge.cpp
+    src/data/path.cpp
     src/data/graph.cpp
     src/data/graphelementdata.cpp
     src/data/graphelementproperty.cpp
@@ -45,6 +51,7 @@ set(SOURCES
     src/gui/commands.cpp
     src/gui/delimitedstringitemdelegate.cpp
     src/gui/edgeitem.cpp
+    src/gui/pathitem.cpp
     src/gui/exportdialog.cpp
     src/gui/latexprocess.cpp
     src/gui/mainmenu.cpp
@@ -66,6 +73,7 @@ set(SOURCES
 
 set(HEADERS
     src/data/edge.h
+    src/data/path.h
     src/data/graph.h
     src/data/graphelementdata.h
     src/data/graphelementproperty.h
@@ -80,6 +88,7 @@ set(HEADERS
     src/gui/commands.h
     src/gui/delimitedstringitemdelegate.h
     src/gui/edgeitem.h
+    src/gui/pathitem.h
     src/gui/exportdialog.h
     src/gui/latexprocess.h
     src/gui/mainmenu.h
@@ -109,8 +118,13 @@ set(FORMS
     src/gui/stylepalette.ui
 )
 
-qt5_wrap_ui(FORM_HEADERS ${FORMS})
-qt5_add_resources(QT_RESOURCES tikzit.qrc)
+if (${QT_VER} STREQUAL "Qt6")
+    qt6_wrap_ui(FORM_HEADERS ${FORMS})
+    qt6_add_resources(QT_RESOURCES tikzit.qrc)
+else()
+    qt5_wrap_ui(FORM_HEADERS ${FORMS})
+    qt5_add_resources(QT_RESOURCES tikzit.qrc)
+endif()
 
 
 
@@ -123,7 +137,10 @@ add_executable(tikzit
     ${QT_RESOURCES})
 
 target_link_libraries(${PROJECT_NAME}
-    Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network
-    ${Poppler_LIBRARIES})
+    "${QT_VER}::Core"
+    "${QT_VER}::Gui"
+    "${QT_VER}::Widgets"
+    "${QT_VER}::Network"
+    poppler-cpp)
 
 install (TARGETS tikzit DESTINATION bin)

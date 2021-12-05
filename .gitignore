@@ -1,4 +1,6 @@
 *.pro.user*
+.clangd
+compile_commands.json
 scripts/*.pyc
 scripts/__pycache__
 tex/sample/Output

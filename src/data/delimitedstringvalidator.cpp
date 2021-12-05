@@ -41,7 +41,7 @@ int DelimitedStringValidator::braceDepth(QString input) const
     int depth = 0;
     bool escape = false;
     for (int i = 0; i < input.length(); ++i) {
-        QCharRef c = input[i];
+        QChar c = input[i];
         if (escape) {
             escape = false;
         } else if (c == '\\') {

@@ -2,7 +2,7 @@
 
 QT += core gui widgets network
 
-VERSION = 2.1.6
+VERSION = 2.1.7
 
 test {
     CONFIG += testcase
@@ -143,7 +143,7 @@ macx {
     LIBS += -L/usr/local/opt/poppler/lib
 }   
 
-LIBS += -lpoppler-qt5
+LIBS += -lpoppler-cpp
 
 DISTFILES +=
 
