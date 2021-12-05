@@ -20,12 +20,12 @@ for:
 
   install:
     - brew update
-    - brew install qt5
+    # - brew install qt5
     # - brew link --force qt5
-    - brew install poppler-qt5
+    - brew install poppler
 
   build_script:
-    - 'export PATH="/usr/local/opt/qt@5/bin:$PATH"'
+    # - 'export PATH="/usr/local/opt/qt@5/bin:$PATH"'
     - qmake -v
     - qmake -r
     - make
@@ -40,7 +40,7 @@ for:
 
   install:
     - sudo apt-get update
-    - sudo apt-get -y install flex bison qt5-default libpoppler-dev libpoppler-qt5-dev
+    - sudo apt-get -y install flex bison libpoppler-dev
 
   build_script:
     - qmake -v
