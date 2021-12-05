@@ -5,9 +5,9 @@ branches:
     - master
 
 image:
+  - macos
   - Ubuntu2004
   - Visual Studio 2015
-  - macos
 
 configuration:
   - release
@@ -19,12 +19,12 @@ for:
       - image: macos
 
   install:
-    - brew update
-    # - brew install qt5
-    # - brew link --force qt5
+    - 'export HOMEBREW_NO_AUTO_UPDATE=1'
     - brew install poppler
 
   build_script:
+    - 'export QTDIR="$HOME/Qt/5.15/clang_64"'
+    - 'export PATH="$QTDIR/bin:$PATH"'
     - qmake -v
     - qmake -r
     - make
