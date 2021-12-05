@@ -20,7 +20,7 @@ LIBDIR=/usr$SYSLIBDIR
 QTLIBDIR=$QTDIR/lib
 
 # directory where Qt plugins can be found
-PLUGINDIR=$QTLIBDIR/plugins
+PLUGINDIR=$QTDIR/plugins
 
 mkdir -p dist/tikzit
 cd dist/tikzit

@@ -134,8 +134,8 @@ INCLUDEPATH += src src/gui src/data
 
 # link to pre-compiled poppler libs on windows
 win32 {
-    INCLUDEPATH += win32-deps/include
-    LIBS += -L"$$PWD/win32-deps/bin"
+    INCLUDEPATH += poppler-21.11.0/Library/include
+    LIBS += -L"$$PWD/poppler-21.11.0/Library/bin"
 }
 
 macx {

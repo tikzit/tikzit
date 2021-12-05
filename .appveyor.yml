@@ -5,9 +5,9 @@ branches:
     - master
 
 image:
+  - Visual Studio 2019
   - macos
   - Ubuntu2004
-  - Visual Studio 2015
 
 configuration:
   - release
@@ -55,17 +55,18 @@ for:
 -
   matrix:
     only:
-      - image: Visual Studio 2015
+      - image: Visual Studio 2019
 
   install:
     - choco install winflexbison
     - choco install poppler
-    - 'C:\Qt\5.12\mingw73_32\bin\qtenv2.bat'
+    - 'C:\Qt\5.15\mingw81_32\bin\qtenv2.bat'
     - cd C:\projects\tikzit
 
   before_build:
-    - ps: (new-object net.webclient).DownloadFile('http://tikzit.github.io/download/win32-deps.zip', 'c:\projects\tikzit\win32-deps.zip')
-    - 7z x win32-deps.zip
+    # - ps: (new-object net.webclient).DownloadFile('http://tikzit.github.io/download/win32-deps.zip', 'c:\projects\tikzit\win32-deps.zip')
+    - ps: (new-object net.webclient).DownloadFile('https://github.com/oschwartz10612/poppler-windows/releases/download/v21.11.0-0/Release-21.11.0-0.zip', 'c:\projects\tikzit\poppler.zip')
+    - 7z x poppler.zip
 
   build_script:
     - qmake -v
