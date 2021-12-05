@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: this comment is out of date, update with new test:
+#
 # Deployment script for Linux x64 portable binary. This
 # script is tested on a clean Ubuntu 18.04, after running:
 # 
@@ -93,7 +95,7 @@ cp --no-dereference $LIBDIR/libcrypto.so* lib
 
 # add poppler libs
 cp --no-dereference $LIBDIR/libpoppler.so* lib
-cp --no-dereference $LIBDIR/libpoppler-qt5.so* lib
+cp --no-dereference $LIBDIR/libpoppler-cpp.so* lib
 
 # add dependencies of poppler that are on Ubuntu 18.04,
 # but maybe not other distros...
