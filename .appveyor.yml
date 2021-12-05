@@ -60,7 +60,7 @@ for:
   install:
     - choco install winflexbison
     - choco install poppler
-    - 'C:\Qt\5.15\mingw81_32\bin\qtenv2.bat'
+    - 'C:\Qt\5.15\msvc2019\bin\qtenv2.bat'
     - cd C:\projects\tikzit
 
   before_build:
@@ -71,7 +71,8 @@ for:
   build_script:
     - qmake -v
     - qmake
-    - mingw32-make
+    - nmake
+    # - mingw32-make
 
   after_build:
     - deploy-win.bat
