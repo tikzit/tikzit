@@ -39,7 +39,6 @@ void PdfDocument::renderTo(QLabel *label, QRect rect)
     int w = static_cast<int>(ratio * (rect.width() - 20));
     int h = static_cast<int>(ratio * (rect.height() - 20));
 
-    // not all platforms have fmin, compute the min by hand
     qreal hscale = static_cast<qreal>(w) / w0;
     qreal vscale = static_cast<qreal>(h) / h0;
     qreal scale = (hscale < vscale) ? hscale : vscale;
@@ -111,11 +110,7 @@ bool PdfDocument::exportImage(QString file, const char *format, QSize outputSize
 bool PdfDocument::exportPdf(QString file)
 {
     if (!isValid()) return false;
-    return false;
-    /*std::unique_ptr<Poppler::PDFConverter> conv = _doc->pdfConverter();
-    conv->setOutputFileName(file);
-    bool success = conv->convert();
-    return success;*/
+    return _doc->save(file.toStdString());
 }
 
 void PdfDocument::copyImageToClipboard(QSize outputSize)
@@ -128,15 +123,25 @@ void PdfDocument::copyImageToClipboard(QSize outputSize)
 
 QImage PdfDocument::asImage(QSize outputSize)
 {
-    return QImage();
-    /*if (!isValid()) return QImage();
+    if (!isValid()) return QImage();
     if (outputSize.isNull()) outputSize = size();
-    QSize pageSize = _page->pageSize();
+    QSize pageSize = size();
     int dpix = (72 * outputSize.width()) / pageSize.width();
-    int dpiy = (72 * outputSize.width()) / pageSize.width();
-    QImage img = _page->renderToImage(dpix, dpiy, 0,  0,
-                                      outputSize.width(), outputSize.height());
-    return img;*/
+    int dpiy = (72 * outputSize.height()) / pageSize.height();
+
+    page_renderer renderer;
+    renderer.set_render_hint(page_renderer::render_hint::antialiasing, true);
+    renderer.set_render_hint(page_renderer::render_hint::text_antialiasing, true);
+    renderer.set_render_hint(page_renderer::render_hint::text_hinting, true);
+    renderer.set_image_format(image::format_argb32);
+    image_wrapper *iw = new image_wrapper();
+    iw->img = renderer.render_page(_page, dpix, dpiy, 0,  0, outputSize.width(), outputSize.height());
+
+    QImage qimg((const uchar*)iw->img.const_data(),
+            iw->img.width(), iw->img.height(), iw->img.bytes_per_row(),
+            QImage::Format_ARGB32,
+            &poppler_cleanup, (void*)iw);
+    return qimg;
 }
 
 // CRASHES TikZiT when figures contain text, due to limitations of Arthur backend
@@ -160,7 +165,9 @@ QImage PdfDocument::asImage(QSize outputSize)
 QSize PdfDocument::size()
 {
     if (isValid()) {
-        return QSize();//_page->pageSize();
+        int w = _page->page_rect().right() - _page->page_rect().left();
+        int h = _page->page_rect().bottom() - _page->page_rect().top();
+        return QSize(w, h);
     } else {
         return QSize();
     }
