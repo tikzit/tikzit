@@ -27,6 +27,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src/gui
 )
 
+
 BISON_TARGET(PARSER src/data/tikzparser.y ${CMAKE_CURRENT_BINARY_DIR}/tikzparser.parser.cpp)
 FLEX_TARGET(LEXER src/data/tikzlexer.l ${CMAKE_CURRENT_BINARY_DIR}/tikzlexer.lexer.cpp)
 ADD_FLEX_BISON_DEPENDENCY(LEXER PARSER)
@@ -135,6 +136,10 @@ add_executable(tikzit
     ${FLEX_LEXER_OUTPUTS}
     ${BISON_PARSER_OUTPUTS}
     ${QT_RESOURCES})
+
+# local poppler binaries for windows
+include_directories(${PROJECT_SOURCE_DIR}/poppler-21.11.0/Library/include)
+link_directories(${PROJECT_SOURCE_DIR}/poppler-21.11.0/Library/bin)
 
 target_link_libraries(${PROJECT_NAME}
     "${QT_VER}::Core"
