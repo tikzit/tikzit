@@ -138,14 +138,16 @@ add_executable(tikzit
     ${QT_RESOURCES})
 
 # local poppler binaries for windows
+find_library(POPPLER_LIB poppler-cpp HINTS "${PROJECT_SOURCE_DIR}/poppler-21.11.0/Library/bin")
+
 include_directories(${PROJECT_SOURCE_DIR}/poppler-21.11.0/Library/include)
-link_directories(${PROJECT_SOURCE_DIR}/poppler-21.11.0/Library/bin)
+# link_directories(${PROJECT_SOURCE_DIR}/poppler-21.11.0/Library/bin)
 
 target_link_libraries(${PROJECT_NAME}
     "${QT_VER}::Core"
     "${QT_VER}::Gui"
     "${QT_VER}::Widgets"
     "${QT_VER}::Network"
-    poppler-cpp)
+    ${POPPLER_LIB})
 
 install (TARGETS tikzit DESTINATION bin)
