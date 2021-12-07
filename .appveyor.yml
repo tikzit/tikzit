@@ -59,7 +59,6 @@ for:
 
   install:
     - choco install winflexbison
-    - 'C:\Qt\5.15\msvc2019_64\bin\qtenv2.bat'
     - cd C:\projects\tikzit
 
   before_build:
@@ -68,6 +67,7 @@ for:
     - 7z x poppler.zip
 
   build_script:
+    - 'call "C:\Qt\6.2\msvc2019_64\bin\qtenv2.bat"'
     - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"'
     - qmake -v
     - qmake
