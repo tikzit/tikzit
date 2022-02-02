@@ -145,10 +145,30 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 QPainterPath NodeItem::shape() const
 {
     QPainterPath path;
-
+    double rotate = _node->data()->property("rotate").toDouble();
+    QTransform transform;
+    transform.scale(GLOBAL_SCALEF, GLOBAL_SCALEF).rotate(rotate);
 	if (_node->style()->shape() == "rectangle") {
-        path.addRect(-0.2 * GLOBAL_SCALEF, -0.2 * GLOBAL_SCALEF, 0.4 * GLOBAL_SCALEF, 0.4 * GLOBAL_SCALEF);
-	} else {
+        QVector<QPointF> points ({
+            QPointF(-0.2, -0.2),
+            QPointF(-0.2,  0.2),
+            QPointF( 0.2,  0.2),
+            QPointF( 0.2, -0.2)
+        });
+        QPolygonF rect(points);
+        path.addPolygon(transform.map(rect));
+        path.closeSubpath();
+    } else if (_node->style()->shape() == "triangle") {
+        QVector<QPointF> points ({
+            QPointF(-0.2,  0.2),
+            QPointF( 0.0, -0.1464),
+            QPointF( 0.2,  0.2)
+        });
+
+        QPolygonF triangle(points);
+        path.addPolygon(transform.map(triangle));
+        path.closeSubpath();
+    } else {
         path.addEllipse(QPointF(0, 0), GLOBAL_SCALEF * 0.2, GLOBAL_SCALEF * 0.2);
 	}
     return path;

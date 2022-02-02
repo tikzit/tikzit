@@ -198,6 +198,16 @@ QPainterPath Style::path() const
 
     if (sh == "rectangle") {
         pth.addRect(-30.0f, -30.0f, 60.0f, 60.0f);
+    } else if (sh == "triangle") {
+        QVector<QPointF> points ({
+            QPointF(-30.0f,  30.0f),
+            QPointF(  0.0f, -1.414f * 15),
+            QPointF( 30.0f,  30.0f),
+        });
+
+        QPolygonF triangle(points);
+        pth.addPolygon(triangle);
+        pth.closeSubpath();
     } else { // default is 'circle'
         pth.addEllipse(QPointF(0.0f,0.0f), 30.0f, 30.0f);
     }
