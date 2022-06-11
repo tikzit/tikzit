@@ -28,7 +28,7 @@ To get a portable directory, you can then (optionally) run:
 
 This should be buildable in Linux using a "standard" dev setup (gcc, flex, bison, make) as well as Qt. It has been tested with Qt 5.9, which is packaged with Ubuntu 18.04 (Bionic Beaver). The setup on Ubuntu is:
 
-    $ sudo apt -y install flex bison qt5-default libpoppler-dev libpoppler-qt5-dev
+    $ sudo apt -y install flex bison qt5-default libpoppler-dev libpoppler-cpp-dev
 
 After that, building is:
 
