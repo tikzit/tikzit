@@ -26,14 +26,14 @@ To get a portable directory, you can then (optionally) run:
 
 ## Building on Linux
 
-This should be buildable in Linux using a "standard" dev setup (gcc, flex, bison, make) as well as Qt. It has been tested with Qt 5.9, which is packaged with Ubuntu 18.04 (Bionic Beaver). The setup on Ubuntu is:
+This should be buildable in Linux using a "standard" dev setup (gcc, flex, bison, make) as well as Qt. It has been most recently tested with Qt 6.2. First <a href="https://www.qt.io/">Install Qt</a> and add the `$QTDIR/bin` to your `PATH`. The other dependencies should be available via your package manager, e.g. on Ubuntu 22.04 run:
 
-    $ sudo apt -y install flex bison qt5-default libpoppler-dev libpoppler-cpp-dev
+    sudo apt install flex bison libpoppler-dev libpoppler-cpp-dev libgl1-mesa-dev
 
 After that, building is:
 
-    $ qmake -r
-    $ make
+    qmake -r
+    make
 
 To get a portable directory, you can then (optionally) run:
 
@@ -46,26 +46,26 @@ Building on other distributions should be similar. For Qt setup, you can find in
 
 You'll need developer tools, Qt5, and Poppler (with Qt bindings) installed. You can install these via Homebrew with the following commands:
 
-    $ brew install qt5
-    $ brew install poppler --with-qt
+    brew install qt5
+    brew install poppler --with-qt
 
 This doesn't add Qt binaries to the `$PATH` by default, so you may wish to either run:
 
-    $ brew link --force qt5
+    brew link --force qt5
 
 or add `/usr/local/opt/qt/bin` to your `$PATH`. Once this is done, TikZiT can be built from the command line via:
 
-    $ qmake -r
-    $ make
+    qmake -r
+    make
 
 To bundle the required libraries into `tikzit.app` and create a `.dmg` file, you can additionally run:
 
-    $ ./deploy-osx.sh
+    ./deploy-osx.sh
 
 
 On older systems (pre-10.11), you can build with Qt 5.6, which <a href="http://doc.qt.io/qt-5/supported-platforms-and-configurations.html">claims</a> to support Mac OS as far back as Mountain Lion. It is installable via <a href="https://www.macports.org">MacPorts</a>:
 
-    $ sudo port -N -k install qt56
-    $ export PATH=/opt/local/libexec/qt5/bin:$PATH
+    sudo port -N -k install qt56
+    export PATH=/opt/local/libexec/qt5/bin:$PATH
 
 I have only tested this with TikZiT 2.0, so to install Poppler (required by TikZiT >= 2.1), you are on your own.
