@@ -62,9 +62,18 @@ void TikzDocument::open(QString fileName)
     QSettings settings("tikzit", "tikzit");
     settings.setValue("previous-file-path", fi.absolutePath());
 
+    // if the file does not exist, only set the file name. The file will be written on
+    // the first save.
+    if (!file.exists()) {
+        refreshTikz();
+        _undoStack->resetClean();
+        _parseSuccess = true;
+        return;
+    }
+
     if (!file.open(QIODevice::ReadOnly)) {
-//        QMessageBox::critical(this, tr("Error"),
-//        tr("Could not open file"));
+       // QMessageBox::critical(NULL, tr("Error"),
+       //         tr("Could not open file"));
         _parseSuccess = false;
         return;
     }
@@ -90,7 +99,8 @@ void TikzDocument::open(QString fileName)
         refreshTikz();
         setClean();
     } else {
-        // TODO: should not quietly fail to open
+       // QMessageBox::critical(NULL, tr("Error"),
+       //         tr("Could not parse tikz file."));
         newGraph->deleteLater();
         _parseSuccess = false;
     }
@@ -124,6 +134,7 @@ bool TikzDocument::save() {
             stream << _tikz;
             file.close();
             setClean();
+            addToRecentFiles();
             return true;
         } else {
             QMessageBox::warning(nullptr,
@@ -208,7 +219,6 @@ bool TikzDocument::saveAs() {
         if (save()) {
             // clean state might not change, so update title bar manually
             tikzit->activeWindow()->updateFileName();
-            addToRecentFiles();
             return true;
         }
     }
