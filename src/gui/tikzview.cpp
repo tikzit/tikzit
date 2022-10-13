@@ -31,7 +31,8 @@ TikzView::TikzView(QWidget *parent) : QGraphicsView(parent)
 
     setBackgroundBrush(QBrush(Qt::white));
 
-    _scale = 1.0f;
+    _scale = 2.5f;
+    scale(2.5, 2.5);
 }
 
 void TikzView::zoomIn()
