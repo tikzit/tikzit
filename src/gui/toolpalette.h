@@ -47,7 +47,6 @@ private:
     QAction *select;
     QAction *vertex;
     QAction *edge;
-    QAction *crop;
 };
 
 #endif // TOOLPALETTE_H

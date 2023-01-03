@@ -53,18 +53,15 @@ ToolPalette::ToolPalette(QWidget *parent) :
     tools->addAction(select);
     tools->addAction(vertex);
     tools->addAction(edge);
-    //tools->addAction(crop);
 
     select->setCheckable(true);
     vertex->setCheckable(true);
     edge->setCheckable(true);
-    //crop->setCheckable(true);
     select->setChecked(true);
 
     addAction(select);
     addAction(vertex);
     addAction(edge);
-    //addAction(crop);
 }
 
 ToolPalette::Tool ToolPalette::currentTool() const
@@ -72,7 +69,6 @@ ToolPalette::Tool ToolPalette::currentTool() const
     QAction *a = tools->checkedAction();
     if (a == vertex) return VERTEX;
     else if (a == edge) return EDGE;
-    else if (a == crop) return CROP;
     else return SELECT;
 }
 
@@ -87,9 +83,6 @@ void ToolPalette::setCurrentTool(ToolPalette::Tool tool)
         break;
     case EDGE:
         edge->setChecked(true);
-        break;
-    case CROP:
-        crop->setChecked(true);
         break;
     }
 }

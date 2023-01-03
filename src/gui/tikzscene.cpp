@@ -1056,9 +1056,6 @@ void TikzScene::keyPressEvent(QKeyEvent *event)
             case Qt::Key_E:
                 tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::EDGE);
                 break;
-            case Qt::Key_B:
-                tikzit->activeWindow()->toolPalette()->setCurrentTool(ToolPalette::CROP);
-                break;
             }
         }
     }
