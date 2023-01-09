@@ -155,3 +155,33 @@ void TikzView::wheelEvent(QWheelEvent *event)
     }
 }
 
+
+void TikzView::mouseMoveEvent(QMouseEvent *event)
+{
+    if(event->buttons() & Qt::MiddleButton) // middle button: move veiw
+    {
+        QPointF delta = _mouseDownPos - event->pos();
+        horizontalScrollBar()->setValue((horizontalScrollBar()->value() + delta.x()));
+        verticalScrollBar()->setValue((verticalScrollBar()->value() + delta.y()));
+        _mouseDownPos = event->pos();
+    } else {
+        QGraphicsView::mouseMoveEvent(event);
+    }
+}
+
+void TikzView::mousePressEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::MiddleButton) // Middle button: save position
+    {
+        _mouseDownPos = event->pos();
+    } else { // Otherwise, handle the click normally
+        QGraphicsView::mousePressEvent(event);
+    }
+}
+
+void TikzView::mouseReleaseEvent(QMouseEvent *event)
+{
+    QGraphicsView::mouseReleaseEvent(event);
+}
+
+
