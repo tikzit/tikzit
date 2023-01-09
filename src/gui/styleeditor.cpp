@@ -64,6 +64,10 @@ StyleEditor::StyleEditor(QWidget *parent) :
     ui->edgeStyleListView->setMovement(QListView::Static);
     ui->edgeStyleListView->setGridSize(QSize(space,space));
 
+    QList<int> sizes;
+    sizes << 100 << 400;
+    ui->splitter->setSizes(sizes);
+
     connect(ui->category->lineEdit(),
             SIGNAL(editingFinished()),
             this, SLOT(categoryChanged()));
