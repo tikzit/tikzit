@@ -770,7 +770,7 @@ void StyleEditor::on_duplicateEdgeStyle_clicked()
 
         // set dirty flag and select the newly-added style
         setDirty(true);
-        selectNodeStyle(_styles->edgeStyles()->numInCategory()-1);
+        selectEdgeStyle(_styles->edgeStyles()->numInCategory()-1);
     }
 }
 
