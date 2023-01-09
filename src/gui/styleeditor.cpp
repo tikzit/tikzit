@@ -630,6 +630,36 @@ void StyleEditor::on_removeStyle_clicked()
     }
 }
 
+void StyleEditor::on_duplicateStyle_clicked()
+{
+    if (! _activeStyle->isEdgeStyle()){
+        // get a fresh name
+        QString name;
+        QStringList list = _activeStyle->name().split(" ");
+        bool is_last_int;
+        int last = list.last().toInt(&is_last_int, 10);
+        if (is_last_int){
+            list.pop_back();
+            while (true) {
+                name = list.join(" ") + " " + QString::number(last);
+                if (_styles->nodeStyles()->style(name) == nullptr) break;
+                ++last;
+            }
+        } else {
+            last = 1;
+        }
+        name = list.join(" ") + " " + QString::number(last);
+
+        // add the style to the current category
+        Style *s = new Style(name, _activeStyle->data()->copy());
+        _styles->nodeStyles()->addStyle(s);
+
+        // set dirty flag and select the newly-added style
+        setDirty(true);
+        selectNodeStyle(_styles->nodeStyles()->numInCategory()-1);
+    }
+}
+
 void StyleEditor::on_styleUp_clicked()
 {
     if (_nodeStyleIndex.isValid()) {
@@ -711,6 +741,36 @@ void StyleEditor::on_edgeStyleUp_clicked()
             setDirty(true);
             edgeItemChanged(_styles->edgeStyles()->index(r - 1));
         }
+    }
+}
+
+void StyleEditor::on_duplicateEdgeStyle_clicked()
+{
+    if (_activeStyle->isEdgeStyle()){
+        // get a fresh name
+        QString name;
+        QStringList list = _activeStyle->name().split(" ");
+        bool is_last_int;
+        int last = list.last().toInt(&is_last_int, 10);
+        if (is_last_int){
+            list.pop_back();
+            while (true) {
+                name = list.join(" ") + " " + QString::number(last);
+                if (_styles->edgeStyles()->style(name) == nullptr) break;
+                ++last;
+            }
+        } else {
+            last = 1;
+        }
+        name = list.join(" ") + " " + QString::number(last);
+
+        // add the style to the current category
+        Style *s = new Style(name, _activeStyle->data()->copy());
+        _styles->edgeStyles()->addStyle(s);
+
+        // set dirty flag and select the newly-added style
+        setDirty(true);
+        selectNodeStyle(_styles->edgeStyles()->numInCategory()-1);
     }
 }
 

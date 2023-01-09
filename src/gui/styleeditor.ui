@@ -92,6 +92,30 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="duplicateStyle">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>d</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="styleUp">
             <property name="minimumSize">
              <size>
@@ -215,6 +239,30 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="duplicateEdgeStyle">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>d</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolButton" name="edgeStyleUp">
             <property name="minimumSize">
              <size>
@@ -283,6 +331,9 @@
        <layout class="QVBoxLayout" name="verticalLayou_1">
         <item>
          <layout class="QFormLayout" name="formLayout_2">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
           <property name="labelAlignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>

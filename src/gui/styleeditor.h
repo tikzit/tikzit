@@ -85,11 +85,13 @@ public slots:
 
     void on_addStyle_clicked();
     void on_removeStyle_clicked();
+    void on_duplicateStyle_clicked();
     void on_styleUp_clicked();
     void on_styleDown_clicked();
 
     void on_addEdgeStyle_clicked();
     void on_removeEdgeStyle_clicked();
+    void on_duplicateEdgeStyle_clicked();
     void on_edgeStyleUp_clicked();
     void on_edgeStyleDown_clicked();
 
