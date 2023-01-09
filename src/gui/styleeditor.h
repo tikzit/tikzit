@@ -43,7 +43,7 @@ public:
     ~StyleEditor() override;
 
     void open();
-    void save();
+    bool save();
     void closeEvent(QCloseEvent *event) override;
 
     bool dirty() const;
@@ -117,6 +117,8 @@ private:
     QModelIndex _nodeStyleIndex;
     QModelIndex _edgeStyleIndex;
     Style *_activeStyle;
+
+    bool _canParse;
 };
 
 #endif // STYLEEDITOR_H

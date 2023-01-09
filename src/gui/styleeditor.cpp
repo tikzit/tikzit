@@ -100,6 +100,7 @@ void StyleEditor::open() {
             this, SLOT(edgeItemChanged(QModelIndex)));
 
     if (_styles->loadStyles(tikzit->styleFilePath())) {
+        _canParse = true;
         setDirty(false);
         refreshCategories();
         refreshDisplay();
@@ -121,8 +122,11 @@ void StyleEditor::closeEvent(QCloseEvent *event)
                     QMessageBox::Yes);
 
         if (resBtn == QMessageBox::Yes) {
-            save();
-            event->accept();
+            if (save()){
+                event->accept();
+            } else {
+                event->ignore();
+            }
         } else if (resBtn == QMessageBox::No) {
             event->accept();
         } else {
@@ -724,8 +728,8 @@ void StyleEditor::on_edgeStyleDown_clicked()
 
 void StyleEditor::on_save_clicked()
 {
-    save();
-    close();
+    if (save())
+        close();
 }
 
 void StyleEditor::on_currentCategory_currentIndexChanged(int)
@@ -734,17 +738,40 @@ void StyleEditor::on_currentCategory_currentIndexChanged(int)
 }
 
 
-void StyleEditor::save()
+bool StyleEditor::save() // tries to save, returns true if saved
 {
-    QString p = tikzit->styleFilePath();
+    // check parsing of the new style
+    _canParse = _styles->checkStyles();
+    if (!_canParse) {
+        qDebug() << "Style error, not saving";
+        QMessageBox::StandardButton resBtn = QMessageBox::question(
+                    this, "Parse error",
+                    "Parsing error. Are you sure you want to save ? \nYou will not be able to open your styles in tikzit afterwards, you will need to correct it manually first.",
+                    QMessageBox::No | QMessageBox::Yes,
+                    QMessageBox::Yes);
 
-    if (_styles->saveStyles(p)) {
-        setDirty(false);
-        tikzit->loadStyles(p);
+        if (resBtn == QMessageBox::Yes) {
+            _canParse = true;
+        }
+    }
+
+    if (_canParse){
+        QString p = tikzit->styleFilePath();
+
+        if (_styles->saveStyles(p)) {
+            setDirty(false);
+            tikzit->loadStyles(p);
+
+            return true;
+        } else {
+            QMessageBox::warning(0,
+                "Unabled to save style file",
+                "Unable to write to file: '" + tikzit->styleFile() + "'.");
+
+            return false;
+        }
     } else {
-        QMessageBox::warning(0,
-            "Unabled to save style file",
-            "Unable to write to file: '" + tikzit->styleFile() + "'.");
+        return false;
     }
 }
 
