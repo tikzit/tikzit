@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>476</width>
-    <height>22</height>
+    <height>30</height>
    </rect>
   </property>
   <widget class="QMenu" name="menuFile">
@@ -258,6 +258,9 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionRevert">

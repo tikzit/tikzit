@@ -43,6 +43,7 @@ public:
 
     bool loadStyles(QString fileName);
     bool saveStyles(QString fileName);
+    bool checkStyles();
     void refreshModels(QStandardItemModel *nodeModel,
                        QStandardItemModel *edgeModel,
                        QString category="",

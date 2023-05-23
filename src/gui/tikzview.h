@@ -46,8 +46,12 @@ public slots:
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect) override;
     void wheelEvent(QWheelEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 private:
     float _scale;
+    QPointF _mouseDownPos;
 };
 
 #endif // TIKZVIEW_H

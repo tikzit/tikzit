@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>659</width>
+    <width>662</width>
     <height>520</height>
    </rect>
   </property>
@@ -14,852 +14,1023 @@
    <string>Style Editor - TikZiT</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QComboBox" name="currentCategory">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>241</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelName">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>50</y>
-      <width>91</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Name</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelCategory">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>80</y>
-      <width>91</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Category</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelFillColor">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>110</y>
-      <width>91</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Fill Color</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelDrawColor">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>140</y>
-      <width>91</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Draw Color</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="name">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>50</y>
-      <width>301</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="category">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>80</y>
-      <width>301</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="editable">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="fillColor">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>110</y>
-      <width>31</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="flat">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="drawColor">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>140</y>
-      <width>31</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="flat">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="hasTikzitFillColor">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>110</y>
-      <width>91</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <italic>false</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>in TikZiT:</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="hasTikzitDrawColor">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>140</y>
-      <width>91</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <italic>false</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>in TikZiT:</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="tikzitFillColor">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>110</y>
-      <width>31</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="flat">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="tikzitDrawColor">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>140</y>
-      <width>31</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="flat">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelShape">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>170</y>
-      <width>91</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Shape</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="shape">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>170</y>
-      <width>231</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="editable">
-     <bool>true</bool>
-    </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <property name="text">
-      <string/>
-     </property>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="handleWidth">
+       <number>10</number>
+      </property>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget_2">
+       <layout class="QVBoxLayout" name="verticalLayout_0">
+        <item>
+         <widget class="QComboBox" name="currentCategory"/>
+        </item>
+        <item>
+         <widget class="QListView" name="styleListView">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QToolButton" name="addStyle">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>New node style</string>
+            </property>
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="removeStyle">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Remove node style</string>
+            </property>
+            <property name="text">
+             <string>-</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="duplicateStyle">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Duplicate node style</string>
+            </property>
+            <property name="text">
+             <string>d</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="styleUp">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Move style up</string>
+            </property>
+            <property name="text">
+             <string>^</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="styleDown">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Move style down</string>
+            </property>
+            <property name="text">
+             <string>v</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QListView" name="edgeStyleListView">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QToolButton" name="addEdgeStyle">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>New edge style</string>
+            </property>
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="removeEdgeStyle">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Remove edge style</string>
+            </property>
+            <property name="text">
+             <string>-</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="duplicateEdgeStyle">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Duplicate edge style</string>
+            </property>
+            <property name="text">
+             <string>d</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="edgeStyleUp">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Move style up</string>
+            </property>
+            <property name="text">
+             <string>^</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="edgeStyleDown">
+            <property name="minimumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Move style down</string>
+            </property>
+            <property name="text">
+             <string>v</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayou_1">
+        <item>
+         <layout class="QFormLayout" name="formLayout_2">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
+          <property name="labelAlignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelName">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Name</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="name">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelCategory">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Category</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="category">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="editable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="labelFillColor">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Fill Color</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QPushButton" name="fillColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="noFill">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>none</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="hasTikzitFillColor">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>in TikZiT:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="tikzitFillColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="labelDrawColor">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Draw Color</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QPushButton" name="drawColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="noDraw">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>none</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="hasTikzitDrawColor">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>in TikZiT:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="tikzitDrawColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="labelShape">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Shape</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="shape">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="editable">
+             <bool>true</bool>
+            </property>
+            <item>
+             <property name="text">
+              <string/>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>circle</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>rectangle</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <item>
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="hasTikzitShape">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>in TikZiT:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="tikzitShape">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <item>
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>circle</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>rectangle</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="6" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QComboBox" name="leftArrow">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="editable">
+               <bool>false</bool>
+              </property>
+              <item>
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>&lt;</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>|</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelDash">
+              <property name="font">
+               <font>
+                <pointsize>16</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="rightArrow">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <property name="editable">
+               <bool>false</bool>
+              </property>
+              <item>
+               <property name="text">
+                <string/>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>&gt;</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>|</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="labelProperties">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Properties</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <widget class="QTreeView" name="properties">
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="rootIsDecorated">
+                 <bool>false</bool>
+                </property>
+                <property name="uniformRowHeights">
+                 <bool>true</bool>
+                </property>
+                <property name="headerHidden">
+                 <bool>false</bool>
+                </property>
+                <attribute name="headerVisible">
+                 <bool>true</bool>
+                </attribute>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_12">
+                <item>
+                 <widget class="QToolButton" name="addProperty">
+                  <property name="minimumSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>9</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>New property</string>
+                  </property>
+                  <property name="text">
+                   <string>+</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="addAtom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>9</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>New atom</string>
+                  </property>
+                  <property name="text">
+                   <string>+a</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="removeProperty">
+                  <property name="minimumSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>9</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Remove property</string>
+                  </property>
+                  <property name="text">
+                   <string>-</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="propertyUp">
+                  <property name="minimumSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>9</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Move property up</string>
+                  </property>
+                  <property name="text">
+                   <string>^</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="propertyDown">
+                  <property name="minimumSize">
+                   <size>
+                    <width>22</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>22</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>9</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Move property down</string>
+                  </property>
+                  <property name="text">
+                   <string>v</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="labelArrowhead">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Arrowhead</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="labelArrowhead_2">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string> </string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="save">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Save and Close</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
-    <item>
-     <property name="text">
-      <string>circle</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>rectangle</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QCheckBox" name="hasTikzitShape">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>200</y>
-      <width>91</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <italic>false</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>in TikZiT:</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="tikzitShape">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>200</y>
-      <width>111</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <item>
-     <property name="text">
-      <string/>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>circle</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>rectangle</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="labelArrowhead">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>230</y>
-      <width>91</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Arrowhead</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="leftArrow">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>230</y>
-      <width>41</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="editable">
-     <bool>false</bool>
-    </property>
-    <item>
-     <property name="text">
-      <string/>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>&lt;</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>|</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="labelDash">
-    <property name="geometry">
-     <rect>
-      <x>400</x>
-      <y>230</y>
-      <width>16</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>-</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="rightArrow">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>230</y>
-      <width>41</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="editable">
-     <bool>false</bool>
-    </property>
-    <item>
-     <property name="text">
-      <string/>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>&gt;</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>|</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="labelProperties">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>270</y>
-      <width>91</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Properties</string>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="addProperty">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>460</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="addAtom">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>460</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>+a</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="removeProperty">
-    <property name="geometry">
-     <rect>
-      <x>410</x>
-      <y>460</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>-</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="propertyUp">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>460</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>^</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="propertyDown">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>460</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>v</string>
-    </property>
-   </widget>
-   <widget class="QListView" name="styleListView">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>241</width>
-      <height>251</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-      <italic>true</italic>
-     </font>
-    </property>
-   </widget>
-   <widget class="QListView" name="edgeStyleListView">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>330</y>
-      <width>241</width>
-      <height>151</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-      <italic>true</italic>
-     </font>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="addStyle">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>300</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="removeStyle">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>300</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>-</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="styleUp">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>300</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>^</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="styleDown">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>300</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>v</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="removeEdgeStyle">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>490</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>-</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="addEdgeStyle">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>490</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="edgeStyleUp">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>490</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>^</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="edgeStyleDown">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>490</y>
-      <width>23</width>
-      <height>18</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>v</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="save">
-    <property name="geometry">
-     <rect>
-      <x>529</x>
-      <y>490</y>
-      <width>121</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Save and Close</string>
-    </property>
-   </widget>
-   <widget class="QTreeView" name="properties">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>270</y>
-      <width>301</width>
-      <height>181</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
-    </property>
-    <property name="rootIsDecorated">
-     <bool>false</bool>
-    </property>
-    <property name="uniformRowHeights">
-     <bool>true</bool>
-    </property>
-    <property name="headerHidden">
-     <bool>false</bool>
-    </property>
-    <attribute name="headerVisible">
-     <bool>true</bool>
-    </attribute>
-   </widget>
-   <widget class="QCheckBox" name="noFill">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>110</y>
-      <width>71</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <italic>false</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>none</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="noDraw">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>140</y>
-      <width>71</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <italic>false</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>none</string>
-    </property>
-   </widget>
+   </layout>
   </widget>
  </widget>
  <resources/>

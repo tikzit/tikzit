@@ -64,6 +64,10 @@ StyleEditor::StyleEditor(QWidget *parent) :
     ui->edgeStyleListView->setMovement(QListView::Static);
     ui->edgeStyleListView->setGridSize(QSize(space,space));
 
+    QList<int> sizes;
+    sizes << 100 << 400;
+    ui->splitter->setSizes(sizes);
+
     connect(ui->category->lineEdit(),
             SIGNAL(editingFinished()),
             this, SLOT(categoryChanged()));
@@ -100,6 +104,7 @@ void StyleEditor::open() {
             this, SLOT(edgeItemChanged(QModelIndex)));
 
     if (_styles->loadStyles(tikzit->styleFilePath())) {
+        _canParse = true;
         setDirty(false);
         refreshCategories();
         refreshDisplay();
@@ -121,8 +126,11 @@ void StyleEditor::closeEvent(QCloseEvent *event)
                     QMessageBox::Yes);
 
         if (resBtn == QMessageBox::Yes) {
-            save();
-            event->accept();
+            if (save()){
+                event->accept();
+            } else {
+                event->ignore();
+            }
         } else if (resBtn == QMessageBox::No) {
             event->accept();
         } else {
@@ -622,6 +630,36 @@ void StyleEditor::on_removeStyle_clicked()
     }
 }
 
+void StyleEditor::on_duplicateStyle_clicked()
+{
+    if (! _activeStyle->isEdgeStyle()){
+        // get a fresh name
+        QString name;
+        QStringList list = _activeStyle->name().split(" ");
+        bool is_last_int;
+        int last = list.last().toInt(&is_last_int, 10);
+        if (is_last_int){
+            list.pop_back();
+            while (true) {
+                name = list.join(" ") + " " + QString::number(last);
+                if (_styles->nodeStyles()->style(name) == nullptr) break;
+                ++last;
+            }
+        } else {
+            last = 1;
+        }
+        name = list.join(" ") + " " + QString::number(last);
+
+        // add the style to the current category
+        Style *s = new Style(name, _activeStyle->data()->copy());
+        _styles->nodeStyles()->addStyle(s);
+
+        // set dirty flag and select the newly-added style
+        setDirty(true);
+        selectNodeStyle(_styles->nodeStyles()->numInCategory()-1);
+    }
+}
+
 void StyleEditor::on_styleUp_clicked()
 {
     if (_nodeStyleIndex.isValid()) {
@@ -706,6 +744,36 @@ void StyleEditor::on_edgeStyleUp_clicked()
     }
 }
 
+void StyleEditor::on_duplicateEdgeStyle_clicked()
+{
+    if (_activeStyle->isEdgeStyle()){
+        // get a fresh name
+        QString name;
+        QStringList list = _activeStyle->name().split(" ");
+        bool is_last_int;
+        int last = list.last().toInt(&is_last_int, 10);
+        if (is_last_int){
+            list.pop_back();
+            while (true) {
+                name = list.join(" ") + " " + QString::number(last);
+                if (_styles->edgeStyles()->style(name) == nullptr) break;
+                ++last;
+            }
+        } else {
+            last = 1;
+        }
+        name = list.join(" ") + " " + QString::number(last);
+
+        // add the style to the current category
+        Style *s = new Style(name, _activeStyle->data()->copy());
+        _styles->edgeStyles()->addStyle(s);
+
+        // set dirty flag and select the newly-added style
+        setDirty(true);
+        selectEdgeStyle(_styles->edgeStyles()->numInCategory()-1);
+    }
+}
+
 void StyleEditor::on_edgeStyleDown_clicked()
 {
     if (_edgeStyleIndex.isValid()) {
@@ -724,8 +792,8 @@ void StyleEditor::on_edgeStyleDown_clicked()
 
 void StyleEditor::on_save_clicked()
 {
-    save();
-    close();
+    if (save())
+        close();
 }
 
 void StyleEditor::on_currentCategory_currentIndexChanged(int)
@@ -734,17 +802,40 @@ void StyleEditor::on_currentCategory_currentIndexChanged(int)
 }
 
 
-void StyleEditor::save()
+bool StyleEditor::save() // tries to save, returns true if saved
 {
-    QString p = tikzit->styleFilePath();
+    // check parsing of the new style
+    _canParse = _styles->checkStyles();
+    if (!_canParse) {
+        qDebug() << "Style error, not saving";
+        QMessageBox::StandardButton resBtn = QMessageBox::question(
+                    this, "Parse error",
+                    "Parsing error. Are you sure you want to save ? \nYou will not be able to open your styles in tikzit afterwards, you will need to correct it manually first.",
+                    QMessageBox::No | QMessageBox::Yes,
+                    QMessageBox::Yes);
 
-    if (_styles->saveStyles(p)) {
-        setDirty(false);
-        tikzit->loadStyles(p);
+        if (resBtn == QMessageBox::Yes) {
+            _canParse = true;
+        }
+    }
+
+    if (_canParse){
+        QString p = tikzit->styleFilePath();
+
+        if (_styles->saveStyles(p)) {
+            setDirty(false);
+            tikzit->loadStyles(p);
+
+            return true;
+        } else {
+            QMessageBox::warning(0,
+                "Unabled to save style file",
+                "Unable to write to file: '" + tikzit->styleFile() + "'.");
+
+            return false;
+        }
     } else {
-        QMessageBox::warning(0,
-            "Unabled to save style file",
-            "Unable to write to file: '" + tikzit->styleFile() + "'.");
+        return false;
     }
 }
 

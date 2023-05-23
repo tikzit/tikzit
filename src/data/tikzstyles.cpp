@@ -78,6 +78,13 @@ bool TikzStyles::saveStyles(QString fileName)
     return false;
 }
 
+bool TikzStyles::checkStyles()
+{
+    TikzStyles style;
+    TikzAssembler ass(&style);
+    return ass.parse(tikz());
+}
+
 void TikzStyles::refreshModels(QStandardItemModel *nodeModel, QStandardItemModel *edgeModel, QString category, bool includeNone)
 {
     nodeModel->clear();
