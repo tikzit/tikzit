@@ -89,7 +89,7 @@ void ToolPalette::setCurrentTool(ToolPalette::Tool tool)
         edge->setChecked(true);
         break;
     case CROP:
-        crop->setChecked(true);
+        /* crop->setChecked(true); */
         break;
     }
 }
