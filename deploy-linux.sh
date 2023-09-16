@@ -97,18 +97,18 @@ cp --no-dereference $LIBDIR/libssl.so* lib
 cp --no-dereference $LIBDIR/libcrypto.so* lib
 
 # add poppler libs
-cp --no-dereference $LIBDIR/libpoppler.so* lib
-cp --no-dereference $LIBDIR/libpoppler-cpp.so* lib
+# cp --no-dereference $LIBDIR/libpoppler.so* lib
+# cp --no-dereference $LIBDIR/libpoppler-cpp.so* lib
 
 # add dependencies of poppler that are on Ubuntu 18.04,
 # but maybe not other distros...
-cp --no-dereference $LIBDIR/libgraphite2.so.3* lib
-cp --no-dereference $LIBDIR/libharfbuzz.so.0* lib
-cp --no-dereference $LIBDIR/libjbig.so.0* lib
-cp --no-dereference $LIBDIR/libjpeg.so.8* lib
-cp --no-dereference $LIBDIR/liblcms2.so.2* lib
-cp --no-dereference $LIBDIR/libpng16.so.16* lib
-cp --no-dereference $SYSLIBDIR/libz.so.1* lib
+# cp --no-dereference $LIBDIR/libgraphite2.so.3* lib
+# cp --no-dereference $LIBDIR/libharfbuzz.so.0* lib
+# cp --no-dereference $LIBDIR/libjbig.so.0* lib
+# cp --no-dereference $LIBDIR/libjpeg.so.8* lib
+# cp --no-dereference $LIBDIR/liblcms2.so.2* lib
+# cp --no-dereference $LIBDIR/libpng16.so.16* lib
+# cp --no-dereference $SYSLIBDIR/libz.so.1* lib
 
 # add Qt plugins used by TikZiT
 cp -R $PLUGINDIR/platforms plugins
