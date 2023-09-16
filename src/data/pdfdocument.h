@@ -21,6 +21,7 @@ public:
     QSize size();
 private:
     QPdfDocument *_doc1;
+    QByteArray _data;
 };
 
 #endif // PDFDOCUMENT_H

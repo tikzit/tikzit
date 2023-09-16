@@ -11,6 +11,8 @@ PdfDocument::PdfDocument(QString file, QObject *parent) : QObject(parent)
     _doc1 = new QPdfDocument(this);
     QFile f(file);
     f.open(QIODevice::ReadOnly);
+    _data = f.readAll();
+    f.reset();
     _doc1->load(&f);
     f.close();
     //_doc1->load(file);
@@ -55,7 +57,12 @@ bool PdfDocument::exportImage(QString file, const char *format, QSize outputSize
 bool PdfDocument::exportPdf(QString file)
 {
     if (!isValid()) return false;
-//    return _doc->save(file.toStdString());
+    QFile f(file);
+    if (f.open(QIODevice::WriteOnly)) {
+        f.write(_data);
+        f.close();
+        return true;
+    }
     return false;
 }
 
