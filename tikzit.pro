@@ -1,6 +1,6 @@
 # CONFIG += debug
 
-QT += core gui widgets network
+QT += core gui widgets network pdf
 
 VERSION = 2.1.7
 
@@ -131,20 +131,6 @@ FORMS += src/gui/mainwindow.ui \
     src/gui/preferencedialog.ui
 
 INCLUDEPATH += src src/gui src/data
-
-# link to pre-compiled poppler libs on windows
-win32 {
-    INCLUDEPATH += poppler-21.11.0/Library/include
-    LIBS += -L"$$PWD/poppler-21.11.0/Library/bin"
-    LIBS += -L"$$PWD/poppler-21.11.0/Library/lib"
-}
-
-macx {
-    INCLUDEPATH += /usr/local/opt/poppler/include
-    LIBS += -L/usr/local/opt/poppler/lib
-}   
-
-LIBS += -lpoppler-cpp
 
 DISTFILES +=
 

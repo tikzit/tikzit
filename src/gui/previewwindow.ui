@@ -56,6 +56,9 @@
        </property>
        <item>
         <widget class="QScrollArea" name="scrollArea">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);</string>
+         </property>
          <property name="verticalScrollBarPolicy">
           <enum>Qt::ScrollBarAlwaysOff</enum>
          </property>
@@ -71,7 +74,7 @@
             <x>0</x>
             <y>0</y>
             <width>595</width>
-            <height>451</height>
+            <height>444</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
