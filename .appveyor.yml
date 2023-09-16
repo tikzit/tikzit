@@ -23,7 +23,7 @@ for:
     - brew install poppler
 
   build_script:
-    - 'export QTDIR="$HOME/Qt/5.15/clang_64"'
+    - 'export QTDIR="$HOME/Qt/6.4/clang_64"'
     - 'export PATH="$QTDIR/bin:$PATH"'
     - qmake -v
     - qmake -r
@@ -39,10 +39,10 @@ for:
 
   install:
     - sudo apt-get update
-    - sudo apt-get -y install flex bison libpoppler-cpp-dev libgl-dev
+    - sudo apt-get -y install flex bison
 
   build_script:
-    - 'export QTDIR="$HOME/Qt/5.15/gcc_64"'
+    - 'export QTDIR="$HOME/Qt/6.4/gcc_64"'
     - 'export PATH="$QTDIR/bin:$PATH"'
     - qmake -v
     - qmake
@@ -61,13 +61,8 @@ for:
     - choco install winflexbison
     - cd C:\projects\tikzit
 
-  before_build:
-    # - ps: (new-object net.webclient).DownloadFile('http://tikzit.github.io/download/win32-deps.zip', 'c:\projects\tikzit\win32-deps.zip')
-    - ps: (new-object net.webclient).DownloadFile('https://github.com/oschwartz10612/poppler-windows/releases/download/v21.11.0-0/Release-21.11.0-0.zip', 'c:\projects\tikzit\poppler.zip')
-    - 7z x poppler.zip
-
   build_script:
-    - 'call "C:\Qt\6.2\msvc2019_64\bin\qtenv2.bat"'
+    - 'call "C:\Qt\6.4\msvc2019_64\bin\qtenv2.bat"'
     - 'call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"'
     - qmake -v
     - qmake
