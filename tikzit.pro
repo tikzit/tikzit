@@ -2,7 +2,7 @@
 
 QT += core gui widgets network pdf
 
-VERSION = 2.1.7
+VERSION = 2.2
 
 test {
     CONFIG += testcase

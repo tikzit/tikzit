@@ -49,7 +49,7 @@
 #ifndef TIKZIT_H
 #define TIKZIT_H
 
-#define TIKZIT_VERSION "2.1.6"
+#define TIKZIT_VERSION "2.2"
 
 #include "mainwindow.h"
 #include "mainmenu.h"
