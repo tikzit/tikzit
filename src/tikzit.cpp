@@ -216,6 +216,14 @@ void Tikzit::removeWindow(MainWindow *w)
     }
 }
 
+bool Tikzit::dialogStatus() const {
+    return _dialog_active;
+}
+
+void Tikzit::setDialogStatus(bool active) {
+    _dialog_active = active;
+}
+
 void Tikzit::open()
 {
     QSettings settings("tikzit", "tikzit");
@@ -449,6 +457,7 @@ void Tikzit::makePreview()
         // do nothing.
         _preview->restorePosition();
         _preview->raise();
+        _preview->activateWindow();
     }
 }
 

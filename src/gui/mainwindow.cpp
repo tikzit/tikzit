@@ -147,6 +147,7 @@ void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::ActivationChange && isActiveWindow()) {
         tikzit->setActiveWindow(this);
+        tikzit->setDialogStatus(false);
         //tikzit->stylePalette()->raise();
     }
     QMainWindow::changeEvent(event);
