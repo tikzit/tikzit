@@ -329,6 +329,11 @@
       <string>rectangle</string>
      </property>
     </item>
+    <item>
+     <property name="text">
+      <string>triangle</string>
+     </property>
+    </item>
    </widget>
    <widget class="QCheckBox" name="hasTikzitShape">
     <property name="geometry">
