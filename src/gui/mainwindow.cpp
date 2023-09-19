@@ -59,12 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_tikzDocument->undoStack(), SIGNAL(cleanChanged(bool)), this, SLOT(updateFileName()));
     _menu->addDocks(createPopupMenu());
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
-    ui->tikzSource->setTabStopDistance(20.0);
-#else
-    ui->tikzSource->setTabStopWidth(20);
-#endif
-
+    setFont();
 
     QVariant state = settings.value(QString("windowState-main-qt") + qVersion());
     if (state.isValid()) {
@@ -79,6 +74,22 @@ MainWindow::~MainWindow()
 {
     tikzit->removeWindow(this);
     delete ui;
+}
+
+void MainWindow::setFont()
+{
+    QSettings settings("tikzit", "tikzit");
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+    ui->tikzSource->setTabStopDistance(20.0);
+#else
+    ui->tikzSource->setTabStopWidth(20);
+#endif
+
+    QFont font("Courier New", 12);
+    if (settings.contains("source-font")) {
+        font.fromString(settings.value("source-font").toString());
+    }
+    ui->tikzSource->setFont(font);
 }
 
 void MainWindow::restorePosition()

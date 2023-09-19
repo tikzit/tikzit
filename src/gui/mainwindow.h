@@ -30,6 +30,7 @@ public:
     ~MainWindow();
 
     void restorePosition();
+    void setFont();
     void open(QString fileName);
     int windowId() const;
     TikzView *tikzView() const;

@@ -1,7 +1,9 @@
 #include "preferencedialog.h"
+#include "tikzit.h"
 #include "ui_preferencedialog.h"
 
 #include <QColorDialog>
+#include <QFontDialog>
 #include <QFileDialog>
 #include <QSettings>
 
@@ -35,6 +37,10 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     else
         ui->styleIconSpacing->setText("48");
 
+    QString fontString = settings.value("source-font", QFont("Courier New", 12).toString()).toString();
+    ui->sourceFont->setText(fontString);
+    connect(ui->sourceFontPick, SIGNAL(clicked()), this, SLOT(sourceFontPickClick()));
+
     ui->selectNewEdges->setChecked(settings.value("select-new-edges", false).toBool());
     ui->shiftToScroll->setChecked(settings.value("shift-to-scroll", false).toBool());
 }
@@ -60,6 +66,9 @@ void PreferenceDialog::accept()
     settings.setValue("grid-color-minor", color(ui->minorColor));
     settings.setValue("select-new-edges", ui->selectNewEdges->isChecked());
     settings.setValue("shift-to-scroll", ui->shiftToScroll->isChecked());
+    settings.setValue("source-font", ui->sourceFont->text());
+
+    tikzit->activeWindow()->setFont();
     QDialog::accept();
 }
 
@@ -80,6 +89,15 @@ void PreferenceDialog::colorClick()
                         QColorDialog::DontUseNativeDialog);
         if (col.isValid()) setColor(btn, col);
     }
+}
+
+void PreferenceDialog::sourceFontPickClick()
+{
+    QFont currentFont;
+    currentFont.fromString(ui->sourceFont->text());
+    bool ok = false;
+    QFont font = QFontDialog::getFont(&ok, currentFont, this);
+    if (ok) ui->sourceFont->setText(font.toString());
 }
 
 void PreferenceDialog::on_autoPdflatex_stateChanged(int state)

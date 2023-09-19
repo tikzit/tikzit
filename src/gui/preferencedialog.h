@@ -18,6 +18,7 @@ public:
 protected slots:
     void accept() override;
     void colorClick();
+    void sourceFontPickClick();
     void on_resetColors_clicked();
     void on_autoPdflatex_stateChanged(int state);
     void on_browsePdflatex_clicked();
