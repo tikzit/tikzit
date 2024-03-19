@@ -180,6 +180,12 @@ property:
         free($3);
         $$ = p;
     }
+	| val "="
+    {
+        GraphElementProperty *p = new GraphElementProperty(QString($1),"");
+        free($1);
+        $$ = p;
+    }
 	| val
     {
         GraphElementProperty *a = new GraphElementProperty(QString($1));
