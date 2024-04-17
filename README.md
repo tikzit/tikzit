@@ -47,7 +47,7 @@ Building on other distributions should be similar. For Qt setup, you can find in
 You'll need developer tools, Qt5, and Poppler (with Qt bindings) installed. You can install these via Homebrew with the following commands:
 
     brew install qt5
-    brew install poppler --with-qt
+    brew install poppler-qt5
 
 This doesn't add Qt binaries to the `$PATH` by default, so you may wish to either run:
 
