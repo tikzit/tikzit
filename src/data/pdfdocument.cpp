@@ -12,16 +12,14 @@ PdfDocument::PdfDocument(QString file, QObject *parent) : QObject(parent)
     QFile f(file);
     f.open(QIODevice::ReadOnly);
     _data = f.readAll();
-    f.reset();
-    _doc1->load(&f);
     f.close();
-    //_doc1->load(file);
+    _doc1->load(file);
 }
 
 void PdfDocument::renderTo(QLabel *label, QRect rect)
 {
     if (!isValid()) return;
-    QSizeF sz = _doc1->pagePointSize(0);
+    QSizeF sz = _doc1->pageSize(0);
     qreal w0 = sz.width();
     qreal h0 = sz.height();
     qreal ratio = label->devicePixelRatioF();
@@ -103,7 +101,7 @@ QImage PdfDocument::asImage(QSize outputSize)
 QSize PdfDocument::size()
 {
     if (isValid()) {
-        QSizeF sizef = _doc1->pagePointSize(0);
+        QSizeF sizef = _doc1->pageSize(0);
         return QSize(static_cast<int>(sizef.width()), static_cast<int>(sizef.height()));
     } else {
         return QSize();
