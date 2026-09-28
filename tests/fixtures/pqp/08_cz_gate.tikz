@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (q1_in) at (-1.5, 0.8) {};
+		\node [style=none] (q2_in) at (-1.5, -0.8) {};
+		\node [style=Z dot] (z1) at (0, 0.8) {};
+		\node [style=H] (h) at (0, 0) {$H$};
+		\node [style=Z dot] (z2) at (0, -0.8) {};
+		\node [style=none] (q1_out) at (1.5, 0.8) {};
+		\node [style=none] (q2_out) at (1.5, -0.8) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire] (q1_in) to (z1);
+		\draw [style=wire] (z1) to (q1_out);
+		\draw [style=wire] (q2_in) to (z2);
+		\draw [style=wire] (z2) to (q2_out);
+		\draw [style=wire] (z1) to (h);
+		\draw [style=wire] (h) to (z2);
+	\end{pgfonlayer}
+\end{tikzpicture}

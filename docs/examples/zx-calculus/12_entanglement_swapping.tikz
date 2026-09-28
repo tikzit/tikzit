@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (q1) at (-2.0, 1.2) {};
+		\node [style=none] (q2) at (-0.7, 1.2) {};
+		\node [style=none] (q3) at (0.7, 1.2) {};
+		\node [style=none] (q4) at (2.0, 1.2) {};
+		\node [style=none] (meas_l) at (-0.7, 0) {};
+		\node [style=none] (meas_r) at (0.7, 0) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire, in=-90, out=-90, looseness=2.2] (q1) to (q2);
+		\draw [style=wire, in=-90, out=-90, looseness=2.2] (q3) to (q4);
+		\draw [style=wire, in=90, out=90, looseness=2.2] (meas_l) to (meas_r);
+		\draw [style=wire] (q2) to (meas_l);
+		\draw [style=wire] (q3) to (meas_r);
+	\end{pgfonlayer}
+\end{tikzpicture}

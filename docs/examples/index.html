@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikZiT ZX-Calculus Reference Corpus | Picturing Quantum Processes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#151f33',
+                            950: '#070b14',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        code, pre, .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        html.light {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        html.light .diagram-card {
+            background-color: #ffffff;
+            border-color: #e2e8f0;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+        html.light .diagram-card h3 {
+            color: #0f172a;
+        }
+        html.light .bg-slate-900 {
+            background-color: #ffffff;
+        }
+        html.light .bg-slate-950 {
+            background-color: #f1f5f9;
+        }
+        html.light .bg-slate-950\/60, html.light .bg-slate-950\/70, html.light .bg-slate-950\/80 {
+            background-color: #f8fafc;
+        }
+        html.light .border-slate-800, html.light .border-slate-800\/60, html.light .border-slate-800\/80 {
+            border-color: #e2e8f0;
+        }
+        html.light .text-white {
+            color: #0f172a;
+        }
+        html.light .text-slate-400 {
+            color: #64748b;
+        }
+        html.light .text-slate-300 {
+            color: #475569;
+        }
+        html.light header {
+            background: linear-gradient(180deg, #f1f5f9 0%, #f8fafc 100%);
+            border-color: #e2e8f0;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-slate-950 font-black text-xl">
+                    ZX
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                        TikZiT ZX-Calculus Corpus
+                        <span class="text-[10px] px-2 py-0.5 font-mono font-medium rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                            Sprint 00-A Golden Master
+                        </span>
+                    </h1>
+                    <p class="text-xs text-slate-400">
+                        12 Canonical Ground-Truth String Diagrams from <em>Picturing Quantum Processes</em>
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="relative w-64">
+                    <input type="text"
+                           id="search-input"
+                           placeholder="Search diagrams, formulas..."
+                           class="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-900/90 border border-slate-800 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-colors" />
+                    <svg class="w-4 h-4 text-slate-500 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button type="button"
+                        id="theme-toggle-btn"
+                        class="p-2 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition-colors"
+                        title="Toggle dark / light theme">
+                    <svg id="theme-icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg id="theme-icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-3 pt-1 flex items-center gap-2 overflow-x-auto scrollbar-none">
+            
+        <button class="filter-btn px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all active bg-emerald-600 text-white border-emerald-500" data-filter="all">
+            All
+        </button>
+    
+        <button class="filter-btn px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white" data-filter="Elementary Spiders">
+            Elementary Spiders
+        </button>
+    
+        <button class="filter-btn px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white" data-filter="Dualities & Invariants">
+            Dualities & Invariants
+        </button>
+    
+        <button class="filter-btn px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white" data-filter="Bialgebra & Hopf Laws">
+            Bialgebra & Hopf Laws
+        </button>
+    
+        <button class="filter-btn px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white" data-filter="Quantum Gates & Circuits">
+            Quantum Gates & Circuits
+        </button>
+    
+        <button class="filter-btn px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white" data-filter="Protocols & Entangled States">
+            Protocols & Entangled States
+        </button>
+    
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div id="diagrams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="01_spider_fusion"
+             data-category="Elementary Spiders">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Elementary Spiders
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 9.1: Spiders & The Fusion Rule">
+                        Chapter 9.1
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">Spider Fusion (Z & X Spiders)</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>Z(\alpha) \circ Z(\beta) = Z(\alpha + \beta)</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/01_spider_fusion.svg" alt="Spider Fusion (Z & X Spiders)" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    The foundational rewrite rule of ZX-calculus: whenever two spiders of the same color are connected by one or more wires, they fuse into a single spider whose phase is the sum of the individual phases.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>6</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>6</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>649B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>6834B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('01_spider_fusion')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('01_spider_fusion', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/01_spider_fusion.svg" download="01_spider_fusion.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="02_identity_spiders"
+             data-category="Elementary Spiders">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Elementary Spiders
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 9.1: The Identity Rule">
+                        Chapter 9.1
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">Identity Wires & Phase-Zero Spiders</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>Z(0) = \text{id}_A</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/02_identity_spiders.svg" alt="Identity Wires & Phase-Zero Spiders" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    A 2-legged spider with phase 0 is mathematically identical to a straight identity wire. This rule allows inserting or removing spiders along any quantum communication channel without altering quantum state.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>6</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>3</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>520B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>2781B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('02_identity_spiders')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('02_identity_spiders', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/02_identity_spiders.svg" download="02_identity_spiders.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="03_yanking_cup_cap"
+             data-category="Dualities & Invariants">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Dualities & Invariants
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 4.2: Compact Closed Categories & Cups/Caps">
+                        Chapter 4.2
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">The Yanking Identity (Snake Equation)</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>(\text{id} \otimes \epsilon) \circ (\eta \otimes \text{id}) = \text{id}</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/03_yanking_cup_cap.svg" alt="The Yanking Identity (Snake Equation)" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    The snake / yanking equation in compact closed monoidal categories. Pulling a wire with a cup and a cap tightens it into a straight wire, proving that cup and cap are dual adjoint morphisms.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>6</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>4</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>634B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>1363B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('03_yanking_cup_cap')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('03_yanking_cup_cap', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/03_yanking_cup_cap.svg" download="03_yanking_cup_cap.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="04_cup_cap_duality"
+             data-category="Dualities & Invariants">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Dualities & Invariants
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 4.1: States and Effects">
+                        Chapter 4.1
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">Bell State Preparation & Bell Effect (Cup & Cap)</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>\eta: I \to A \otimes A, \quad \epsilon: A \otimes A \to I</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/04_cup_cap_duality.svg" alt="Bell State Preparation & Bell Effect (Cup & Cap)" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    A cup represents the unnormalized maximally entangled Bell state preparation (|00> + |11>), while a cap represents the corresponding Bell projection effect (measurement).
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>6</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>2</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>613B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>15516B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('04_cup_cap_duality')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('04_cup_cap_duality', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/04_cup_cap_duality.svg" download="04_cup_cap_duality.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="05_bialgebra_law"
+             data-category="Bialgebra & Hopf Laws">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Bialgebra & Hopf Laws
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 9.3: Bialgebra and Commutation">
+                        Chapter 9.3
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">The Bialgebra Interaction Law</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>\delta_Z \circ \mu_X = (\mu_X \otimes \mu_X) \circ \sigma \circ (\delta_Z \otimes \delta_Z)</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/05_bialgebra_law.svg" alt="The Bialgebra Interaction Law" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    Green copy spiders commute with red XOR addition spiders via a complete bipartite cross-connection, capturing the algebraic essence of quantum linearity and copy-sum duality.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>6</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>5</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>582B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>3372B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('05_bialgebra_law')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('05_bialgebra_law', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/05_bialgebra_law.svg" download="05_bialgebra_law.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="06_hadamard_color_change"
+             data-category="Bialgebra & Hopf Laws">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Bialgebra & Hopf Laws
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 9.2: The Color Change Rule">
+                        Chapter 9.2
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">Hadamard Conjugation & Color Change</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>H \circ Z(\alpha) \circ H = X(\alpha)</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/06_hadamard_color_change.svg" alt="Hadamard Conjugation & Color Change" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    Surrounding a green Z-spider with Hadamard boxes rotates the computational basis into the X-basis, transforming green into red while perfectly preserving the phase angle.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>5</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>4</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>505B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>7006B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('06_hadamard_color_change')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('06_hadamard_color_change', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/06_hadamard_color_change.svg" download="06_hadamard_color_change.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="07_cnot_gate"
+             data-category="Quantum Gates & Circuits">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Quantum Gates & Circuits
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 5.3: Controlled Quantum Operations">
+                        Chapter 5.3
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">CNOT Gate (Controlled-NOT)</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>|c, t\rangle \mapsto |c, c \oplus t\rangle</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/07_cnot_gate.svg" alt="CNOT Gate (Controlled-NOT)" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    The CNOT entangling gate represented as a green Z-copy dot on the control wire connected to a red X-addition dot on the target wire.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>6</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>5</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>630B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>3247B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('07_cnot_gate')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('07_cnot_gate', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/07_cnot_gate.svg" download="07_cnot_gate.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="08_cz_gate"
+             data-category="Quantum Gates & Circuits">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Quantum Gates & Circuits
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 5.3: Phase Gates and CZ">
+                        Chapter 5.3
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">Controlled-Z (CZ) Gate</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>|c, t\rangle \mapsto (-1)^{ct} |c, t\rangle</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/08_cz_gate.svg" alt="Controlled-Z (CZ) Gate" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    A symmetric Controlled-Phase gate formed by two green Z-dots bridged by a Hadamard H-box, demonstrating the bilateral symmetry of phase entanglement.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>7</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>6</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>678B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>6299B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('08_cz_gate')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('08_cz_gate', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/08_cz_gate.svg" download="08_cz_gate.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="09_swap_gate"
+             data-category="Quantum Gates & Circuits">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Quantum Gates & Circuits
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 3.2: Symmetric Monoidal Categories">
+                        Chapter 3.2
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">Swap Gate (Symmetric Braiding)</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>\sigma: A \otimes B \to B \otimes A</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/09_swap_gate.svg" alt="Swap Gate (Symmetric Braiding)" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    The symmetry isomorphism (wire crossing) swapping two quantum subsystems without phase alteration.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>4</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>2</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>428B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>1025B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('09_swap_gate')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('09_swap_gate', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/09_swap_gate.svg" download="09_swap_gate.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="10_teleportation"
+             data-category="Protocols & Entangled States">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Protocols & Entangled States
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 4.3 & 10.1: Quantum Teleportation in ZX">
+                        Chapter 4.3 & 10.1
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">Quantum Teleportation Protocol</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>|\psi\rangle \otimes |\text{EPR}\rangle \mapsto \text{Meas} \to \text{Correction} \to |\psi\rangle</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/10_teleportation.svg" alt="Quantum Teleportation Protocol" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    The full diagrammatic quantum teleportation protocol: unknown state psi and an entangled Bell pair are combined in a Bell measurement; classical measurement outcomes (dashed lines) feed forward to conditionally apply Pauli X and Z corrections.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>8</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>9</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>991B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>5458B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('10_teleportation')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('10_teleportation', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/10_teleportation.svg" download="10_teleportation.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="11_ghz_state"
+             data-category="Protocols & Entangled States">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Protocols & Entangled States
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 11.1: Multipartite Entanglement">
+                        Chapter 11.1
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">GHZ Tripartite Entangled State</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>|\text{GHZ}\rangle = \frac{1}{\sqrt{2}}(|000\rangle + |111\rangle)</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/11_ghz_state.svg" alt="GHZ Tripartite Entangled State" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    The 3-qubit Greenberger–Horne–Zeilinger state represented as a central green Z-spider broadcasting the 0-phase state into three entangled output wires.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>4</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>3</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>440B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>1953B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('11_ghz_state')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('11_ghz_state', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/11_ghz_state.svg" download="11_ghz_state.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="diagram-card bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-950/20 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm group"
+             data-diagram-id="12_entanglement_swapping"
+             data-category="Protocols & Entangled States">
+            <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400">
+                        Protocols & Entangled States
+                    </span>
+                    <span class="text-xs text-slate-400 font-mono" title="Chapter 4.4: Entanglement Swapping and Networks">
+                        Chapter 4.4
+                    </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">Entanglement Swapping Protocol</h3>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 mb-4 font-mono text-xs text-emerald-400/90 overflow-x-auto">
+                    <code>|\text{EPR}_{12}\rangle \otimes |\text{EPR}_{34}\rangle \xrightarrow{\text{Meas}_{23}} |\text{EPR}_{14}\rangle</code>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center min-h-[220px] mb-4 relative overflow-hidden group-hover:border-slate-700 transition-colors">
+                    <img src="zx-calculus/12_entanglement_swapping.svg" alt="Entanglement Swapping Protocol" class="max-h-44 max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    Two initially independent entangled pairs (cups 1-2 and 3-4) undergo a joint Bell measurement (cap 2-3) on their inner qubits, creating non-local quantum entanglement between qubits 1 and 4 without direct interaction.
+                </p>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-4 gap-1.5 py-2.5 px-3 bg-slate-950/70 border border-slate-800/60 rounded-xl mb-4 text-[11px] font-mono text-slate-300 text-center">
+                    <div><span class="text-slate-500 block text-[10px]">NODES</span>6</div>
+                    <div><span class="text-slate-500 block text-[10px]">EDGES</span>5</div>
+                    <div><span class="text-slate-500 block text-[10px]">TIKZ</span>692B</div>
+                    <div><span class="text-slate-500 block text-[10px]">SVG</span>2179B</div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/80">
+                    <button type="button"
+                            onclick="openCodeModal('12_entanglement_swapping')"
+                            class="flex-1 px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-950">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        View TikZ
+                    </button>
+                    <button type="button"
+                            onclick="copyTikzCode('12_entanglement_swapping', this)"
+                            class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                            title="Copy TikZ code">
+                        Copy
+                    </button>
+                    <a href="zx-calculus/12_entanglement_swapping.svg" download="12_entanglement_swapping.svg"
+                       class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                       title="Download SVG">
+                        SVG
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 py-6 text-center text-xs text-slate-400 bg-slate-950">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>TikZiT Web Project &middot; Monoidal Categories &amp; ZX-Calculus Reference Corpus</p>
+            <p class="font-mono text-[11px] text-slate-400">PQP Palette: Z=#5AD25A | X=#EB4B4B | H=#FFDC46</p>
+        </div>
+    </footer>
+
+    <!-- Code Inspection Modal -->
+    <div id="code-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+                <div>
+                    <h3 id="modal-title" class="text-base font-bold text-white">TikZ Source</h3>
+                    <p id="modal-subtitle" class="text-xs font-mono text-emerald-400"></p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button"
+                            id="modal-copy-btn"
+                            class="px-3 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-colors">
+                        Copy Code
+                    </button>
+                    <button type="button"
+                            onclick="closeCodeModal()"
+                            class="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 bg-slate-950">
+                <pre class="text-xs font-mono text-emerald-400/90 whitespace-pre leading-relaxed select-all"><code id="modal-code"></code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Embedded TikZ Sources for Modal -->
+    <script>
+        const TIKZ_DATA = {
+  "01_spider_fusion": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (in1) at (-2, 0.8) {};\n\t\t\\node [style=none] (in2) at (-2, -0.8) {};\n\t\t\\node [style=Z] (z1) at (-1, 0) {$\\alpha$};\n\t\t\\node [style=Z] (z2) at (1, 0) {$\\beta$};\n\t\t\\node [style=none] (out1) at (2, 0.8) {};\n\t\t\\node [style=none] (out2) at (2, -0.8) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire] (in1) to (z1);\n\t\t\\draw [style=wire] (in2) to (z1);\n\t\t\\draw [style=wire, bend left=35] (z1) to (z2);\n\t\t\\draw [style=wire, bend right=35] (z1) to (z2);\n\t\t\\draw [style=wire] (z2) to (out1);\n\t\t\\draw [style=wire] (z2) to (out2);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "02_identity_spiders": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (in) at (-2, 0) {};\n\t\t\\node [style=Z dot] (z) at (-0.5, 0) {};\n\t\t\\node [style=none] (mid1) at (0.5, 0) {};\n\t\t\\node [style=none] (eq) at (1.0, 0) {$=$};\n\t\t\\node [style=none] (wire_in) at (1.5, 0) {};\n\t\t\\node [style=none] (wire_out) at (3.0, 0) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire] (in) to (z);\n\t\t\\draw [style=wire] (z) to (mid1);\n\t\t\\draw [style=wire] (wire_in) to (wire_out);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "03_yanking_cup_cap": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (in) at (-1.6, -1.2) {};\n\t\t\\node [style=none] (cup_l) at (-0.6, -1.2) {};\n\t\t\\node [style=none] (cup_r) at (0.4, 0) {};\n\t\t\\node [style=none] (cap_l) at (0.4, 0) {};\n\t\t\\node [style=none] (cap_r) at (1.4, 1.2) {};\n\t\t\\node [style=none] (out) at (2.0, 1.2) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire] (in) to (cup_l);\n\t\t\\draw [style=wire, in=-90, out=-90, looseness=2.2] (cup_l) to (cup_r);\n\t\t\\draw [style=wire, in=90, out=90, looseness=2.2] (cap_l) to (cap_r);\n\t\t\\draw [style=wire] (cap_r) to (out);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "04_cup_cap_duality": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (cup_l) at (-1.5, 0.8) {};\n\t\t\\node [style=none] (cup_r) at (-0.5, 0.8) {};\n\t\t\\node [style=none] (cup_lbl) at (-1.0, -0.6) {$\\eta$ (Cup State)};\n\t\t\\node [style=none] (cap_l) at (0.8, -0.8) {};\n\t\t\\node [style=none] (cap_r) at (1.8, -0.8) {};\n\t\t\\node [style=none] (cap_lbl) at (1.3, 0.6) {$\\epsilon$ (Cap Effect)};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire, in=-90, out=-90, looseness=2.0] (cup_l) to (cup_r);\n\t\t\\draw [style=wire, in=90, out=90, looseness=2.0] (cap_l) to (cap_r);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "05_bialgebra_law": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (in1) at (-2.0, 0.7) {};\n\t\t\\node [style=none] (in2) at (-2.0, -0.7) {};\n\t\t\\node [style=X dot] (x) at (-1.0, 0) {};\n\t\t\\node [style=Z dot] (z) at (1.0, 0) {};\n\t\t\\node [style=none] (out1) at (2.0, 0.7) {};\n\t\t\\node [style=none] (out2) at (2.0, -0.7) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire] (in1) to (x);\n\t\t\\draw [style=wire] (in2) to (x);\n\t\t\\draw [style=wire] (x) to (z);\n\t\t\\draw [style=wire] (z) to (out1);\n\t\t\\draw [style=wire] (z) to (out2);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "06_hadamard_color_change": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (in) at (-2.2, 0) {};\n\t\t\\node [style=H] (h1) at (-1.2, 0) {$H$};\n\t\t\\node [style=Z] (spider) at (0, 0) {$\\alpha$};\n\t\t\\node [style=H] (h2) at (1.2, 0) {$H$};\n\t\t\\node [style=none] (out) at (2.2, 0) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire] (in) to (h1);\n\t\t\\draw [style=wire] (h1) to (spider);\n\t\t\\draw [style=wire] (spider) to (h2);\n\t\t\\draw [style=wire] (h2) to (out);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "07_cnot_gate": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (ctrl_in) at (-1.5, 0.8) {};\n\t\t\\node [style=none] (tgt_in) at (-1.5, -0.8) {};\n\t\t\\node [style=Z dot] (ctrl) at (0, 0.8) {};\n\t\t\\node [style=X dot] (tgt) at (0, -0.8) {};\n\t\t\\node [style=none] (ctrl_out) at (1.5, 0.8) {};\n\t\t\\node [style=none] (tgt_out) at (1.5, -0.8) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire] (ctrl_in) to (ctrl);\n\t\t\\draw [style=wire] (ctrl) to (ctrl_out);\n\t\t\\draw [style=wire] (tgt_in) to (tgt);\n\t\t\\draw [style=wire] (tgt) to (tgt_out);\n\t\t\\draw [style=wire] (ctrl) to (tgt);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "08_cz_gate": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (q1_in) at (-1.5, 0.8) {};\n\t\t\\node [style=none] (q2_in) at (-1.5, -0.8) {};\n\t\t\\node [style=Z dot] (z1) at (0, 0.8) {};\n\t\t\\node [style=H] (h) at (0, 0) {$H$};\n\t\t\\node [style=Z dot] (z2) at (0, -0.8) {};\n\t\t\\node [style=none] (q1_out) at (1.5, 0.8) {};\n\t\t\\node [style=none] (q2_out) at (1.5, -0.8) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire] (q1_in) to (z1);\n\t\t\\draw [style=wire] (z1) to (q1_out);\n\t\t\\draw [style=wire] (q2_in) to (z2);\n\t\t\\draw [style=wire] (z2) to (q2_out);\n\t\t\\draw [style=wire] (z1) to (h);\n\t\t\\draw [style=wire] (h) to (z2);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "09_swap_gate": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (in1) at (-1.5, 0.8) {};\n\t\t\\node [style=none] (in2) at (-1.5, -0.8) {};\n\t\t\\node [style=none] (out1) at (1.5, 0.8) {};\n\t\t\\node [style=none] (out2) at (1.5, -0.8) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire, in=180, out=0] (in1) to (out2);\n\t\t\\draw [style=wire, in=180, out=0] (in2) to (out1);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "10_teleportation": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (psi) at (-2.5, 1.2) {};\n\t\t\\node [style=Z dot] (z_meas) at (-0.5, 1.2) {};\n\t\t\\node [style=X dot] (x_meas) at (-0.5, 0.3) {};\n\t\t\\node [style=none] (cup_top) at (-1.8, 0.3) {};\n\t\t\\node [style=none] (cup_bot) at (-1.8, -0.8) {};\n\t\t\\node [style=X dot] (x_corr) at (0.8, -0.8) {};\n\t\t\\node [style=Z dot] (z_corr) at (1.6, -0.8) {};\n\t\t\\node [style=none] (out) at (2.5, -0.8) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire] (psi) to (z_meas);\n\t\t\\draw [style=wire] (z_meas) to (x_meas);\n\t\t\\draw [style=wire, in=180, out=180, looseness=2.0] (cup_top) to (cup_bot);\n\t\t\\draw [style=wire] (cup_top) to (x_meas);\n\t\t\\draw [style=wire] (cup_bot) to (x_corr);\n\t\t\\draw [style=wire] (x_corr) to (z_corr);\n\t\t\\draw [style=wire] (z_corr) to (out);\n\t\t\\draw [style=dashed wire, bend left=35] (z_meas) to (x_corr);\n\t\t\\draw [style=dashed wire, in=100, out=-35] (x_meas) to (z_corr);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "11_ghz_state": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=Z dot] (hub) at (0, 0.4) {};\n\t\t\\node [style=none] (leaf1) at (-1.5, -1.0) {};\n\t\t\\node [style=none] (leaf2) at (0, -1.0) {};\n\t\t\\node [style=none] (leaf3) at (1.5, -1.0) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire] (hub) to (leaf1);\n\t\t\\draw [style=wire] (hub) to (leaf2);\n\t\t\\draw [style=wire] (hub) to (leaf3);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n",
+  "12_entanglement_swapping": "\\begin{tikzpicture}\n\t\\begin{pgfonlayer}{nodelayer}\n\t\t\\node [style=none] (q1) at (-2.0, 1.2) {};\n\t\t\\node [style=none] (q2) at (-0.7, 1.2) {};\n\t\t\\node [style=none] (q3) at (0.7, 1.2) {};\n\t\t\\node [style=none] (q4) at (2.0, 1.2) {};\n\t\t\\node [style=none] (meas_l) at (-0.7, 0) {};\n\t\t\\node [style=none] (meas_r) at (0.7, 0) {};\n\t\\end{pgfonlayer}\n\t\\begin{pgfonlayer}{edgelayer}\n\t\t\\draw [style=wire, in=-90, out=-90, looseness=2.2] (q1) to (q2);\n\t\t\\draw [style=wire, in=-90, out=-90, looseness=2.2] (q3) to (q4);\n\t\t\\draw [style=wire, in=90, out=90, looseness=2.2] (meas_l) to (meas_r);\n\t\t\\draw [style=wire] (q2) to (meas_l);\n\t\t\\draw [style=wire] (q3) to (meas_r);\n\t\\end{pgfonlayer}\n\\end{tikzpicture}\n"
+};
+        const MANIFEST_DATA = [
+  {
+    "id": "01_spider_fusion",
+    "title": "Spider Fusion (Z & X Spiders)",
+    "category": "Elementary Spiders",
+    "pqp_ref": "Chapter 9.1: Spiders & The Fusion Rule",
+    "formula": "Z(\\alpha) \\circ Z(\\beta) = Z(\\alpha + \\beta)",
+    "description": "The foundational rewrite rule of ZX-calculus: whenever two spiders of the same color are connected by one or more wires, they fuse into a single spider whose phase is the sum of the individual phases.",
+    "tikz_file": "zx-calculus/01_spider_fusion.tikz",
+    "svg_file": "zx-calculus/01_spider_fusion.svg",
+    "nodes": 6,
+    "edges": 6,
+    "tikz_bytes": 649,
+    "svg_bytes": 6834,
+    "tikz_sha256": "33b9ab0cb2480edc7cd16bf76c4f071ae199b9febf32ef8aca57afb7b9ba0835",
+    "svg_sha256": "37f22abcb45348651dfc8fc144394466daf76bf0fd877a41b3f142b5d4637a3c",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "02_identity_spiders",
+    "title": "Identity Wires & Phase-Zero Spiders",
+    "category": "Elementary Spiders",
+    "pqp_ref": "Chapter 9.1: The Identity Rule",
+    "formula": "Z(0) = \\text{id}_A",
+    "description": "A 2-legged spider with phase 0 is mathematically identical to a straight identity wire. This rule allows inserting or removing spiders along any quantum communication channel without altering quantum state.",
+    "tikz_file": "zx-calculus/02_identity_spiders.tikz",
+    "svg_file": "zx-calculus/02_identity_spiders.svg",
+    "nodes": 6,
+    "edges": 3,
+    "tikz_bytes": 520,
+    "svg_bytes": 2781,
+    "tikz_sha256": "db769b70cfec237bdb3161c4fcee9f969550afff4212e2d0ee05c54adf46ab12",
+    "svg_sha256": "d7d0940de2832b75849a1ca2866ed97cca5e30927dfbc9f75feabba29b7e1ed8",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "03_yanking_cup_cap",
+    "title": "The Yanking Identity (Snake Equation)",
+    "category": "Dualities & Invariants",
+    "pqp_ref": "Chapter 4.2: Compact Closed Categories & Cups/Caps",
+    "formula": "(\\text{id} \\otimes \\epsilon) \\circ (\\eta \\otimes \\text{id}) = \\text{id}",
+    "description": "The snake / yanking equation in compact closed monoidal categories. Pulling a wire with a cup and a cap tightens it into a straight wire, proving that cup and cap are dual adjoint morphisms.",
+    "tikz_file": "zx-calculus/03_yanking_cup_cap.tikz",
+    "svg_file": "zx-calculus/03_yanking_cup_cap.svg",
+    "nodes": 6,
+    "edges": 4,
+    "tikz_bytes": 634,
+    "svg_bytes": 1363,
+    "tikz_sha256": "72ccf6b098b5a4a0eb9d15040e34c7a5bf49a64ff0e852b4159672039d002cd4",
+    "svg_sha256": "9fc669e863530b54efbecbb95972f15804a4c09209782c2d0cf43300ee39e291",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "04_cup_cap_duality",
+    "title": "Bell State Preparation & Bell Effect (Cup & Cap)",
+    "category": "Dualities & Invariants",
+    "pqp_ref": "Chapter 4.1: States and Effects",
+    "formula": "\\eta: I \\to A \\otimes A, \\quad \\epsilon: A \\otimes A \\to I",
+    "description": "A cup represents the unnormalized maximally entangled Bell state preparation (|00> + |11>), while a cap represents the corresponding Bell projection effect (measurement).",
+    "tikz_file": "zx-calculus/04_cup_cap_duality.tikz",
+    "svg_file": "zx-calculus/04_cup_cap_duality.svg",
+    "nodes": 6,
+    "edges": 2,
+    "tikz_bytes": 613,
+    "svg_bytes": 15516,
+    "tikz_sha256": "fa2bd07361e144c55f144fcc87672f17c8a2afc646e7ebfe84599de4f7cb4f81",
+    "svg_sha256": "8046427dc400d9303d133c671414f152b356533d24629cb7231ff514d36a7cc6",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "05_bialgebra_law",
+    "title": "The Bialgebra Interaction Law",
+    "category": "Bialgebra & Hopf Laws",
+    "pqp_ref": "Chapter 9.3: Bialgebra and Commutation",
+    "formula": "\\delta_Z \\circ \\mu_X = (\\mu_X \\otimes \\mu_X) \\circ \\sigma \\circ (\\delta_Z \\otimes \\delta_Z)",
+    "description": "Green copy spiders commute with red XOR addition spiders via a complete bipartite cross-connection, capturing the algebraic essence of quantum linearity and copy-sum duality.",
+    "tikz_file": "zx-calculus/05_bialgebra_law.tikz",
+    "svg_file": "zx-calculus/05_bialgebra_law.svg",
+    "nodes": 6,
+    "edges": 5,
+    "tikz_bytes": 582,
+    "svg_bytes": 3372,
+    "tikz_sha256": "c73896009fcf8fb54ad615dbde4af7d2a238170c01bbd2d5ccc41d41507c3386",
+    "svg_sha256": "70e677d8de2ec0c45dfbfbbbe0d1912219448ae6624a62fbc29b79220cd93e6f",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "06_hadamard_color_change",
+    "title": "Hadamard Conjugation & Color Change",
+    "category": "Bialgebra & Hopf Laws",
+    "pqp_ref": "Chapter 9.2: The Color Change Rule",
+    "formula": "H \\circ Z(\\alpha) \\circ H = X(\\alpha)",
+    "description": "Surrounding a green Z-spider with Hadamard boxes rotates the computational basis into the X-basis, transforming green into red while perfectly preserving the phase angle.",
+    "tikz_file": "zx-calculus/06_hadamard_color_change.tikz",
+    "svg_file": "zx-calculus/06_hadamard_color_change.svg",
+    "nodes": 5,
+    "edges": 4,
+    "tikz_bytes": 505,
+    "svg_bytes": 7006,
+    "tikz_sha256": "b61c6a2b331a01f9e3a06da371702edab9a744bf9e829e4a72f1bff5bc2c7e0d",
+    "svg_sha256": "9d627a08257dcfffc0c7693bd1465cbb7eb4b7f3d5b48fc8f11493b1ae4147a6",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "07_cnot_gate",
+    "title": "CNOT Gate (Controlled-NOT)",
+    "category": "Quantum Gates & Circuits",
+    "pqp_ref": "Chapter 5.3: Controlled Quantum Operations",
+    "formula": "|c, t\\rangle \\mapsto |c, c \\oplus t\\rangle",
+    "description": "The CNOT entangling gate represented as a green Z-copy dot on the control wire connected to a red X-addition dot on the target wire.",
+    "tikz_file": "zx-calculus/07_cnot_gate.tikz",
+    "svg_file": "zx-calculus/07_cnot_gate.svg",
+    "nodes": 6,
+    "edges": 5,
+    "tikz_bytes": 630,
+    "svg_bytes": 3247,
+    "tikz_sha256": "251d3083b95ec1ba18c58bcc3ded9153ce7a6abf7009b58080b904dbcd8c7ae7",
+    "svg_sha256": "a7bb6f3f7cb7a5640266fb1ab9eed6057d5de07a8226debcca3fa9e01048c106",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "08_cz_gate",
+    "title": "Controlled-Z (CZ) Gate",
+    "category": "Quantum Gates & Circuits",
+    "pqp_ref": "Chapter 5.3: Phase Gates and CZ",
+    "formula": "|c, t\\rangle \\mapsto (-1)^{ct} |c, t\\rangle",
+    "description": "A symmetric Controlled-Phase gate formed by two green Z-dots bridged by a Hadamard H-box, demonstrating the bilateral symmetry of phase entanglement.",
+    "tikz_file": "zx-calculus/08_cz_gate.tikz",
+    "svg_file": "zx-calculus/08_cz_gate.svg",
+    "nodes": 7,
+    "edges": 6,
+    "tikz_bytes": 678,
+    "svg_bytes": 6299,
+    "tikz_sha256": "d7c26ae4b9ec27061d733b6a68b16a4e119bcae2d8b9f1600475d12639fdf188",
+    "svg_sha256": "de77487027a2a34258fe0573e846ec908d558d1db85db1932725dbff5e158a2b",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "09_swap_gate",
+    "title": "Swap Gate (Symmetric Braiding)",
+    "category": "Quantum Gates & Circuits",
+    "pqp_ref": "Chapter 3.2: Symmetric Monoidal Categories",
+    "formula": "\\sigma: A \\otimes B \\to B \\otimes A",
+    "description": "The symmetry isomorphism (wire crossing) swapping two quantum subsystems without phase alteration.",
+    "tikz_file": "zx-calculus/09_swap_gate.tikz",
+    "svg_file": "zx-calculus/09_swap_gate.svg",
+    "nodes": 4,
+    "edges": 2,
+    "tikz_bytes": 428,
+    "svg_bytes": 1025,
+    "tikz_sha256": "c3a18453bd39facccb6780d813b189c27f41ed2cff9031aaf8acb59794473b47",
+    "svg_sha256": "28847970674d806bbe170e334d938b18db94e2d83153875216a1ad0c13e61da9",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "10_teleportation",
+    "title": "Quantum Teleportation Protocol",
+    "category": "Protocols & Entangled States",
+    "pqp_ref": "Chapter 4.3 & 10.1: Quantum Teleportation in ZX",
+    "formula": "|\\psi\\rangle \\otimes |\\text{EPR}\\rangle \\mapsto \\text{Meas} \\to \\text{Correction} \\to |\\psi\\rangle",
+    "description": "The full diagrammatic quantum teleportation protocol: unknown state psi and an entangled Bell pair are combined in a Bell measurement; classical measurement outcomes (dashed lines) feed forward to conditionally apply Pauli X and Z corrections.",
+    "tikz_file": "zx-calculus/10_teleportation.tikz",
+    "svg_file": "zx-calculus/10_teleportation.svg",
+    "nodes": 8,
+    "edges": 9,
+    "tikz_bytes": 991,
+    "svg_bytes": 5458,
+    "tikz_sha256": "0db87e47bb736fddc8ecdf9ca6a9aa912635d96ca22a1b446562bd1daacfcef6",
+    "svg_sha256": "6dbac4d2ef67a10e28536662adcbb76ff0b606e88fb2b13c0fae9fa0e37ca0b8",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "11_ghz_state",
+    "title": "GHZ Tripartite Entangled State",
+    "category": "Protocols & Entangled States",
+    "pqp_ref": "Chapter 11.1: Multipartite Entanglement",
+    "formula": "|\\text{GHZ}\\rangle = \\frac{1}{\\sqrt{2}}(|000\\rangle + |111\\rangle)",
+    "description": "The 3-qubit Greenberger\u2013Horne\u2013Zeilinger state represented as a central green Z-spider broadcasting the 0-phase state into three entangled output wires.",
+    "tikz_file": "zx-calculus/11_ghz_state.tikz",
+    "svg_file": "zx-calculus/11_ghz_state.svg",
+    "nodes": 4,
+    "edges": 3,
+    "tikz_bytes": 440,
+    "svg_bytes": 1953,
+    "tikz_sha256": "cab491848689e68263d32047bb09a9011ffc548d7844d50424e3ef7c55482f1c",
+    "svg_sha256": "7f6497ecd16461813385db1908829060d8c14d4d6f17c4d44d2b1b91ec7c00d4",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "12_entanglement_swapping",
+    "title": "Entanglement Swapping Protocol",
+    "category": "Protocols & Entangled States",
+    "pqp_ref": "Chapter 4.4: Entanglement Swapping and Networks",
+    "formula": "|\\text{EPR}_{12}\\rangle \\otimes |\\text{EPR}_{34}\\rangle \\xrightarrow{\\text{Meas}_{23}} |\\text{EPR}_{14}\\rangle",
+    "description": "Two initially independent entangled pairs (cups 1-2 and 3-4) undergo a joint Bell measurement (cap 2-3) on their inner qubits, creating non-local quantum entanglement between qubits 1 and 4 without direct interaction.",
+    "tikz_file": "zx-calculus/12_entanglement_swapping.tikz",
+    "svg_file": "zx-calculus/12_entanglement_swapping.svg",
+    "nodes": 6,
+    "edges": 5,
+    "tikz_bytes": 692,
+    "svg_bytes": 2179,
+    "tikz_sha256": "fe4feae88bf8cfcb7267f65d950e4cec10603db96b9d3248aede65ef0d32b7d4",
+    "svg_sha256": "8b79f4f28dfaef4694c5fd57221043907f03d1574c9f5bb91219c8bbd4390496",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  }
+];
+
+        // Theme Toggle Logic
+        const themeBtn = document.getElementById('theme-toggle-btn');
+        const sunIcon = document.getElementById('theme-icon-sun');
+        const moonIcon = document.getElementById('theme-icon-moon');
+        const htmlEl = document.documentElement;
+
+        function updateThemeUI(isDark) {
+            if (isDark) {
+                htmlEl.classList.add('dark');
+                htmlEl.classList.remove('light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                htmlEl.classList.remove('dark');
+                htmlEl.classList.add('light');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+        }
+
+        themeBtn.addEventListener('click', () => {
+            const isDark = htmlEl.classList.contains('dark');
+            const nextDark = !isDark;
+            updateThemeUI(nextDark);
+            try {
+                localStorage.setItem('tikzit-theme', nextDark ? 'dark' : 'light');
+            } catch (e) {}
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('code-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalSubtitle = document.getElementById('modal-subtitle');
+        const modalCode = document.getElementById('modal-code');
+        const modalCopyBtn = document.getElementById('modal-copy-btn');
+        let currentModalCode = '';
+
+        function openCodeModal(id) {
+            const item = MANIFEST_DATA.find(x => x.id === id);
+            const code = TIKZ_DATA[id] || '';
+            currentModalCode = code;
+
+            if (item) {
+                modalTitle.textContent = item.title;
+                modalSubtitle.textContent = item.tikz_file;
+            } else {
+                modalTitle.textContent = id;
+                modalSubtitle.textContent = id + '.tikz';
+            }
+
+            modalCode.textContent = code;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCodeModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeCodeModal();
+        });
+
+        modalCopyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(currentModalCode).then(() => {
+                const orig = modalCopyBtn.textContent;
+                modalCopyBtn.textContent = 'Copied!';
+                setTimeout(() => { modalCopyBtn.textContent = orig; }, 1500);
+            });
+        });
+
+        function copyTikzCode(id, btn) {
+            const code = TIKZ_DATA[id] || '';
+            navigator.clipboard.writeText(code).then(() => {
+                const orig = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.classList.add('bg-emerald-600', 'text-white');
+                setTimeout(() => {
+                    btn.textContent = orig;
+                    btn.classList.remove('bg-emerald-600', 'text-white');
+                }, 1500);
+            });
+        }
+
+        // Filter and Search Logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.diagram-card');
+        const searchInput = document.getElementById('search-input');
+
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        function updateFilter() {
+            cards.forEach(card => {
+                const cat = card.getAttribute('data-category');
+                const text = card.textContent.toLowerCase();
+                const matchesCat = (currentCategory === 'all' || cat === currentCategory);
+                const matchesSearch = (!searchQuery || text.includes(searchQuery));
+
+                if (matchesCat && matchesSearch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-emerald-600', 'text-white', 'border-emerald-500');
+                    b.classList.add('bg-slate-900', 'text-slate-300', 'border-slate-800');
+                });
+                btn.classList.add('active', 'bg-emerald-600', 'text-white', 'border-emerald-500');
+                btn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-800');
+                currentCategory = btn.getAttribute('data-filter');
+                updateFilter();
+            });
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            updateFilter();
+        });
+    </script>
+</body>
+</html>

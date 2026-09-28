@@ -11,7 +11,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 #set(CMAKE_AUTOUIC ON)
 
-find_package(${QT_VER} REQUIRED COMPONENTS Core Gui Widgets Network)
+find_package(${QT_VER} REQUIRED COMPONENTS Core Gui Widgets Network Pdf)
 find_package(BISON)
 find_package(FLEX)
 
@@ -148,6 +148,7 @@ target_link_libraries(${PROJECT_NAME}
     "${QT_VER}::Gui"
     "${QT_VER}::Widgets"
     "${QT_VER}::Network"
+    "${QT_VER}::Pdf"
     ${POPPLER_LIB})
 
 install (TARGETS tikzit DESTINATION bin)

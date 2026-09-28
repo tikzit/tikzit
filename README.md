@@ -1,71 +1,170 @@
-
 # TikZiT
 
-TikZiT is a graphical tool for rapidly creating graphs and string diagrams using PGF/TikZ. It was used, for example, to make all of the 2500+ diagrams in <a href="http://cambridge.org/pqp">this book</a>.
+TikZiT is a graphical tool for rapidly creating graphs and string diagrams using PGF/TikZ. It was used, for example, to make all of the 2500+ diagrams in <a href="http://cambridge.org/pqp">Picturing Quantum Processes</a>.
 
-## Building on Windows
+This repository hosts two complementary implementations:
+1. **TikZiT Web Spatial Workbench** — A modern, in-browser graphical workbench built with Astro 7, React, TypeScript, Three.js WebGL, Dockview, and Cordis/Nanostores state management.
+2. **TikZiT Native Desktop Application** — The original high-performance desktop application implemented in C++ and Qt (Qt 5 / Qt 6).
 
-TiKZiT can be built in Windows using Qt Creator (part of <a href="http://doc.qt.io/qt-5/windows-support.html">Qt for Windows</a>) or from the command line. In either case, it is recommended you compile with <a href="http://www.mingw.org/">mingw32</a>, which is included in the official Qt distribution. There is no reason, in principle, that you couldn't use mingw64 or MSVC, but these haven't been tested.
+---
 
-In addition to Qt itself, TikZiT needs flex/bison, <a href="https://poppler.freedesktop.org/">Poppler</a> (with Qt bindings), and <a href="https://www.openssl.org/">OpenSSL</a>. For flex/bison, the simplest way to install this is to download <a href="https://github.com/lexxmark/winflexbison">WinFlexBison</a>, then make sure both are in your `%Path%` so the build tools can find them. Alternatively, you can install it via <a href="https://chocolatey.org">Chocolatey</a>, via:
+## TikZiT Web Spatial Workbench
 
-    > choco install winflexbison
+The web workbench brings the complete TikZiT diagramming experience into modern browsers with zero local installation required. It is backed by a TypeScript recursive-descent parser directly compliant with TikZiT's Flex/Bison grammar, offering lossless round-tripping of TikZ code, 60 FPS WebGL rendering, and full PWA offline support.
 
-For convenience, I have packaged up some headers and pre-built DLLs to take care of the Poppler and OpenSSL dependencies in a single shot. If you wish to use these, download <a href="http://tikzit.github.io/download/win32-deps.zip">win32-deps.zip</a> and extract it into the source folder before building. At this point, you should be able to open `tikzit.pro` in Qt Creator and build the project. If you wish to build from the command line, make sure `mingw32-make.exe` is in your `%Path%`. For the version that comes with Qt, this is in `C:\Qt\Tools\mingw530_32\bin`. Then, from the command prompt, run:
+### Features
+- **Deterministic AST Parser & Combinators**: Pure TypeScript tokenizer, recursive-descent grammar combinators (`nodeCombinator`, `edgeCombinator`, `styleCombinator`, `propertyCombinator`, `pathCombinator`), and emitter ensuring byte-level fidelity with native TikZiT PGF/TikZ files.
+- **Three.js WebGL Canvas**: Infinite smooth pan/zoom canvas, procedural coordinate grid shader, high-contrast dashed junction circles, and Bézier curves.
+- **Dockview Spatial Workbench**: Fully customizable multi-dock workspace with draggable, collapsable panels for the canvas, source code editor, live TeX preview, style palette, and property inspector.
+- **Petri Net Document Lifecycle & CSP Sync**: Formal marked Petri Net state machine (`DocumentProcess.ts`) guaranteeing token conservation and dirty-buffer protection during async persistence, coordinated via bounded CSP asynchronous channels (`SyncChannel.ts`).
+- **Unified Diagram Lifecycle & Version History**: User diagram creation (`zx:diagrams:UUID`), prominent Draft save affordance, session durability across reloads, and version history popover with non-destructive restore, preview, and comparison.
+- **Comprehensive Multi-Format Export**: Verbatim TikZ/TeX export, rendered vector SVG, raster PNG (1x, 2x, 4x), PDF generation via `pdf-lib`, and standalone sovereign SQLite `.db` collection export with complete lineage closure and `mcard-studio` round-trip verification.
+- **CLM TriDatabase Persistence**: Transactional state history and local offline storage via `SqlJsBackend` pillars (mcard, executionLog, knowledge) snapshotted to IndexedDB with PWA service worker offline readiness.
+- **Dual-System Protocol & Independence Gate**: Authored root `Makefile` backed by an automated 5-check browser independence gate (`make check-independence`) guaranteeing pure WASM execution, and cross-engine protocol conformance tests (`make check-conformance`).
 
-    > C:\Qt\5.XX.X\mingw53_32\bin\qtenv2.bat
-    > cd \path\to\tikzit
-    > qmake -r
-    > mingw32-make
+### Quick Start (Web)
 
-To get a portable directory, you can then (optionally) run:
+Ensure you have [Node.js](https://nodejs.org/) (v18 or later) installed:
 
-    > deploy-win.bat
+```bash
+# 1. Install dependencies
+npm install
 
+# 2. Launch local development server (runs on http://localhost:4321)
+npm run dev
+```
 
+### Testing & Verification
 
-## Building on Linux
+The web workbench is backed by a comprehensive automated test matrix orchestrated via the root `Makefile`:
 
-This should be buildable in Linux using a "standard" dev setup (gcc, flex, bison, make) as well as Qt. It has been most recently tested with Qt 6.2. First <a href="https://www.qt.io/">Install Qt</a> and add the `$QTDIR/bin` to your `PATH`. The other dependencies should be available via your package manager, e.g. on Ubuntu 22.04 run:
+```bash
+# Run Vitest unit, parser, CLM, and integration test suite (77 test files, 466 tests)
+make test-web
 
-    sudo apt install flex bison libpoppler-dev libpoppler-cpp-dev libgl1-mesa-dev
+# Run automated browser independence verification (5 checks, 0 native C++ bindings)
+make check-independence
 
-After that, building is:
+# Verify dual-system protocol conformance across 12 canonical ZX diagrams
+make check-conformance
 
-    qmake -r
-    make
+# Run Playwright cross-browser test suite (Chromium, Firefox, WebKit)
+make test-e2e
 
-To get a portable directory, you can then (optionally) run:
+# Verify 12 canonical ZX diagrams corpus fixture
+make verify-corpus
 
-    ./deploy-linux.sh
+# Check TypeScript types
+npx tsc --noEmit
 
-Building on other distributions should be similar. For Qt setup, you can find instructions for <a href="https://wiki.qt.io/Install_Qt_5_on_openSUSE">openSUSE</a> and <a href="https://wiki.archlinux.org/index.php/qt">Arch Linux</a> on the Qt wiki.
+# Compile production bundle and PWA service worker
+make build-web
+```
 
+---
 
-## Building on MacOS
+## Repository Layout
 
-You'll need developer tools, Qt5, and Poppler (with Qt bindings) installed. You can install these via Homebrew with the following commands:
+```
+tikzit/
+├── Makefile            # Unified developer Makefile (web and native desktop)
+├── src/
+│   ├── core/           # TypeScript TikZ AST parser, grammar combinators, and lexer
+│   ├── canvas/         # Three.js WebGL canvas engine, shaders, and renderers
+│   ├── components/     # Dockview spatial workbench, style palette, preview, inspectors
+│   ├── stores/         # Nanostores flux state management and undo/redo history
+│   ├── services/       # Cordis service mesh, Petri Net actors, and MCard persistence
+│   ├── gui/            # Native C++ Qt window, scene, and tool implementations (Reference)
+│   └── data/           # Native C++ graph and parser data structures (Reference)
+├── docs/
+│   ├── sprints/        # Implementation sprint specifications (Sprints 00-24 Graduated)
+│   ├── examples/       # 12-diagram ZX-calculus reference corpus with SVGs
+│   ├── architecture/   # Architecture specifications (Shared Dual-System Protocol)
+│   └── changelog/      # Weekly changelog archive (YYYY-Www.md)
+├── tests/              # Vitest unit, integration, and headless test suites (466 tests)
+├── e2e/                # Playwright end-to-end and browser inspection scenarios
+├── scripts/            # Build, testid audit, independence, and conformance verification scripts
+├── images/             # Canonical application icon and tool SVGs
+├── CMakeLists.txt      # CMake build configuration for native Qt application
+├── tikzit.pro          # qmake project file for native Qt application
+└── astro.config.mjs    # Astro configuration for Web Spatial Workbench
+```
 
-    brew install qt5
-    brew install poppler --with-qt
+---
 
-This doesn't add Qt binaries to the `$PATH` by default, so you may wish to either run:
+## Building Native Desktop App with CMake
 
-    brew link --force qt5
+A CMake build is supported (Qt 6 recommended). The application requires the Qt Core, Gui, Widgets, Network, and **Pdf** modules — `QPdfDocument` is used by the preview window, so QtPdf must be installed (it ships with the standard Qt distribution):
 
-or add `/usr/local/opt/qt/bin` to your `$PATH`. Once this is done, TikZiT can be built from the command line via:
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
 
-    qmake -r
-    make
+On macOS with Qt installed via Homebrew, point CMake at the Qt prefix, e.g.:
 
-To bundle the required libraries into `tikzit.app` and create a `.dmg` file, you can additionally run:
+```bash
+cmake -B build -DCMAKE_PREFIX_PATH="$(brew --prefix qt)"
+```
 
-    ./deploy-osx.sh
+---
 
+## Building Native Desktop App on macOS
 
-On older systems (pre-10.11), you can build with Qt 5.6, which <a href="http://doc.qt.io/qt-5/supported-platforms-and-configurations.html">claims</a> to support Mac OS as far back as Mountain Lion. It is installable via <a href="https://www.macports.org">MacPorts</a>:
+You'll need developer tools, Qt5 or Qt6, and Poppler (with Qt bindings) installed. You can install these via Homebrew with the following commands:
 
-    sudo port -N -k install qt56
-    export PATH=/opt/local/libexec/qt5/bin:$PATH
+```bash
+brew install qt
+brew install poppler --with-qt
+```
 
-I have only tested this with TikZiT 2.0, so to install Poppler (required by TikZiT >= 2.1), you are on your own.
+Once installed, TikZiT can be built from the command line via:
+
+```bash
+qmake -r
+make
+```
+
+To bundle the required libraries into `tikzit.app` and create a `.dmg` file, run:
+
+```bash
+./deploy-osx.sh
+```
+
+---
+
+## Building Native Desktop App on Linux
+
+Tested on modern Linux distributions (e.g. Ubuntu 22.04+):
+
+```bash
+sudo apt install flex bison libpoppler-dev libpoppler-cpp-dev libgl1-mesa-dev
+qmake -r
+make
+```
+
+To package into a portable directory:
+
+```bash
+./deploy-linux.sh
+```
+
+---
+
+## Building Native Desktop App on Windows
+
+TiKZiT can be built on Windows using Qt Creator or from the command line with MinGW.
+
+In addition to Qt itself, TikZiT requires flex/bison, [Poppler](https://poppler.freedesktop.org/) (with Qt bindings), and [OpenSSL](https://www.openssl.org/). For flex/bison, install via [Chocolatey](https://chocolatey.org):
+
+```cmd
+choco install winflexbison
+```
+
+Download [win32-deps.zip](http://tikzit.github.io/download/win32-deps.zip) and extract it into the source folder before building. From the MinGW prompt:
+
+```cmd
+qmake -r
+mingw32-make
+deploy-win.bat
+```

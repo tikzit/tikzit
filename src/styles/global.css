@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+:root {
+  /* Calibrated Design Tokens (Sprint 02 Section 2.5) - Dark Default */
+  --bg-app: #0D1117;
+  --bg-panel: #161B22;
+  --bg-panel-header: #21262D;
+  --border-subtle: #30363D;
+  --border-focus: #58A6FF;
+  --text-primary: #F0F6FC;
+  --text-secondary: #8B949E;
+  --sash-hover: #58A6FF;
+  --spider-z-green: #5AD25A;
+  --spider-x-red: #EB4B4B;
+  --hadamard-yellow: #FFDC46;
+  --wire-default: #C9D1D9;
+  --wire-dashed: #8B949E;
+
+  /* Backward Compatibility Aliases */
+  --bg-primary: var(--bg-app);
+  --bg-secondary: var(--bg-panel);
+  --bg-tertiary: var(--bg-panel-header);
+  --border-color: var(--border-subtle);
+  --accent-color: var(--border-focus);
+  --accent-hover: #79c0ff;
+  --zx-green: var(--spider-z-green);
+  --zx-red: var(--spider-x-red);
+  --zx-yellow: var(--hadamard-yellow);
+}
+
+html:not(.dark) {
+  /* Light Theme Overrides */
+  --bg-app: #F6F8FA;
+  --bg-panel: #FFFFFF;
+  --bg-panel-header: #F0F2F5;
+  --border-subtle: #D0D7DE;
+  --border-focus: #0969DA;
+  --text-primary: #1F2328;
+  --text-secondary: #656D76;
+  --sash-hover: #0969DA;
+  --spider-z-green: #45B845;
+  --spider-x-red: #D93636;
+  --hadamard-yellow: #F5C800;
+  --wire-default: #24292F;
+  --wire-dashed: #656D76;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  user-select: none;
+}
+
+#root, .workbench-root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dockview Theme Overrides */
+.dockview-theme-dark {
+  --dv-background-color: var(--bg-app);
+  --dv-drag-over-background-color: rgba(88, 166, 255, 0.15);
+  --dv-drag-over-border-color: var(--border-focus);
+  --dv-tabs-and-actions-container-background-color: var(--bg-panel);
+  --dv-activegroup-visiblepanel-tab-background-color: var(--bg-panel-header);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--bg-panel);
+  --dv-inactivegroup-visiblepanel-tab-background-color: #1e2230;
+  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--bg-panel);
+  --dv-tab-divider-color: var(--border-subtle);
+  --dv-separator-border: var(--border-subtle);
+  --dv-paneview-header-border-color: var(--border-subtle);
+}
+
+.dockview-theme-light {
+  --dv-background-color: var(--bg-app);
+  --dv-drag-over-background-color: rgba(9, 105, 218, 0.12);
+  --dv-drag-over-border-color: var(--border-focus);
+  --dv-tabs-and-actions-container-background-color: var(--bg-panel-header);
+  --dv-activegroup-visiblepanel-tab-background-color: var(--bg-panel);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--bg-panel-header);
+  --dv-inactivegroup-visiblepanel-tab-background-color: #eaeef2;
+  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--bg-panel-header);
+  --dv-tab-divider-color: var(--border-subtle);
+  --dv-separator-border: var(--border-subtle);
+  --dv-paneview-header-border-color: var(--border-subtle);
+}
+
+.dockview-theme-dark .dockview-sash,
+.dockview-theme-light .dockview-sash,
+.dv-sash {
+  transition: background-color 0.15s ease;
+}
+
+.dockview-theme-dark .dockview-sash:hover,
+.dockview-theme-dark .dockview-sash:active,
+.dv-sash:hover,
+.dv-sash:active {
+  background-color: var(--sash-hover) !important;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-panel);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}

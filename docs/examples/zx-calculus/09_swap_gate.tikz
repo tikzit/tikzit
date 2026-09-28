@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (in1) at (-1.5, 0.8) {};
+		\node [style=none] (in2) at (-1.5, -0.8) {};
+		\node [style=none] (out1) at (1.5, 0.8) {};
+		\node [style=none] (out2) at (1.5, -0.8) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire, in=180, out=0] (in1) to (out2);
+		\draw [style=wire, in=180, out=0] (in2) to (out1);
+	\end{pgfonlayer}
+\end{tikzpicture}

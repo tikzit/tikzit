@@ -1,0 +1,18 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (in1) at (-2, 0.8) {};
+		\node [style=none] (in2) at (-2, -0.8) {};
+		\node [style=Z] (z1) at (-1, 0) {$\alpha$};
+		\node [style=Z] (z2) at (1, 0) {$\beta$};
+		\node [style=none] (out1) at (2, 0.8) {};
+		\node [style=none] (out2) at (2, -0.8) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire] (in1) to (z1);
+		\draw [style=wire] (in2) to (z1);
+		\draw [style=wire, bend left=35] (z1) to (z2);
+		\draw [style=wire, bend right=35] (z1) to (z2);
+		\draw [style=wire] (z2) to (out1);
+		\draw [style=wire] (z2) to (out2);
+	\end{pgfonlayer}
+\end{tikzpicture}

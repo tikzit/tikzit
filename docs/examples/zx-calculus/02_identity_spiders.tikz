@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (in) at (-2, 0) {};
+		\node [style=Z dot] (z) at (-0.5, 0) {};
+		\node [style=none] (mid1) at (0.5, 0) {};
+		\node [style=none] (eq) at (1.0, 0) {$=$};
+		\node [style=none] (wire_in) at (1.5, 0) {};
+		\node [style=none] (wire_out) at (3.0, 0) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire] (in) to (z);
+		\draw [style=wire] (z) to (mid1);
+		\draw [style=wire] (wire_in) to (wire_out);
+	\end{pgfonlayer}
+\end{tikzpicture}

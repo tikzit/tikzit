@@ -1,0 +1,15 @@
+% TikZiT style file for Picturing Quantum Processes (ZX-Calculus)
+% Standard PQP green/red/yellow palette
+
+% Node styles
+\tikzstyle{Z}=[fill={rgb,255: red,90; green,210; blue,90}, draw=black, shape=circle, minimum size=6.5mm, inner sep=0pt, font=\small]
+\tikzstyle{X}=[fill={rgb,255: red,235; green,75; blue,75}, draw=black, shape=circle, minimum size=6.5mm, inner sep=0pt, font=\small]
+\tikzstyle{Z dot}=[fill={rgb,255: red,90; green,210; blue,90}, draw=black, shape=circle, minimum size=3.2mm, inner sep=0pt]
+\tikzstyle{X dot}=[fill={rgb,255: red,235; green,75; blue,75}, draw=black, shape=circle, minimum size=3.2mm, inner sep=0pt]
+\tikzstyle{H}=[fill={rgb,255: red,255; green,220; blue,70}, draw=black, shape=rectangle, minimum size=4.8mm, inner sep=0pt, font=\footnotesize]
+\tikzstyle{none}=[shape=circle, inner sep=0pt, minimum size=0pt]
+
+% Edge styles
+\tikzstyle{wire}=[-, draw=black, line width=0.85pt]
+\tikzstyle{diredge}=[->, draw=black, line width=0.85pt]
+\tikzstyle{dashed wire}=[-, draw=black, dashed, line width=0.85pt]

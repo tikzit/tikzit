@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=Z dot] (hub) at (0, 0.4) {};
+		\node [style=none] (leaf1) at (-1.5, -1.0) {};
+		\node [style=none] (leaf2) at (0, -1.0) {};
+		\node [style=none] (leaf3) at (1.5, -1.0) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire] (hub) to (leaf1);
+		\draw [style=wire] (hub) to (leaf2);
+		\draw [style=wire] (hub) to (leaf3);
+	\end{pgfonlayer}
+\end{tikzpicture}

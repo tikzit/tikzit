@@ -2,7 +2,14 @@
 # of Qt should be in your PATH
 
 # copy in libraries and set (most) library paths
-macdeployqt tikzit.app
+LIBPATH_FLAG=""
+if [ -d "/opt/homebrew/lib" ]; then
+    LIBPATH_FLAG="-libpath=/opt/homebrew/lib"
+elif [ -d "/usr/local/lib" ]; then
+    LIBPATH_FLAG="-libpath=/usr/local/lib"
+fi
+
+macdeployqt tikzit.app $LIBPATH_FLAG
 
 # macdeployqt doesn't fix the path to libpoppler for some reason, so we do it by hand
 cd tikzit.app/Contents/Frameworks

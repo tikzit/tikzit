@@ -1,0 +1,254 @@
+[
+  {
+    "id": "01_spider_fusion",
+    "title": "Spider Fusion (Z & X Spiders)",
+    "category": "Elementary Spiders",
+    "pqp_ref": "Chapter 9.1: Spiders & The Fusion Rule",
+    "formula": "Z(\\alpha) \\circ Z(\\beta) = Z(\\alpha + \\beta)",
+    "description": "The foundational rewrite rule of ZX-calculus: whenever two spiders of the same color are connected by one or more wires, they fuse into a single spider whose phase is the sum of the individual phases.",
+    "tikz_file": "zx-calculus/01_spider_fusion.tikz",
+    "svg_file": "zx-calculus/01_spider_fusion.svg",
+    "nodes": 6,
+    "edges": 6,
+    "tikz_bytes": 649,
+    "svg_bytes": 6834,
+    "tikz_sha256": "33b9ab0cb2480edc7cd16bf76c4f071ae199b9febf32ef8aca57afb7b9ba0835",
+    "svg_sha256": "37f22abcb45348651dfc8fc144394466daf76bf0fd877a41b3f142b5d4637a3c",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "02_identity_spiders",
+    "title": "Identity Wires & Phase-Zero Spiders",
+    "category": "Elementary Spiders",
+    "pqp_ref": "Chapter 9.1: The Identity Rule",
+    "formula": "Z(0) = \\text{id}_A",
+    "description": "A 2-legged spider with phase 0 is mathematically identical to a straight identity wire. This rule allows inserting or removing spiders along any quantum communication channel without altering quantum state.",
+    "tikz_file": "zx-calculus/02_identity_spiders.tikz",
+    "svg_file": "zx-calculus/02_identity_spiders.svg",
+    "nodes": 6,
+    "edges": 3,
+    "tikz_bytes": 520,
+    "svg_bytes": 2781,
+    "tikz_sha256": "db769b70cfec237bdb3161c4fcee9f969550afff4212e2d0ee05c54adf46ab12",
+    "svg_sha256": "d7d0940de2832b75849a1ca2866ed97cca5e30927dfbc9f75feabba29b7e1ed8",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "03_yanking_cup_cap",
+    "title": "The Yanking Identity (Snake Equation)",
+    "category": "Dualities & Invariants",
+    "pqp_ref": "Chapter 4.2: Compact Closed Categories & Cups/Caps",
+    "formula": "(\\text{id} \\otimes \\epsilon) \\circ (\\eta \\otimes \\text{id}) = \\text{id}",
+    "description": "The snake / yanking equation in compact closed monoidal categories. Pulling a wire with a cup and a cap tightens it into a straight wire, proving that cup and cap are dual adjoint morphisms.",
+    "tikz_file": "zx-calculus/03_yanking_cup_cap.tikz",
+    "svg_file": "zx-calculus/03_yanking_cup_cap.svg",
+    "nodes": 6,
+    "edges": 4,
+    "tikz_bytes": 634,
+    "svg_bytes": 1363,
+    "tikz_sha256": "72ccf6b098b5a4a0eb9d15040e34c7a5bf49a64ff0e852b4159672039d002cd4",
+    "svg_sha256": "9fc669e863530b54efbecbb95972f15804a4c09209782c2d0cf43300ee39e291",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "04_cup_cap_duality",
+    "title": "Bell State Preparation & Bell Effect (Cup & Cap)",
+    "category": "Dualities & Invariants",
+    "pqp_ref": "Chapter 4.1: States and Effects",
+    "formula": "\\eta: I \\to A \\otimes A, \\quad \\epsilon: A \\otimes A \\to I",
+    "description": "A cup represents the unnormalized maximally entangled Bell state preparation (|00> + |11>), while a cap represents the corresponding Bell projection effect (measurement).",
+    "tikz_file": "zx-calculus/04_cup_cap_duality.tikz",
+    "svg_file": "zx-calculus/04_cup_cap_duality.svg",
+    "nodes": 6,
+    "edges": 2,
+    "tikz_bytes": 613,
+    "svg_bytes": 15516,
+    "tikz_sha256": "fa2bd07361e144c55f144fcc87672f17c8a2afc646e7ebfe84599de4f7cb4f81",
+    "svg_sha256": "8046427dc400d9303d133c671414f152b356533d24629cb7231ff514d36a7cc6",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "05_bialgebra_law",
+    "title": "The Bialgebra Interaction Law",
+    "category": "Bialgebra & Hopf Laws",
+    "pqp_ref": "Chapter 9.3: Bialgebra and Commutation",
+    "formula": "\\delta_Z \\circ \\mu_X = (\\mu_X \\otimes \\mu_X) \\circ \\sigma \\circ (\\delta_Z \\otimes \\delta_Z)",
+    "description": "Green copy spiders commute with red XOR addition spiders via a complete bipartite cross-connection, capturing the algebraic essence of quantum linearity and copy-sum duality.",
+    "tikz_file": "zx-calculus/05_bialgebra_law.tikz",
+    "svg_file": "zx-calculus/05_bialgebra_law.svg",
+    "nodes": 6,
+    "edges": 5,
+    "tikz_bytes": 582,
+    "svg_bytes": 3372,
+    "tikz_sha256": "c73896009fcf8fb54ad615dbde4af7d2a238170c01bbd2d5ccc41d41507c3386",
+    "svg_sha256": "70e677d8de2ec0c45dfbfbbbe0d1912219448ae6624a62fbc29b79220cd93e6f",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "06_hadamard_color_change",
+    "title": "Hadamard Conjugation & Color Change",
+    "category": "Bialgebra & Hopf Laws",
+    "pqp_ref": "Chapter 9.2: The Color Change Rule",
+    "formula": "H \\circ Z(\\alpha) \\circ H = X(\\alpha)",
+    "description": "Surrounding a green Z-spider with Hadamard boxes rotates the computational basis into the X-basis, transforming green into red while perfectly preserving the phase angle.",
+    "tikz_file": "zx-calculus/06_hadamard_color_change.tikz",
+    "svg_file": "zx-calculus/06_hadamard_color_change.svg",
+    "nodes": 5,
+    "edges": 4,
+    "tikz_bytes": 505,
+    "svg_bytes": 7006,
+    "tikz_sha256": "b61c6a2b331a01f9e3a06da371702edab9a744bf9e829e4a72f1bff5bc2c7e0d",
+    "svg_sha256": "9d627a08257dcfffc0c7693bd1465cbb7eb4b7f3d5b48fc8f11493b1ae4147a6",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "07_cnot_gate",
+    "title": "CNOT Gate (Controlled-NOT)",
+    "category": "Quantum Gates & Circuits",
+    "pqp_ref": "Chapter 5.3: Controlled Quantum Operations",
+    "formula": "|c, t\\rangle \\mapsto |c, c \\oplus t\\rangle",
+    "description": "The CNOT entangling gate represented as a green Z-copy dot on the control wire connected to a red X-addition dot on the target wire.",
+    "tikz_file": "zx-calculus/07_cnot_gate.tikz",
+    "svg_file": "zx-calculus/07_cnot_gate.svg",
+    "nodes": 6,
+    "edges": 5,
+    "tikz_bytes": 630,
+    "svg_bytes": 3247,
+    "tikz_sha256": "251d3083b95ec1ba18c58bcc3ded9153ce7a6abf7009b58080b904dbcd8c7ae7",
+    "svg_sha256": "a7bb6f3f7cb7a5640266fb1ab9eed6057d5de07a8226debcca3fa9e01048c106",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "08_cz_gate",
+    "title": "Controlled-Z (CZ) Gate",
+    "category": "Quantum Gates & Circuits",
+    "pqp_ref": "Chapter 5.3: Phase Gates and CZ",
+    "formula": "|c, t\\rangle \\mapsto (-1)^{ct} |c, t\\rangle",
+    "description": "A symmetric Controlled-Phase gate formed by two green Z-dots bridged by a Hadamard H-box, demonstrating the bilateral symmetry of phase entanglement.",
+    "tikz_file": "zx-calculus/08_cz_gate.tikz",
+    "svg_file": "zx-calculus/08_cz_gate.svg",
+    "nodes": 7,
+    "edges": 6,
+    "tikz_bytes": 678,
+    "svg_bytes": 6299,
+    "tikz_sha256": "d7c26ae4b9ec27061d733b6a68b16a4e119bcae2d8b9f1600475d12639fdf188",
+    "svg_sha256": "de77487027a2a34258fe0573e846ec908d558d1db85db1932725dbff5e158a2b",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "09_swap_gate",
+    "title": "Swap Gate (Symmetric Braiding)",
+    "category": "Quantum Gates & Circuits",
+    "pqp_ref": "Chapter 3.2: Symmetric Monoidal Categories",
+    "formula": "\\sigma: A \\otimes B \\to B \\otimes A",
+    "description": "The symmetry isomorphism (wire crossing) swapping two quantum subsystems without phase alteration.",
+    "tikz_file": "zx-calculus/09_swap_gate.tikz",
+    "svg_file": "zx-calculus/09_swap_gate.svg",
+    "nodes": 4,
+    "edges": 2,
+    "tikz_bytes": 428,
+    "svg_bytes": 1025,
+    "tikz_sha256": "c3a18453bd39facccb6780d813b189c27f41ed2cff9031aaf8acb59794473b47",
+    "svg_sha256": "28847970674d806bbe170e334d938b18db94e2d83153875216a1ad0c13e61da9",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "10_teleportation",
+    "title": "Quantum Teleportation Protocol",
+    "category": "Protocols & Entangled States",
+    "pqp_ref": "Chapter 4.3 & 10.1: Quantum Teleportation in ZX",
+    "formula": "|\\psi\\rangle \\otimes |\\text{EPR}\\rangle \\mapsto \\text{Meas} \\to \\text{Correction} \\to |\\psi\\rangle",
+    "description": "The full diagrammatic quantum teleportation protocol: unknown state psi and an entangled Bell pair are combined in a Bell measurement; classical measurement outcomes (dashed lines) feed forward to conditionally apply Pauli X and Z corrections.",
+    "tikz_file": "zx-calculus/10_teleportation.tikz",
+    "svg_file": "zx-calculus/10_teleportation.svg",
+    "nodes": 8,
+    "edges": 9,
+    "tikz_bytes": 991,
+    "svg_bytes": 5458,
+    "tikz_sha256": "0db87e47bb736fddc8ecdf9ca6a9aa912635d96ca22a1b446562bd1daacfcef6",
+    "svg_sha256": "6dbac4d2ef67a10e28536662adcbb76ff0b606e88fb2b13c0fae9fa0e37ca0b8",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "11_ghz_state",
+    "title": "GHZ Tripartite Entangled State",
+    "category": "Protocols & Entangled States",
+    "pqp_ref": "Chapter 11.1: Multipartite Entanglement",
+    "formula": "|\\text{GHZ}\\rangle = \\frac{1}{\\sqrt{2}}(|000\\rangle + |111\\rangle)",
+    "description": "The 3-qubit Greenberger\u2013Horne\u2013Zeilinger state represented as a central green Z-spider broadcasting the 0-phase state into three entangled output wires.",
+    "tikz_file": "zx-calculus/11_ghz_state.tikz",
+    "svg_file": "zx-calculus/11_ghz_state.svg",
+    "nodes": 4,
+    "edges": 3,
+    "tikz_bytes": 440,
+    "svg_bytes": 1953,
+    "tikz_sha256": "cab491848689e68263d32047bb09a9011ffc548d7844d50424e3ef7c55482f1c",
+    "svg_sha256": "7f6497ecd16461813385db1908829060d8c14d4d6f17c4d44d2b1b91ec7c00d4",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  },
+  {
+    "id": "12_entanglement_swapping",
+    "title": "Entanglement Swapping Protocol",
+    "category": "Protocols & Entangled States",
+    "pqp_ref": "Chapter 4.4: Entanglement Swapping and Networks",
+    "formula": "|\\text{EPR}_{12}\\rangle \\otimes |\\text{EPR}_{34}\\rangle \\xrightarrow{\\text{Meas}_{23}} |\\text{EPR}_{14}\\rangle",
+    "description": "Two initially independent entangled pairs (cups 1-2 and 3-4) undergo a joint Bell measurement (cap 2-3) on their inner qubits, creating non-local quantum entanglement between qubits 1 and 4 without direct interaction.",
+    "tikz_file": "zx-calculus/12_entanglement_swapping.tikz",
+    "svg_file": "zx-calculus/12_entanglement_swapping.svg",
+    "nodes": 6,
+    "edges": 5,
+    "tikz_bytes": 692,
+    "svg_bytes": 2179,
+    "tikz_sha256": "fe4feae88bf8cfcb7267f65d950e4cec10603db96b9d3248aede65ef0d32b7d4",
+    "svg_sha256": "8b79f4f28dfaef4694c5fd57221043907f03d1574c9f5bb91219c8bbd4390496",
+    "provenance": {
+      "source": "Picturing Quantum Processes (Coecke & Kissinger, 2017)",
+      "layer_convention": "TikZiT nodelayer + edgelayer PGF syntax",
+      "verifier": "Native TikZiT Parser (TikzAssembler) + Qt 6 UnitTests"
+    }
+  }
+]

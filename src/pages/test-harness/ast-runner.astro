@@ -1,0 +1,34 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TikZ AST Runner Test Harness</title>
+</head>
+<body>
+  <h1>TikZ AST Runner Harness</h1>
+  <div id="status">Loading parser...</div>
+  <script>
+    import { parseTikz, emitTikz, normalize, parseSafe, parseTikzStyles, emitTikzStyles } from '../../core/parser';
+
+    declare global {
+      interface Window {
+        TikzParser: any;
+      }
+    }
+
+    window.TikzParser = {
+      parse: parseTikz,
+      emit: emitTikz,
+      normalize,
+      parseSafe,
+      parseStyles: parseTikzStyles,
+      emitStyles: emitTikzStyles,
+    };
+
+    const statusEl = document.getElementById('status');
+    if (statusEl) statusEl.textContent = 'Ready';
+  </script>
+</body>
+</html>

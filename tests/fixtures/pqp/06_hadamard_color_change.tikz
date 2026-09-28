@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (in) at (-2.2, 0) {};
+		\node [style=H] (h1) at (-1.2, 0) {$H$};
+		\node [style=Z] (spider) at (0, 0) {$\alpha$};
+		\node [style=H] (h2) at (1.2, 0) {$H$};
+		\node [style=none] (out) at (2.2, 0) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire] (in) to (h1);
+		\draw [style=wire] (h1) to (spider);
+		\draw [style=wire] (spider) to (h2);
+		\draw [style=wire] (h2) to (out);
+	\end{pgfonlayer}
+\end{tikzpicture}

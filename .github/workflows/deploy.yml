@@ -1,0 +1,41 @@
+name: Deploy & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm run test
+
+      - name: Build Production Bundle
+        run: npm run build
+
+      - name: Package Dist Artifact
+        run: |
+          tar -czf "tikzit-web-${{ github.ref_name }}.tar.gz" -C dist .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: tikzit-web-${{ github.ref_name }}.tar.gz
+          generate_release_notes: true

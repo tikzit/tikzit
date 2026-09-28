@@ -37,7 +37,7 @@ GraphElementData *GraphElementData::copy()
 
 void GraphElementData::setProperty(QString key, QString value)
 {
-    int i = indexOfKey(key);
+    int i = indexOfProperty(key);
     if (i != -1) {
         _properties[i].setValue(value);
     } else {
@@ -48,7 +48,7 @@ void GraphElementData::setProperty(QString key, QString value)
 
 void GraphElementData::unsetProperty(QString key)
 {
-    int i = indexOfKey(key);
+    int i = indexOfProperty(key);
     if (i != -1)
         _properties.remove(i);
 }
@@ -68,21 +68,21 @@ void GraphElementData::operator <<(GraphElementProperty p)
 
 void GraphElementData::setAtom(QString atom)
 {
-    int i = indexOfKey(atom);
+    int i = indexOfAtom(atom);
     if (i == -1)
         _properties << GraphElementProperty(atom);
 }
 
 void GraphElementData::unsetAtom(QString atom)
 {
-    int i = indexOfKey(atom);
+    int i = indexOfAtom(atom);
     if (i != -1)
         _properties.remove(i);
 }
 
 QString GraphElementData::property(QString key)
 {
-    int i = indexOfKey(key);
+    int i = indexOfProperty(key);
     if (i != -1) {
         return _properties[i].value();
     } else {
@@ -92,19 +92,34 @@ QString GraphElementData::property(QString key)
 
 bool GraphElementData::hasProperty(QString key)
 {
-    return (indexOfKey(key) != -1);
+    return (indexOfProperty(key) != -1);
 }
 
 bool GraphElementData::atom(QString atom)
 {
-    int idx = indexOfKey(atom);
-    return (idx != -1 && _properties[idx].atom());
+    return (indexOfAtom(atom) != -1);
+}
+
+int GraphElementData::indexOfAtom(QString atom)
+{
+    for (int i = 0; i < _properties.size(); ++i) {
+        if (_properties[i].atom() && _properties[i].key() == atom) return i;
+    }
+    return -1;
+}
+
+int GraphElementData::indexOfProperty(QString key)
+{
+    for (int i = 0; i < _properties.size(); ++i) {
+        if (!_properties[i].atom() && _properties[i].key() == key) return i;
+    }
+    return -1;
 }
 
 int GraphElementData::indexOfKey(QString key)
 {
     for (int i = 0; i < _properties.size(); ++i) {
-		QString key1 = _properties[i].key();
+        QString key1 = _properties[i].key();
         if (key1 == key) return i;
     }
     return -1;

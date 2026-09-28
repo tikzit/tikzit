@@ -94,7 +94,7 @@ void yyerror(YYLTYPE *yylloc, void * /*scanner*/, const char *str) {
 %token PATH_CMD "\\path"
 %token RECTANGLE "rectangle"
 %token NODE "node"
-%token AT "at"
+%token TOKEN_AT "at"
 %token TO "to"
 %token CYCLE "cycle"
 %token SEMICOLON ";"

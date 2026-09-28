@@ -70,8 +70,8 @@ void TestTikzOutput::graphFromTikz()
     "\t\\end{pgfonlayer}\n"
     "\t\\begin{pgfonlayer}{edgelayer}\n"
     "\t\t\\draw [style=diredge] (1) to (2);\n"
-    "\t\t\\draw [style=diredge] (2.center) to (0);\n"
-    "\t\t\\draw [style=diredge] (0) to ();\n"
+    "\t\t\\draw [style=diredge] (2) to (0);\n"
+    "\t\t\\draw [style=diredge, loop] (0) to ();\n"
     "\t\\end{pgfonlayer}\n"
     "\\end{tikzpicture}\n";
     bool res = ga.parse(tikz);

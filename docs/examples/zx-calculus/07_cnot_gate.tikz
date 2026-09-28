@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (ctrl_in) at (-1.5, 0.8) {};
+		\node [style=none] (tgt_in) at (-1.5, -0.8) {};
+		\node [style=Z dot] (ctrl) at (0, 0.8) {};
+		\node [style=X dot] (tgt) at (0, -0.8) {};
+		\node [style=none] (ctrl_out) at (1.5, 0.8) {};
+		\node [style=none] (tgt_out) at (1.5, -0.8) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire] (ctrl_in) to (ctrl);
+		\draw [style=wire] (ctrl) to (ctrl_out);
+		\draw [style=wire] (tgt_in) to (tgt);
+		\draw [style=wire] (tgt) to (tgt_out);
+		\draw [style=wire] (ctrl) to (tgt);
+	\end{pgfonlayer}
+\end{tikzpicture}

@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (in) at (-1.6, -1.2) {};
+		\node [style=none] (cup_l) at (-0.6, -1.2) {};
+		\node [style=none] (cup_r) at (0.4, 0) {};
+		\node [style=none] (cap_l) at (0.4, 0) {};
+		\node [style=none] (cap_r) at (1.4, 1.2) {};
+		\node [style=none] (out) at (2.0, 1.2) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire] (in) to (cup_l);
+		\draw [style=wire, in=-90, out=-90, looseness=2.2] (cup_l) to (cup_r);
+		\draw [style=wire, in=90, out=90, looseness=2.2] (cap_l) to (cap_r);
+		\draw [style=wire] (cap_r) to (out);
+	\end{pgfonlayer}
+\end{tikzpicture}

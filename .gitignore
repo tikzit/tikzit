@@ -9,7 +9,8 @@ tex/sample/sample.pdf
 *.sublime-*
 src-old
 GeneratedFiles
-build
+/build/
+!tests/unit/build/
 .vs
 debug
 release
@@ -22,7 +23,9 @@ target_wrapper.bat
 build-tikzit-*
 *.pro.user
 *.autosave
-Makefile
+!/Makefile
+build-qmake/
+build-test/
 tikzit.app
 target_wrapper.sh
 src/data/tikzlexer.lexer.cpp
@@ -38,3 +41,32 @@ tikzlexer.h
 dist
 win32-deps
 
+/cmake-build-*/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/Testing/
+/tikzit_autogen/
+node_modules
+/node_modules/
+/.astro/
+/coverage/
+/playwright-report/
+/test-results/
+/blob-report/
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.toc
+*.out
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.dmg
+
+/build-test/
+.DS_Store
+# Oberon (out-of-context telemetry, postmortems, raw blobs)
+.oberon/

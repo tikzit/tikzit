@@ -1,0 +1,23 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (psi) at (-2.5, 1.2) {};
+		\node [style=Z dot] (z_meas) at (-0.5, 1.2) {};
+		\node [style=X dot] (x_meas) at (-0.5, 0.3) {};
+		\node [style=none] (cup_top) at (-1.8, 0.3) {};
+		\node [style=none] (cup_bot) at (-1.8, -0.8) {};
+		\node [style=X dot] (x_corr) at (0.8, -0.8) {};
+		\node [style=Z dot] (z_corr) at (1.6, -0.8) {};
+		\node [style=none] (out) at (2.5, -0.8) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire] (psi) to (z_meas);
+		\draw [style=wire] (z_meas) to (x_meas);
+		\draw [style=wire, in=180, out=180, looseness=2.0] (cup_top) to (cup_bot);
+		\draw [style=wire] (cup_top) to (x_meas);
+		\draw [style=wire] (cup_bot) to (x_corr);
+		\draw [style=wire] (x_corr) to (z_corr);
+		\draw [style=wire] (z_corr) to (out);
+		\draw [style=dashed wire, bend left=35] (z_meas) to (x_corr);
+		\draw [style=dashed wire, in=100, out=-35] (x_meas) to (z_corr);
+	\end{pgfonlayer}
+\end{tikzpicture}

@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (in1) at (-2.0, 0.7) {};
+		\node [style=none] (in2) at (-2.0, -0.7) {};
+		\node [style=X dot] (x) at (-1.0, 0) {};
+		\node [style=Z dot] (z) at (1.0, 0) {};
+		\node [style=none] (out1) at (2.0, 0.7) {};
+		\node [style=none] (out2) at (2.0, -0.7) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=wire] (in1) to (x);
+		\draw [style=wire] (in2) to (x);
+		\draw [style=wire] (x) to (z);
+		\draw [style=wire] (z) to (out1);
+		\draw [style=wire] (z) to (out2);
+	\end{pgfonlayer}
+\end{tikzpicture}

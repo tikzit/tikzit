@@ -1,3 +1,7 @@
+#include <QFile>
+#include <QFileInfo>
+#include <QTextStream>
+#include <QDir>
 #include "testparser.h"
 #include "graph.h"
 #include "tikzassembler.h"
@@ -130,7 +134,7 @@ void TestParser::parseEdgeBends()
     QVERIFY(g->edges()[3]->bend() == 80);
     QVERIFY(g->edges()[4]->inAngle() == 10);
     QVERIFY(g->edges()[4]->outAngle() == 150);
-    QVERIFY(g->edges()[4]->weight() == 2.0f/2.5f);
+    QVERIFY(qFuzzyCompare(g->edges()[4]->weight(), 2.0/2.5));
 }
 
 void TestParser::parseBbox()
@@ -161,3 +165,64 @@ void TestParser::parseBbox()
 }
 
 
+
+void TestParser::parseCorpusDiagrams()
+{
+    struct ExpectedCounts {
+        int nodes;
+        int edges;
+    };
+
+    QMap<QString, ExpectedCounts> expected = {
+        {"01_spider_fusion.tikz", {6, 6}},
+        {"02_identity_spiders.tikz", {6, 3}},
+        {"03_yanking_cup_cap.tikz", {6, 4}},
+        {"04_cup_cap_duality.tikz", {6, 2}},
+        {"05_bialgebra_law.tikz", {6, 5}},
+        {"06_hadamard_color_change.tikz", {5, 4}},
+        {"07_cnot_gate.tikz", {6, 5}},
+        {"08_cz_gate.tikz", {7, 6}},
+        {"09_swap_gate.tikz", {4, 2}},
+        {"10_teleportation.tikz", {8, 9}},
+        {"11_ghz_state.tikz", {4, 3}},
+        {"12_entanglement_swapping.tikz", {6, 5}}
+    };
+
+    // Locate docs/examples/zx-calculus relative to app dir or source dir
+    QStringList candidates = {
+        "../docs/examples/zx-calculus",
+        "../../docs/examples/zx-calculus",
+        "docs/examples/zx-calculus",
+        "/Users/bkoo/Documents/Development/PicturingProcesses/tikzit/docs/examples/zx-calculus"
+    };
+
+    QString zxDir;
+    for (const QString &c : candidates) {
+        if (QDir(c).exists()) {
+            zxDir = c;
+            break;
+        }
+    }
+
+    QVERIFY2(!zxDir.isEmpty(), "Found zx-calculus corpus directory");
+
+    for (auto it = expected.begin(); it != expected.end(); ++it) {
+        QString filePath = zxDir + "/" + it.key();
+        QFile file(filePath);
+        QVERIFY2(file.open(QIODevice::ReadOnly | QIODevice::Text),
+                 QString("Open %1").arg(filePath).toUtf8().constData());
+
+        QTextStream in(&file);
+        QString tikzContent = in.readAll();
+        file.close();
+
+        Graph *g = new Graph();
+        TikzAssembler ga(g);
+        bool parsed = ga.parse(tikzContent);
+        QVERIFY2(parsed, QString("Parse %1").arg(it.key()).toUtf8().constData());
+        QCOMPARE(g->nodes().size(), it.value().nodes);
+        QCOMPARE(g->edges().size(), it.value().edges);
+
+        delete g;
+    }
+}

@@ -1,0 +1,76 @@
+---
+import TikzitSpatialWorkbench from '../components/workbench/TikzitSpatialWorkbench';
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="TikZiT Web - Modern PGF/TikZ graphical diagram editor for quantum circuits, category theory, and ZX-calculus." />
+    <title>TikZiT Web — PGF/TikZ Diagram Editor & ZX-Calculus Studio</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1a1d26" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Theme Initialization Script -->
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('tikzit:theme') || 'dark';
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+
+    <!-- Lightweight Browser Buffer Shim for CLM Kernel In-Memory Schemas -->
+    <script is:inline>
+      if (typeof window !== 'undefined' && !window.Buffer) {
+        window.Buffer = {
+          from(data, encoding) {
+            if (encoding === 'base64') {
+              const binary = atob(data);
+              const bytes = new Uint8Array(binary.length);
+              for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+              return {
+                toString(enc) {
+                  return new TextDecoder().decode(bytes);
+                },
+                buffer: bytes.buffer,
+                byteOffset: bytes.byteOffset,
+                byteLength: bytes.byteLength,
+              };
+            }
+            if (typeof data === 'string') {
+              return new TextEncoder().encode(data);
+            }
+            return new Uint8Array(data);
+          },
+        };
+      }
+    </script>
+    <!-- Localhost Service Worker Cleanup Safeguard (from Knowledge Base) -->
+    <script is:inline>
+      if ('serviceWorker' in navigator && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          for (const registration of registrations) {
+            registration.unregister();
+            console.log('[Safeguard] Stale dev Service Worker unregistered:', registration);
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <TikzitSpatialWorkbench client:only="react" />
+    </div>
+  </body>
+</html>

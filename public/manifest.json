@@ -1,0 +1,28 @@
+{
+  "name": "TikZiT Web - Graphical TikZ Diagram Editor",
+  "short_name": "TikZiT",
+  "description": "Interactive graphical PGF/TikZ diagram editor and ZX-calculus studio",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape-primary",
+  "background_color": "#12141a",
+  "theme_color": "#1a1d26",
+  "categories": [
+    "productivity",
+    "education",
+    "graphics"
+  ],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "tikzit",
+  "version": "2.2.0",
+  "private": true,
+  "description": "TikZiT - PGF/TikZ graphical diagram editor with ZX-Calculus support",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && cp dist/test-harness/ast-runner/index.html dist/test-harness/ast-runner.html && cp dist/test-harness/canvas-runner/index.html dist/test-harness/canvas-runner.html",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:corpus": "playwright test e2e/corpus",
+    "test:native": "./build-test/UnitTests.app/Contents/MacOS/UnitTests",
+    "build:corpus": "python3 docs/examples/build_examples.py",
+    "verify:corpus": "python3 docs/examples/build_examples.py --verify-only",
+    "bench": "vitest run tests/perf/benchmark.test.ts",
+    "predev": "node scripts/sync-desktop-icons.mjs",
+    "prebuild": "node scripts/sync-desktop-icons.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.6.3",
+    "@types/sql.js": "1.4.11",
+    "fake-indexeddb": "6.2.5"
+  },
+  "dependencies": {
+    "@astrojs/react": "^7.0.0",
+    "@nanostores/react": "^2.0.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "animejs": "^4.5.0",
+    "astro": "^7.3.5",
+    "clm-kernel": "^0.0.1",
+    "cordis": "^4.0.0-rc.10",
+    "dockview-react": "^8.3.1",
+    "nanostores": "^1.5.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "sql.js": "1.13.0",
+    "tailwindcss": "^4.3.3",
+    "three": "^0.186.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  },
+  "type": "module"
+}
